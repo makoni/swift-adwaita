@@ -1,0 +1,30 @@
+// Auto-generated from Adw-1.gir — do not edit
+import CAdwaita
+import GObjectSupport
+/// A helper widget for setting a window's title and subtitle.
+@MainActor
+public final class WindowTitle: Widget {
+
+    /// Internal raw-pointer initializer.
+    override internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
+    /// Creates a new `WindowTitle`.
+    public init(title: String, subtitle: String) {
+        let ptr = adw_window_title_new(title, subtitle)!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The `subtitle` property.
+    public var subtitle: String {
+        get { String(cString: adw_window_title_get_subtitle(opaquePointer)) }
+        set { adw_window_title_set_subtitle(opaquePointer, newValue) }
+    }
+
+    /// The `title` property.
+    public var title: String {
+        get { String(cString: adw_window_title_get_title(opaquePointer)) }
+        set { adw_window_title_set_title(opaquePointer, newValue) }
+    }
+}

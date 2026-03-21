@@ -1,0 +1,36 @@
+Name: CAdwaita
+Tags:
+  - Name: AdwToolbarStyle
+    EnumExtensibility: closed
+  - Name: AdwCenteringPolicy
+    EnumExtensibility: closed
+  - Name: AdwColorScheme
+    EnumExtensibility: closed
+  - Name: AdwAnimationState
+    EnumExtensibility: closed
+  - Name: AdwEasing
+    EnumExtensibility: closed
+  - Name: AdwLengthUnit
+    EnumExtensibility: closed
+  - Name: AdwNavigationDirection
+    EnumExtensibility: closed
+  - Name: AdwResponseAppearance
+    EnumExtensibility: closed
+  - Name: AdwToastPriority
+    EnumExtensibility: closed
+  - Name: AdwDialogPresentationMode
+    EnumExtensibility: closed
+  - Name: AdwViewSwitcherPolicy
+    EnumExtensibility: closed
+  - Name: AdwAccentColor
+    EnumExtensibility: closed
+  - Name: AdwFlapFoldPolicy
+    EnumExtensibility: closed
+  - Name: AdwFlapTransitionType
+    EnumExtensibility: closed
+  - Name: AdwLeafletTransitionType
+    EnumExtensibility: closed
+  - Name: AdwSqueezerTransitionType
+    EnumExtensibility: closed
+  - Name: AdwFoldThresholdPolicy
+    EnumExtensibility: closed
