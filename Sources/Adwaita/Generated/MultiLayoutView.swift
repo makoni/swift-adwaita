@@ -31,9 +31,10 @@ public final class MultiLayoutView: Widget {
         set { adw_multi_layout_view_set_layout_name(opaquePointer, newValue) }
     }
 
-    /// Calls `adw_multi_layout_view_add_layout`.
-    public func addLayout(_ layout: OpaquePointer) {
-        adw_multi_layout_view_add_layout(opaquePointer, layout)
+    /// Adds a layout (transfer-full: adds a ref before passing).
+    public func addLayout(_ layout: Layout) {
+        g_object_ref(layout.pointer)
+        adw_multi_layout_view_add_layout(opaquePointer, layout.opaquePointer)
     }
 
     /// Calls `adw_multi_layout_view_get_child`.

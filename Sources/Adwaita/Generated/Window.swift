@@ -41,8 +41,9 @@ open class Window: GtkWindow {
         (adw_window_get_visible_dialog(castedPointer() as UnsafeMutablePointer<AdwWindow>)).map { OpaquePointer($0) }
     }
 
-    /// Calls `adw_window_add_breakpoint`.
-    public func addBreakpoint(_ breakpoint: OpaquePointer) {
-        adw_window_add_breakpoint(castedPointer() as UnsafeMutablePointer<AdwWindow>, breakpoint)
+    /// Adds a breakpoint (transfer-full: adds a ref before passing).
+    public func addBreakpoint(_ breakpoint: Breakpoint) {
+        g_object_ref(breakpoint.pointer)
+        adw_window_add_breakpoint(castedPointer() as UnsafeMutablePointer<AdwWindow>, breakpoint.opaquePointer)
     }
 }

@@ -17,8 +17,9 @@ public final class ShortcutsDialog: Dialog {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    /// Calls `adw_shortcuts_dialog_add`.
-    public func add(_ section: OpaquePointer) {
-        adw_shortcuts_dialog_add(opaquePointer, section)
+    /// Adds a section (transfer-full: adds a ref before passing).
+    public func add(_ section: ShortcutsSection) {
+        g_object_ref(section.pointer)
+        adw_shortcuts_dialog_add(opaquePointer, section.opaquePointer)
     }
 }

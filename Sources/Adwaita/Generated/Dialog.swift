@@ -86,9 +86,10 @@ open class Dialog: Widget {
         set { adw_dialog_set_title(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue) }
     }
 
-    /// Calls `adw_dialog_add_breakpoint`.
-    public func addBreakpoint(_ breakpoint: OpaquePointer) {
-        adw_dialog_add_breakpoint(castedPointer() as UnsafeMutablePointer<AdwDialog>, breakpoint)
+    /// Adds a breakpoint (transfer-full: adds a ref before passing).
+    public func addBreakpoint(_ breakpoint: Breakpoint) {
+        g_object_ref(breakpoint.pointer)
+        adw_dialog_add_breakpoint(castedPointer() as UnsafeMutablePointer<AdwDialog>, breakpoint.opaquePointer)
     }
 
     /// Calls `adw_dialog_close`.

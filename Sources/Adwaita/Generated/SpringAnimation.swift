@@ -11,8 +11,13 @@ public final class SpringAnimation: Animation {
     }
 
     /// Creates a new `SpringAnimation`.
-    public init(widget: Widget, from: Double, to: Double, springParams: OpaquePointer, target: OpaquePointer) {
-        let ptr = adw_spring_animation_new(widget.widgetPointer, from, to, springParams, target)!
+    ///
+    /// The C function takes ownership of `target` (transfer-full),
+    /// so we add a ref to keep the Swift wrapper valid.
+    /// `springParams` is a boxed type (not a GObject), no ref needed.
+    public init(widget: Widget, from: Double, to: Double, springParams: OpaquePointer, target: AnimationTarget) {
+        g_object_ref(target.pointer)
+        let ptr = adw_spring_animation_new(widget.widgetPointer, from, to, springParams, target.opaquePointer)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 

@@ -11,8 +11,12 @@ public final class TimedAnimation: Animation {
     }
 
     /// Creates a new `TimedAnimation`.
-    public init(widget: Widget, from: Double, to: Double, duration: UInt32, target: OpaquePointer) {
-        let ptr = adw_timed_animation_new(widget.widgetPointer, from, to, duration, target)!
+    ///
+    /// The C function takes ownership of `target` (transfer-full),
+    /// so we add a ref to keep the Swift wrapper valid.
+    public init(widget: Widget, from: Double, to: Double, duration: UInt32, target: AnimationTarget) {
+        g_object_ref(target.pointer)
+        let ptr = adw_timed_animation_new(widget.widgetPointer, from, to, duration, target.opaquePointer)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 

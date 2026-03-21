@@ -51,9 +51,10 @@ public final class ToggleGroup: Widget {
         adw_toggle_group_get_n_toggles(opaquePointer)
     }
 
-    /// Calls `adw_toggle_group_add`.
-    public func add(_ toggle: OpaquePointer) {
-        adw_toggle_group_add(opaquePointer, toggle)
+    /// Adds a toggle (transfer-full: adds a ref before passing).
+    public func add(_ toggle: Toggle) {
+        g_object_ref(toggle.pointer)
+        adw_toggle_group_add(opaquePointer, toggle.opaquePointer)
     }
 
     /// Calls `adw_toggle_group_get_toggle`.

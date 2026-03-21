@@ -24,8 +24,9 @@ public final class ShortcutsSection: GObjectRef {
         set { adw_shortcuts_section_set_title(opaquePointer, newValue) }
     }
 
-    /// Calls `adw_shortcuts_section_add`.
-    public func add(_ item: OpaquePointer) {
-        adw_shortcuts_section_add(opaquePointer, item)
+    /// Adds an item (transfer-full: adds a ref before passing).
+    public func add(_ item: ShortcutsItem) {
+        g_object_ref(item.pointer)
+        adw_shortcuts_section_add(opaquePointer, item.opaquePointer)
     }
 }

@@ -30,9 +30,10 @@ open class BreakpointBin: Widget {
         adw_breakpoint_bin_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>)
     }
 
-    /// Calls `adw_breakpoint_bin_add_breakpoint`.
-    public func addBreakpoint(_ breakpoint: OpaquePointer) {
-        adw_breakpoint_bin_add_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>, breakpoint)
+    /// Adds a breakpoint (transfer-full: adds a ref before passing).
+    public func addBreakpoint(_ breakpoint: Breakpoint) {
+        g_object_ref(breakpoint.pointer)
+        adw_breakpoint_bin_add_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>, breakpoint.opaquePointer)
     }
 
     /// Calls `adw_breakpoint_bin_remove_breakpoint`.
