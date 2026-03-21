@@ -22,9 +22,14 @@ public final class ToastOverlay: Widget {
         set { adw_toast_overlay_set_child(opaquePointer, newValue?.widgetPointer) }
     }
 
-    /// Calls `adw_toast_overlay_add_toast`.
-    public func addToast(_ toast: OpaquePointer) {
-        adw_toast_overlay_add_toast(opaquePointer, toast)
+    /// Displays a toast notification.
+    ///
+    /// This method adds a reference before passing to the C function,
+    /// which takes ownership (transfer-full). This ensures the Swift
+    /// wrapper and the overlay don't conflict on ownership.
+    public func addToast(_ toast: Toast) {
+        g_object_ref(toast.pointer)
+        adw_toast_overlay_add_toast(opaquePointer, toast.opaquePointer)
     }
 
     /// Calls `adw_toast_overlay_dismiss_all`.

@@ -12,21 +12,21 @@ struct ToastExample: DemoExample {
 
     // Simple toast
     let toast = Toast(title: "Hello from swift-adwaita!")
-    overlay.addToast(toast.opaquePointer)
+    overlay.addToast(toast)
 
     // Toast with button
     let toast2 = Toast(title: "File deleted")
     toast2.buttonLabel = "Undo"
     toast2.onButtonClicked {
         let undone = Toast(title: "Undo successful")
-        overlay.addToast(undone.opaquePointer)
+        overlay.addToast(undone)
     }
-    overlay.addToast(toast2.opaquePointer)
+    overlay.addToast(toast2)
 
     // Toast with timeout
     let toast3 = Toast(title: "Auto-dismiss in 3s")
     toast3.timeout = 3
-    overlay.addToast(toast3.opaquePointer)
+    overlay.addToast(toast3)
     """
 
     func buildWidget() -> Widget {
@@ -47,7 +47,7 @@ struct ToastExample: DemoExample {
         btn1.valign = GTK_ALIGN_CENTER
         btn1.onClicked { [overlay] in
             let toast = Toast(title: "Hello from swift-adwaita!")
-            overlay.addToast(toast.opaquePointer)
+            overlay.addToast(toast)
         }
         row1.addSuffix(btn1)
         row1.activatableWidget = btn1
@@ -65,9 +65,9 @@ struct ToastExample: DemoExample {
             toast.onButtonClicked { [overlay] in
                 let undone = Toast(title: "Undo successful")
                 undone.timeout = 2
-                overlay.addToast(undone.opaquePointer)
+                overlay.addToast(undone)
             }
-            overlay.addToast(toast.opaquePointer)
+            overlay.addToast(toast)
         }
         row2.addSuffix(btn2)
         row2.activatableWidget = btn2
@@ -82,7 +82,7 @@ struct ToastExample: DemoExample {
         btn3.onClicked { [overlay] in
             let toast = Toast(title: "This will disappear in 3 seconds")
             toast.timeout = 3
-            overlay.addToast(toast.opaquePointer)
+            overlay.addToast(toast)
         }
         row3.addSuffix(btn3)
         row3.activatableWidget = btn3
@@ -97,7 +97,7 @@ struct ToastExample: DemoExample {
         btn4.onClicked { [overlay] in
             let toast = Toast(title: "Important notification!")
             toast.priority = AdwToastPriority(rawValue: 1)!
-            overlay.addToast(toast.opaquePointer)
+            overlay.addToast(toast)
         }
         row4.addSuffix(btn4)
         row4.activatableWidget = btn4
