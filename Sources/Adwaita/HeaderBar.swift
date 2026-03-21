@@ -45,4 +45,22 @@ public final class HeaderBar: Widget {
         get { adw_header_bar_get_show_title(opaquePointer) != 0 }
         set { adw_header_bar_set_show_title(opaquePointer, newValue ? 1 : 0) }
     }
+
+    /// The custom title widget.
+    public var titleWidget: Widget? {
+        get {
+            guard let ptr = adw_header_bar_get_title_widget(opaquePointer) else { return nil }
+            return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+        }
+        set { adw_header_bar_set_title_widget(opaquePointer, newValue?.widgetPointer) }
+    }
+
+    /// The decoration layout.
+    public var decorationLayout: String? {
+        get {
+            guard let cStr = adw_header_bar_get_decoration_layout(opaquePointer) else { return nil }
+            return String(cString: cStr)
+        }
+        set { adw_header_bar_set_decoration_layout(opaquePointer, newValue) }
+    }
 }

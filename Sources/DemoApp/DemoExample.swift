@@ -1,0 +1,41 @@
+import Adwaita
+
+enum ExampleCategory {
+    case composite
+    case widgets
+}
+
+@MainActor
+protocol DemoExample {
+    var name: String { get }
+    var id: String { get }
+    var category: ExampleCategory { get }
+    var sourceCode: String { get }
+    func buildWidget() -> Widget
+}
+
+@MainActor
+let allExamples: [any DemoExample] = [
+    // Composite layouts
+    PreferencesExample(),
+    StatusPageExample(),
+    ToolbarExample(),
+    ListRowsExample(),
+    TabViewExample(),
+    CarouselExample(),
+    BottomSheetExample(),
+    // Individual widgets
+    ButtonExample(),
+    EntryExample(),
+    SwitchExample(),
+    SpinRowExample(),
+    LabelExample(),
+    AvatarExample(),
+    BannerExample(),
+    SpinnerExample(),
+    RevealerExample(),
+    ToastExample(),
+    AlertDialogExample(),
+    ProgressBarExample(),
+    ScaleExample(),
+]

@@ -56,4 +56,9 @@ public final class MenuButton: Widget {
         get { gtk_menu_button_get_direction(opaquePointer) }
         set { gtk_menu_button_set_direction(opaquePointer, newValue) }
     }
+
+    /// Sets a GMenuModel as the menu for this button.
+    public func setMenuModel(_ menu: GMenuRef) {
+        gtk_menu_button_set_menu_model(opaquePointer, menu.menuModelPointer)
+    }
 }

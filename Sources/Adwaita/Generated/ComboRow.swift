@@ -46,4 +46,15 @@ open class ComboRow: ActionRow {
         get { adw_combo_row_get_use_subtitle(castedPointer() as UnsafeMutablePointer<AdwComboRow>) != 0 }
         set { adw_combo_row_set_use_subtitle(castedPointer() as UnsafeMutablePointer<AdwComboRow>, newValue ? 1 : 0) }
     }
+
+    /// The `model` property.
+    public var model: OpaquePointer? {
+        get { adw_combo_row_get_model(castedPointer() as UnsafeMutablePointer<AdwComboRow>) }
+        set { adw_combo_row_set_model(castedPointer() as UnsafeMutablePointer<AdwComboRow>, newValue) }
+    }
+
+    /// Sets a `StringList` as the model for this combo row.
+    public func setModel(_ stringList: StringList) {
+        adw_combo_row_set_model(castedPointer() as UnsafeMutablePointer<AdwComboRow>, stringList.listModelPointer)
+    }
 }

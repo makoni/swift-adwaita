@@ -26,6 +26,11 @@ let package = Package(
             name: "Adwaita",
             dependencies: ["GObjectSupport"]
         ),
+        .executableTarget(
+            name: "DemoApp",
+            dependencies: ["Adwaita"],
+            path: "Sources/DemoApp"
+        ),
         .testTarget(
             name: "AdwaitaTests",
             dependencies: ["Adwaita"]

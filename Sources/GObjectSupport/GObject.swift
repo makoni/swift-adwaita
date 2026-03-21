@@ -51,4 +51,30 @@ open class GObjectRef {
     public var opaquePointer: OpaquePointer {
         OpaquePointer(pointer)
     }
+
+    /// Binds a property of this object to a property of another object.
+    ///
+    /// When the source property changes, the target property is updated automatically.
+    ///
+    /// - Parameters:
+    ///   - sourceProperty: The name of the property on this object.
+    ///   - target: The target object.
+    ///   - targetProperty: The name of the property on the target object.
+    ///   - flags: Binding flags. Defaults to `.syncCreate` (sync on creation + one-way).
+    /// - Returns: The binding, which can be used to unbind later.
+    @discardableResult
+    public func bind(
+        _ sourceProperty: String,
+        to target: GObjectRef,
+        property targetProperty: String,
+        flags: GBindingFlags = G_BINDING_SYNC_CREATE
+    ) -> OpaquePointer {
+        g_object_bind_property(
+            pointer,
+            sourceProperty,
+            target.pointer,
+            targetProperty,
+            flags
+        )
+    }
 }

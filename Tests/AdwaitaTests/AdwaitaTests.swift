@@ -1066,6 +1066,167 @@ func ensureAdwInit() {
         #expect(Bool(true), "All key Adw enum types are accessible")
     }
 
+    // MARK: - GMenu and Actions Tests
+
+    @Test @MainActor func gmenuCreationAndAppend() {
+        ensureAdwInit()
+        let menu = GMenuRef()
+        menu.append("Quit", action: "app.quit")
+        menu.append("About", action: "app.about")
+        // Should not crash
+        #expect(menu.pointer != nil)
+    }
+
+    @Test @MainActor func gmenuSectionAndSubmenu() {
+        ensureAdwInit()
+        let menu = GMenuRef()
+        let section = GMenuRef()
+        section.append("Cut", action: "app.cut")
+        section.append("Copy", action: "app.copy")
+        menu.appendSection("Edit", section: section)
+
+        let submenu = GMenuRef()
+        submenu.append("Zoom In", action: "app.zoom-in")
+        menu.appendSubmenu("View", submenu: submenu)
+        #expect(menu.pointer != nil)
+    }
+
+    @Test @MainActor func gmenuItemWithIcon() {
+        ensureAdwInit()
+        let item = GMenuItemRef(label: "Open", action: "app.open")
+        item.setIconName("document-open-symbolic")
+        item.setLabel("Open File")
+        #expect(item.pointer != nil)
+    }
+
+    @Test @MainActor func simpleActionCreation() {
+        ensureAdwInit()
+        let action = SimpleAction(name: "test")
+        #expect(action.enabled == true)
+        action.enabled = false
+        #expect(action.enabled == false)
+    }
+
+    @Test @MainActor func simpleActionSignal() {
+        ensureAdwInit()
+        let action = SimpleAction(name: "click")
+        let conn = action.onActivate { }
+        conn.disconnect()
+    }
+
+    @Test @MainActor func menuButtonWithModel() {
+        ensureAdwInit()
+        let menu = GMenuRef()
+        menu.append("Item 1", action: "app.item1")
+        let btn = MenuButton()
+        btn.setMenuModel(menu)
+        #expect(btn.pointer != nil)
+    }
+
+    // MARK: - New GTK Widget Tests
+
+    @Test @MainActor func progressBarProperties() {
+        ensureAdwInit()
+        let pb = ProgressBar()
+        pb.fraction = 0.75
+        #expect(pb.fraction == 0.75)
+        pb.showText = true
+        #expect(pb.showText == true)
+        pb.text = "75%"
+        #expect(pb.text == "75%")
+        pb.inverted = true
+        #expect(pb.inverted == true)
+    }
+
+    @Test @MainActor func progressBarPulse() {
+        ensureAdwInit()
+        let pb = ProgressBar()
+        pb.pulseStep = 0.1
+        #expect(pb.pulseStep == 0.1)
+        pb.pulse()
+        // Should not crash
+        #expect(pb.pointer != nil)
+    }
+
+    @Test @MainActor func scaleProperties() {
+        ensureAdwInit()
+        let scale = Scale(orientation: GTK_ORIENTATION_HORIZONTAL, min: 0, max: 100, step: 1)
+        scale.value = 50
+        #expect(scale.value == 50)
+        scale.drawValue = true
+        #expect(scale.drawValue == true)
+        scale.hasOrigin = true
+        #expect(scale.hasOrigin == true)
+        scale.digits = 0
+        #expect(scale.digits == 0)
+    }
+
+    @Test @MainActor func scaleInverted() {
+        ensureAdwInit()
+        let scale = Scale(orientation: GTK_ORIENTATION_HORIZONTAL, min: 0, max: 10, step: 1)
+        scale.inverted = true
+        #expect(scale.inverted == true)
+    }
+
+    @Test @MainActor func levelBarProperties() {
+        ensureAdwInit()
+        let lb = LevelBar(min: 0, max: 10)
+        lb.value = 7
+        #expect(lb.value == 7)
+        #expect(lb.minValue == 0)
+        #expect(lb.maxValue == 10)
+        lb.inverted = true
+        #expect(lb.inverted == true)
+    }
+
+    @Test @MainActor func textViewProperties() {
+        ensureAdwInit()
+        let tv = TextView()
+        tv.text = "Hello, World!"
+        #expect(tv.text == "Hello, World!")
+        tv.editable = false
+        #expect(tv.editable == false)
+        tv.monospace = true
+        #expect(tv.monospace == true)
+        tv.cursorVisible = false
+        #expect(tv.cursorVisible == false)
+    }
+
+    @Test @MainActor func textViewMargins() {
+        ensureAdwInit()
+        let tv = TextView()
+        tv.leftMargin = 10
+        tv.rightMargin = 10
+        tv.topMargin = 5
+        tv.bottomMargin = 5
+        #expect(tv.leftMargin == 10)
+        #expect(tv.rightMargin == 10)
+        #expect(tv.topMargin == 5)
+        #expect(tv.bottomMargin == 5)
+    }
+
+    @Test @MainActor func stringListOperations() {
+        ensureAdwInit()
+        let sl = StringList(["Alpha", "Beta", "Gamma"])
+        #expect(sl.count == 3)
+        #expect(sl.getString(0) == "Alpha")
+        #expect(sl.getString(1) == "Beta")
+        #expect(sl.getString(2) == "Gamma")
+        sl.append("Delta")
+        #expect(sl.count == 4)
+        sl.remove(1)
+        #expect(sl.count == 3)
+        #expect(sl.getString(1) == "Gamma")
+    }
+
+    @Test @MainActor func cssProviderLoadFromString() {
+        ensureAdwInit()
+        let css = CSSProvider()
+        css.loadFromString("button { color: red; }")
+        css.addToDefaultDisplay()
+        css.removeFromDefaultDisplay()
+    }
+
     @Test @MainActor func gtkEnumsAreAccessible() {
         let _ = GTK_ORIENTATION_HORIZONTAL
         let _ = GTK_ORIENTATION_VERTICAL

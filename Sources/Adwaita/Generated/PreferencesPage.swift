@@ -61,6 +61,16 @@ open class PreferencesPage: Widget {
         set { adw_preferences_page_set_use_underline(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>, newValue ? 1 : 0) }
     }
 
+    /// Calls `adw_preferences_page_add`.
+    public func add(_ group: Widget) {
+        adw_preferences_page_add(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>, group.castedPointer())
+    }
+
+    /// Calls `adw_preferences_page_remove`.
+    public func remove(_ group: Widget) {
+        adw_preferences_page_remove(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>, group.castedPointer())
+    }
+
     /// Calls `adw_preferences_page_get_group`.
     @discardableResult
     public func getGroup(_ index: UInt32) -> OpaquePointer? {
