@@ -29,9 +29,9 @@ open class ActionRow: PreferencesRow {
     }
 
     /// The `subtitle-lines` property.
-    public var subtitleLines: Int32 {
-        get { adw_action_row_get_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>) }
-        set { adw_action_row_set_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>, newValue) }
+    public var subtitleLines: Int {
+        get { Int(adw_action_row_get_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>)) }
+        set { adw_action_row_set_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>, Int32(newValue)) }
     }
 
     /// The `subtitle-selectable` property.
@@ -42,9 +42,9 @@ open class ActionRow: PreferencesRow {
     }
 
     /// The `title-lines` property.
-    public var titleLines: Int32 {
-        get { adw_action_row_get_title_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>) }
-        set { adw_action_row_set_title_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>, newValue) }
+    public var titleLines: Int {
+        get { Int(adw_action_row_get_title_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>)) }
+        set { adw_action_row_set_title_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>, Int32(newValue)) }
     }
 
     /// Calls `adw_action_row_activate`.

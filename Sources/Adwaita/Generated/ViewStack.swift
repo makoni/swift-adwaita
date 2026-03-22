@@ -10,6 +10,11 @@ public final class ViewStack: Widget {
         super.init(raw: pointer)
     }
 
+    /// Borrows a reference to an existing ViewStack.
+    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
+        super.init(borrowing: pointer)
+    }
+
     /// Creates a new `ViewStack`.
     public init() {
         let ptr = adw_view_stack_new()!
@@ -31,9 +36,9 @@ public final class ViewStack: Widget {
 
     /// The `transition-duration` property.
     /// - Since: libadwaita 1.7
-    public var transitionDuration: UInt32 {
-        get { adw_view_stack_get_transition_duration(opaquePointer) }
-        set { adw_view_stack_set_transition_duration(opaquePointer, newValue) }
+    public var transitionDuration: Int {
+        get { Int(adw_view_stack_get_transition_duration(opaquePointer)) }
+        set { adw_view_stack_set_transition_duration(opaquePointer, UInt32(newValue)) }
     }
 
     /// The `transition-running` property (read-only).
@@ -60,40 +65,45 @@ public final class ViewStack: Widget {
         set { adw_view_stack_set_visible_child_name(opaquePointer, newValue) }
     }
 
-    /// Calls `adw_view_stack_add`.
+    /// Adds a child widget, returning its page object.
     @discardableResult
-    public func add(_ child: Widget) -> OpaquePointer {
-        return adw_view_stack_add(opaquePointer, child.widgetPointer)
+    public func add(_ child: Widget) -> ViewStackPage {
+        let ptr = adw_view_stack_add(opaquePointer, child.widgetPointer)!
+        return ViewStackPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
-    /// Calls `adw_view_stack_add_named`.
+    /// Adds a named child widget, returning its page object.
     @discardableResult
-    public func addNamed(_ child: Widget, name: String?) -> OpaquePointer {
-        return adw_view_stack_add_named(opaquePointer, child.widgetPointer, name)
+    public func addNamed(_ child: Widget, name: String?) -> ViewStackPage {
+        let ptr = adw_view_stack_add_named(opaquePointer, child.widgetPointer, name)!
+        return ViewStackPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
-    /// Calls `adw_view_stack_add_titled`.
+    /// Adds a titled child widget, returning its page object.
     @discardableResult
-    public func addTitled(_ child: Widget, name: String?, title: String) -> OpaquePointer {
-        return adw_view_stack_add_titled(opaquePointer, child.widgetPointer, name, title)
+    public func addTitled(_ child: Widget, name: String?, title: String) -> ViewStackPage {
+        let ptr = adw_view_stack_add_titled(opaquePointer, child.widgetPointer, name, title)!
+        return ViewStackPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
-    /// Calls `adw_view_stack_add_titled_with_icon`.
+    /// Adds a titled child widget with an icon, returning its page object.
     @discardableResult
-    public func addTitledWithIcon(_ child: Widget, name: String?, title: String, iconName: String) -> OpaquePointer {
-        return adw_view_stack_add_titled_with_icon(opaquePointer, child.widgetPointer, name, title, iconName)
+    public func addTitledWithIcon(_ child: Widget, name: String?, title: String, iconName: String) -> ViewStackPage {
+        let ptr = adw_view_stack_add_titled_with_icon(opaquePointer, child.widgetPointer, name, title, iconName)!
+        return ViewStackPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
-    /// Calls `adw_view_stack_get_child_by_name`.
+    /// Returns the child widget with the given name.
     @discardableResult
     public func getChildByName(_ name: String) -> Widget? {
         return (adw_view_stack_get_child_by_name(opaquePointer, name)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
-    /// Calls `adw_view_stack_get_page`.
+    /// Returns the page object for the given child.
     @discardableResult
-    public func getPage(_ child: Widget) -> OpaquePointer {
-        return adw_view_stack_get_page(opaquePointer, child.widgetPointer)
+    public func getPage(_ child: Widget) -> ViewStackPage {
+        let ptr = adw_view_stack_get_page(opaquePointer, child.widgetPointer)!
+        return ViewStackPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// Calls `adw_view_stack_remove`.

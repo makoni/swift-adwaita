@@ -26,9 +26,9 @@ public final class WrapBox: Widget {
 
     /// The `child-spacing` property.
     /// - Since: libadwaita 1.7
-    public var childSpacing: Int32 {
-        get { adw_wrap_box_get_child_spacing(opaquePointer) }
-        set { adw_wrap_box_set_child_spacing(opaquePointer, newValue) }
+    public var childSpacing: Int {
+        get { Int(adw_wrap_box_get_child_spacing(opaquePointer)) }
+        set { adw_wrap_box_set_child_spacing(opaquePointer, Int32(newValue)) }
     }
 
     /// The `child-spacing-unit` property.
@@ -61,9 +61,9 @@ public final class WrapBox: Widget {
 
     /// The `line-spacing` property.
     /// - Since: libadwaita 1.7
-    public var lineSpacing: Int32 {
-        get { adw_wrap_box_get_line_spacing(opaquePointer) }
-        set { adw_wrap_box_set_line_spacing(opaquePointer, newValue) }
+    public var lineSpacing: Int {
+        get { Int(adw_wrap_box_get_line_spacing(opaquePointer)) }
+        set { adw_wrap_box_set_line_spacing(opaquePointer, Int32(newValue)) }
     }
 
     /// The `line-spacing-unit` property.
@@ -75,9 +75,9 @@ public final class WrapBox: Widget {
 
     /// The `natural-line-length` property.
     /// - Since: libadwaita 1.7
-    public var naturalLineLength: Int32 {
-        get { adw_wrap_box_get_natural_line_length(opaquePointer) }
-        set { adw_wrap_box_set_natural_line_length(opaquePointer, newValue) }
+    public var naturalLineLength: Int {
+        get { Int(adw_wrap_box_get_natural_line_length(opaquePointer)) }
+        set { adw_wrap_box_set_natural_line_length(opaquePointer, Int32(newValue)) }
     }
 
     /// The `natural-line-length-unit` property.

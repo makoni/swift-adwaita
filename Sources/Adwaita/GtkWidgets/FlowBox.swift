@@ -29,8 +29,8 @@ public final class FlowBox: Widget {
     }
 
     /// Inserts a child at the given position.
-    public func insert(_ child: Widget, position: Int32) {
-        gtk_flow_box_insert(opaquePointer, child.widgetPointer, position)
+    public func insert(_ child: Widget, position: Int) {
+        gtk_flow_box_insert(opaquePointer, child.widgetPointer, Int32(position))
     }
 
     /// Removes a child.
@@ -39,15 +39,15 @@ public final class FlowBox: Widget {
     }
 
     /// The minimum number of children per line.
-    public var minChildrenPerLine: UInt32 {
-        get { gtk_flow_box_get_min_children_per_line(opaquePointer) }
-        set { gtk_flow_box_set_min_children_per_line(opaquePointer, newValue) }
+    public var minChildrenPerLine: Int {
+        get { Int(gtk_flow_box_get_min_children_per_line(opaquePointer)) }
+        set { gtk_flow_box_set_min_children_per_line(opaquePointer, UInt32(newValue)) }
     }
 
     /// The maximum number of children per line.
-    public var maxChildrenPerLine: UInt32 {
-        get { gtk_flow_box_get_max_children_per_line(opaquePointer) }
-        set { gtk_flow_box_set_max_children_per_line(opaquePointer, newValue) }
+    public var maxChildrenPerLine: Int {
+        get { Int(gtk_flow_box_get_max_children_per_line(opaquePointer)) }
+        set { gtk_flow_box_set_max_children_per_line(opaquePointer, UInt32(newValue)) }
     }
 
     /// The selection mode.
@@ -57,15 +57,15 @@ public final class FlowBox: Widget {
     }
 
     /// The row spacing.
-    public var rowSpacing: UInt32 {
-        get { gtk_flow_box_get_row_spacing(opaquePointer) }
-        set { gtk_flow_box_set_row_spacing(opaquePointer, newValue) }
+    public var rowSpacing: Int {
+        get { Int(gtk_flow_box_get_row_spacing(opaquePointer)) }
+        set { gtk_flow_box_set_row_spacing(opaquePointer, UInt32(newValue)) }
     }
 
     /// The column spacing.
-    public var columnSpacing: UInt32 {
-        get { gtk_flow_box_get_column_spacing(opaquePointer) }
-        set { gtk_flow_box_set_column_spacing(opaquePointer, newValue) }
+    public var columnSpacing: Int {
+        get { Int(gtk_flow_box_get_column_spacing(opaquePointer)) }
+        set { gtk_flow_box_set_column_spacing(opaquePointer, UInt32(newValue)) }
     }
 
     /// Whether children are laid out homogeneously.

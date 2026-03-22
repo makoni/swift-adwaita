@@ -48,9 +48,9 @@ public final class Toast: GObjectRef {
     }
 
     /// The `timeout` property.
-    public var timeout: UInt32 {
-        get { adw_toast_get_timeout(opaquePointer) }
-        set { adw_toast_set_timeout(opaquePointer, newValue) }
+    public var timeout: Int {
+        get { Int(adw_toast_get_timeout(opaquePointer)) }
+        set { adw_toast_set_timeout(opaquePointer, UInt32(newValue)) }
     }
 
     /// The `title` property.

@@ -44,9 +44,9 @@ public final class Entry: Widget {
     }
 
     /// The maximum length of the entry text (0 for no limit).
-    public var maxLength: Int32 {
-        get { gtk_entry_get_max_length(castedPointer()) }
-        set { gtk_entry_set_max_length(castedPointer(), newValue) }
+    public var maxLength: Int {
+        get { Int(gtk_entry_get_max_length(castedPointer())) }
+        set { gtk_entry_set_max_length(castedPointer(), Int32(newValue)) }
     }
 
     /// Connects to the `activate` signal (user pressed Enter).

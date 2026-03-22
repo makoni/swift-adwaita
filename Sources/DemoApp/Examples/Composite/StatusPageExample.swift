@@ -16,7 +16,7 @@ struct StatusPageExample: DemoExample {
     let getStartedBtn = Button(label: "Get Started")
     getStartedBtn.addCSSClass("suggested-action")
     getStartedBtn.addCSSClass("pill")
-    getStartedBtn.halign = GTK_ALIGN_CENTER
+    getStartedBtn.halign = .center
     getStartedBtn.onClicked {
         statusPage.title = "Let's Go!"
         statusPage.iconName = "emblem-ok-symbolic"
@@ -33,7 +33,7 @@ struct StatusPageExample: DemoExample {
         let getStartedBtn = Button(label: "Get Started")
         getStartedBtn.addCSSClass("suggested-action")
         getStartedBtn.addCSSClass("pill")
-        getStartedBtn.halign = GTK_ALIGN_CENTER
+        getStartedBtn.halign = .center
 
         getStartedBtn.onClicked { [statusPage] in
             statusPage.title = "Let's Go!"

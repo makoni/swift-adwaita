@@ -35,7 +35,7 @@ struct ProgressBarExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         // Determinate progress
@@ -54,7 +54,7 @@ struct ProgressBarExample: DemoExample {
         incRow.title = "Increase"
         incRow.subtitle = "Add 10% to the progress"
         let incBtn = Button(iconName: "list-add-symbolic")
-        incBtn.valign = GTK_ALIGN_CENTER
+        incBtn.valign = .center
         incBtn.addCSSClass("flat")
         incBtn.onClicked { [progressBar] in
             let newVal = min(1.0, progressBar.fraction + 0.1)
@@ -69,7 +69,7 @@ struct ProgressBarExample: DemoExample {
         decRow.title = "Decrease"
         decRow.subtitle = "Remove 10% from the progress"
         let decBtn = Button(iconName: "list-remove-symbolic")
-        decBtn.valign = GTK_ALIGN_CENTER
+        decBtn.valign = .center
         decBtn.addCSSClass("flat")
         decBtn.onClicked { [progressBar] in
             let newVal = max(0.0, progressBar.fraction - 0.1)
@@ -84,7 +84,7 @@ struct ProgressBarExample: DemoExample {
         resetRow.title = "Reset"
         resetRow.subtitle = "Set progress back to 0%"
         let resetBtn = Button(label: "Reset")
-        resetBtn.valign = GTK_ALIGN_CENTER
+        resetBtn.valign = .center
         resetBtn.onClicked { [progressBar] in
             progressBar.fraction = 0.0
             progressBar.text = "0%"
@@ -111,7 +111,7 @@ struct ProgressBarExample: DemoExample {
         pulseRow.title = "Pulse"
         pulseRow.subtitle = "Tap to advance the pulse animation"
         let pulseBtn = Button(label: "Pulse")
-        pulseBtn.valign = GTK_ALIGN_CENTER
+        pulseBtn.valign = .center
         pulseBtn.addCSSClass("suggested-action")
         pulseBtn.onClicked { [pulseBar] in
             pulseBar.pulse()

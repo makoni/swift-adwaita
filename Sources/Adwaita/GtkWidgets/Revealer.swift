@@ -43,8 +43,8 @@ public final class Revealer: Widget {
     }
 
     /// The transition duration in milliseconds.
-    public var transitionDuration: UInt32 {
-        get { gtk_revealer_get_transition_duration(opaquePointer) }
-        set { gtk_revealer_set_transition_duration(opaquePointer, newValue) }
+    public var transitionDuration: Int {
+        get { Int(gtk_revealer_get_transition_duration(opaquePointer)) }
+        set { gtk_revealer_set_transition_duration(opaquePointer, UInt32(newValue)) }
     }
 }

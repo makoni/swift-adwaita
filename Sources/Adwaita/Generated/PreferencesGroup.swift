@@ -10,6 +10,11 @@ open class PreferencesGroup: Widget {
         super.init(raw: pointer)
     }
 
+    /// Borrows a reference to an existing PreferencesGroup.
+    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
+        super.init(borrowing: pointer)
+    }
+
     /// Creates a new `PreferencesGroup`.
     public init() {
         let ptr = adw_preferences_group_new()!
@@ -49,8 +54,8 @@ open class PreferencesGroup: Widget {
 
     /// Calls `adw_preferences_group_get_row`.
     @discardableResult
-    public func getRow(_ index: UInt32) -> Widget? {
-        return (adw_preferences_group_get_row(castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>, index)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+    public func getRow(_ index: Int) -> Widget? {
+        return (adw_preferences_group_get_row(castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>, UInt32(index))).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Calls `adw_preferences_group_remove`.

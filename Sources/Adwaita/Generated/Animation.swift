@@ -11,9 +11,9 @@ open class Animation: GObjectRef {
     }
 
     /// The `target` property.
-    public var target: OpaquePointer {
-        get { adw_animation_get_target(castedPointer() as UnsafeMutablePointer<AdwAnimation>) }
-        set { adw_animation_set_target(castedPointer() as UnsafeMutablePointer<AdwAnimation>, newValue) }
+    public var target: AnimationTarget {
+        get { AnimationTarget(borrowing: UnsafeMutableRawPointer(adw_animation_get_target(castedPointer() as UnsafeMutablePointer<AdwAnimation>))) }
+        set { adw_animation_set_target(castedPointer() as UnsafeMutablePointer<AdwAnimation>, newValue.opaquePointer) }
     }
 
     /// The `value` property (read-only).

@@ -33,8 +33,8 @@ public final class BottomSheet: Widget {
 
     /// The `bottom-bar-height` property (read-only).
     /// - Since: libadwaita 1.6
-    public var bottomBarHeight: Int32 {
-        adw_bottom_sheet_get_bottom_bar_height(opaquePointer)
+    public var bottomBarHeight: Int {
+        Int(adw_bottom_sheet_get_bottom_bar_height(opaquePointer))
     }
 
     /// The `can-close` property.
@@ -95,8 +95,8 @@ public final class BottomSheet: Widget {
 
     /// The `sheet-height` property (read-only).
     /// - Since: libadwaita 1.6
-    public var sheetHeight: Int32 {
-        adw_bottom_sheet_get_sheet_height(opaquePointer)
+    public var sheetHeight: Int {
+        Int(adw_bottom_sheet_get_sheet_height(opaquePointer))
     }
 
     /// The `show-drag-handle` property.

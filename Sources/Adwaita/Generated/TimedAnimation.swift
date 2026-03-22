@@ -14,9 +14,9 @@ public final class TimedAnimation: Animation {
     ///
     /// The C function takes ownership of `target` (transfer-full),
     /// so we add a ref to keep the Swift wrapper valid.
-    public init(widget: Widget, from: Double, to: Double, duration: UInt32, target: AnimationTarget) {
+    public init(widget: Widget, from: Double, to: Double, duration: Int, target: AnimationTarget) {
         g_object_ref(target.pointer)
-        let ptr = adw_timed_animation_new(widget.widgetPointer, from, to, duration, target.opaquePointer)!
+        let ptr = adw_timed_animation_new(widget.widgetPointer, from, to, UInt32(duration), target.opaquePointer)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
@@ -27,9 +27,9 @@ public final class TimedAnimation: Animation {
     }
 
     /// The `duration` property.
-    public var duration: UInt32 {
-        get { adw_timed_animation_get_duration(opaquePointer) }
-        set { adw_timed_animation_set_duration(opaquePointer, newValue) }
+    public var duration: Int {
+        get { Int(adw_timed_animation_get_duration(opaquePointer)) }
+        set { adw_timed_animation_set_duration(opaquePointer, UInt32(newValue)) }
     }
 
     /// The `easing` property.
@@ -39,9 +39,9 @@ public final class TimedAnimation: Animation {
     }
 
     /// The `repeat-count` property.
-    public var repeatCount: UInt32 {
-        get { adw_timed_animation_get_repeat_count(opaquePointer) }
-        set { adw_timed_animation_set_repeat_count(opaquePointer, newValue) }
+    public var repeatCount: Int {
+        get { Int(adw_timed_animation_get_repeat_count(opaquePointer)) }
+        set { adw_timed_animation_set_repeat_count(opaquePointer, UInt32(newValue)) }
     }
 
     /// The `reverse` property.

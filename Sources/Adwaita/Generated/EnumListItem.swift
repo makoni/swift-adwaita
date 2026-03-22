@@ -16,7 +16,7 @@ public final class EnumListItem: GObjectRef {
     }
 
     /// The `value` property (read-only).
-    public var value: Int32 {
-        adw_enum_list_item_get_value(opaquePointer)
+    public var value: Int {
+        Int(adw_enum_list_item_get_value(opaquePointer))
     }
 }

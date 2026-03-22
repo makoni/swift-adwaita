@@ -19,9 +19,9 @@ public final class MultiLayoutView: Widget {
 
     /// The `layout` property.
     /// - Since: libadwaita 1.6
-    public var layout: OpaquePointer? {
-        get { adw_multi_layout_view_get_layout(opaquePointer) }
-        set { adw_multi_layout_view_set_layout(opaquePointer, newValue) }
+    public var layout: Layout? {
+        get { (adw_multi_layout_view_get_layout(opaquePointer)).map { Layout(borrowing: UnsafeMutableRawPointer($0)) } }
+        set { adw_multi_layout_view_set_layout(opaquePointer, newValue?.opaquePointer) }
     }
 
     /// The `layout-name` property.
@@ -43,15 +43,15 @@ public final class MultiLayoutView: Widget {
         return (adw_multi_layout_view_get_child(opaquePointer, id)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
-    /// Calls `adw_multi_layout_view_get_layout_by_name`.
+    /// Returns the layout with the given name.
     @discardableResult
-    public func getLayoutByName(_ name: String) -> OpaquePointer? {
-        return adw_multi_layout_view_get_layout_by_name(opaquePointer, name)
+    public func getLayoutByName(_ name: String) -> Layout? {
+        return (adw_multi_layout_view_get_layout_by_name(opaquePointer, name)).map { Layout(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
-    /// Calls `adw_multi_layout_view_remove_layout`.
-    public func removeLayout(_ layout: OpaquePointer) {
-        adw_multi_layout_view_remove_layout(opaquePointer, layout)
+    /// Removes a layout.
+    public func removeLayout(_ layout: Layout) {
+        adw_multi_layout_view_remove_layout(opaquePointer, layout.opaquePointer)
     }
 
     /// Calls `adw_multi_layout_view_set_child`.

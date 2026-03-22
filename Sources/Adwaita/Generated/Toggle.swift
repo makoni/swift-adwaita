@@ -11,6 +11,11 @@ public final class Toggle: GObjectRef {
         super.init(raw: pointer)
     }
 
+    /// Borrows a reference to an existing Toggle.
+    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
+        super.init(borrowing: pointer)
+    }
+
     /// Creates a new `Toggle`.
     public init() {
         let ptr = adw_toggle_new()!
@@ -68,7 +73,7 @@ public final class Toggle: GObjectRef {
 
     /// Calls `adw_toggle_get_index`.
     @discardableResult
-    public func getIndex() -> UInt32 {
-        return adw_toggle_get_index(opaquePointer)
+    public func getIndex() -> Int {
+        return Int(adw_toggle_get_index(opaquePointer))
     }
 }

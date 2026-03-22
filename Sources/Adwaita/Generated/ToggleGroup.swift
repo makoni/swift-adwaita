@@ -19,9 +19,9 @@ public final class ToggleGroup: Widget {
 
     /// The `active` property.
     /// - Since: libadwaita 1.7
-    public var active: UInt32 {
-        get { adw_toggle_group_get_active(opaquePointer) }
-        set { adw_toggle_group_set_active(opaquePointer, newValue) }
+    public var active: Int {
+        get { Int(adw_toggle_group_get_active(opaquePointer)) }
+        set { adw_toggle_group_set_active(opaquePointer, UInt32(newValue)) }
     }
 
     /// The `active-name` property.
@@ -47,8 +47,8 @@ public final class ToggleGroup: Widget {
 
     /// The `n-toggles` property (read-only).
     /// - Since: libadwaita 1.7
-    public var nToggles: UInt32 {
-        adw_toggle_group_get_n_toggles(opaquePointer)
+    public var nToggles: Int {
+        Int(adw_toggle_group_get_n_toggles(opaquePointer))
     }
 
     /// Adds a toggle (transfer-full: adds a ref before passing).
@@ -57,21 +57,21 @@ public final class ToggleGroup: Widget {
         adw_toggle_group_add(opaquePointer, toggle.opaquePointer)
     }
 
-    /// Calls `adw_toggle_group_get_toggle`.
+    /// Returns the toggle at the given index.
     @discardableResult
-    public func getToggle(_ index: UInt32) -> OpaquePointer? {
-        return adw_toggle_group_get_toggle(opaquePointer, index)
+    public func getToggle(_ index: Int) -> Toggle? {
+        return (adw_toggle_group_get_toggle(opaquePointer, UInt32(index))).map { Toggle(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
-    /// Calls `adw_toggle_group_get_toggle_by_name`.
+    /// Returns the toggle with the given name.
     @discardableResult
-    public func getToggleByName(_ name: String) -> OpaquePointer? {
-        return adw_toggle_group_get_toggle_by_name(opaquePointer, name)
+    public func getToggleByName(_ name: String) -> Toggle? {
+        return (adw_toggle_group_get_toggle_by_name(opaquePointer, name)).map { Toggle(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
-    /// Calls `adw_toggle_group_remove`.
-    public func remove(_ toggle: OpaquePointer) {
-        adw_toggle_group_remove(opaquePointer, toggle)
+    /// Removes a toggle from the group.
+    public func remove(_ toggle: Toggle) {
+        adw_toggle_group_remove(opaquePointer, toggle.opaquePointer)
     }
 
     /// Calls `adw_toggle_group_remove_all`.

@@ -22,35 +22,35 @@ struct AvatarExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         let group = PreferencesGroup()
         group.title = "Avatars"
         group.description = "User avatar display in various sizes"
 
-        let avatarBox = Box(orientation: GTK_ORIENTATION_HORIZONTAL, spacing: 24)
-        avatarBox.halign = GTK_ALIGN_CENTER
+        let avatarBox = Box(orientation: .horizontal, spacing: 24)
+        avatarBox.halign = .center
         avatarBox.setMargins(24)
 
         let small = Avatar(size: 32, text: "AB", showInitials: true)
-        small.valign = GTK_ALIGN_CENTER
+        small.valign = .center
         avatarBox.append(small)
 
         let medium = Avatar(size: 48, text: "CD", showInitials: true)
-        medium.valign = GTK_ALIGN_CENTER
+        medium.valign = .center
         avatarBox.append(medium)
 
         let large = Avatar(size: 64, text: "EF", showInitials: true)
-        large.valign = GTK_ALIGN_CENTER
+        large.valign = .center
         avatarBox.append(large)
 
         let xlarge = Avatar(size: 96, text: "GH", showInitials: true)
-        xlarge.valign = GTK_ALIGN_CENTER
+        xlarge.valign = .center
         avatarBox.append(xlarge)
 
         let fallback = Avatar(size: 64, text: nil, showInitials: false)
-        fallback.valign = GTK_ALIGN_CENTER
+        fallback.valign = .center
         avatarBox.append(fallback)
 
         group.add(avatarBox)
@@ -70,7 +70,7 @@ struct AvatarExample: DemoExample {
             row.title = fullName
             row.subtitle = handle
             let avatar = Avatar(size: 36, text: initials, showInitials: true)
-            avatar.valign = GTK_ALIGN_CENTER
+            avatar.valign = .center
             row.addPrefix(avatar)
             rowGroup.add(row)
         }

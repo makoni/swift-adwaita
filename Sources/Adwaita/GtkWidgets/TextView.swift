@@ -62,26 +62,26 @@ public final class TextView: Widget {
     }
 
     /// The left margin in pixels.
-    public var leftMargin: Int32 {
-        get { gtk_text_view_get_left_margin(castedPointer()) }
-        set { gtk_text_view_set_left_margin(castedPointer(), newValue) }
+    public var leftMargin: Int {
+        get { Int(gtk_text_view_get_left_margin(castedPointer())) }
+        set { gtk_text_view_set_left_margin(castedPointer(), Int32(newValue)) }
     }
 
     /// The right margin in pixels.
-    public var rightMargin: Int32 {
-        get { gtk_text_view_get_right_margin(castedPointer()) }
-        set { gtk_text_view_set_right_margin(castedPointer(), newValue) }
+    public var rightMargin: Int {
+        get { Int(gtk_text_view_get_right_margin(castedPointer())) }
+        set { gtk_text_view_set_right_margin(castedPointer(), Int32(newValue)) }
     }
 
     /// The top margin in pixels.
-    public var topMargin: Int32 {
-        get { gtk_text_view_get_top_margin(castedPointer()) }
-        set { gtk_text_view_set_top_margin(castedPointer(), newValue) }
+    public var topMargin: Int {
+        get { Int(gtk_text_view_get_top_margin(castedPointer())) }
+        set { gtk_text_view_set_top_margin(castedPointer(), Int32(newValue)) }
     }
 
     /// The bottom margin in pixels.
-    public var bottomMargin: Int32 {
-        get { gtk_text_view_get_bottom_margin(castedPointer()) }
-        set { gtk_text_view_set_bottom_margin(castedPointer(), newValue) }
+    public var bottomMargin: Int {
+        get { Int(gtk_text_view_get_bottom_margin(castedPointer())) }
+        set { gtk_text_view_set_bottom_margin(castedPointer(), Int32(newValue)) }
     }
 }

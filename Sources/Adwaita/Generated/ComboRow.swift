@@ -31,9 +31,9 @@ open class ComboRow: ActionRow {
     }
 
     /// The `selected` property.
-    public var selected: UInt32 {
-        get { adw_combo_row_get_selected(castedPointer() as UnsafeMutablePointer<AdwComboRow>) }
-        set { adw_combo_row_set_selected(castedPointer() as UnsafeMutablePointer<AdwComboRow>, newValue) }
+    public var selected: Int {
+        get { Int(adw_combo_row_get_selected(castedPointer() as UnsafeMutablePointer<AdwComboRow>)) }
+        set { adw_combo_row_set_selected(castedPointer() as UnsafeMutablePointer<AdwComboRow>, UInt32(newValue)) }
     }
 
     /// The `selected-item` property (read-only).

@@ -42,16 +42,16 @@ open class ExpanderRow: PreferencesRow {
 
     /// The `subtitle-lines` property.
     /// - Since: libadwaita 1.3
-    public var subtitleLines: Int32 {
-        get { adw_expander_row_get_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>) }
-        set { adw_expander_row_set_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>, newValue) }
+    public var subtitleLines: Int {
+        get { Int(adw_expander_row_get_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>)) }
+        set { adw_expander_row_set_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>, Int32(newValue)) }
     }
 
     /// The `title-lines` property.
     /// - Since: libadwaita 1.3
-    public var titleLines: Int32 {
-        get { adw_expander_row_get_title_lines(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>) }
-        set { adw_expander_row_set_title_lines(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>, newValue) }
+    public var titleLines: Int {
+        get { Int(adw_expander_row_get_title_lines(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>)) }
+        set { adw_expander_row_set_title_lines(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>, Int32(newValue)) }
     }
 
     /// Calls `adw_expander_row_add_prefix`.

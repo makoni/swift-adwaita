@@ -17,7 +17,7 @@ func showCodeDialog(sourceCode: String, title: String, parent: Widget) {
 
     let scrolled = ScrolledWindow()
     scrolled.child = codeLabel
-    scrolled.setPolicy(horizontal: GTK_POLICY_AUTOMATIC, vertical: GTK_POLICY_AUTOMATIC)
+    scrolled.setPolicy(horizontal: .automatic, vertical: .automatic)
 
     let headerBar = HeaderBar()
     let toolbar = ToolbarView()

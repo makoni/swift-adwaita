@@ -40,8 +40,8 @@ public final class InlineViewSwitcher: Widget {
 
     /// The `stack` property.
     /// - Since: libadwaita 1.7
-    public var stack: OpaquePointer? {
-        get { adw_inline_view_switcher_get_stack(opaquePointer) }
-        set { adw_inline_view_switcher_set_stack(opaquePointer, newValue) }
+    public var stack: ViewStack? {
+        get { (adw_inline_view_switcher_get_stack(opaquePointer)).map { ViewStack(borrowing: UnsafeMutableRawPointer($0)) } }
+        set { adw_inline_view_switcher_set_stack(opaquePointer, newValue?.opaquePointer) }
     }
 }

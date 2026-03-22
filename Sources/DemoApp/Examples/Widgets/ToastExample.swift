@@ -32,7 +32,7 @@ struct ToastExample: DemoExample {
     func buildWidget() -> Widget {
         let overlay = ToastOverlay()
 
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         let group = PreferencesGroup()
@@ -44,7 +44,7 @@ struct ToastExample: DemoExample {
         row1.title = "Simple Toast"
         row1.subtitle = "A basic text notification"
         let btn1 = Button(label: "Show")
-        btn1.valign = GTK_ALIGN_CENTER
+        btn1.valign = .center
         btn1.onClicked { [overlay] in
             let toast = Toast(title: "Hello from swift-adwaita!")
             overlay.addToast(toast)
@@ -58,7 +58,7 @@ struct ToastExample: DemoExample {
         row2.title = "Toast with Action"
         row2.subtitle = "Includes an undo button"
         let btn2 = Button(label: "Show")
-        btn2.valign = GTK_ALIGN_CENTER
+        btn2.valign = .center
         btn2.onClicked { [overlay] in
             let toast = Toast(title: "File deleted")
             toast.buttonLabel = "Undo"
@@ -78,7 +78,7 @@ struct ToastExample: DemoExample {
         row3.title = "Timed Toast"
         row3.subtitle = "Auto-dismisses after 3 seconds"
         let btn3 = Button(label: "Show")
-        btn3.valign = GTK_ALIGN_CENTER
+        btn3.valign = .center
         btn3.onClicked { [overlay] in
             let toast = Toast(title: "This will disappear in 3 seconds")
             toast.timeout = 3
@@ -93,10 +93,10 @@ struct ToastExample: DemoExample {
         row4.title = "Priority Toast"
         row4.subtitle = "Displayed ahead of other toasts"
         let btn4 = Button(label: "Show")
-        btn4.valign = GTK_ALIGN_CENTER
+        btn4.valign = .center
         btn4.onClicked { [overlay] in
             let toast = Toast(title: "Important notification!")
-            toast.priority = AdwToastPriority(rawValue: 1)!
+            toast.priority = .high
             overlay.addToast(toast)
         }
         row4.addSuffix(btn4)

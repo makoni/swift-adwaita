@@ -33,8 +33,8 @@ public final class ListBox: Widget {
     }
 
     /// Inserts a child at the given position.
-    public func insert(_ child: Widget, position: Int32) {
-        gtk_list_box_insert(opaquePointer, child.widgetPointer, position)
+    public func insert(_ child: Widget, position: Int) {
+        gtk_list_box_insert(opaquePointer, child.widgetPointer, Int32(position))
     }
 
     /// Removes all rows.
@@ -60,15 +60,29 @@ public final class ListBox: Widget {
         set { gtk_list_box_set_activate_on_single_click(opaquePointer, newValue ? 1 : 0) }
     }
 
+    /// Deselects all rows.
+    public func unselectAll() {
+        gtk_list_box_unselect_all(opaquePointer)
+    }
+
+    /// Selects all rows.
+    public func selectAll() {
+        gtk_list_box_select_all(opaquePointer)
+    }
+
     /// Connects to the `row-activated` signal.
     @discardableResult
-    public func onRowActivated(_ handler: @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "row-activated", handler: handler)
+    public func onRowActivated(_ handler: @escaping @MainActor (ListBoxRow) -> Void) -> SignalConnection {
+        SignalHelper.connectPointer(self, signal: "row-activated") { (ptr: OpaquePointer) in
+            handler(ListBoxRow(borrowing: UnsafeMutableRawPointer(ptr)))
+        }
     }
 
     /// Connects to the `row-selected` signal.
     @discardableResult
-    public func onRowSelected(_ handler: @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "row-selected", handler: handler)
+    public func onRowSelected(_ handler: @escaping @MainActor (ListBoxRow) -> Void) -> SignalConnection {
+        SignalHelper.connectPointer(self, signal: "row-selected") { (ptr: OpaquePointer) in
+            handler(ListBoxRow(borrowing: UnsafeMutableRawPointer(ptr)))
+        }
     }
 }

@@ -25,12 +25,12 @@ public final class CSSProvider {
     }
 
     /// Adds this provider to the default display so its styles apply globally.
-    public func addToDefaultDisplay(priority: UInt32 = UInt32(GTK_STYLE_PROVIDER_PRIORITY_APPLICATION)) {
+    public func addToDefaultDisplay(priority: Int = Int(GTK_STYLE_PROVIDER_PRIORITY_APPLICATION)) {
         let display = gdk_display_get_default()
         gtk_style_context_add_provider_for_display(
             display,
             OpaquePointer(provider),
-            priority
+            UInt32(priority)
         )
     }
 

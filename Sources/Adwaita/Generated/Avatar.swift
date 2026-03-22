@@ -11,8 +11,8 @@ public final class Avatar: Widget {
     }
 
     /// Creates a new `Avatar`.
-    public init(size: Int32, text: String?, showInitials: Bool) {
-        let ptr = adw_avatar_new(size, text, showInitials ? 1 : 0)!
+    public init(size: Int, text: String?, showInitials: Bool) {
+        let ptr = adw_avatar_new(Int32(size), text, showInitials ? 1 : 0)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
@@ -29,9 +29,9 @@ public final class Avatar: Widget {
     }
 
     /// The `size` property.
-    public var size: Int32 {
-        get { adw_avatar_get_size(opaquePointer) }
-        set { adw_avatar_set_size(opaquePointer, newValue) }
+    public var size: Int {
+        get { Int(adw_avatar_get_size(opaquePointer)) }
+        set { adw_avatar_set_size(opaquePointer, Int32(newValue)) }
     }
 
     /// The `text` property.

@@ -26,8 +26,8 @@ open class BreakpointBin: Widget {
 
     /// The `current-breakpoint` property (read-only).
     /// - Since: libadwaita 1.4
-    public var currentBreakpoint: OpaquePointer? {
-        adw_breakpoint_bin_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>)
+    public var currentBreakpoint: Breakpoint? {
+        (adw_breakpoint_bin_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>)).map { Breakpoint(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Adds a breakpoint (transfer-full: adds a ref before passing).
@@ -36,8 +36,8 @@ open class BreakpointBin: Widget {
         adw_breakpoint_bin_add_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>, breakpoint.opaquePointer)
     }
 
-    /// Calls `adw_breakpoint_bin_remove_breakpoint`.
-    public func removeBreakpoint(_ breakpoint: OpaquePointer) {
-        adw_breakpoint_bin_remove_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>, breakpoint)
+    /// Removes a breakpoint.
+    public func removeBreakpoint(_ breakpoint: Breakpoint) {
+        adw_breakpoint_bin_remove_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>, breakpoint.opaquePointer)
     }
 }

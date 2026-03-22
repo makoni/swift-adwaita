@@ -32,8 +32,8 @@ struct ToolbarExample: DemoExample {
     toolbarView.content = content
 
     // Bottom bar
-    let bottomBar = Box(orientation: GTK_ORIENTATION_HORIZONTAL, spacing: 6)
-    bottomBar.halign = GTK_ALIGN_CENTER
+    let bottomBar = Box(orientation: .horizontal, spacing: 6)
+    bottomBar.halign = .center
     bottomBar.setMargins(6)
     let bottomLabel = Label("Bottom Toolbar")
     bottomBar.append(bottomLabel)
@@ -66,8 +66,8 @@ struct ToolbarExample: DemoExample {
         toolbarView.content = content
 
         // Bottom bar
-        let bottomBar = Box(orientation: GTK_ORIENTATION_HORIZONTAL, spacing: 6)
-        bottomBar.halign = GTK_ALIGN_CENTER
+        let bottomBar = Box(orientation: .horizontal, spacing: 6)
+        bottomBar.halign = .center
         bottomBar.setMargins(6)
         let bottomLabel = Label("Bottom Toolbar")
         bottomLabel.addCSSClass("dim-label")

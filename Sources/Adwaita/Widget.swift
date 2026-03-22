@@ -66,10 +66,40 @@ open class Widget: GObjectRef {
     }
 
     /// Sets margin on all sides.
-    public func setMargins(_ margin: Int32) {
-        gtk_widget_set_margin_start(widgetPointer, margin)
-        gtk_widget_set_margin_end(widgetPointer, margin)
-        gtk_widget_set_margin_top(widgetPointer, margin)
-        gtk_widget_set_margin_bottom(widgetPointer, margin)
+    public func setMargins(_ margin: Int) {
+        let m = Int32(margin)
+        gtk_widget_set_margin_start(widgetPointer, m)
+        gtk_widget_set_margin_end(widgetPointer, m)
+        gtk_widget_set_margin_top(widgetPointer, m)
+        gtk_widget_set_margin_bottom(widgetPointer, m)
+    }
+
+    /// The tooltip text.
+    public var tooltipText: String? {
+        get { gtk_widget_get_tooltip_text(widgetPointer).map { String(cString: $0) } }
+        set { gtk_widget_set_tooltip_text(widgetPointer, newValue) }
+    }
+
+    /// The tooltip markup.
+    public var tooltipMarkup: String? {
+        get { gtk_widget_get_tooltip_markup(widgetPointer).map { String(cString: $0) } }
+        set { gtk_widget_set_tooltip_markup(widgetPointer, newValue) }
+    }
+
+    /// Sets the minimum size of the widget.
+    public func setSizeRequest(width: Int = -1, height: Int = -1) {
+        gtk_widget_set_size_request(widgetPointer, Int32(width), Int32(height))
+    }
+
+    /// Returns the root widget of the widget tree this widget belongs to.
+    public var root: Widget? {
+        guard let ptr = gtk_widget_get_root(widgetPointer) else { return nil }
+        return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The opacity of the widget, from 0.0 (fully transparent) to 1.0 (fully opaque).
+    public var opacity: Double {
+        get { gtk_widget_get_opacity(widgetPointer) }
+        set { gtk_widget_set_opacity(widgetPointer, newValue) }
     }
 }

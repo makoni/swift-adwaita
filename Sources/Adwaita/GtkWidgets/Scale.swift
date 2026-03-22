@@ -32,9 +32,9 @@ public final class Scale: Widget {
     }
 
     /// The number of decimal places to display.
-    public var digits: Int32 {
-        get { gtk_scale_get_digits(scalePointer) }
-        set { gtk_scale_set_digits(scalePointer, newValue) }
+    public var digits: Int {
+        get { Int(gtk_scale_get_digits(scalePointer)) }
+        set { gtk_scale_set_digits(scalePointer, Int32(newValue)) }
     }
 
     /// Whether the slider has an origin.

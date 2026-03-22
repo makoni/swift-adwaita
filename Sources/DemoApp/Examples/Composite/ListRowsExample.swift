@@ -27,7 +27,7 @@ struct ListRowsExample: DemoExample {
     let btIcon = Image(iconName: "bluetooth-symbolic")
     row2.addPrefix(btIcon)
     let btSwitch = Switch()
-    btSwitch.valign = GTK_ALIGN_CENTER
+    btSwitch.valign = .center
     row2.addSuffix(btSwitch)
     group.add(row2)
 
@@ -50,7 +50,7 @@ struct ListRowsExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         let group = PreferencesGroup()
@@ -62,7 +62,7 @@ struct ListRowsExample: DemoExample {
         row1.title = "Wi-Fi"
         row1.subtitle = "Connected"
         let wifiIcon = Image(iconName: "network-wireless-symbolic")
-        wifiIcon.valign = GTK_ALIGN_CENTER
+        wifiIcon.valign = .center
         row1.addPrefix(wifiIcon)
         group.add(row1)
 
@@ -71,10 +71,10 @@ struct ListRowsExample: DemoExample {
         row2.title = "Bluetooth"
         row2.subtitle = "Disabled"
         let btIcon = Image(iconName: "bluetooth-symbolic")
-        btIcon.valign = GTK_ALIGN_CENTER
+        btIcon.valign = .center
         row2.addPrefix(btIcon)
         let btSwitch = Switch()
-        btSwitch.valign = GTK_ALIGN_CENTER
+        btSwitch.valign = .center
         row2.addSuffix(btSwitch)
         row2.activatableWidget = btSwitch
         group.add(row2)
@@ -84,7 +84,7 @@ struct ListRowsExample: DemoExample {
         expander.title = "Privacy"
         expander.subtitle = "Location, Camera, Microphone"
         let privIcon = Image(iconName: "security-high-symbolic")
-        privIcon.valign = GTK_ALIGN_CENTER
+        privIcon.valign = .center
         expander.addPrefix(privIcon)
 
         let locRow = ActionRow()
@@ -115,7 +115,7 @@ struct ListRowsExample: DemoExample {
         resetRow.subtitle = "This cannot be undone"
         let resetBtn = Button(label: "Reset")
         resetBtn.addCSSClass("destructive-action")
-        resetBtn.valign = GTK_ALIGN_CENTER
+        resetBtn.valign = .center
         resetRow.addSuffix(resetBtn)
         dangerGroup.add(resetRow)
 

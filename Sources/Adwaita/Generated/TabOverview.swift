@@ -87,9 +87,9 @@ public final class TabOverview: Widget {
 
     /// The `view` property.
     /// - Since: libadwaita 1.3
-    public var view: OpaquePointer? {
-        get { adw_tab_overview_get_view(opaquePointer) }
-        set { adw_tab_overview_set_view(opaquePointer, newValue) }
+    public var view: TabView? {
+        get { (adw_tab_overview_get_view(opaquePointer)).map { TabView(borrowing: UnsafeMutableRawPointer($0)) } }
+        set { adw_tab_overview_set_view(opaquePointer, newValue?.opaquePointer) }
     }
 
     /// Connects to the `create-tab` signal.
@@ -100,13 +100,17 @@ public final class TabOverview: Widget {
 
     /// Connects to the `extra-drag-drop` signal.
     @discardableResult
-    public func onExtraDragDrop(_ handler: @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> Bool) -> SignalConnection {
-        SignalHelper.connectPointerGValueReturnBool(self, signal: "extra-drag-drop", handler: handler)
+    public func onExtraDragDrop(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> Bool) -> SignalConnection {
+        SignalHelper.connectPointerGValueReturnBool(self, signal: "extra-drag-drop") { (ptr: OpaquePointer, val: UnsafePointer<GValue>) in
+            handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), val)
+        }
     }
 
     /// Connects to the `extra-drag-value` signal.
     @discardableResult
-    public func onExtraDragValue(_ handler: @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction) -> SignalConnection {
-        SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: "extra-drag-value", handler: handler)
+    public func onExtraDragValue(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> GdkDragAction) -> SignalConnection {
+        SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: "extra-drag-value") { (ptr: OpaquePointer, val: UnsafePointer<GValue>) in
+            handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), val)
+        }
     }
 }

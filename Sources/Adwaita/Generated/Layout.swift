@@ -11,6 +11,11 @@ public final class Layout: GObjectRef {
         super.init(raw: pointer)
     }
 
+    /// Borrows a reference to an existing Layout.
+    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
+        super.init(borrowing: pointer)
+    }
+
     /// Creates a new `Layout`.
     public init(content: Widget) {
         let ptr = adw_layout_new(content.widgetPointer)!

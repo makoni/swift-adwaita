@@ -29,7 +29,7 @@ struct EntryExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         // Basic entry

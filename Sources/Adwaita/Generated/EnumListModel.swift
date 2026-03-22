@@ -23,7 +23,7 @@ public final class EnumListModel: GObjectRef {
 
     /// Calls `adw_enum_list_model_find_position`.
     @discardableResult
-    public func findPosition(_ value: Int32) -> UInt32 {
-        return adw_enum_list_model_find_position(opaquePointer, value)
+    public func findPosition(_ value: Int) -> Int {
+        return Int(adw_enum_list_model_find_position(opaquePointer, Int32(value)))
     }
 }

@@ -13,7 +13,7 @@ func buildApp() {
 
         // -- Content stack --
         let contentStack = Stack()
-        contentStack.transitionType = GTK_STACK_TRANSITION_TYPE_CROSSFADE
+        contentStack.transitionType = .crossfade
         contentStack.transitionDuration = 200
 
         // Welcome / landing page
@@ -38,7 +38,7 @@ func buildApp() {
         )
         let showCodeButton = Button(iconName: "code-symbolic")
         showCodeButton.addCSSClass("flat")
-        gtk_widget_set_tooltip_text(showCodeButton.widgetPointer, "Show Code")
+        showCodeButton.tooltipText = "Show Code"
         showCodeButton.visible = false
 
         showCodeButton.onClicked { [window, contentStack] in
@@ -59,7 +59,7 @@ func buildApp() {
         let compositeExamples = allExamples.filter { $0.category == .composite }
         let widgetExamples = allExamples.filter { $0.category == .widgets }
 
-        let sidebarBox = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 0)
+        let sidebarBox = Box(orientation: .vertical, spacing: 0)
 
         // Composite section
         let compositeHeading = Label("Composite Layouts")
@@ -69,7 +69,7 @@ func buildApp() {
         sidebarBox.append(compositeHeading)
 
         let compositeList = ListBox()
-        compositeList.selectionMode = GTK_SELECTION_SINGLE
+        compositeList.selectionMode = .single
         compositeList.addCSSClass("navigation-sidebar")
         for example in compositeExamples {
             let label = Label(example.name)
@@ -87,7 +87,7 @@ func buildApp() {
         sidebarBox.append(widgetsHeading)
 
         let widgetsList = ListBox()
-        widgetsList.selectionMode = GTK_SELECTION_SINGLE
+        widgetsList.selectionMode = .single
         widgetsList.addCSSClass("navigation-sidebar")
         for example in widgetExamples {
             let label = Label(example.name)
@@ -98,29 +98,29 @@ func buildApp() {
         sidebarBox.append(widgetsList)
 
         // Sidebar selection handlers
-        compositeList.onRowActivated { [contentStack, contentWindowTitle, widgetsList, showCodeButton] rowPtr in
-            let idx = gtk_list_box_row_get_index(UnsafeMutablePointer(rowPtr))
+        compositeList.onRowActivated { [contentStack, contentWindowTitle, widgetsList, showCodeButton] row in
+            let idx = row.index
             guard idx >= 0, Int(idx) < compositeExamples.count else { return }
             let example = compositeExamples[Int(idx)]
             contentStack.visibleChildName = example.id
             contentWindowTitle.title = example.name
             showCodeButton.visible = true
-            gtk_list_box_unselect_all(widgetsList.opaquePointer)
+            widgetsList.unselectAll()
         }
 
-        widgetsList.onRowActivated { [contentStack, contentWindowTitle, compositeList, showCodeButton] rowPtr in
-            let idx = gtk_list_box_row_get_index(UnsafeMutablePointer(rowPtr))
+        widgetsList.onRowActivated { [contentStack, contentWindowTitle, compositeList, showCodeButton] row in
+            let idx = row.index
             guard idx >= 0, Int(idx) < widgetExamples.count else { return }
             let example = widgetExamples[Int(idx)]
             contentStack.visibleChildName = example.id
             contentWindowTitle.title = example.name
             showCodeButton.visible = true
-            gtk_list_box_unselect_all(compositeList.opaquePointer)
+            compositeList.unselectAll()
         }
 
         let sidebarScroll = ScrolledWindow()
         sidebarScroll.child = sidebarBox
-        sidebarScroll.setPolicy(horizontal: GTK_POLICY_NEVER, vertical: GTK_POLICY_AUTOMATIC)
+        sidebarScroll.setPolicy(horizontal: .never, vertical: .automatic)
 
         let sidebarHeaderBar = HeaderBar()
         let sidebarTitle = Label("Examples")

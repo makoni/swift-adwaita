@@ -9,13 +9,13 @@ struct ScaleExample: DemoExample {
 
     let sourceCode = """
     // Basic horizontal scale
-    let scale = Scale(orientation: GTK_ORIENTATION_HORIZONTAL,
+    let scale = Scale(orientation: .horizontal,
                       min: 0, max: 100, step: 1)
     scale.value = 50
     scale.drawValue = true
 
     // Scale with decimal precision
-    let precise = Scale(orientation: GTK_ORIENTATION_HORIZONTAL,
+    let precise = Scale(orientation: .horizontal,
                         min: 0, max: 1, step: 0.01)
     precise.digits = 2
     precise.drawValue = true
@@ -28,7 +28,7 @@ struct ScaleExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         // Basic scale
@@ -39,7 +39,7 @@ struct ScaleExample: DemoExample {
         let valueLabel1 = Label("50")
         valueLabel1.addCSSClass("title-2")
 
-        let scale1 = Scale(orientation: GTK_ORIENTATION_HORIZONTAL, min: 0, max: 100, step: 1)
+        let scale1 = Scale(orientation: .horizontal, min: 0, max: 100, step: 1)
         scale1.value = 50
         scale1.drawValue = false
         scale1.hasOrigin = true
@@ -53,7 +53,7 @@ struct ScaleExample: DemoExample {
 
         let valueRow1 = ActionRow()
         valueRow1.title = "Current Value"
-        valueLabel1.valign = GTK_ALIGN_CENTER
+        valueLabel1.valign = .center
         valueRow1.addSuffix(valueLabel1)
         group1.add(valueRow1)
 
@@ -67,7 +67,7 @@ struct ScaleExample: DemoExample {
         let valueLabel2 = Label("0.50")
         valueLabel2.addCSSClass("title-2")
 
-        let scale2 = Scale(orientation: GTK_ORIENTATION_HORIZONTAL, min: 0, max: 1, step: 0.01)
+        let scale2 = Scale(orientation: .horizontal, min: 0, max: 1, step: 0.01)
         scale2.value = 0.5
         scale2.drawValue = true
         scale2.digits = 2
@@ -84,7 +84,7 @@ struct ScaleExample: DemoExample {
 
         let valueRow2 = ActionRow()
         valueRow2.title = "Current Value"
-        valueLabel2.valign = GTK_ALIGN_CENTER
+        valueLabel2.valign = .center
         valueRow2.addSuffix(valueLabel2)
         group2.add(valueRow2)
 
@@ -95,7 +95,7 @@ struct ScaleExample: DemoExample {
         group3.title = "Scale Options"
         group3.description = "An inverted scale without origin indicator"
 
-        let scale3 = Scale(orientation: GTK_ORIENTATION_HORIZONTAL, min: 0, max: 10, step: 1)
+        let scale3 = Scale(orientation: .horizontal, min: 0, max: 10, step: 1)
         scale3.value = 7
         scale3.drawValue = true
         scale3.digits = 0
@@ -110,7 +110,7 @@ struct ScaleExample: DemoExample {
         invertRow.title = "Inverted"
         invertRow.subtitle = "This scale counts right-to-left"
         let invertIcon = Image(iconName: "object-flip-horizontal-symbolic")
-        invertIcon.valign = GTK_ALIGN_CENTER
+        invertIcon.valign = .center
         invertRow.addSuffix(invertIcon)
         group3.add(invertRow)
 

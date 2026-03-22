@@ -31,14 +31,14 @@ open class Window: GtkWindow {
 
     /// The `current-breakpoint` property (read-only).
     /// - Since: libadwaita 1.4
-    public var currentBreakpoint: OpaquePointer? {
-        adw_window_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwWindow>)
+    public var currentBreakpoint: Breakpoint? {
+        (adw_window_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwWindow>)).map { Breakpoint(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// The `visible-dialog` property (read-only).
     /// - Since: libadwaita 1.5
-    public var visibleDialog: OpaquePointer? {
-        (adw_window_get_visible_dialog(castedPointer() as UnsafeMutablePointer<AdwWindow>)).map { OpaquePointer($0) }
+    public var visibleDialog: Dialog? {
+        (adw_window_get_visible_dialog(castedPointer() as UnsafeMutablePointer<AdwWindow>)).map { Dialog(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Adds a breakpoint (transfer-full: adds a ref before passing).

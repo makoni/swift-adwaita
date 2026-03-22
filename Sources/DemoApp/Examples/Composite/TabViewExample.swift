@@ -15,17 +15,17 @@ struct TabViewExample: DemoExample {
     page1.title = "Documents"
     page1.iconName = "document-open-symbolic"
     let tab1 = tabView.append(page1)
-    adw_tab_page_set_title(tab1, "Documents")
+    tab1.title = "Documents"
 
     let page2 = StatusPage()
     page2.title = "Music"
     page2.iconName = "audio-x-generic-symbolic"
     let tab2 = tabView.append(page2)
-    adw_tab_page_set_title(tab2, "Music")
+    tab2.title = "Music"
 
     // TabBar linked to TabView
     let tabBar = TabBar()
-    tabBar.view = tabView.opaquePointer
+    tabBar.view = tabView
 
     // "New Tab" button as end action
     let addBtn = Button(iconName: "tab-new-symbolic")
@@ -35,7 +35,7 @@ struct TabViewExample: DemoExample {
         page.title = "Tab \\(n)"
         page.iconName = "tab-new-symbolic"
         let tab = tabView.append(page)
-        adw_tab_page_set_title(tab, "Tab \\(n)")
+        tab.title = "Tab \\(n)"
     }
     tabBar.endActionWidget = addBtn
     """
@@ -49,7 +49,7 @@ struct TabViewExample: DemoExample {
         page1.iconName = "document-open-symbolic"
         page1.description = "Your recent documents"
         let tab1 = tabView.append(page1)
-        adw_tab_page_set_title(tab1, "Documents")
+        tab1.title = "Documents"
 
         // Tab 2 — Music
         let page2 = StatusPage()
@@ -57,7 +57,7 @@ struct TabViewExample: DemoExample {
         page2.iconName = "audio-x-generic-symbolic"
         page2.description = "Your music library"
         let tab2 = tabView.append(page2)
-        adw_tab_page_set_title(tab2, "Music")
+        tab2.title = "Music"
 
         // Tab 3 — Pictures
         let page3 = StatusPage()
@@ -65,11 +65,11 @@ struct TabViewExample: DemoExample {
         page3.iconName = "image-x-generic-symbolic"
         page3.description = "Your photo gallery"
         let tab3 = tabView.append(page3)
-        adw_tab_page_set_title(tab3, "Pictures")
+        tab3.title = "Pictures"
 
         // TabBar
         let tabBar = TabBar()
-        tabBar.view = tabView.opaquePointer
+        tabBar.view = tabView
 
         // "New Tab" button
         let addBtn = Button(iconName: "tab-new-symbolic")
@@ -80,7 +80,7 @@ struct TabViewExample: DemoExample {
             newPage.title = "Tab \(n)"
             newPage.iconName = "tab-new-symbolic"
             let tab = tabView.append(newPage)
-            adw_tab_page_set_title(tab, "Tab \(n)")
+            tab.title = "Tab \(n)"
         }
         tabBar.endActionWidget = addBtn
 

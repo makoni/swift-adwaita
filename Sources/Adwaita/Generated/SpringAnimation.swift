@@ -12,12 +12,13 @@ public final class SpringAnimation: Animation {
 
     /// Creates a new `SpringAnimation`.
     ///
-    /// The C function takes ownership of `target` (transfer-full),
-    /// so we add a ref to keep the Swift wrapper valid.
-    /// `springParams` is a boxed type (not a GObject), no ref needed.
-    public init(widget: Widget, from: Double, to: Double, springParams: OpaquePointer, target: AnimationTarget) {
+    /// The C function takes ownership of both `springParams` (transfer-full)
+    /// and `target` (transfer-full), so we add refs/copies to keep the
+    /// Swift wrappers valid.
+    public init(widget: Widget, from: Double, to: Double, springParams: SpringParams, target: AnimationTarget) {
         g_object_ref(target.pointer)
-        let ptr = adw_spring_animation_new(widget.widgetPointer, from, to, springParams, target.opaquePointer)!
+        adw_spring_params_ref(springParams.pointer)
+        let ptr = adw_spring_animation_new(widget.widgetPointer, from, to, springParams.pointer, target.opaquePointer)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
@@ -34,8 +35,8 @@ public final class SpringAnimation: Animation {
     }
 
     /// The `estimated-duration` property (read-only).
-    public var estimatedDuration: UInt32 {
-        adw_spring_animation_get_estimated_duration(opaquePointer)
+    public var estimatedDuration: Int {
+        Int(adw_spring_animation_get_estimated_duration(opaquePointer))
     }
 
     /// The `initial-velocity` property.
@@ -45,9 +46,11 @@ public final class SpringAnimation: Animation {
     }
 
     /// The `spring-params` property.
-    public var springParams: OpaquePointer {
-        get { adw_spring_animation_get_spring_params(opaquePointer) }
-        set { adw_spring_animation_set_spring_params(opaquePointer, newValue) }
+    public var springParams: SpringParams {
+        // getter is transfer-none: we must borrow (ref)
+        get { SpringParams(borrowing: adw_spring_animation_get_spring_params(opaquePointer)) }
+        // setter is transfer-none: C side refs internally
+        set { adw_spring_animation_set_spring_params(opaquePointer, newValue.pointer) }
     }
 
     /// The `value-from` property.
@@ -69,13 +72,13 @@ public final class SpringAnimation: Animation {
 
     /// Calls `adw_spring_animation_calculate_value`.
     @discardableResult
-    public func calculateValue(_ time: UInt32) -> Double {
-        return adw_spring_animation_calculate_value(opaquePointer, time)
+    public func calculateValue(_ time: Int) -> Double {
+        return adw_spring_animation_calculate_value(opaquePointer, UInt32(time))
     }
 
     /// Calls `adw_spring_animation_calculate_velocity`.
     @discardableResult
-    public func calculateVelocity(_ time: UInt32) -> Double {
-        return adw_spring_animation_calculate_velocity(opaquePointer, time)
+    public func calculateVelocity(_ time: Int) -> Double {
+        return adw_spring_animation_calculate_velocity(opaquePointer, UInt32(time))
     }
 }

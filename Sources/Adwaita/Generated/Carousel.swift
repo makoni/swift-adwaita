@@ -10,6 +10,11 @@ public final class Carousel: Widget {
         super.init(raw: pointer)
     }
 
+    /// Borrows a reference to an existing Carousel.
+    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
+        super.init(borrowing: pointer)
+    }
+
     /// Creates a new `Carousel`.
     public init() {
         let ptr = adw_carousel_new()!
@@ -41,8 +46,8 @@ public final class Carousel: Widget {
     }
 
     /// The `n-pages` property (read-only).
-    public var nPages: UInt32 {
-        adw_carousel_get_n_pages(opaquePointer)
+    public var nPages: Int {
+        Int(adw_carousel_get_n_pages(opaquePointer))
     }
 
     /// The `position` property (read-only).
@@ -51,21 +56,23 @@ public final class Carousel: Widget {
     }
 
     /// The `reveal-duration` property.
-    public var revealDuration: UInt32 {
-        get { adw_carousel_get_reveal_duration(opaquePointer) }
-        set { adw_carousel_set_reveal_duration(opaquePointer, newValue) }
+    public var revealDuration: Int {
+        get { Int(adw_carousel_get_reveal_duration(opaquePointer)) }
+        set { adw_carousel_set_reveal_duration(opaquePointer, UInt32(newValue)) }
     }
 
     /// The `scroll-params` property.
-    public var scrollParams: OpaquePointer {
-        get { adw_carousel_get_scroll_params(opaquePointer) }
-        set { adw_carousel_set_scroll_params(opaquePointer, newValue) }
+    public var scrollParams: SpringParams {
+        // getter is transfer-full: we own the returned ref
+        get { SpringParams(raw: adw_carousel_get_scroll_params(opaquePointer)) }
+        // setter is transfer-none: C side refs internally
+        set { adw_carousel_set_scroll_params(opaquePointer, newValue.pointer) }
     }
 
     /// The `spacing` property.
-    public var spacing: UInt32 {
-        get { adw_carousel_get_spacing(opaquePointer) }
-        set { adw_carousel_set_spacing(opaquePointer, newValue) }
+    public var spacing: Int {
+        get { Int(adw_carousel_get_spacing(opaquePointer)) }
+        set { adw_carousel_set_spacing(opaquePointer, UInt32(newValue)) }
     }
 
     /// Calls `adw_carousel_append`.
@@ -75,13 +82,13 @@ public final class Carousel: Widget {
 
     /// Calls `adw_carousel_get_nth_page`.
     @discardableResult
-    public func getNthPage(_ n: UInt32) -> Widget {
-        return Widget(borrowing: UnsafeMutableRawPointer(adw_carousel_get_nth_page(opaquePointer, n)))
+    public func getNthPage(_ n: Int) -> Widget {
+        return Widget(borrowing: UnsafeMutableRawPointer(adw_carousel_get_nth_page(opaquePointer, UInt32(n))))
     }
 
     /// Calls `adw_carousel_insert`.
-    public func insert(_ child: Widget, position: Int32) {
-        adw_carousel_insert(opaquePointer, child.widgetPointer, position)
+    public func insert(_ child: Widget, position: Int) {
+        adw_carousel_insert(opaquePointer, child.widgetPointer, Int32(position))
     }
 
     /// Calls `adw_carousel_prepend`.
@@ -95,8 +102,8 @@ public final class Carousel: Widget {
     }
 
     /// Calls `adw_carousel_reorder`.
-    public func reorder(_ child: Widget, position: Int32) {
-        adw_carousel_reorder(opaquePointer, child.widgetPointer, position)
+    public func reorder(_ child: Widget, position: Int) {
+        adw_carousel_reorder(opaquePointer, child.widgetPointer, Int32(position))
     }
 
     /// Calls `adw_carousel_scroll_to`.
@@ -106,7 +113,9 @@ public final class Carousel: Widget {
 
     /// Connects to the `page-changed` signal.
     @discardableResult
-    public func onPageChanged(_ handler: @escaping @MainActor (UInt32) -> Void) -> SignalConnection {
-        SignalHelper.connectUInt(self, signal: "page-changed", handler: handler)
+    public func onPageChanged(_ handler: @escaping @MainActor (Int) -> Void) -> SignalConnection {
+        SignalHelper.connectUInt(self, signal: "page-changed") { (value: UInt32) in
+            handler(Int(value))
+        }
     }
 }

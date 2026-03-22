@@ -46,7 +46,7 @@ struct AlertDialogExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         let group = PreferencesGroup()
@@ -58,7 +58,7 @@ struct AlertDialogExample: DemoExample {
         row1.title = "Information Dialog"
         row1.subtitle = "A simple informational message"
         let btn1 = Button(label: "Show")
-        btn1.valign = GTK_ALIGN_CENTER
+        btn1.valign = .center
         btn1.onClicked { [btn1] in
             let dialog = AlertDialog(
                 heading: "Information",
@@ -66,8 +66,7 @@ struct AlertDialogExample: DemoExample {
             )
             dialog.addResponse("ok", label: "OK")
             dialog.defaultResponse = "ok"
-            let root = gtk_widget_get_root(btn1.widgetPointer)
-            dialog.present(Widget(borrowing: UnsafeMutableRawPointer(root!)))
+            dialog.present(btn1.root!)
         }
         row1.addSuffix(btn1)
         row1.activatableWidget = btn1
@@ -78,7 +77,7 @@ struct AlertDialogExample: DemoExample {
         row2.title = "Confirmation Dialog"
         row2.subtitle = "Ask the user to save changes"
         let btn2 = Button(label: "Show")
-        btn2.valign = GTK_ALIGN_CENTER
+        btn2.valign = .center
         btn2.onClicked { [btn2] in
             let dialog = AlertDialog(
                 heading: "Save Changes?",
@@ -87,12 +86,11 @@ struct AlertDialogExample: DemoExample {
             dialog.addResponse("cancel", label: "Cancel")
             dialog.addResponse("discard", label: "Discard")
             dialog.addResponse("save", label: "Save")
-            dialog.setResponseAppearance("discard", appearance: AdwResponseAppearance(rawValue: 2)!)
-            dialog.setResponseAppearance("save", appearance: AdwResponseAppearance(rawValue: 1)!)
+            dialog.setResponseAppearance("discard", appearance: .destructive)
+            dialog.setResponseAppearance("save", appearance: .suggested)
             dialog.defaultResponse = "save"
             dialog.closeResponse = "cancel"
-            let root = gtk_widget_get_root(btn2.widgetPointer)
-            dialog.present(Widget(borrowing: UnsafeMutableRawPointer(root!)))
+            dialog.present(btn2.root!)
         }
         row2.addSuffix(btn2)
         row2.activatableWidget = btn2
@@ -103,7 +101,7 @@ struct AlertDialogExample: DemoExample {
         row3.title = "Destructive Dialog"
         row3.subtitle = "Confirm a dangerous action"
         let btn3 = Button(label: "Show")
-        btn3.valign = GTK_ALIGN_CENTER
+        btn3.valign = .center
         btn3.addCSSClass("destructive-action")
         btn3.onClicked { [btn3] in
             let dialog = AlertDialog(
@@ -112,11 +110,10 @@ struct AlertDialogExample: DemoExample {
             )
             dialog.addResponse("cancel", label: "Cancel")
             dialog.addResponse("delete", label: "Delete")
-            dialog.setResponseAppearance("delete", appearance: AdwResponseAppearance(rawValue: 2)!)
+            dialog.setResponseAppearance("delete", appearance: .destructive)
             dialog.defaultResponse = "cancel"
             dialog.closeResponse = "cancel"
-            let root = gtk_widget_get_root(btn3.widgetPointer)
-            dialog.present(Widget(borrowing: UnsafeMutableRawPointer(root!)))
+            dialog.present(btn3.root!)
         }
         row3.addSuffix(btn3)
         row3.activatableWidget = btn3

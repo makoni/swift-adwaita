@@ -12,7 +12,7 @@ struct SwitchExample: DemoExample {
     let row = ActionRow()
     row.title = "Dark Mode"
     let toggle = Switch()
-    toggle.valign = GTK_ALIGN_CENTER
+    toggle.valign = .center
     row.addSuffix(toggle)
     row.activatableWidget = toggle
 
@@ -27,7 +27,7 @@ struct SwitchExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         // Switch group
@@ -38,7 +38,7 @@ struct SwitchExample: DemoExample {
         row1.title = "Dark Mode"
         row1.subtitle = "Use dark appearance"
         let toggle = Switch()
-        toggle.valign = GTK_ALIGN_CENTER
+        toggle.valign = .center
         row1.addSuffix(toggle)
         row1.activatableWidget = toggle
         switchGroup.add(row1)
@@ -61,7 +61,7 @@ struct SwitchExample: DemoExample {
         let checkGroup = PreferencesGroup()
         checkGroup.title = "Check Buttons"
 
-        let checkBox = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 8)
+        let checkBox = Box(orientation: .vertical, spacing: 8)
         checkBox.setMargins(12)
 
         let check1 = CheckButton(label: "Option A")

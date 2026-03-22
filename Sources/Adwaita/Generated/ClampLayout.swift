@@ -17,15 +17,15 @@ public final class ClampLayout: LayoutManager {
     }
 
     /// The `maximum-size` property.
-    public var maximumSize: Int32 {
-        get { adw_clamp_layout_get_maximum_size(opaquePointer) }
-        set { adw_clamp_layout_set_maximum_size(opaquePointer, newValue) }
+    public var maximumSize: Int {
+        get { Int(adw_clamp_layout_get_maximum_size(opaquePointer)) }
+        set { adw_clamp_layout_set_maximum_size(opaquePointer, Int32(newValue)) }
     }
 
     /// The `tightening-threshold` property.
-    public var tighteningThreshold: Int32 {
-        get { adw_clamp_layout_get_tightening_threshold(opaquePointer) }
-        set { adw_clamp_layout_set_tightening_threshold(opaquePointer, newValue) }
+    public var tighteningThreshold: Int {
+        get { Int(adw_clamp_layout_get_tightening_threshold(opaquePointer)) }
+        set { adw_clamp_layout_set_tightening_threshold(opaquePointer, Int32(newValue)) }
     }
 
     /// The `unit` property.

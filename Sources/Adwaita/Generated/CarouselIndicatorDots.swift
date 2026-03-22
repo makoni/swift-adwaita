@@ -17,8 +17,8 @@ public final class CarouselIndicatorDots: Widget {
     }
 
     /// The `carousel` property.
-    public var carousel: OpaquePointer? {
-        get { adw_carousel_indicator_dots_get_carousel(opaquePointer) }
-        set { adw_carousel_indicator_dots_set_carousel(opaquePointer, newValue) }
+    public var carousel: Carousel? {
+        get { (adw_carousel_indicator_dots_get_carousel(opaquePointer)).map { Carousel(borrowing: UnsafeMutableRawPointer($0)) } }
+        set { adw_carousel_indicator_dots_set_carousel(opaquePointer, newValue?.opaquePointer) }
     }
 }

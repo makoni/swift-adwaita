@@ -11,6 +11,11 @@ open class NavigationPage: Widget {
         super.init(raw: pointer)
     }
 
+    /// Borrows a reference to an existing NavigationPage.
+    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
+        super.init(borrowing: pointer)
+    }
+
     /// Creates a new `NavigationPage`.
     public init(child: Widget, title: String) {
         let ptr = adw_navigation_page_new(child.widgetPointer, title)!

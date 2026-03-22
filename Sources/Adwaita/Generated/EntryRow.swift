@@ -54,9 +54,9 @@ open class EntryRow: PreferencesRow {
 
     /// The `max-length` property.
     /// - Since: libadwaita 1.6
-    public var maxLength: Int32 {
-        get { adw_entry_row_get_max_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) }
-        set { adw_entry_row_set_max_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue) }
+    public var maxLength: Int {
+        get { Int(adw_entry_row_get_max_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>)) }
+        set { adw_entry_row_set_max_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, Int32(newValue)) }
     }
 
     /// The `show-apply-button` property.
@@ -68,8 +68,8 @@ open class EntryRow: PreferencesRow {
 
     /// The `text-length` property (read-only).
     /// - Since: libadwaita 1.5
-    public var textLength: UInt32 {
-        adw_entry_row_get_text_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>)
+    public var textLength: Int {
+        Int(adw_entry_row_get_text_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>))
     }
 
     /// Calls `adw_entry_row_add_prefix`.

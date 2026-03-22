@@ -47,8 +47,8 @@ public final class NavigationView: Widget {
 
     /// The `visible-page` property (read-only).
     /// - Since: libadwaita 1.4
-    public var visiblePage: OpaquePointer? {
-        (adw_navigation_view_get_visible_page(opaquePointer)).map { OpaquePointer($0) }
+    public var visiblePage: NavigationPage? {
+        (adw_navigation_view_get_visible_page(opaquePointer)).map { NavigationPage(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// The `visible-page-tag` property (read-only).
@@ -57,10 +57,10 @@ public final class NavigationView: Widget {
         (adw_navigation_view_get_visible_page_tag(opaquePointer)).map { String(cString: $0) }
     }
 
-    /// Calls `adw_navigation_view_find_page`.
+    /// Finds a page by its tag.
     @discardableResult
-    public func findPage(_ tag: String) -> OpaquePointer? {
-        return (adw_navigation_view_find_page(opaquePointer, tag)).map { OpaquePointer($0) }
+    public func findPage(_ tag: String) -> NavigationPage? {
+        return (adw_navigation_view_find_page(opaquePointer, tag)).map { NavigationPage(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Calls `adw_navigation_view_pop`.
@@ -86,8 +86,10 @@ public final class NavigationView: Widget {
 
     /// Connects to the `popped` signal.
     @discardableResult
-    public func onPopped(_ handler: @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "popped", handler: handler)
+    public func onPopped(_ handler: @escaping @MainActor (NavigationPage) -> Void) -> SignalConnection {
+        SignalHelper.connectPointer(self, signal: "popped") { (ptr: OpaquePointer) in
+            handler(NavigationPage(borrowing: UnsafeMutableRawPointer(ptr)))
+        }
     }
 
     /// Connects to the `pushed` signal.

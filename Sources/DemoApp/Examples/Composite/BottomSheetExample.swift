@@ -53,7 +53,7 @@ struct BottomSheetExample: DemoExample {
         let toggleBtn = Button(label: "Open Sheet")
         toggleBtn.addCSSClass("suggested-action")
         toggleBtn.addCSSClass("pill")
-        toggleBtn.halign = GTK_ALIGN_CENTER
+        toggleBtn.halign = .center
         toggleBtn.onClicked { [bottomSheet] in
             bottomSheet.open = !bottomSheet.open
         }
@@ -61,7 +61,7 @@ struct BottomSheetExample: DemoExample {
         bottomSheet.content = content
 
         // Sheet content
-        let sheetBox = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 12)
+        let sheetBox = Box(orientation: .vertical, spacing: 12)
         sheetBox.setMargins(12)
 
         let group = PreferencesGroup()
@@ -87,8 +87,8 @@ struct BottomSheetExample: DemoExample {
         bottomSheet.sheet = sheetBox
 
         // Bottom bar that shows when sheet is closed
-        let bottomBar = Box(orientation: GTK_ORIENTATION_HORIZONTAL, spacing: 6)
-        bottomBar.halign = GTK_ALIGN_CENTER
+        let bottomBar = Box(orientation: .horizontal, spacing: 6)
+        bottomBar.halign = .center
         bottomBar.setMargins(6)
         let barLabel = Label("Swipe up for settings")
         barLabel.addCSSClass("dim-label")

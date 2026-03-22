@@ -10,6 +10,11 @@ public final class TabView: Widget {
         super.init(raw: pointer)
     }
 
+    /// Borrows a reference to an existing TabView.
+    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
+        super.init(borrowing: pointer)
+    }
+
     /// Creates a new `TabView`.
     public init() {
         let ptr = adw_tab_view_new()!
@@ -22,19 +27,19 @@ public final class TabView: Widget {
     }
 
     /// The `n-pages` property (read-only).
-    public var nPages: Int32 {
-        adw_tab_view_get_n_pages(opaquePointer)
+    public var nPages: Int {
+        Int(adw_tab_view_get_n_pages(opaquePointer))
     }
 
     /// The `n-pinned-pages` property (read-only).
-    public var nPinnedPages: Int32 {
-        adw_tab_view_get_n_pinned_pages(opaquePointer)
+    public var nPinnedPages: Int {
+        Int(adw_tab_view_get_n_pinned_pages(opaquePointer))
     }
 
     /// The `selected-page` property.
-    public var selectedPage: OpaquePointer? {
-        get { adw_tab_view_get_selected_page(opaquePointer) }
-        set { adw_tab_view_set_selected_page(opaquePointer, newValue) }
+    public var selectedPage: TabPage? {
+        get { adw_tab_view_get_selected_page(opaquePointer).map { TabPage(borrowing: UnsafeMutableRawPointer($0)) } }
+        set { adw_tab_view_set_selected_page(opaquePointer, newValue?.opaquePointer) }
     }
 
     /// The `shortcuts` property.
@@ -46,8 +51,9 @@ public final class TabView: Widget {
 
     /// Calls `adw_tab_view_add_page`.
     @discardableResult
-    public func addPage(_ child: Widget, parent: OpaquePointer?) -> OpaquePointer {
-        return adw_tab_view_add_page(opaquePointer, child.widgetPointer, parent)
+    public func addPage(_ child: Widget, parent: TabPage?) -> TabPage {
+        let ptr = adw_tab_view_add_page(opaquePointer, child.widgetPointer, parent?.opaquePointer)!
+        return TabPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// Calls `adw_tab_view_add_shortcuts`.
@@ -57,69 +63,75 @@ public final class TabView: Widget {
 
     /// Calls `adw_tab_view_append`.
     @discardableResult
-    public func append(_ child: Widget) -> OpaquePointer {
-        return adw_tab_view_append(opaquePointer, child.widgetPointer)
+    public func append(_ child: Widget) -> TabPage {
+        let ptr = adw_tab_view_append(opaquePointer, child.widgetPointer)!
+        return TabPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// Calls `adw_tab_view_append_pinned`.
     @discardableResult
-    public func appendPinned(_ child: Widget) -> OpaquePointer {
-        return adw_tab_view_append_pinned(opaquePointer, child.widgetPointer)
+    public func appendPinned(_ child: Widget) -> TabPage {
+        let ptr = adw_tab_view_append_pinned(opaquePointer, child.widgetPointer)!
+        return TabPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// Calls `adw_tab_view_close_other_pages`.
-    public func closeOtherPages(_ page: OpaquePointer) {
-        adw_tab_view_close_other_pages(opaquePointer, page)
+    public func closeOtherPages(_ page: TabPage) {
+        adw_tab_view_close_other_pages(opaquePointer, page.opaquePointer)
     }
 
     /// Calls `adw_tab_view_close_page`.
-    public func closePage(_ page: OpaquePointer) {
-        adw_tab_view_close_page(opaquePointer, page)
+    public func closePage(_ page: TabPage) {
+        adw_tab_view_close_page(opaquePointer, page.opaquePointer)
     }
 
     /// Calls `adw_tab_view_close_page_finish`.
-    public func closePageFinish(_ page: OpaquePointer, confirm: Bool) {
-        adw_tab_view_close_page_finish(opaquePointer, page, confirm ? 1 : 0)
+    public func closePageFinish(_ page: TabPage, confirm: Bool) {
+        adw_tab_view_close_page_finish(opaquePointer, page.opaquePointer, confirm ? 1 : 0)
     }
 
     /// Calls `adw_tab_view_close_pages_after`.
-    public func closePagesAfter(_ page: OpaquePointer) {
-        adw_tab_view_close_pages_after(opaquePointer, page)
+    public func closePagesAfter(_ page: TabPage) {
+        adw_tab_view_close_pages_after(opaquePointer, page.opaquePointer)
     }
 
     /// Calls `adw_tab_view_close_pages_before`.
-    public func closePagesBefore(_ page: OpaquePointer) {
-        adw_tab_view_close_pages_before(opaquePointer, page)
+    public func closePagesBefore(_ page: TabPage) {
+        adw_tab_view_close_pages_before(opaquePointer, page.opaquePointer)
     }
 
     /// Calls `adw_tab_view_get_nth_page`.
     @discardableResult
-    public func getNthPage(_ position: Int32) -> OpaquePointer {
-        return adw_tab_view_get_nth_page(opaquePointer, position)
+    public func getNthPage(_ position: Int) -> TabPage {
+        let ptr = adw_tab_view_get_nth_page(opaquePointer, Int32(position))!
+        return TabPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// Calls `adw_tab_view_get_page`.
     @discardableResult
-    public func getPage(_ child: Widget) -> OpaquePointer {
-        return adw_tab_view_get_page(opaquePointer, child.widgetPointer)
+    public func getPage(_ child: Widget) -> TabPage {
+        let ptr = adw_tab_view_get_page(opaquePointer, child.widgetPointer)!
+        return TabPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// Calls `adw_tab_view_get_page_position`.
     @discardableResult
-    public func getPagePosition(_ page: OpaquePointer) -> Int32 {
-        return adw_tab_view_get_page_position(opaquePointer, page)
+    public func getPagePosition(_ page: TabPage) -> Int {
+        return Int(adw_tab_view_get_page_position(opaquePointer, page.opaquePointer))
     }
 
     /// Calls `adw_tab_view_insert`.
     @discardableResult
-    public func insert(_ child: Widget, position: Int32) -> OpaquePointer {
-        return adw_tab_view_insert(opaquePointer, child.widgetPointer, position)
+    public func insert(_ child: Widget, position: Int) -> TabPage {
+        let ptr = adw_tab_view_insert(opaquePointer, child.widgetPointer, Int32(position))!
+        return TabPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// Calls `adw_tab_view_insert_pinned`.
     @discardableResult
-    public func insertPinned(_ child: Widget, position: Int32) -> OpaquePointer {
-        return adw_tab_view_insert_pinned(opaquePointer, child.widgetPointer, position)
+    public func insertPinned(_ child: Widget, position: Int) -> TabPage {
+        let ptr = adw_tab_view_insert_pinned(opaquePointer, child.widgetPointer, Int32(position))!
+        return TabPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// Calls `adw_tab_view_invalidate_thumbnails`.
@@ -129,14 +141,16 @@ public final class TabView: Widget {
 
     /// Calls `adw_tab_view_prepend`.
     @discardableResult
-    public func prepend(_ child: Widget) -> OpaquePointer {
-        return adw_tab_view_prepend(opaquePointer, child.widgetPointer)
+    public func prepend(_ child: Widget) -> TabPage {
+        let ptr = adw_tab_view_prepend(opaquePointer, child.widgetPointer)!
+        return TabPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// Calls `adw_tab_view_prepend_pinned`.
     @discardableResult
-    public func prependPinned(_ child: Widget) -> OpaquePointer {
-        return adw_tab_view_prepend_pinned(opaquePointer, child.widgetPointer)
+    public func prependPinned(_ child: Widget) -> TabPage {
+        let ptr = adw_tab_view_prepend_pinned(opaquePointer, child.widgetPointer)!
+        return TabPage(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// Calls `adw_tab_view_remove_shortcuts`.
@@ -145,28 +159,28 @@ public final class TabView: Widget {
     }
 
     /// Calls `adw_tab_view_reorder_backward`.
-    public func reorderBackward(_ page: OpaquePointer) -> Bool {
-        return adw_tab_view_reorder_backward(opaquePointer, page) != 0
+    public func reorderBackward(_ page: TabPage) -> Bool {
+        return adw_tab_view_reorder_backward(opaquePointer, page.opaquePointer) != 0
     }
 
     /// Calls `adw_tab_view_reorder_first`.
-    public func reorderFirst(_ page: OpaquePointer) -> Bool {
-        return adw_tab_view_reorder_first(opaquePointer, page) != 0
+    public func reorderFirst(_ page: TabPage) -> Bool {
+        return adw_tab_view_reorder_first(opaquePointer, page.opaquePointer) != 0
     }
 
     /// Calls `adw_tab_view_reorder_forward`.
-    public func reorderForward(_ page: OpaquePointer) -> Bool {
-        return adw_tab_view_reorder_forward(opaquePointer, page) != 0
+    public func reorderForward(_ page: TabPage) -> Bool {
+        return adw_tab_view_reorder_forward(opaquePointer, page.opaquePointer) != 0
     }
 
     /// Calls `adw_tab_view_reorder_last`.
-    public func reorderLast(_ page: OpaquePointer) -> Bool {
-        return adw_tab_view_reorder_last(opaquePointer, page) != 0
+    public func reorderLast(_ page: TabPage) -> Bool {
+        return adw_tab_view_reorder_last(opaquePointer, page.opaquePointer) != 0
     }
 
     /// Calls `adw_tab_view_reorder_page`.
-    public func reorderPage(_ page: OpaquePointer, position: Int32) -> Bool {
-        return adw_tab_view_reorder_page(opaquePointer, page, position) != 0
+    public func reorderPage(_ page: TabPage, position: Int) -> Bool {
+        return adw_tab_view_reorder_page(opaquePointer, page.opaquePointer, Int32(position)) != 0
     }
 
     /// Calls `adw_tab_view_select_next_page`.
@@ -180,19 +194,21 @@ public final class TabView: Widget {
     }
 
     /// Calls `adw_tab_view_set_page_pinned`.
-    public func setPagePinned(_ page: OpaquePointer, pinned: Bool) {
-        adw_tab_view_set_page_pinned(opaquePointer, page, pinned ? 1 : 0)
+    public func setPagePinned(_ page: TabPage, pinned: Bool) {
+        adw_tab_view_set_page_pinned(opaquePointer, page.opaquePointer, pinned ? 1 : 0)
     }
 
     /// Calls `adw_tab_view_transfer_page`.
-    public func transferPage(_ page: OpaquePointer, otherView: OpaquePointer, position: Int32) {
-        adw_tab_view_transfer_page(opaquePointer, page, otherView, position)
+    public func transferPage(_ page: TabPage, otherView: TabView, position: Int) {
+        adw_tab_view_transfer_page(opaquePointer, page.opaquePointer, otherView.opaquePointer, Int32(position))
     }
 
     /// Connects to the `close-page` signal.
     @discardableResult
-    public func onClosePage(_ handler: @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "close-page", handler: handler)
+    public func onClosePage(_ handler: @escaping @MainActor (TabPage) -> Void) -> SignalConnection {
+        SignalHelper.connectPointer(self, signal: "close-page") { (ptr: OpaquePointer) in
+            handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)))
+        }
     }
 
     /// Connects to the `create-window` signal.
@@ -203,31 +219,41 @@ public final class TabView: Widget {
 
     /// Connects to the `indicator-activated` signal.
     @discardableResult
-    public func onIndicatorActivated(_ handler: @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "indicator-activated", handler: handler)
+    public func onIndicatorActivated(_ handler: @escaping @MainActor (TabPage) -> Void) -> SignalConnection {
+        SignalHelper.connectPointer(self, signal: "indicator-activated") { (ptr: OpaquePointer) in
+            handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)))
+        }
     }
 
     /// Connects to the `page-attached` signal.
     @discardableResult
-    public func onPageAttached(_ handler: @escaping @MainActor (OpaquePointer, Int32) -> Void) -> SignalConnection {
-        SignalHelper.connectPointerInt(self, signal: "page-attached", handler: handler)
+    public func onPageAttached(_ handler: @escaping @MainActor (TabPage, Int) -> Void) -> SignalConnection {
+        SignalHelper.connectPointerInt(self, signal: "page-attached") { (ptr: OpaquePointer, pos: Int32) in
+            handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), Int(pos))
+        }
     }
 
     /// Connects to the `page-detached` signal.
     @discardableResult
-    public func onPageDetached(_ handler: @escaping @MainActor (OpaquePointer, Int32) -> Void) -> SignalConnection {
-        SignalHelper.connectPointerInt(self, signal: "page-detached", handler: handler)
+    public func onPageDetached(_ handler: @escaping @MainActor (TabPage, Int) -> Void) -> SignalConnection {
+        SignalHelper.connectPointerInt(self, signal: "page-detached") { (ptr: OpaquePointer, pos: Int32) in
+            handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), Int(pos))
+        }
     }
 
     /// Connects to the `page-reordered` signal.
     @discardableResult
-    public func onPageReordered(_ handler: @escaping @MainActor (OpaquePointer, Int32) -> Void) -> SignalConnection {
-        SignalHelper.connectPointerInt(self, signal: "page-reordered", handler: handler)
+    public func onPageReordered(_ handler: @escaping @MainActor (TabPage, Int) -> Void) -> SignalConnection {
+        SignalHelper.connectPointerInt(self, signal: "page-reordered") { (ptr: OpaquePointer, pos: Int32) in
+            handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), Int(pos))
+        }
     }
 
     /// Connects to the `setup-menu` signal.
     @discardableResult
-    public func onSetupMenu(_ handler: @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "setup-menu", handler: handler)
+    public func onSetupMenu(_ handler: @escaping @MainActor (TabPage) -> Void) -> SignalConnection {
+        SignalHelper.connectPointer(self, signal: "setup-menu") { (ptr: OpaquePointer) in
+            handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)))
+        }
     }
 }

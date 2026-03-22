@@ -44,14 +44,14 @@ struct LabelExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         // Typography group
         let typoGroup = PreferencesGroup()
         typoGroup.title = "Typography"
 
-        let typoBox = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 12)
+        let typoBox = Box(orientation: .vertical, spacing: 12)
         typoBox.setMargins(12)
 
         let title1 = Label("Title 1")
@@ -95,7 +95,7 @@ struct LabelExample: DemoExample {
         let featGroup = PreferencesGroup()
         featGroup.title = "Features"
 
-        let featBox = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 12)
+        let featBox = Box(orientation: .vertical, spacing: 12)
         featBox.setMargins(12)
 
         let wrapping = Label("This is a long paragraph of text that demonstrates word wrapping. When the text exceeds the available width, it wraps to the next line automatically, which is useful for displaying descriptions and multi-line content.")
@@ -103,7 +103,7 @@ struct LabelExample: DemoExample {
         wrapping.xalign = 0
         featBox.append(wrapping)
 
-        let sep = Separator(orientation: GTK_ORIENTATION_HORIZONTAL)
+        let sep = Separator(orientation: .horizontal)
         featBox.append(sep)
 
         let selectable = Label("This text is selectable — try selecting and copying it")

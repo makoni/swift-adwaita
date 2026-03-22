@@ -19,9 +19,9 @@ public final class TabButton: Widget {
 
     /// The `view` property.
     /// - Since: libadwaita 1.3
-    public var view: OpaquePointer? {
-        get { adw_tab_button_get_view(opaquePointer) }
-        set { adw_tab_button_set_view(opaquePointer, newValue) }
+    public var view: TabView? {
+        get { (adw_tab_button_get_view(opaquePointer)).map { TabView(borrowing: UnsafeMutableRawPointer($0)) } }
+        set { adw_tab_button_set_view(opaquePointer, newValue?.opaquePointer) }
     }
 
     /// Connects to the `activate` signal.

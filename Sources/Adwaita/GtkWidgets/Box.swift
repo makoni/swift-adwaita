@@ -11,8 +11,8 @@ public final class Box: Widget {
     /// - Parameters:
     ///   - orientation: Whether to lay out children horizontally or vertically.
     ///   - spacing: The space (in pixels) between children.
-    public init(orientation: GtkOrientation = GTK_ORIENTATION_VERTICAL, spacing: Int32 = 0) {
-        let ptr = gtk_box_new(orientation, spacing)!
+    public init(orientation: GtkOrientation = GTK_ORIENTATION_VERTICAL, spacing: Int = 0) {
+        let ptr = gtk_box_new(orientation, Int32(spacing))!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
@@ -41,9 +41,9 @@ public final class Box: Widget {
     }
 
     /// The spacing between children.
-    public var spacing: Int32 {
-        get { gtk_box_get_spacing(castedPointer()) }
-        set { gtk_box_set_spacing(castedPointer(), newValue) }
+    public var spacing: Int {
+        get { Int(gtk_box_get_spacing(castedPointer())) }
+        set { gtk_box_set_spacing(castedPointer(), Int32(newValue)) }
     }
 
     /// Whether children are laid out homogeneously.

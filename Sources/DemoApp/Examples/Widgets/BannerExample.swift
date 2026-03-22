@@ -25,7 +25,7 @@ struct BannerExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let outerBox = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 0)
+        let outerBox = Box(orientation: .vertical, spacing: 0)
 
         let banner = Banner(title: "New update available")
         banner.buttonLabel = "Update Now"
@@ -37,7 +37,7 @@ struct BannerExample: DemoExample {
             banner.buttonLabel = nil
         }
 
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         let group = PreferencesGroup()
@@ -47,7 +47,7 @@ struct BannerExample: DemoExample {
         toggleRow.title = "Toggle Banner"
         toggleRow.subtitle = "Show or hide the banner above"
         let toggleBtn = Button(label: "Toggle")
-        toggleBtn.valign = GTK_ALIGN_CENTER
+        toggleBtn.valign = .center
         toggleBtn.onClicked {
             banner.revealed = !banner.revealed
         }
@@ -58,7 +58,7 @@ struct BannerExample: DemoExample {
         resetRow.title = "Reset Banner"
         resetRow.subtitle = "Restore original text and button"
         let resetBtn = Button(label: "Reset")
-        resetBtn.valign = GTK_ALIGN_CENTER
+        resetBtn.valign = .center
         resetBtn.onClicked {
             banner.title = "New update available"
             banner.buttonLabel = "Update Now"

@@ -31,9 +31,9 @@ public final class Application: GObjectRef {
     ///
     /// - Returns: The exit status.
     @discardableResult
-    public func run() -> Int32 {
+    public func run() -> Int {
         let gApp: UnsafeMutablePointer<GApplication> = castedPointer()
-        return g_application_run(gApp, 0, nil)
+        return Int(g_application_run(gApp, 0, nil))
     }
 
     /// Connects a handler to the `activate` signal.

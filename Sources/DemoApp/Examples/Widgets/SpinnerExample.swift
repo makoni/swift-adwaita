@@ -13,7 +13,7 @@ struct SpinnerExample: DemoExample {
 
     // Larger spinner via size request
     let bigSpinner = Spinner()
-    gtk_widget_set_size_request(bigSpinner.widgetPointer, 48, 48)
+    bigSpinner.setSizeRequest(width: 48, height: 48)
 
     // Spinner can be shown/hidden with .visible
     spinner.visible = true   // show
@@ -21,26 +21,26 @@ struct SpinnerExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         let group = PreferencesGroup()
         group.title = "Spinners"
         group.description = "AdwSpinner is always animating when visible"
 
-        let spinnerBox = Box(orientation: GTK_ORIENTATION_HORIZONTAL, spacing: 32)
-        spinnerBox.halign = GTK_ALIGN_CENTER
+        let spinnerBox = Box(orientation: .horizontal, spacing: 32)
+        spinnerBox.halign = .center
         spinnerBox.setMargins(24)
 
         let spinner1 = Spinner()
         spinnerBox.append(spinner1)
 
         let spinner2 = Spinner()
-        gtk_widget_set_size_request(spinner2.widgetPointer, 48, 48)
+        spinner2.setSizeRequest(width: 48, height: 48)
         spinnerBox.append(spinner2)
 
         let spinner3 = Spinner()
-        gtk_widget_set_size_request(spinner3.widgetPointer, 64, 64)
+        spinner3.setSizeRequest(width: 64, height: 64)
         spinnerBox.append(spinner3)
 
         group.add(spinnerBox)
@@ -54,7 +54,7 @@ struct SpinnerExample: DemoExample {
         toggleRow.title = "Toggle Visibility"
         toggleRow.subtitle = "Show or hide the spinners"
         let toggleBtn = Button(label: "Toggle")
-        toggleBtn.valign = GTK_ALIGN_CENTER
+        toggleBtn.valign = .center
         let s1 = spinner1
         let s2 = spinner2
         let s3 = spinner3

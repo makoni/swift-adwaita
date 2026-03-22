@@ -9,7 +9,7 @@ struct RevealerExample: DemoExample {
 
     let sourceCode = """
     let revealer = Revealer()
-    revealer.transitionType = GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN
+    revealer.transitionType = .slideDown
     revealer.transitionDuration = 300
     revealer.revealChild = true
 
@@ -24,7 +24,7 @@ struct RevealerExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         // Slide down revealer
@@ -32,7 +32,7 @@ struct RevealerExample: DemoExample {
         group1.title = "Slide Down"
 
         let revealerDown = Revealer()
-        revealerDown.transitionType = GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN
+        revealerDown.transitionType = .slideDown
         revealerDown.transitionDuration = 300
         revealerDown.revealChild = true
 
@@ -47,7 +47,7 @@ struct RevealerExample: DemoExample {
 
         let rdRef = revealerDown
         let toggleDown = Button(label: "Toggle Slide Down")
-        toggleDown.halign = GTK_ALIGN_CENTER
+        toggleDown.halign = .center
         toggleDown.addCSSClass("pill")
         toggleDown.onClicked {
             rdRef.revealChild = !rdRef.revealChild
@@ -60,7 +60,7 @@ struct RevealerExample: DemoExample {
         group2.title = "Crossfade"
 
         let revealerFade = Revealer()
-        revealerFade.transitionType = GTK_REVEALER_TRANSITION_TYPE_CROSSFADE
+        revealerFade.transitionType = .crossfade
         revealerFade.transitionDuration = 500
         revealerFade.revealChild = true
 
@@ -73,7 +73,7 @@ struct RevealerExample: DemoExample {
 
         let rfRef = revealerFade
         let toggleFade = Button(label: "Toggle Crossfade")
-        toggleFade.halign = GTK_ALIGN_CENTER
+        toggleFade.halign = .center
         toggleFade.addCSSClass("pill")
         toggleFade.onClicked {
             rfRef.revealChild = !rfRef.revealChild
@@ -86,7 +86,7 @@ struct RevealerExample: DemoExample {
         group3.title = "Slide Left"
 
         let revealerLeft = Revealer()
-        revealerLeft.transitionType = GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT
+        revealerLeft.transitionType = .slideLeft
         revealerLeft.transitionDuration = 300
         revealerLeft.revealChild = true
 
@@ -97,7 +97,7 @@ struct RevealerExample: DemoExample {
 
         let rlRef = revealerLeft
         let toggleLeft = Button(label: "Toggle Slide Left")
-        toggleLeft.halign = GTK_ALIGN_CENTER
+        toggleLeft.halign = .center
         toggleLeft.addCSSClass("pill")
         toggleLeft.onClicked {
             rlRef.revealChild = !rlRef.revealChild

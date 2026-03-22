@@ -26,9 +26,9 @@ public final class SpinRow: ActionRow {
 
     /// The `digits` property.
     /// - Since: libadwaita 1.4
-    public var digits: UInt32 {
-        get { adw_spin_row_get_digits(opaquePointer) }
-        set { adw_spin_row_set_digits(opaquePointer, newValue) }
+    public var digits: Int {
+        get { Int(adw_spin_row_get_digits(opaquePointer)) }
+        set { adw_spin_row_set_digits(opaquePointer, UInt32(newValue)) }
     }
 
     /// The `numeric` property.

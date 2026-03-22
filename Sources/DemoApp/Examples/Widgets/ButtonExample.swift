@@ -39,7 +39,7 @@ struct ButtonExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 24)
+        let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         // Basic buttons
@@ -50,7 +50,7 @@ struct ButtonExample: DemoExample {
         row1.title = "Standard Button"
         row1.subtitle = "A simple labeled button"
         let btn = Button(label: "Click Me")
-        btn.valign = GTK_ALIGN_CENTER
+        btn.valign = .center
         btn.onClicked { [btn] in
             btn.label = "Clicked!"
         }
@@ -62,7 +62,7 @@ struct ButtonExample: DemoExample {
         row2.title = "Icon Button"
         row2.subtitle = "Flat style with icon"
         let iconBtn = Button(iconName: "edit-copy-symbolic")
-        iconBtn.valign = GTK_ALIGN_CENTER
+        iconBtn.valign = .center
         iconBtn.addCSSClass("flat")
         row2.addSuffix(iconBtn)
         basicGroup.add(row2)
@@ -70,7 +70,7 @@ struct ButtonExample: DemoExample {
         let row3 = ActionRow()
         row3.title = "Toggle Button"
         let toggleBtn = ToggleButton(label: "Toggle")
-        toggleBtn.valign = GTK_ALIGN_CENTER
+        toggleBtn.valign = .center
         row3.addSuffix(toggleBtn)
         basicGroup.add(row3)
 
@@ -87,7 +87,7 @@ struct ButtonExample: DemoExample {
         bc.label = "Open File"
         let sugBtn = Button()
         sugBtn.child = bc
-        sugBtn.valign = GTK_ALIGN_CENTER
+        sugBtn.valign = .center
         sugBtn.addCSSClass("suggested-action")
         row4.addSuffix(sugBtn)
         styledGroup.add(row4)
@@ -95,7 +95,7 @@ struct ButtonExample: DemoExample {
         let row5 = ActionRow()
         row5.title = "Destructive Action"
         let delBtn = Button(label: "Delete")
-        delBtn.valign = GTK_ALIGN_CENTER
+        delBtn.valign = .center
         delBtn.addCSSClass("destructive-action")
         row5.addSuffix(delBtn)
         styledGroup.add(row5)
@@ -103,7 +103,7 @@ struct ButtonExample: DemoExample {
         let row6 = ActionRow()
         row6.title = "Pill Button"
         let pillBtn = Button(label: "Pill Shape")
-        pillBtn.valign = GTK_ALIGN_CENTER
+        pillBtn.valign = .center
         pillBtn.addCSSClass("pill")
         row6.addSuffix(pillBtn)
         styledGroup.add(row6)

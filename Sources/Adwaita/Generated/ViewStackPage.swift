@@ -6,9 +6,9 @@ import GObjectSupport
 public final class ViewStackPage: GObjectRef {
 
     /// The `badge-number` property.
-    public var badgeNumber: UInt32 {
-        get { adw_view_stack_page_get_badge_number(opaquePointer) }
-        set { adw_view_stack_page_set_badge_number(opaquePointer, newValue) }
+    public var badgeNumber: Int {
+        get { Int(adw_view_stack_page_get_badge_number(opaquePointer)) }
+        set { adw_view_stack_page_set_badge_number(opaquePointer, UInt32(newValue)) }
     }
 
     /// The `child` property (read-only).

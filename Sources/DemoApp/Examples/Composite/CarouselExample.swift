@@ -31,7 +31,7 @@ struct CarouselExample: DemoExample {
 
     // Indicator dots
     let dots = CarouselIndicatorDots()
-    dots.carousel = carousel.opaquePointer
+    dots.carousel = carousel
     """
 
     func buildWidget() -> Widget {
@@ -69,7 +69,7 @@ struct CarouselExample: DemoExample {
 
         // Indicator dots
         let dots = CarouselIndicatorDots()
-        dots.carousel = carousel.opaquePointer
+        dots.carousel = carousel
 
         // Navigation buttons
         let prevBtn = Button(iconName: "go-previous-symbolic")
@@ -77,7 +77,7 @@ struct CarouselExample: DemoExample {
         prevBtn.onClicked { [carousel] in
             let pos = carousel.position
             if pos > 0 {
-                let target = UInt32(max(0, Int(pos) - 1))
+                let target = max(0, Int(pos) - 1)
                 let targetPage = carousel.getNthPage(target)
                 carousel.scrollTo(targetPage, animate: true)
             }
@@ -88,20 +88,20 @@ struct CarouselExample: DemoExample {
         nextBtn.onClicked { [carousel] in
             let pos = carousel.position
             let n = carousel.nPages
-            if UInt32(pos) < n - 1 {
-                let target = UInt32(min(Int(pos) + 1, Int(n) - 1))
+            if Int(pos) < n - 1 {
+                let target = min(Int(pos) + 1, n - 1)
                 let targetPage = carousel.getNthPage(target)
                 carousel.scrollTo(targetPage, animate: true)
             }
         }
 
-        let navBox = Box(orientation: GTK_ORIENTATION_HORIZONTAL, spacing: 12)
-        navBox.halign = GTK_ALIGN_CENTER
+        let navBox = Box(orientation: .horizontal, spacing: 12)
+        navBox.halign = .center
         navBox.append(prevBtn)
         navBox.append(dots)
         navBox.append(nextBtn)
 
-        let outerBox = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 0)
+        let outerBox = Box(orientation: .vertical, spacing: 0)
         carousel.vexpand = true
         outerBox.append(carousel)
         navBox.setMargins(12)

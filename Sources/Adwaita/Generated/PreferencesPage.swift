@@ -18,9 +18,9 @@ open class PreferencesPage: Widget {
 
     /// The `banner` property.
     /// - Since: libadwaita 1.7
-    public var banner: OpaquePointer? {
-        get { adw_preferences_page_get_banner(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>) }
-        set { adw_preferences_page_set_banner(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>, newValue) }
+    public var banner: Banner? {
+        get { (adw_preferences_page_get_banner(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>)).map { Banner(borrowing: UnsafeMutableRawPointer($0)) } }
+        set { adw_preferences_page_set_banner(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>, newValue?.opaquePointer) }
     }
 
     /// The `description` property.
@@ -71,10 +71,10 @@ open class PreferencesPage: Widget {
         adw_preferences_page_remove(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>, group.castedPointer())
     }
 
-    /// Calls `adw_preferences_page_get_group`.
+    /// Returns the preferences group at the given index.
     @discardableResult
-    public func getGroup(_ index: UInt32) -> OpaquePointer? {
-        return (adw_preferences_page_get_group(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>, index)).map { OpaquePointer($0) }
+    public func getGroup(_ index: Int) -> PreferencesGroup? {
+        return (adw_preferences_page_get_group(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>, UInt32(index))).map { PreferencesGroup(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Calls `adw_preferences_page_scroll_to_top`.

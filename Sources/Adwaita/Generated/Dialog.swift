@@ -11,6 +11,11 @@ open class Dialog: Widget {
         super.init(raw: pointer)
     }
 
+    /// Borrows a reference to an existing Dialog.
+    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
+        super.init(borrowing: pointer)
+    }
+
     /// Creates a new `Dialog`.
     public init() {
         let ptr = adw_dialog_new()!
@@ -33,22 +38,22 @@ open class Dialog: Widget {
 
     /// The `content-height` property.
     /// - Since: libadwaita 1.5
-    public var contentHeight: Int32 {
-        get { adw_dialog_get_content_height(castedPointer() as UnsafeMutablePointer<AdwDialog>) }
-        set { adw_dialog_set_content_height(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue) }
+    public var contentHeight: Int {
+        get { Int(adw_dialog_get_content_height(castedPointer() as UnsafeMutablePointer<AdwDialog>)) }
+        set { adw_dialog_set_content_height(castedPointer() as UnsafeMutablePointer<AdwDialog>, Int32(newValue)) }
     }
 
     /// The `content-width` property.
     /// - Since: libadwaita 1.5
-    public var contentWidth: Int32 {
-        get { adw_dialog_get_content_width(castedPointer() as UnsafeMutablePointer<AdwDialog>) }
-        set { adw_dialog_set_content_width(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue) }
+    public var contentWidth: Int {
+        get { Int(adw_dialog_get_content_width(castedPointer() as UnsafeMutablePointer<AdwDialog>)) }
+        set { adw_dialog_set_content_width(castedPointer() as UnsafeMutablePointer<AdwDialog>, Int32(newValue)) }
     }
 
     /// The `current-breakpoint` property (read-only).
     /// - Since: libadwaita 1.5
-    public var currentBreakpoint: OpaquePointer? {
-        adw_dialog_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwDialog>)
+    public var currentBreakpoint: Breakpoint? {
+        (adw_dialog_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwDialog>)).map { Breakpoint(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// The `default-widget` property.

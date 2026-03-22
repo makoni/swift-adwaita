@@ -27,15 +27,15 @@ public final class ScrolledWindow: Widget {
     }
 
     /// The minimum content width.
-    public var minContentWidth: Int32 {
-        get { gtk_scrolled_window_get_min_content_width(opaquePointer) }
-        set { gtk_scrolled_window_set_min_content_width(opaquePointer, newValue) }
+    public var minContentWidth: Int {
+        get { Int(gtk_scrolled_window_get_min_content_width(opaquePointer)) }
+        set { gtk_scrolled_window_set_min_content_width(opaquePointer, Int32(newValue)) }
     }
 
     /// The minimum content height.
-    public var minContentHeight: Int32 {
-        get { gtk_scrolled_window_get_min_content_height(opaquePointer) }
-        set { gtk_scrolled_window_set_min_content_height(opaquePointer, newValue) }
+    public var minContentHeight: Int {
+        get { Int(gtk_scrolled_window_get_min_content_height(opaquePointer)) }
+        set { gtk_scrolled_window_set_min_content_height(opaquePointer, Int32(newValue)) }
     }
 
     /// Sets the scrollbar policy for both axes.

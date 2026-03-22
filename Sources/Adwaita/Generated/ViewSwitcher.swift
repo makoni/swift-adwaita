@@ -23,8 +23,8 @@ public final class ViewSwitcher: Widget {
     }
 
     /// The `stack` property.
-    public var stack: OpaquePointer? {
-        get { adw_view_switcher_get_stack(opaquePointer) }
-        set { adw_view_switcher_set_stack(opaquePointer, newValue) }
+    public var stack: ViewStack? {
+        get { (adw_view_switcher_get_stack(opaquePointer)).map { ViewStack(borrowing: UnsafeMutableRawPointer($0)) } }
+        set { adw_view_switcher_set_stack(opaquePointer, newValue?.opaquePointer) }
     }
 }

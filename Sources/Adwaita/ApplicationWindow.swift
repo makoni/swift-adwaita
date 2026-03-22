@@ -44,30 +44,30 @@ public final class ApplicationWindow: Widget {
     }
 
     /// The default width of the window.
-    public var defaultWidth: Int32 {
+    public var defaultWidth: Int {
         get {
             var w: Int32 = 0
             gtk_window_get_default_size(castedPointer(), &w, nil)
-            return w
+            return Int(w)
         }
         set {
             var h: Int32 = 0
             gtk_window_get_default_size(castedPointer(), nil, &h)
-            gtk_window_set_default_size(castedPointer(), newValue, h)
+            gtk_window_set_default_size(castedPointer(), Int32(newValue), h)
         }
     }
 
     /// The default height of the window.
-    public var defaultHeight: Int32 {
+    public var defaultHeight: Int {
         get {
             var h: Int32 = 0
             gtk_window_get_default_size(castedPointer(), nil, &h)
-            return h
+            return Int(h)
         }
         set {
             var w: Int32 = 0
             gtk_window_get_default_size(castedPointer(), &w, nil)
-            gtk_window_set_default_size(castedPointer(), w, newValue)
+            gtk_window_set_default_size(castedPointer(), w, Int32(newValue))
         }
     }
 

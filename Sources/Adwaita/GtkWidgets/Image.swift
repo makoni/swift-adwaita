@@ -38,8 +38,8 @@ public final class Image: Widget {
     }
 
     /// The pixel size for icon display.
-    public var pixelSize: Int32 {
-        get { gtk_image_get_pixel_size(opaquePointer) }
-        set { gtk_image_set_pixel_size(opaquePointer, newValue) }
+    public var pixelSize: Int {
+        get { Int(gtk_image_get_pixel_size(opaquePointer)) }
+        set { gtk_image_set_pixel_size(opaquePointer, Int32(newValue)) }
     }
 }

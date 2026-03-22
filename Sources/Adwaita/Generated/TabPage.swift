@@ -50,8 +50,8 @@ public final class TabPage: GObjectRef {
     }
 
     /// The `parent` property (read-only).
-    public var parent: OpaquePointer? {
-        adw_tab_page_get_parent(opaquePointer)
+    public var parent: TabPage? {
+        (adw_tab_page_get_parent(opaquePointer)).map { TabPage(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// The `pinned` property (read-only).

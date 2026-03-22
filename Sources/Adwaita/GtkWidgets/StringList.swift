@@ -34,21 +34,21 @@ public final class StringList: GObjectRef {
     }
 
     /// Removes the string at the given position.
-    public func remove(_ position: UInt32) {
-        gtk_string_list_remove(opaquePointer, position)
+    public func remove(_ position: Int) {
+        gtk_string_list_remove(opaquePointer, UInt32(position))
     }
 
     /// Returns the string at the given position.
-    public func getString(_ position: UInt32) -> String? {
-        guard let cStr = gtk_string_list_get_string(opaquePointer, position) else {
+    public func getString(_ position: Int) -> String? {
+        guard let cStr = gtk_string_list_get_string(opaquePointer, UInt32(position)) else {
             return nil
         }
         return String(cString: cStr)
     }
 
     /// The number of items in the list.
-    public var count: UInt32 {
-        g_list_model_get_n_items(OpaquePointer(pointer))
+    public var count: Int {
+        Int(g_list_model_get_n_items(OpaquePointer(pointer)))
     }
 
     /// The underlying GListModel pointer for use with ComboRow etc.

@@ -45,13 +45,13 @@ public final class GMenuRef: GObjectRef {
     }
 
     /// Inserts a labeled item at the given position.
-    public func insert(_ position: Int32, label: String, action: String?) {
-        g_menu_insert(menuPointer, position, label, action)
+    public func insert(_ position: Int, label: String, action: String?) {
+        g_menu_insert(menuPointer, Int32(position), label, action)
     }
 
     /// Removes the item at the given position.
-    public func remove(_ position: Int32) {
-        g_menu_remove(menuPointer, position)
+    public func remove(_ position: Int) {
+        g_menu_remove(menuPointer, Int32(position))
     }
 
     /// Removes all items from the menu.
