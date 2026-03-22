@@ -3450,4 +3450,46 @@ func ensureAdwInit() {
         row.addRow(child)
         // No crash = success
     }
+
+    // MARK: - Batch 11: GtkWindow properties
+
+    @Test @MainActor func windowProperties() {
+        ensureAdwInit()
+        let win = Window()
+        win.title = "Test"
+        #expect(win.title == "Test")
+        win.defaultWidth = 400
+        win.defaultHeight = 300
+        #expect(win.defaultWidth == 400)
+        #expect(win.defaultHeight == 300)
+    }
+
+    @Test @MainActor func windowModal() {
+        ensureAdwInit()
+        let win = Window()
+        win.modal = true
+        #expect(win.modal == true)
+        win.modal = false
+        #expect(win.modal == false)
+    }
+
+    // MARK: - NavigationSplitView sidebar/content
+
+    @Test @MainActor func navigationSplitViewSetSidebarContent() {
+        ensureAdwInit()
+        let splitView = NavigationSplitView()
+        let sidebar = NavigationPage(child: Label("Side"), title: "Side")
+        let content = NavigationPage(child: Label("Main"), title: "Main")
+        splitView.setSidebar(sidebar)
+        splitView.setContent(content)
+        // No crash = success
+    }
+
+    @Test @MainActor func navigationSplitViewProperties() {
+        ensureAdwInit()
+        let splitView = NavigationSplitView()
+        splitView.sidebarWidthFraction = 0.4
+        #expect(splitView.sidebarWidthFraction > 0.39 && splitView.sidebarWidthFraction < 0.41)
+    }
+
 }

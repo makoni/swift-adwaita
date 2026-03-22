@@ -6,6 +6,7 @@ struct ToolbarExample: DemoExample {
     let name = "Toolbar View"
     let id = "toolbar"
     let category: ExampleCategory = .composite
+    let opensInWindow = true
 
     let sourceCode = """
     let toolbarView = ToolbarView()

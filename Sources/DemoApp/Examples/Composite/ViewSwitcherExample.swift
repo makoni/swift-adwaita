@@ -6,6 +6,7 @@ struct ViewSwitcherExample: DemoExample {
     let name = "View Switcher"
     let id = "viewswitcher"
     let category: ExampleCategory = .composite
+    let opensInWindow = true
 
     let sourceCode = """
     let viewStack = ViewStack()

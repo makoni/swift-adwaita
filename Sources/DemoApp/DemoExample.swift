@@ -11,7 +11,13 @@ protocol DemoExample {
     var id: String { get }
     var category: ExampleCategory { get }
     var sourceCode: String { get }
+    /// If true, the example opens in a separate window via a "Try It" button.
+    var opensInWindow: Bool { get }
     func buildWidget() -> Widget
+}
+
+extension DemoExample {
+    var opensInWindow: Bool { false }
 }
 
 @MainActor
@@ -32,6 +38,9 @@ let allExamples: [any DemoExample] = [
     AboutDialogExample(),
     AnimationExample(),
     BreakpointExample(),
+    NavigationSplitViewExample(),
+    OverlaySplitViewExample(),
+    DialogExample(),
     // Individual widgets
     ButtonExample(),
     EntryExample(),

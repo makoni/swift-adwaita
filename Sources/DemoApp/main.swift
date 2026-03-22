@@ -24,10 +24,35 @@ func buildApp() {
         contentStack.addNamed(welcomePage, name: "welcome")
 
         for example in allExamples {
-            let widget = example.buildWidget()
-            widget.hexpand = true
-            widget.vexpand = true
-            contentStack.addNamed(widget, name: example.id)
+            if example.opensInWindow {
+                let preview = StatusPage()
+                preview.iconName = "preferences-desktop-remote-desktop-symbolic"
+                preview.title = example.name
+                preview.description = "This example opens in its own window to showcase window-level features."
+                let tryBtn = Button(label: "Try It")
+                tryBtn.addCSSClass("suggested-action")
+                tryBtn.addCSSClass("pill")
+                tryBtn.halign = .center
+                tryBtn.onClicked { [window] in
+                    let demoWindow = Window()
+                    demoWindow.title = example.name
+                    demoWindow.defaultWidth = 700
+                    demoWindow.defaultHeight = 500
+                    demoWindow.content = example.buildWidget()
+                    gtk_window_set_transient_for(
+                        demoWindow.pointer.assumingMemoryBound(to: CAdwaita.GtkWindow.self),
+                        window.pointer.assumingMemoryBound(to: CAdwaita.GtkWindow.self)
+                    )
+                    demoWindow.present()
+                }
+                preview.child = tryBtn
+                contentStack.addNamed(preview, name: example.id)
+            } else {
+                let widget = example.buildWidget()
+                widget.hexpand = true
+                widget.vexpand = true
+                contentStack.addNamed(widget, name: example.id)
+            }
         }
         contentStack.visibleChildName = "welcome"
 

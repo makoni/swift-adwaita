@@ -6,6 +6,7 @@ struct BottomSheetExample: DemoExample {
     let name = "Bottom Sheet"
     let id = "bottomsheet"
     let category: ExampleCategory = .composite
+    let opensInWindow = true
 
     let sourceCode = """
     let bottomSheet = BottomSheet()

@@ -6,6 +6,7 @@ struct NavigationViewExample: DemoExample {
     let name = "Navigation View"
     let id = "navigationview"
     let category: ExampleCategory = .composite
+    let opensInWindow = true
 
     let sourceCode = """
     let navView = NavigationView()

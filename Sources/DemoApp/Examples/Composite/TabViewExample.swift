@@ -6,6 +6,7 @@ struct TabViewExample: DemoExample {
     let name = "Tab View"
     let id = "tabview"
     let category: ExampleCategory = .composite
+    let opensInWindow = true
 
     let sourceCode = """
     let tabView = TabView()

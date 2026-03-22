@@ -66,4 +66,16 @@ public final class NavigationSplitView: Widget {
         get { adw_navigation_split_view_get_sidebar_width_unit(opaquePointer) }
         set { adw_navigation_split_view_set_sidebar_width_unit(opaquePointer, newValue) }
     }
+
+    /// Sets the sidebar navigation page.
+    public func setSidebar(_ page: NavigationPage?) {
+        let ptr: UnsafeMutablePointer<AdwNavigationPage>? = page.map { $0.castedPointer() }
+        adw_navigation_split_view_set_sidebar(opaquePointer, ptr)
+    }
+
+    /// Sets the content navigation page.
+    public func setContent(_ page: NavigationPage?) {
+        let ptr: UnsafeMutablePointer<AdwNavigationPage>? = page.map { $0.castedPointer() }
+        adw_navigation_split_view_set_content(opaquePointer, ptr)
+    }
 }
