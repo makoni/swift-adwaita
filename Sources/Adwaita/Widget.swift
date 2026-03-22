@@ -162,6 +162,25 @@ open class Widget: GObjectRef {
         set { gtk_widget_set_can_target(widgetPointer, newValue ? 1 : 0) }
     }
 
+    // MARK: - Size Queries
+
+    /// The widget's current width as set by layout.
+    public var width: Int {
+        Int(gtk_widget_get_width(widgetPointer))
+    }
+
+    /// The widget's current height as set by layout.
+    public var height: Int {
+        Int(gtk_widget_get_height(widgetPointer))
+    }
+
+    // MARK: - CSS Name
+
+    /// The CSS name of the widget class, used for style matching.
+    public var cssName: String {
+        String(cString: gtk_widget_get_css_name(widgetPointer))
+    }
+
     // MARK: - Lifecycle Signals
 
     /// Connects to the `realize` signal -- widget has been associated with a display.

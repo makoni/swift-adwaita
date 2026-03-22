@@ -114,4 +114,74 @@ public final class ListBox: Widget {
     public func setPlaceholder(_ widget: Widget?) {
         gtk_list_box_set_placeholder(opaquePointer, widget?.widgetPointer)
     }
+
+    /// Sets a sort function for automatic row ordering.
+    ///
+    /// The closure receives two rows and returns a negative value if the first
+    /// should come before the second, positive if after, 0 if equal.
+    public func setSortFunc(_ compare: @escaping @MainActor (ListBoxRow, ListBoxRow) -> Int) {
+        let box = Unmanaged.passRetained(PublicClosureBox(compare)).toOpaque()
+        gtk_list_box_set_sort_func(
+            opaquePointer,
+            { row1, row2, userData -> Int32 in
+                guard let userData, let row1, let row2 else { return 0 }
+                let box = Unmanaged<PublicClosureBox<@MainActor (ListBoxRow, ListBoxRow) -> Int>>
+                    .fromOpaque(userData).takeUnretainedValue()
+                return MainActor.assumeIsolated {
+                    Int32(box.closure(
+                        ListBoxRow(borrowing: UnsafeMutableRawPointer(row1)),
+                        ListBoxRow(borrowing: UnsafeMutableRawPointer(row2))
+                    ))
+                }
+            },
+            box,
+            { userData in
+                guard let userData else { return }
+                Unmanaged<AnyObject>.fromOpaque(userData).release()
+            }
+        )
+    }
+
+    /// Clears the sort function, restoring insertion order.
+    public func clearSortFunc() {
+        gtk_list_box_set_sort_func(opaquePointer, nil, nil, nil)
+    }
+
+    /// Sets a filter function to control which rows are visible.
+    ///
+    /// The closure receives a row and returns `true` to show it, `false` to hide it.
+    public func setFilterFunc(_ filter: @escaping @MainActor (ListBoxRow) -> Bool) {
+        let box = Unmanaged.passRetained(PublicClosureBox(filter)).toOpaque()
+        gtk_list_box_set_filter_func(
+            opaquePointer,
+            { row, userData -> Int32 in
+                guard let userData, let row else { return 1 }
+                let box = Unmanaged<PublicClosureBox<@MainActor (ListBoxRow) -> Bool>>
+                    .fromOpaque(userData).takeUnretainedValue()
+                return MainActor.assumeIsolated {
+                    box.closure(ListBoxRow(borrowing: UnsafeMutableRawPointer(row))) ? 1 : 0
+                }
+            },
+            box,
+            { userData in
+                guard let userData else { return }
+                Unmanaged<AnyObject>.fromOpaque(userData).release()
+            }
+        )
+    }
+
+    /// Clears the filter function, showing all rows.
+    public func clearFilterFunc() {
+        gtk_list_box_set_filter_func(opaquePointer, nil, nil, nil)
+    }
+
+    /// Re-evaluates the sort function for all rows.
+    public func invalidateSort() {
+        gtk_list_box_invalidate_sort(opaquePointer)
+    }
+
+    /// Re-evaluates the filter function for all rows.
+    public func invalidateFilter() {
+        gtk_list_box_invalidate_filter(opaquePointer)
+    }
 }

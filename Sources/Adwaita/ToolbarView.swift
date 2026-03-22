@@ -69,4 +69,16 @@ public final class ToolbarView: Widget {
         get { adw_toolbar_view_get_reveal_bottom_bars(opaquePointer) != 0 }
         set { adw_toolbar_view_set_reveal_bottom_bars(opaquePointer, newValue ? 1 : 0) }
     }
+
+    /// Whether content extends behind the top bar.
+    public var extendContentToTopEdge: Bool {
+        get { adw_toolbar_view_get_extend_content_to_top_edge(opaquePointer) != 0 }
+        set { adw_toolbar_view_set_extend_content_to_top_edge(opaquePointer, newValue ? 1 : 0) }
+    }
+
+    /// Whether content extends behind the bottom bar.
+    public var extendContentToBottomEdge: Bool {
+        get { adw_toolbar_view_get_extend_content_to_bottom_edge(opaquePointer) != 0 }
+        set { adw_toolbar_view_set_extend_content_to_bottom_edge(opaquePointer, newValue ? 1 : 0) }
+    }
 }

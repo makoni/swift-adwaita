@@ -55,6 +55,81 @@ public final class Entry: Widget {
         SignalHelper.connect(self, signal: "activate", handler: handler)
     }
 
+    /// Whether the entry has a visible frame.
+    public var hasFrame: Bool {
+        get { gtk_entry_get_has_frame(castedPointer()) != 0 }
+        set { gtk_entry_set_has_frame(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// The horizontal alignment of the entry text (0.0 left, 0.5 center, 1.0 right).
+    public var alignment: Float {
+        get { gtk_entry_get_alignment(castedPointer()) }
+        set { gtk_entry_set_alignment(castedPointer(), newValue) }
+    }
+
+    /// Whether pressing Enter activates the default widget.
+    public var activatesDefault: Bool {
+        get { gtk_entry_get_activates_default(castedPointer()) != 0 }
+        set { gtk_entry_set_activates_default(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// The progress fraction shown in the entry (0.0 to 1.0).
+    public var progressFraction: Double {
+        get { gtk_entry_get_progress_fraction(castedPointer()) }
+        set { gtk_entry_set_progress_fraction(castedPointer(), newValue) }
+    }
+
+    /// The fraction of total entry width to move the progress bar on each pulse.
+    public var progressPulseStep: Double {
+        get { gtk_entry_get_progress_pulse_step(castedPointer()) }
+        set { gtk_entry_set_progress_pulse_step(castedPointer(), newValue) }
+    }
+
+    /// Causes the entry's progress indicator to pulse.
+    public func progressPulse() {
+        gtk_entry_progress_pulse(castedPointer())
+    }
+
+    /// The input purpose hint for on-screen keyboards.
+    public var inputPurpose: GtkInputPurpose {
+        get { gtk_entry_get_input_purpose(castedPointer()) }
+        set { gtk_entry_set_input_purpose(castedPointer(), newValue) }
+    }
+
+    /// The input hints for on-screen keyboards.
+    public var inputHints: GtkInputHints {
+        get { gtk_entry_get_input_hints(castedPointer()) }
+        set { gtk_entry_set_input_hints(castedPointer(), newValue) }
+    }
+
+    /// Sets the icon for the given position from an icon name.
+    public func setIcon(position: GtkEntryIconPosition, iconName: String?) {
+        gtk_entry_set_icon_from_icon_name(castedPointer(), position, iconName)
+    }
+
+    /// Returns the icon name at the given position.
+    public func iconName(at position: GtkEntryIconPosition) -> String? {
+        gtk_entry_get_icon_name(castedPointer(), position).map { String(cString: $0) }
+    }
+
+    /// Sets the tooltip for the icon at the given position.
+    public func setIconTooltip(position: GtkEntryIconPosition, tooltip: String?) {
+        gtk_entry_set_icon_tooltip_text(castedPointer(), position, tooltip)
+    }
+
+    /// Whether the icon at the given position is activatable.
+    public func setIconActivatable(position: GtkEntryIconPosition, activatable: Bool) {
+        gtk_entry_set_icon_activatable(castedPointer(), position, activatable ? 1 : 0)
+    }
+
+    /// Connects to the `icon-press` signal.
+    @discardableResult
+    public func onIconPress(_ handler: @escaping @MainActor (GtkEntryIconPosition) -> Void) -> SignalConnection {
+        SignalHelper.connectInt(self, signal: "icon-press") { pos in
+            handler(GtkEntryIconPosition(UInt32(pos)))
+        }
+    }
+
     /// Connects to the `changed` signal on the entry buffer.
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {

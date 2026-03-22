@@ -63,4 +63,49 @@ public final class Label: Widget {
         get { gtk_label_get_xalign(opaquePointer) }
         set { gtk_label_set_xalign(opaquePointer, newValue) }
     }
+
+    /// The vertical alignment.
+    public var yalign: Float {
+        get { gtk_label_get_yalign(opaquePointer) }
+        set { gtk_label_set_yalign(opaquePointer, newValue) }
+    }
+
+    /// The maximum width in characters (-1 for no limit).
+    public var maxWidthChars: Int {
+        get { Int(gtk_label_get_max_width_chars(opaquePointer)) }
+        set { gtk_label_set_max_width_chars(opaquePointer, Int32(newValue)) }
+    }
+
+    /// The desired width in characters (-1 for automatic).
+    public var widthChars: Int {
+        get { Int(gtk_label_get_width_chars(opaquePointer)) }
+        set { gtk_label_set_width_chars(opaquePointer, Int32(newValue)) }
+    }
+
+    /// The number of lines to show (-1 for no limit).
+    public var lines: Int {
+        get { Int(gtk_label_get_lines(opaquePointer)) }
+        set { gtk_label_set_lines(opaquePointer, Int32(newValue)) }
+    }
+
+    /// The widget to activate when a mnemonic key is pressed.
+    public var mnemonicWidget: Widget? {
+        get {
+            guard let ptr = gtk_label_get_mnemonic_widget(opaquePointer) else { return nil }
+            return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+        }
+        set { gtk_label_set_mnemonic_widget(opaquePointer, newValue?.widgetPointer) }
+    }
+
+    /// Whether the label uses underline for mnemonics.
+    public var useUnderline: Bool {
+        get { gtk_label_get_use_underline(opaquePointer) != 0 }
+        set { gtk_label_set_use_underline(opaquePointer, newValue ? 1 : 0) }
+    }
+
+    /// The natural wrap mode.
+    public var naturalWrapMode: GtkNaturalWrapMode {
+        get { gtk_label_get_natural_wrap_mode(opaquePointer) }
+        set { gtk_label_set_natural_wrap_mode(opaquePointer, newValue) }
+    }
 }

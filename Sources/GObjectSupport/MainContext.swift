@@ -32,6 +32,15 @@ public enum MainContext {
         )
     }
 
+    /// Schedules a one-shot delayed closure on the GLib main loop.
+    ///
+    /// - Parameters:
+    ///   - ms: The delay in milliseconds.
+    ///   - closure: The work to perform after the delay.
+    public static func delay(ms: UInt32, _ closure: @escaping @MainActor () -> Void) {
+        timeout(intervalMs: ms) { closure(); return false }
+    }
+
     /// Schedules a repeating timeout on the GLib main loop.
     ///
     /// - Parameters:

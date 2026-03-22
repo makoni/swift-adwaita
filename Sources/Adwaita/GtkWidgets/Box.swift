@@ -40,6 +40,11 @@ public final class Box: Widget {
         gtk_box_insert_child_after(castedPointer(), child.widgetPointer, sibling?.widgetPointer)
     }
 
+    /// Reorders a child to be placed after a sibling (or at the start if sibling is nil).
+    public func reorderChildAfter(_ child: Widget, sibling: Widget?) {
+        gtk_box_reorder_child_after(castedPointer(), child.widgetPointer, sibling?.widgetPointer)
+    }
+
     /// The spacing between children.
     public var spacing: Int {
         get { Int(gtk_box_get_spacing(castedPointer())) }

@@ -2649,4 +2649,272 @@ func ensureAdwInit() {
         #expect(GtkPackType.start == GTK_PACK_START)
         #expect(GtkPackType.end == GTK_PACK_END)
     }
+
+    // MARK: - Batch 7: Entry enhancements
+
+    @Test @MainActor func entryHasFrame() {
+        ensureAdwInit()
+        let entry = Entry()
+        #expect(entry.hasFrame == true)
+        entry.hasFrame = false
+        #expect(entry.hasFrame == false)
+    }
+
+    @Test @MainActor func entryAlignment() {
+        ensureAdwInit()
+        let entry = Entry()
+        entry.alignment = 0.5
+        #expect(entry.alignment == 0.5)
+        entry.alignment = 1.0
+        #expect(entry.alignment == 1.0)
+    }
+
+    @Test @MainActor func entryActivatesDefault() {
+        ensureAdwInit()
+        let entry = Entry()
+        #expect(entry.activatesDefault == false)
+        entry.activatesDefault = true
+        #expect(entry.activatesDefault == true)
+    }
+
+    @Test @MainActor func entryProgressFraction() {
+        ensureAdwInit()
+        let entry = Entry()
+        #expect(entry.progressFraction == 0.0)
+        entry.progressFraction = 0.5
+        #expect(entry.progressFraction == 0.5)
+    }
+
+    @Test @MainActor func entryProgressPulse() {
+        ensureAdwInit()
+        let entry = Entry()
+        entry.progressPulseStep = 0.2
+        #expect(entry.progressPulseStep == 0.2)
+        entry.progressPulse()
+        // No crash = success
+    }
+
+    @Test @MainActor func entryInputPurpose() {
+        ensureAdwInit()
+        let entry = Entry()
+        entry.inputPurpose = .email
+        #expect(entry.inputPurpose == GtkInputPurpose.email)
+        entry.inputPurpose = .password
+        #expect(entry.inputPurpose == GtkInputPurpose.password)
+    }
+
+    @Test @MainActor func entryIcons() {
+        ensureAdwInit()
+        let entry = Entry()
+        entry.setIcon(position: .primary, iconName: "edit-find-symbolic")
+        #expect(entry.iconName(at: .primary) == "edit-find-symbolic")
+        entry.setIcon(position: .secondary, iconName: "edit-clear-symbolic")
+        #expect(entry.iconName(at: .secondary) == "edit-clear-symbolic")
+    }
+
+    @Test @MainActor func entryIconTooltipAndActivatable() {
+        ensureAdwInit()
+        let entry = Entry()
+        entry.setIcon(position: .primary, iconName: "edit-find-symbolic")
+        entry.setIconTooltip(position: .primary, tooltip: "Search")
+        entry.setIconActivatable(position: .primary, activatable: true)
+        // No crash = success
+    }
+
+    @Test @MainActor func entryIconPressSignal() {
+        ensureAdwInit()
+        let entry = Entry()
+        entry.onIconPress { _ in }
+        // No crash = success
+    }
+
+    // MARK: - Scale marks
+
+    @Test @MainActor func scaleAddMark() {
+        ensureAdwInit()
+        let scale = Scale(orientation: .horizontal, min: 0, max: 100, step: 1)
+        scale.addMark(value: 0, position: .top, markup: "0")
+        scale.addMark(value: 50, position: .top, markup: "50")
+        scale.addMark(value: 100, position: .top, markup: "100")
+        // No crash = success
+    }
+
+    @Test @MainActor func scaleClearMarks() {
+        ensureAdwInit()
+        let scale = Scale(orientation: .horizontal, min: 0, max: 10, step: 1)
+        scale.addMark(value: 5, position: .bottom)
+        scale.clearMarks()
+        // No crash = success
+    }
+
+    // MARK: - Label enhancements
+
+    @Test @MainActor func labelYalign() {
+        ensureAdwInit()
+        let label = Label("Test")
+        label.yalign = 0.0
+        #expect(label.yalign == 0.0)
+        label.yalign = 1.0
+        #expect(label.yalign == 1.0)
+    }
+
+    @Test @MainActor func labelMaxWidthChars() {
+        ensureAdwInit()
+        let label = Label("Test")
+        label.maxWidthChars = 20
+        #expect(label.maxWidthChars == 20)
+    }
+
+    @Test @MainActor func labelWidthChars() {
+        ensureAdwInit()
+        let label = Label("Test")
+        label.widthChars = 10
+        #expect(label.widthChars == 10)
+    }
+
+    @Test @MainActor func labelLines() {
+        ensureAdwInit()
+        let label = Label("Test")
+        label.lines = 3
+        #expect(label.lines == 3)
+    }
+
+    @Test @MainActor func labelMnemonicWidget() {
+        ensureAdwInit()
+        let label = Label("_Test")
+        label.useUnderline = true
+        #expect(label.useUnderline == true)
+        let entry = Entry()
+        label.mnemonicWidget = entry
+        #expect(label.mnemonicWidget != nil)
+    }
+
+    @Test @MainActor func labelNaturalWrapMode() {
+        ensureAdwInit()
+        let label = Label("Test")
+        label.naturalWrapMode = .word
+        #expect(label.naturalWrapMode == GtkNaturalWrapMode.word)
+    }
+
+    // MARK: - ListBox sort/filter
+
+    @Test @MainActor func listBoxSortFunc() {
+        ensureAdwInit()
+        let list = ListBox()
+        list.append(Label("B"))
+        list.append(Label("A"))
+        list.setSortFunc { _, _ in 0 }
+        list.invalidateSort()
+        list.clearSortFunc()
+        // No crash = success
+    }
+
+    @Test @MainActor func listBoxFilterFunc() {
+        ensureAdwInit()
+        let list = ListBox()
+        list.append(Label("Visible"))
+        list.append(Label("Hidden"))
+        list.setFilterFunc { _ in true }
+        list.invalidateFilter()
+        list.clearFilterFunc()
+        // No crash = success
+    }
+
+    // MARK: - Widget size queries
+
+    @Test @MainActor func widgetWidthHeight() {
+        ensureAdwInit()
+        let label = Label("Test")
+        // Before layout, width/height are 0
+        #expect(label.width >= 0)
+        #expect(label.height >= 0)
+    }
+
+    @Test @MainActor func widgetCssName() {
+        ensureAdwInit()
+        let label = Label("Test")
+        #expect(!label.cssName.isEmpty)
+    }
+
+    // MARK: - Box reorder
+
+    @Test @MainActor func boxReorderChildAfter() {
+        ensureAdwInit()
+        let box = Box(orientation: .vertical, spacing: 0)
+        let a = Label("A")
+        let b = Label("B")
+        let c = Label("C")
+        box.append(a)
+        box.append(b)
+        box.append(c)
+        // Move A after C
+        box.reorderChildAfter(a, sibling: c)
+        // No crash = success
+    }
+
+    // MARK: - Image enhancements
+
+    @Test @MainActor func imageFromResource() {
+        ensureAdwInit()
+        let img = Image()
+        img.setFromResource(nil)
+        // No crash = success
+    }
+
+    @Test @MainActor func imageClear() {
+        ensureAdwInit()
+        let img = Image(iconName: "dialog-information-symbolic")
+        img.clear()
+        // After clearing, icon should be nil
+        #expect(img.iconName == nil)
+    }
+
+    // MARK: - ToolbarView edge extension
+
+    @Test @MainActor func toolbarViewExtendContentToEdges() {
+        ensureAdwInit()
+        let tv = ToolbarView()
+        #expect(tv.extendContentToTopEdge == false)
+        tv.extendContentToTopEdge = true
+        #expect(tv.extendContentToTopEdge == true)
+        #expect(tv.extendContentToBottomEdge == false)
+        tv.extendContentToBottomEdge = true
+        #expect(tv.extendContentToBottomEdge == true)
+    }
+
+    // MARK: - MainContext delay
+
+    @Test @MainActor func mainContextDelay() {
+        ensureAdwInit()
+        // Just verify it compiles and doesn't crash
+        // (actual execution requires the main loop)
+        var called = false
+        MainContext.delay(ms: 1) { called = true }
+        _ = called
+    }
+
+    // MARK: - New enum extensions
+
+    @Test @MainActor func inputPurposeEnum() {
+        #expect(GtkInputPurpose.freeForm == GTK_INPUT_PURPOSE_FREE_FORM)
+        #expect(GtkInputPurpose.digits == GTK_INPUT_PURPOSE_DIGITS)
+        #expect(GtkInputPurpose.number == GTK_INPUT_PURPOSE_NUMBER)
+        #expect(GtkInputPurpose.phone == GTK_INPUT_PURPOSE_PHONE)
+        #expect(GtkInputPurpose.url == GTK_INPUT_PURPOSE_URL)
+        #expect(GtkInputPurpose.email == GTK_INPUT_PURPOSE_EMAIL)
+        #expect(GtkInputPurpose.password == GTK_INPUT_PURPOSE_PASSWORD)
+        #expect(GtkInputPurpose.pin == GTK_INPUT_PURPOSE_PIN)
+        #expect(GtkInputPurpose.terminal == GTK_INPUT_PURPOSE_TERMINAL)
+    }
+
+    @Test @MainActor func entryIconPositionEnum() {
+        #expect(GtkEntryIconPosition.primary == GTK_ENTRY_ICON_PRIMARY)
+        #expect(GtkEntryIconPosition.secondary == GTK_ENTRY_ICON_SECONDARY)
+    }
+
+    @Test @MainActor func naturalWrapModeEnum() {
+        #expect(GtkNaturalWrapMode.inherit == GTK_NATURAL_WRAP_INHERIT)
+        #expect(GtkNaturalWrapMode.none == GTK_NATURAL_WRAP_NONE)
+        #expect(GtkNaturalWrapMode.word == GTK_NATURAL_WRAP_WORD)
+    }
 }

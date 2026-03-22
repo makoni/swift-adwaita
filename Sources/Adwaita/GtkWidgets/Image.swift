@@ -24,6 +24,12 @@ public final class Image: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates an image from a resource path.
+    public init(resourcePath: String) {
+        let ptr = gtk_image_new_from_resource(resourcePath)!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+    }
+
     override internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
@@ -35,6 +41,16 @@ public final class Image: Widget {
             return String(cString: cStr)
         }
         set { gtk_image_set_from_icon_name(opaquePointer, newValue) }
+    }
+
+    /// Sets the image from a resource path.
+    public func setFromResource(_ resourcePath: String?) {
+        gtk_image_set_from_resource(opaquePointer, resourcePath)
+    }
+
+    /// Clears the image, making it empty.
+    public func clear() {
+        gtk_image_clear(opaquePointer)
     }
 
     /// The pixel size for icon display.

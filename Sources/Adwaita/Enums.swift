@@ -238,6 +238,45 @@ extension GtkJustification {
     public static let fill = GTK_JUSTIFY_FILL
 }
 
+extension GtkInputPurpose {
+    /// Free-form text.
+    public static let freeForm = GTK_INPUT_PURPOSE_FREE_FORM
+    /// Digits only.
+    public static let digits = GTK_INPUT_PURPOSE_DIGITS
+    /// A number (may include decimals/signs).
+    public static let number = GTK_INPUT_PURPOSE_NUMBER
+    /// A phone number.
+    public static let phone = GTK_INPUT_PURPOSE_PHONE
+    /// A URL.
+    public static let url = GTK_INPUT_PURPOSE_URL
+    /// An email address.
+    public static let email = GTK_INPUT_PURPOSE_EMAIL
+    /// A name.
+    public static let name = GTK_INPUT_PURPOSE_NAME
+    /// A password.
+    public static let password = GTK_INPUT_PURPOSE_PASSWORD
+    /// A PIN.
+    public static let pin = GTK_INPUT_PURPOSE_PIN
+    /// Terminal input.
+    public static let terminal = GTK_INPUT_PURPOSE_TERMINAL
+}
+
+extension GtkEntryIconPosition {
+    /// The primary icon (start of entry).
+    public static let primary = GTK_ENTRY_ICON_PRIMARY
+    /// The secondary icon (end of entry).
+    public static let secondary = GTK_ENTRY_ICON_SECONDARY
+}
+
+extension GtkNaturalWrapMode {
+    /// Inherit from parent.
+    public static let inherit = GTK_NATURAL_WRAP_INHERIT
+    /// No natural wrap.
+    public static let none = GTK_NATURAL_WRAP_NONE
+    /// Wrap at word boundaries.
+    public static let word = GTK_NATURAL_WRAP_WORD
+}
+
 extension AdwAnimationState {
     /// Idle state.
     public static let idle = ADW_ANIMATION_IDLE

@@ -60,6 +60,16 @@ public final class Scale: Widget {
         set { gtk_range_set_inverted(rangePointer, newValue ? 1 : 0) }
     }
 
+    /// Adds a mark at the given value with optional markup text.
+    public func addMark(value: Double, position: GtkPositionType = .top, markup: String? = nil) {
+        gtk_scale_add_mark(scalePointer, value, position, markup)
+    }
+
+    /// Removes all marks from the scale.
+    public func clearMarks() {
+        gtk_scale_clear_marks(scalePointer)
+    }
+
     /// Connects to the `value-changed` signal.
     @discardableResult
     public func onValueChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {

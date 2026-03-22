@@ -57,4 +57,8 @@ let allExamples: [any DemoExample] = [
     FlowBoxExample(),
     OverlayExample(),
     EmojiChooserExample(),
+    LevelBarExample(),
+    PictureExample(),
+    SeparatorExample(),
+    SearchBarExample(),
 ]
