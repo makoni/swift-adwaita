@@ -80,6 +80,12 @@ static inline GType cadw_type_double(void)  { return G_TYPE_DOUBLE; }
 static inline GType cadw_type_string(void)  { return G_TYPE_STRING; }
 static inline GType cadw_type_object(void)  { return G_TYPE_OBJECT; }
 
+// g_object_new is variadic and not importable in Swift.
+
+static inline gpointer cadw_object_new(GType type) {
+    return g_object_new_with_properties(type, 0, NULL, NULL);
+}
+
 // G_VALUE_HOLDS_* macros
 
 static inline gboolean cadw_value_holds_string(const GValue *value) {

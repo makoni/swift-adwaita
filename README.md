@@ -17,7 +17,7 @@ An imperative Swift 6.2 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [liba
 - **Animations** — `TimedAnimation`, `SpringAnimation` with callbacks
 - **Drawing** — `DrawingArea` with Cairo
 - **Swift 6.2 concurrency** — full `@MainActor` isolation, `Sendable` types
-- **386 tests**, **67 demo examples**
+- **396 tests**, **68 demo examples**
 
 ## Requirements
 
@@ -252,7 +252,7 @@ connection.disconnect()
 
 ## Demo App
 
-An interactive gallery with 67 examples showcasing every widget:
+An interactive gallery with 68 examples showcasing every widget:
 
 ```bash
 swift run DemoApp

@@ -91,4 +91,5 @@ let allExamples: [any DemoExample] = [
     CssProviderExample(),
     VideoExample(),
     StackSwitcherExample(),
+    ListViewExample(),
 ]

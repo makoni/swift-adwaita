@@ -3728,4 +3728,109 @@ func ensureAdwInit() {
         #expect(filter.name == "Images")
     }
 
+    // MARK: - ListView Infrastructure
+
+    @Test @MainActor func listStoreCreation() {
+        ensureAdwInit()
+        let store = ListStore()
+        #expect(store.count == 0)
+    }
+
+    @Test @MainActor func listStoreAppendRemove() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        #expect(store.count == 3)
+
+        store.remove(at: 1)
+        #expect(store.count == 2)
+
+        store.removeAll()
+        #expect(store.count == 0)
+    }
+
+    @Test @MainActor func listStoreInsert() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        #expect(store.count == 2)
+
+        store.insertPlaceholder(at: 1)
+        #expect(store.count == 3)
+    }
+
+    @Test @MainActor func noSelectionCreation() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let selection = NoSelection(model: store)
+        #expect(selection.selectionModelPointer != nil)
+    }
+
+    @Test @MainActor func singleSelectionCreation() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let selection = SingleSelection(model: store)
+        #expect(selection.selected == 0)  // autoselects first
+        selection.canUnselect = true
+        #expect(selection.canUnselect == true)
+    }
+
+    @Test @MainActor func singleSelectionAutoselect() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let selection = SingleSelection(model: store)
+        selection.autoselect = false
+        #expect(selection.autoselect == false)
+        selection.autoselect = true
+        #expect(selection.autoselect == true)
+    }
+
+    @Test @MainActor func signalListItemFactoryCreation() {
+        ensureAdwInit()
+        let factory = SignalListItemFactory()
+        #expect(factory.pointer != nil)
+    }
+
+    @Test @MainActor func listViewCreation() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let factory = SignalListItemFactory()
+        let selection = NoSelection(model: store)
+        let listView = ListView(model: selection, factory: factory)
+        #expect(listView.showSeparators == false)
+        listView.showSeparators = true
+        #expect(listView.showSeparators == true)
+    }
+
+    @Test @MainActor func listViewSingleClickActivate() {
+        ensureAdwInit()
+        let store = ListStore()
+        let factory = SignalListItemFactory()
+        let selection = NoSelection(model: store)
+        let listView = ListView(model: selection, factory: factory)
+        #expect(listView.singleClickActivate == false)
+        listView.singleClickActivate = true
+        #expect(listView.singleClickActivate == true)
+    }
+
+    @Test @MainActor func listViewWithSingleSelection() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let factory = SignalListItemFactory()
+        let selection = SingleSelection(model: store)
+        let listView = ListView(model: selection, factory: factory)
+        #expect(listView.pointer != nil)
+        #expect(selection.selected == 0)
+    }
+
 }
