@@ -1239,4 +1239,433 @@ func ensureAdwInit() {
         let _ = GTK_SELECTION_MULTIPLE
         #expect(Bool(true), "All key GTK enums are accessible")
     }
+
+    // MARK: - Event Controller Tests
+
+    @Test @MainActor func gestureClickCreation() {
+        ensureAdwInit()
+        let gesture = GestureClick()
+        #expect(gesture.pointer != nil)
+    }
+
+    @Test @MainActor func gestureClickSignalConnection() {
+        ensureAdwInit()
+        let gesture = GestureClick()
+        let conn1 = gesture.onPressed { _, _, _ in }
+        let conn2 = gesture.onReleased { _, _, _ in }
+        // Signal handlers should be connected without crashing
+        conn1.disconnect()
+        conn2.disconnect()
+    }
+
+    @Test @MainActor func gestureClickAddToWidget() {
+        ensureAdwInit()
+        let btn = Button(label: "Test")
+        let gesture = GestureClick()
+        btn.addController(gesture)
+        // Should not crash
+        #expect(Bool(true))
+    }
+
+    @Test @MainActor func eventControllerKeyCreation() {
+        ensureAdwInit()
+        let controller = EventControllerKey()
+        #expect(controller.pointer != nil)
+    }
+
+    @Test @MainActor func eventControllerKeySignalConnection() {
+        ensureAdwInit()
+        let controller = EventControllerKey()
+        let conn1 = controller.onKeyPressed { _, _, _ in return false }
+        let conn2 = controller.onKeyReleased { _, _, _ in }
+        conn1.disconnect()
+        conn2.disconnect()
+    }
+
+    @Test @MainActor func eventControllerKeyAddToWidget() {
+        ensureAdwInit()
+        let entry = Entry()
+        let controller = EventControllerKey()
+        entry.addController(controller)
+        #expect(Bool(true))
+    }
+
+    @Test @MainActor func eventControllerMotionCreation() {
+        ensureAdwInit()
+        let controller = EventControllerMotion()
+        #expect(controller.pointer != nil)
+    }
+
+    @Test @MainActor func eventControllerMotionSignalConnection() {
+        ensureAdwInit()
+        let controller = EventControllerMotion()
+        let conn1 = controller.onMotion { _, _ in }
+        let conn2 = controller.onEnter { _, _ in }
+        let conn3 = controller.onLeave { }
+        conn1.disconnect()
+        conn2.disconnect()
+        conn3.disconnect()
+    }
+
+    @Test @MainActor func eventControllerMotionAddToWidget() {
+        ensureAdwInit()
+        let label = Label("Hover me")
+        let controller = EventControllerMotion()
+        label.addController(controller)
+        #expect(Bool(true))
+    }
+
+    @Test @MainActor func eventControllerScrollCreation() {
+        ensureAdwInit()
+        let controller = EventControllerScroll()
+        #expect(controller.pointer != nil)
+    }
+
+    @Test @MainActor func eventControllerScrollWithFlags() {
+        ensureAdwInit()
+        let controller = EventControllerScroll(flags: GTK_EVENT_CONTROLLER_SCROLL_VERTICAL)
+        #expect(controller.pointer != nil)
+    }
+
+    @Test @MainActor func eventControllerScrollSignalConnection() {
+        ensureAdwInit()
+        let controller = EventControllerScroll()
+        let conn1 = controller.onScroll { _, _ in return false }
+        let conn2 = controller.onScrollBegin { }
+        let conn3 = controller.onScrollEnd { }
+        conn1.disconnect()
+        conn2.disconnect()
+        conn3.disconnect()
+    }
+
+    @Test @MainActor func eventControllerScrollAddToWidget() {
+        ensureAdwInit()
+        let box = Box()
+        let controller = EventControllerScroll()
+        box.addController(controller)
+        #expect(Bool(true))
+    }
+
+    @Test @MainActor func multipleControllersOnOneWidget() {
+        ensureAdwInit()
+        let btn = Button(label: "Multi")
+        let click = GestureClick()
+        let key = EventControllerKey()
+        let motion = EventControllerMotion()
+        let scroll = EventControllerScroll()
+        btn.addController(click)
+        btn.addController(key)
+        btn.addController(motion)
+        btn.addController(scroll)
+        #expect(Bool(true))
+    }
+
+    @Test @MainActor func eventControllerInheritance() {
+        #expect(isSubclass(GestureClick.self, of: GObjectRef.self))
+        #expect(isSubclass(EventControllerKey.self, of: GObjectRef.self))
+        #expect(isSubclass(EventControllerMotion.self, of: GObjectRef.self))
+        #expect(isSubclass(EventControllerScroll.self, of: GObjectRef.self))
+    }
+
+    // MARK: - Window onCloseRequest Signal
+
+    @Test @MainActor func windowOnCloseRequestSignalConnection() {
+        ensureAdwInit()
+        let window = Window()
+        let conn = window.onCloseRequest { return true }
+        conn.disconnect()
+    }
+
+    // MARK: - Widget Lifecycle Signals
+
+    @Test @MainActor func widgetLifecycleSignalConnections() {
+        ensureAdwInit()
+        let label = Label("lifecycle")
+        let c1 = label.onRealize { }
+        let c2 = label.onUnrealize { }
+        let c3 = label.onMap { }
+        let c4 = label.onUnmap { }
+        let c5 = label.onDestroy { }
+        c1.disconnect()
+        c2.disconnect()
+        c3.disconnect()
+        c4.disconnect()
+        c5.disconnect()
+    }
+
+    // MARK: - Button Convenience Initializers
+
+    @Test @MainActor func buttonConvenienceInitWithLabel() {
+        ensureAdwInit()
+        var clicked = false
+        let btn = Button(label: "Click", onClicked: { clicked = true })
+        #expect(btn.label == "Click")
+        // The handler is connected; we cannot easily trigger it without a main loop,
+        // but we verify the button was created with the correct label.
+    }
+
+    @Test @MainActor func buttonConvenienceInitWithIcon() {
+        ensureAdwInit()
+        let btn = Button(iconName: "edit-copy-symbolic", onClicked: { })
+        #expect(btn.iconName == "edit-copy-symbolic")
+    }
+
+    // MARK: - SpringParams Properties
+
+    @Test @MainActor func springParamsProperties() {
+        ensureAdwInit()
+        let sp = SpringParams(dampingRatio: 0.8, mass: 1.0, stiffness: 100.0)
+        #expect(sp.dampingRatio == 0.8)
+        #expect(sp.mass == 1.0)
+        #expect(sp.stiffness == 100.0)
+        #expect(sp.damping > 0)
+    }
+
+    @Test @MainActor func springParamsFullInit() {
+        ensureAdwInit()
+        let sp = SpringParams(damping: 10.0, mass: 2.0, stiffness: 50.0)
+        #expect(sp.damping == 10.0)
+        #expect(sp.mass == 2.0)
+        #expect(sp.stiffness == 50.0)
+    }
+
+    // MARK: - BreakpointCondition
+
+    @Test @MainActor func breakpointConditionParseAndToString() {
+        ensureAdwInit()
+        let cond = BreakpointCondition(parse: "min-width: 600px")
+        let str = cond.toString()
+        #expect(str.contains("600"))
+    }
+
+    @Test @MainActor func breakpointConditionLength() {
+        ensureAdwInit()
+        let cond = BreakpointCondition.length(
+            type: ADW_BREAKPOINT_CONDITION_MIN_WIDTH,
+            value: 400,
+            unit: .px
+        )
+        let str = cond.toString()
+        #expect(str.contains("400"))
+    }
+
+    @Test @MainActor func breakpointConditionAnd() {
+        ensureAdwInit()
+        let a = BreakpointCondition.length(
+            type: ADW_BREAKPOINT_CONDITION_MIN_WIDTH,
+            value: 400,
+            unit: .px
+        )
+        let b = BreakpointCondition.length(
+            type: ADW_BREAKPOINT_CONDITION_MAX_WIDTH,
+            value: 800,
+            unit: .px
+        )
+        let combined = BreakpointCondition.and(a, b)
+        let str = combined.toString()
+        #expect(str.contains("400"))
+        #expect(str.contains("800"))
+    }
+
+    // MARK: - Enum Extensions
+
+    @Test @MainActor func gtkOrientationEnumExtensions() {
+        #expect(GtkOrientation.vertical == GTK_ORIENTATION_VERTICAL)
+        #expect(GtkOrientation.horizontal == GTK_ORIENTATION_HORIZONTAL)
+    }
+
+    @Test @MainActor func gtkAlignEnumExtensions() {
+        #expect(GtkAlign.fill == GTK_ALIGN_FILL)
+        #expect(GtkAlign.start == GTK_ALIGN_START)
+        #expect(GtkAlign.end == GTK_ALIGN_END)
+        #expect(GtkAlign.center == GTK_ALIGN_CENTER)
+    }
+
+    @Test @MainActor func gtkSelectionModeEnumExtensions() {
+        #expect(GtkSelectionMode.none == GTK_SELECTION_NONE)
+        #expect(GtkSelectionMode.single == GTK_SELECTION_SINGLE)
+        #expect(GtkSelectionMode.multiple == GTK_SELECTION_MULTIPLE)
+    }
+
+    @Test @MainActor func adwColorSchemeEnumExtensions() {
+        // Verify the extensions exist and are distinct
+        let d = AdwColorScheme.default
+        let fd = AdwColorScheme.forceDark
+        let fl = AdwColorScheme.forceLight
+        #expect(fd != fl)
+        #expect(d != fd)
+    }
+
+    // MARK: - SignalHelper connectReturnBool
+
+    @Test @MainActor func signalHelperConnectReturnBoolExists() {
+        let _: (GObjectRef, String, @escaping @MainActor () -> Bool) -> SignalConnection = SignalHelper.connectReturnBool
+    }
+
+    // MARK: - Grid
+
+    @Test @MainActor func gridCreation() {
+        ensureAdwInit()
+        let grid = Grid()
+        #expect(grid.pointer != nil)
+    }
+
+    @Test @MainActor func gridProperties() {
+        ensureAdwInit()
+        let grid = Grid()
+        grid.columnSpacing = 10
+        #expect(grid.columnSpacing == 10)
+        grid.rowSpacing = 8
+        #expect(grid.rowSpacing == 8)
+        grid.columnHomogeneous = true
+        #expect(grid.columnHomogeneous)
+        grid.rowHomogeneous = true
+        #expect(grid.rowHomogeneous)
+    }
+
+    @Test @MainActor func gridAttachAndRetrieve() {
+        ensureAdwInit()
+        let grid = Grid()
+        let label = Label("test")
+        grid.attach(label, column: 0, row: 0)
+        let child = grid.childAt(column: 0, row: 0)
+        #expect(child != nil)
+        #expect(child!.pointer == label.pointer)
+    }
+
+    @Test @MainActor func gridMultiColumnSpan() {
+        ensureAdwInit()
+        let grid = Grid()
+        let label = Label("wide")
+        grid.attach(label, column: 0, row: 0, width: 3, height: 2)
+        // The widget should be found at column 0, row 0
+        #expect(grid.childAt(column: 0, row: 0) != nil)
+    }
+
+    @Test @MainActor func gridInsertRemoveRow() {
+        ensureAdwInit()
+        let grid = Grid()
+        let label = Label("r1")
+        grid.attach(label, column: 0, row: 0)
+        grid.insertRow(at: 0)
+        // After inserting row 0, the label moves to row 1
+        #expect(grid.childAt(column: 0, row: 1) != nil)
+    }
+
+    // MARK: - Popover
+
+    @Test @MainActor func popoverCreation() {
+        ensureAdwInit()
+        let popover = Popover()
+        #expect(popover.pointer != nil)
+    }
+
+    @Test @MainActor func popoverProperties() {
+        ensureAdwInit()
+        let popover = Popover()
+        popover.hasArrow = false
+        #expect(!popover.hasArrow)
+        popover.hasArrow = true
+        #expect(popover.hasArrow)
+        popover.autohide = false
+        #expect(!popover.autohide)
+        popover.position = .bottom
+        #expect(popover.position == .bottom)
+    }
+
+    @Test @MainActor func popoverChild() {
+        ensureAdwInit()
+        let popover = Popover()
+        let label = Label("popup content")
+        popover.child = label
+        #expect(popover.child != nil)
+        #expect(popover.child!.pointer == label.pointer)
+    }
+
+    // MARK: - PopoverMenu
+
+    @Test @MainActor func popoverMenuCreation() {
+        ensureAdwInit()
+        let menu = PopoverMenu(model: nil)
+        #expect(menu.pointer != nil)
+    }
+
+    // MARK: - Picture
+
+    @Test @MainActor func pictureCreation() {
+        ensureAdwInit()
+        let picture = Picture()
+        #expect(picture.pointer != nil)
+    }
+
+    @Test @MainActor func pictureCanShrink() {
+        ensureAdwInit()
+        let picture = Picture()
+        picture.canShrink = false
+        #expect(!picture.canShrink)
+        picture.canShrink = true
+        #expect(picture.canShrink)
+    }
+
+    @Test @MainActor func pictureAlternativeText() {
+        ensureAdwInit()
+        let picture = Picture()
+        picture.alternativeText = "A photo"
+        #expect(picture.alternativeText == "A photo")
+    }
+
+    // MARK: - DropDown
+
+    @Test @MainActor func dropDownFromStrings() {
+        ensureAdwInit()
+        let dd = DropDown(strings: ["One", "Two", "Three"])
+        #expect(dd.pointer != nil)
+        #expect(dd.selected == 0)
+    }
+
+    @Test @MainActor func dropDownSelection() {
+        ensureAdwInit()
+        let dd = DropDown(strings: ["A", "B", "C"])
+        dd.selected = 2
+        #expect(dd.selected == 2)
+    }
+
+    @Test @MainActor func dropDownEnableSearch() {
+        ensureAdwInit()
+        let dd = DropDown(strings: ["X"])
+        dd.enableSearch = true
+        #expect(dd.enableSearch)
+        dd.enableSearch = false
+        #expect(!dd.enableSearch)
+    }
+
+    // MARK: - Adjustment
+
+    @Test @MainActor func adjustmentCreation() {
+        ensureAdwInit()
+        let adj = Adjustment(value: 50, lower: 0, upper: 100, stepIncrement: 1, pageIncrement: 10, pageSize: 0)
+        #expect(adj.value == 50)
+        #expect(adj.lower == 0)
+        #expect(adj.upper == 100)
+        #expect(adj.stepIncrement == 1)
+        #expect(adj.pageIncrement == 10)
+    }
+
+    @Test @MainActor func adjustmentSetValue() {
+        ensureAdwInit()
+        let adj = Adjustment(value: 0, lower: 0, upper: 100)
+        adj.value = 75
+        #expect(adj.value == 75)
+    }
+
+    @Test @MainActor func adjustmentConfigure() {
+        ensureAdwInit()
+        let adj = Adjustment()
+        adj.configure(value: 25, lower: 10, upper: 50, stepIncrement: 2, pageIncrement: 5, pageSize: 0)
+        #expect(adj.value == 25)
+        #expect(adj.lower == 10)
+        #expect(adj.upper == 50)
+        #expect(adj.stepIncrement == 2)
+    }
+
 }

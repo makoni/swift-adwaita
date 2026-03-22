@@ -112,6 +112,17 @@ extension GtkPositionType {
     public static let bottom = GTK_POS_BOTTOM
 }
 
+extension GtkContentFit {
+    /// Fill the entire allocation, ignoring aspect ratio.
+    public static let fill = GTK_CONTENT_FIT_FILL
+    /// Scale to fit the allocation, preserving aspect ratio.
+    public static let contain = GTK_CONTENT_FIT_CONTAIN
+    /// Cover the entire allocation, preserving aspect ratio.
+    public static let cover = GTK_CONTENT_FIT_COVER
+    /// Scale down to fit, but never scale up.
+    public static let scaleDown = GTK_CONTENT_FIT_SCALE_DOWN
+}
+
 extension GtkArrowType {
     /// Up arrow.
     public static let up = GTK_ARROW_UP

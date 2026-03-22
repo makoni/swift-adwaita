@@ -256,6 +256,102 @@ public enum SignalHelper {
         )
     }
 
+    // MARK: - Three parameters
+
+    /// Connects a signal with `Int32`, `Double`, `Double` parameters.
+    /// Used for gesture pressed/released signals (n_press, x, y).
+    @discardableResult
+    public static func connectIntDoubleDouble(
+        _ instance: GObjectRef,
+        signal: String,
+        handler: @escaping @MainActor (Int32, Double, Double) -> Void
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineIntDoubleDouble as @convention(c) (UnsafeMutableRawPointer, Int32, Double, Double, UnsafeMutableRawPointer) -> Void,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
+    /// Connects a signal with `UInt32`, `UInt32`, `UInt32` parameters returning `Bool`.
+    /// Used for key-pressed signals (keyval, keycode, state).
+    @discardableResult
+    public static func connectUIntUIntUIntReturnBool(
+        _ instance: GObjectRef,
+        signal: String,
+        handler: @escaping @MainActor (UInt32, UInt32, UInt32) -> Bool
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineUIntUIntUIntBool as @convention(c) (UnsafeMutableRawPointer, UInt32, UInt32, UInt32, UnsafeMutableRawPointer) -> gboolean,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
+    /// Connects a signal with `UInt32`, `UInt32`, `UInt32` parameters.
+    /// Used for key-released signals (keyval, keycode, state).
+    @discardableResult
+    public static func connectUIntUIntUInt(
+        _ instance: GObjectRef,
+        signal: String,
+        handler: @escaping @MainActor (UInt32, UInt32, UInt32) -> Void
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineUIntUIntUInt as @convention(c) (UnsafeMutableRawPointer, UInt32, UInt32, UInt32, UnsafeMutableRawPointer) -> Void,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
+    // MARK: - No-parameter signal returning Bool
+
+    /// Connects a signal that takes no parameters and returns a Bool (gboolean).
+    /// Useful for signals like `close-request` where returning `true` prevents the default behavior.
+    @discardableResult
+    public static func connectReturnBool(
+        _ instance: GObjectRef,
+        signal: String,
+        handler: @escaping @MainActor () -> Bool
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineReturnBool as @convention(c) (UnsafeMutableRawPointer, UnsafeMutableRawPointer) -> gboolean,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
+    // MARK: - Signals returning Bool
+
+    /// Connects a signal with two `Double` parameters returning `Bool`.
+    /// Used for scroll signals (dx, dy).
+    @discardableResult
+    public static func connectDoubleDoubleReturnBool(
+        _ instance: GObjectRef,
+        signal: String,
+        handler: @escaping @MainActor (Double, Double) -> Bool
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineDoubleDoubleBool as @convention(c) (UnsafeMutableRawPointer, Double, Double, UnsafeMutableRawPointer) -> gboolean,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
     // MARK: - Signals with GValue parameter and return value
 
     /// Connects a signal with `(OpaquePointer, GValue)` params returning `Bool`.
@@ -448,5 +544,71 @@ private func signalTrampolinePointerGValueDragAction(
     nonisolated(unsafe) let capturedGV = gvalue
     return MainActor.assumeIsolated {
         box.closure(capturedPtr, capturedGV)
+    }
+}
+
+private func signalTrampolineIntDoubleDouble(
+    _ instance: UnsafeMutableRawPointer,
+    _ value1: Int32,
+    _ value2: Double,
+    _ value3: Double,
+    _ userData: UnsafeMutableRawPointer
+) {
+    let box = Unmanaged<ClosureBox<@MainActor (Int32, Double, Double) -> Void>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    MainActor.assumeIsolated {
+        box.closure(value1, value2, value3)
+    }
+}
+
+private func signalTrampolineUIntUIntUIntBool(
+    _ instance: UnsafeMutableRawPointer,
+    _ value1: UInt32,
+    _ value2: UInt32,
+    _ value3: UInt32,
+    _ userData: UnsafeMutableRawPointer
+) -> gboolean {
+    let box = Unmanaged<ClosureBox<@MainActor (UInt32, UInt32, UInt32) -> Bool>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    return MainActor.assumeIsolated {
+        box.closure(value1, value2, value3) ? 1 : 0
+    }
+}
+
+private func signalTrampolineUIntUIntUInt(
+    _ instance: UnsafeMutableRawPointer,
+    _ value1: UInt32,
+    _ value2: UInt32,
+    _ value3: UInt32,
+    _ userData: UnsafeMutableRawPointer
+) {
+    let box = Unmanaged<ClosureBox<@MainActor (UInt32, UInt32, UInt32) -> Void>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    MainActor.assumeIsolated {
+        box.closure(value1, value2, value3)
+    }
+}
+
+private func signalTrampolineReturnBool(
+    _ instance: UnsafeMutableRawPointer,
+    _ userData: UnsafeMutableRawPointer
+) -> gboolean {
+    let box = Unmanaged<ClosureBox<@MainActor () -> Bool>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    return MainActor.assumeIsolated {
+        box.closure() ? 1 : 0
+    }
+}
+
+private func signalTrampolineDoubleDoubleBool(
+    _ instance: UnsafeMutableRawPointer,
+    _ value1: Double,
+    _ value2: Double,
+    _ userData: UnsafeMutableRawPointer
+) -> gboolean {
+    let box = Unmanaged<ClosureBox<@MainActor (Double, Double) -> Bool>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    return MainActor.assumeIsolated {
+        box.closure(value1, value2) ? 1 : 0
     }
 }

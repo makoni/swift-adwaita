@@ -24,6 +24,18 @@ public final class Button: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a button with a label and a click handler.
+    public convenience init(label: String, onClicked handler: @escaping @MainActor () -> Void) {
+        self.init(label: label)
+        self.onClicked(handler)
+    }
+
+    /// Creates a button with an icon and a click handler.
+    public convenience init(iconName: String, onClicked handler: @escaping @MainActor () -> Void) {
+        self.init(iconName: iconName)
+        self.onClicked(handler)
+    }
+
     override internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

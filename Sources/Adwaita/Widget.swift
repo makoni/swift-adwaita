@@ -102,4 +102,45 @@ open class Widget: GObjectRef {
         get { gtk_widget_get_opacity(widgetPointer) }
         set { gtk_widget_set_opacity(widgetPointer, newValue) }
     }
+
+    /// Adds an event controller to this widget.
+    ///
+    /// `gtk_widget_add_controller` takes ownership of the controller,
+    /// so we add an extra reference to keep the Swift wrapper valid.
+    public func addController(_ controller: GObjectRef) {
+        g_object_ref(controller.pointer)
+        gtk_widget_add_controller(widgetPointer, OpaquePointer(controller.pointer))
+    }
+
+    // MARK: - Lifecycle Signals
+
+    /// Connects to the `realize` signal -- widget has been associated with a display.
+    @discardableResult
+    public func onRealize(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "realize", handler: handler)
+    }
+
+    /// Connects to the `unrealize` signal -- widget is being disassociated from display.
+    @discardableResult
+    public func onUnrealize(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "unrealize", handler: handler)
+    }
+
+    /// Connects to the `map` signal -- widget is going to be shown.
+    @discardableResult
+    public func onMap(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "map", handler: handler)
+    }
+
+    /// Connects to the `unmap` signal -- widget is going to be hidden.
+    @discardableResult
+    public func onUnmap(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "unmap", handler: handler)
+    }
+
+    /// Connects to the `destroy` signal.
+    @discardableResult
+    public func onDestroy(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "destroy", handler: handler)
+    }
 }

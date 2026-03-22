@@ -1,0 +1,65 @@
+import CAdwaita
+import GObjectSupport
+
+/// A bubble-like popup attached to a widget.
+///
+/// Wraps `GtkPopover`.
+@MainActor
+public final class Popover: Widget {
+    /// Creates a new popover.
+    public init() {
+        let ptr = gtk_popover_new()!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The child widget of the popover.
+    public var child: Widget? {
+        get {
+            guard let ptr = gtk_popover_get_child(castedPointer()) else { return nil }
+            return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+        }
+        set {
+            gtk_popover_set_child(castedPointer(), newValue?.widgetPointer)
+        }
+    }
+
+    /// Presents the popover to the user.
+    public func popup() {
+        gtk_popover_popup(castedPointer())
+    }
+
+    /// Hides the popover.
+    public func popdown() {
+        gtk_popover_popdown(castedPointer())
+    }
+
+    /// Whether the popover has an arrow.
+    public var hasArrow: Bool {
+        get { gtk_popover_get_has_arrow(castedPointer()) != 0 }
+        set { gtk_popover_set_has_arrow(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// The preferred position of the popover.
+    public var position: GtkPositionType {
+        get { gtk_popover_get_position(castedPointer()) }
+        set { gtk_popover_set_position(castedPointer(), newValue) }
+    }
+
+    /// Whether the popover auto-hides on outside clicks.
+    public var autohide: Bool {
+        get { gtk_popover_get_autohide(castedPointer()) != 0 }
+        set { gtk_popover_set_autohide(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// Whether the popover is a menu-style popover.
+    public var mnemonicsVisible: Bool {
+        get { gtk_popover_get_mnemonics_visible(castedPointer()) != 0 }
+        set { gtk_popover_set_mnemonics_visible(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// Connects to the `closed` signal.
+    @discardableResult
+    public func onClosed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "closed", handler: handler)
+    }
+}
