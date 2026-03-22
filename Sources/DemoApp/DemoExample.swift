@@ -30,6 +30,7 @@ let allExamples: [any DemoExample] = [
     ViewSwitcherExample(),
     StyleManagerExample(),
     AboutDialogExample(),
+    AnimationExample(),
     // Individual widgets
     ButtonExample(),
     EntryExample(),

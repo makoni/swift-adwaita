@@ -220,6 +220,13 @@ extension AdwViewSwitcherPolicy {
     public static let wide = ADW_VIEW_SWITCHER_POLICY_WIDE
 }
 
+extension GtkPackType {
+    /// Start side (left for LTR).
+    public static let start = GTK_PACK_START
+    /// End side (right for LTR).
+    public static let end = GTK_PACK_END
+}
+
 extension GtkJustification {
     /// Left justified.
     public static let left = GTK_JUSTIFY_LEFT

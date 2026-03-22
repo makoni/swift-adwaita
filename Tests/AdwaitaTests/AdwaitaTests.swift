@@ -2501,4 +2501,152 @@ func ensureAdwInit() {
         app.onStartup {}
         app.onShutdown {}
     }
+
+    // MARK: - AspectFrame
+
+    @Test @MainActor func aspectFrameCreation() {
+        ensureAdwInit()
+        let af = AspectFrame(xalign: 0.5, yalign: 0.5, ratio: 16.0/9.0)
+        #expect(af.ratio > 1.7 && af.ratio < 1.8)
+        #expect(af.obeyChild == false)
+    }
+
+    @Test @MainActor func aspectFrameProperties() {
+        ensureAdwInit()
+        let af = AspectFrame()
+        af.xalign = 0.0
+        #expect(af.xalign == 0.0)
+        af.yalign = 1.0
+        #expect(af.yalign == 1.0)
+        af.ratio = 2.0
+        #expect(af.ratio == 2.0)
+        af.obeyChild = true
+        #expect(af.obeyChild == true)
+        let label = Label("Child")
+        af.child = label
+        #expect(af.child != nil)
+    }
+
+    // MARK: - StackSwitcher
+
+    @Test @MainActor func stackSwitcherCreation() {
+        ensureAdwInit()
+        let sw = StackSwitcher()
+        #expect(sw.stack == nil)
+    }
+
+    @Test @MainActor func stackSwitcherWithStack() {
+        ensureAdwInit()
+        let sw = StackSwitcher()
+        let stack = Stack()
+        sw.stack = stack
+        #expect(sw.stack != nil)
+    }
+
+    // MARK: - WindowControls
+
+    @Test @MainActor func windowControlsCreation() {
+        ensureAdwInit()
+        let wc = WindowControls(side: .end)
+        #expect(wc.side == .end)
+    }
+
+    @Test @MainActor func windowControlsProperties() {
+        ensureAdwInit()
+        let wc = WindowControls()
+        wc.side = .start
+        #expect(wc.side == .start)
+        wc.decorationLayout = "close"
+        #expect(wc.decorationLayout == "close")
+    }
+
+    // MARK: - MediaControls
+
+    @Test @MainActor func mediaControlsCreation() {
+        ensureAdwInit()
+        let mc = MediaControls()
+        #expect(mc.mediaStream == nil)
+    }
+
+    // MARK: - Widget cursor
+
+    @Test @MainActor func widgetCursor() {
+        ensureAdwInit()
+        let btn = Button(label: "Cursor")
+        btn.setCursor(name: "pointer")
+        btn.resetCursor()
+        // No crash = success
+    }
+
+    // MARK: - Widget tick callback
+
+    @Test @MainActor func widgetTickCallback() {
+        ensureAdwInit()
+        let label = Label("Tick")
+        let id = label.addTickCallback { false } // immediately removes itself
+        // Can also remove manually
+        label.removeTickCallback(id)
+    }
+
+    // MARK: - Widget accessibility
+
+    @Test @MainActor func widgetAccessibility() {
+        ensureAdwInit()
+        let btn = Button(label: "Accessible")
+        btn.setAccessibleLabel("My Button")
+        btn.setAccessibleDescription("A test button")
+        _ = btn.accessibleRole
+        // No crash = success
+    }
+
+    // MARK: - FlowBox enhancements
+
+    @Test @MainActor func flowBoxSignals() {
+        ensureAdwInit()
+        let fb = FlowBox()
+        fb.activateOnSingleClick = true
+        #expect(fb.activateOnSingleClick == true)
+        fb.onChildActivated {}
+        fb.onSelectedChildrenChanged {}
+        // No crash = success
+    }
+
+    @Test @MainActor func flowBoxSelectAll() {
+        ensureAdwInit()
+        let fb = FlowBox()
+        fb.selectionMode = .multiple
+        fb.append(Label("A"))
+        fb.append(Label("B"))
+        fb.selectAll()
+        fb.unselectAll()
+        // No crash = success
+    }
+
+    // MARK: - CallbackAnimationTarget convenience
+
+    @Test @MainActor func callbackAnimationTargetConvenience() {
+        ensureAdwInit()
+        var received = false
+        let target = CallbackAnimationTarget { _ in
+            received = true
+        }
+        _ = target
+        // No crash creating target = success
+    }
+
+    // MARK: - CSSProvider convenience
+
+    @Test @MainActor func cssProviderLoadGlobal() {
+        ensureAdwInit()
+        let provider = CSSProvider.loadGlobal("button { color: red; }")
+        provider.removeFromDefaultDisplay()
+        // No crash = success
+    }
+
+    // MARK: - GtkPackType enum
+
+    @Test @MainActor func packTypeEnum() {
+        #expect(GtkPackType.start == GTK_PACK_START)
+        #expect(GtkPackType.end == GTK_PACK_END)
+    }
 }

@@ -73,4 +73,32 @@ public final class FlowBox: Widget {
         get { gtk_flow_box_get_homogeneous(opaquePointer) != 0 }
         set { gtk_flow_box_set_homogeneous(opaquePointer, newValue ? 1 : 0) }
     }
+
+    /// Whether to activate children on single click.
+    public var activateOnSingleClick: Bool {
+        get { gtk_flow_box_get_activate_on_single_click(opaquePointer) != 0 }
+        set { gtk_flow_box_set_activate_on_single_click(opaquePointer, newValue ? 1 : 0) }
+    }
+
+    /// Selects all children.
+    public func selectAll() {
+        gtk_flow_box_select_all(opaquePointer)
+    }
+
+    /// Deselects all children.
+    public func unselectAll() {
+        gtk_flow_box_unselect_all(opaquePointer)
+    }
+
+    /// Connects to the `child-activated` signal.
+    @discardableResult
+    public func onChildActivated(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "child-activated", handler: handler)
+    }
+
+    /// Connects to the `selected-children-changed` signal.
+    @discardableResult
+    public func onSelectedChildrenChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "selected-children-changed", handler: handler)
+    }
 }

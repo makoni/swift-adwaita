@@ -194,6 +194,90 @@ open class Widget: GObjectRef {
         SignalHelper.connect(self, signal: "destroy", handler: handler)
     }
 
+    // MARK: - Cursor
+
+    /// Sets the cursor from a named cursor (e.g. "pointer", "crosshair", "text", "grab").
+    public func setCursor(name: String?) {
+        gtk_widget_set_cursor_from_name(widgetPointer, name)
+    }
+
+    /// Resets the cursor to the default.
+    public func resetCursor() {
+        gtk_widget_set_cursor(widgetPointer, nil)
+    }
+
+    // MARK: - Tick Callback
+
+    /// Adds a per-frame tick callback for animations.
+    ///
+    /// The callback is called once per frame while active. Return `true` to
+    /// keep the callback, or `false` to remove it.
+    ///
+    /// - Returns: A callback ID that can be passed to `removeTickCallback()`.
+    @discardableResult
+    public func addTickCallback(_ callback: @escaping @MainActor () -> Bool) -> UInt {
+        let box = Unmanaged.passRetained(PublicClosureBox(callback)).toOpaque()
+        let id = gtk_widget_add_tick_callback(
+            widgetPointer,
+            { widget, _, userData in
+                guard let userData else { return 0 }
+                let box = Unmanaged<PublicClosureBox<@MainActor () -> Bool>>
+                    .fromOpaque(userData).takeUnretainedValue()
+                return MainActor.assumeIsolated {
+                    box.closure() ? 1 : 0
+                }
+            },
+            box,
+            { userData in
+                guard let userData else { return }
+                Unmanaged<AnyObject>.fromOpaque(userData).release()
+            }
+        )
+        return UInt(id)
+    }
+
+    /// Removes a tick callback previously added with `addTickCallback()`.
+    public func removeTickCallback(_ id: UInt) {
+        gtk_widget_remove_tick_callback(widgetPointer, UInt32(id))
+    }
+
+    // MARK: - Accessibility
+
+    /// The accessible role of the widget.
+    public var accessibleRole: GtkAccessibleRole {
+        get { gtk_accessible_get_accessible_role(OpaquePointer(pointer)) }
+    }
+
+    /// Sets the accessible label for the widget.
+    public func setAccessibleLabel(_ label: String) {
+        var prop = GTK_ACCESSIBLE_PROPERTY_LABEL
+        var value = GValue()
+        g_value_init(&value, cadw_type_string())
+        g_value_set_string(&value, label)
+        gtk_accessible_update_property_value(
+            OpaquePointer(pointer),
+            1,
+            &prop,
+            &value
+        )
+        g_value_unset(&value)
+    }
+
+    /// Sets the accessible description for the widget.
+    public func setAccessibleDescription(_ description: String) {
+        var prop = GTK_ACCESSIBLE_PROPERTY_DESCRIPTION
+        var value = GValue()
+        g_value_init(&value, cadw_type_string())
+        g_value_set_string(&value, description)
+        gtk_accessible_update_property_value(
+            OpaquePointer(pointer),
+            1,
+            &prop,
+            &value
+        )
+        g_value_unset(&value)
+    }
+
     // MARK: - Keyboard Shortcuts
 
     /// Adds a keyboard shortcut to this widget.
