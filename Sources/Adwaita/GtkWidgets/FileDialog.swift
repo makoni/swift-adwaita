@@ -43,6 +43,29 @@ public final class FileDialog: GObjectRef {
         set { gtk_file_dialog_set_accept_label(opaquePointer, newValue) }
     }
 
+    /// Sets the file filters for this dialog.
+    ///
+    /// Example:
+    /// ```swift
+    /// dialog.setFilters([
+    ///     FileFilter(name: "Swift files", suffixes: ["swift"]),
+    ///     FileFilter(name: "All files", patterns: ["*"]),
+    /// ])
+    /// ```
+    public func setFilters(_ filters: [FileFilter]) {
+        let store = g_list_store_new(gtk_file_filter_get_type())!
+        for filter in filters {
+            g_list_store_append(store, gpointer(filter.pointer))
+        }
+        gtk_file_dialog_set_filters(opaquePointer, store)
+        g_object_unref(gpointer(store))
+    }
+
+    /// Sets the default (initially selected) filter.
+    public func setDefaultFilter(_ filter: FileFilter) {
+        gtk_file_dialog_set_default_filter(opaquePointer, OpaquePointer(filter.pointer))
+    }
+
     /// Opens the file dialog for selecting a file.
     ///
     /// - Parameters:

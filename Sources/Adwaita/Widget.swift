@@ -74,6 +74,30 @@ open class Widget: GObjectRef {
         gtk_widget_set_margin_bottom(widgetPointer, m)
     }
 
+    /// The start (leading) margin.
+    public var marginStart: Int {
+        get { Int(gtk_widget_get_margin_start(widgetPointer)) }
+        set { gtk_widget_set_margin_start(widgetPointer, Int32(newValue)) }
+    }
+
+    /// The end (trailing) margin.
+    public var marginEnd: Int {
+        get { Int(gtk_widget_get_margin_end(widgetPointer)) }
+        set { gtk_widget_set_margin_end(widgetPointer, Int32(newValue)) }
+    }
+
+    /// The top margin.
+    public var marginTop: Int {
+        get { Int(gtk_widget_get_margin_top(widgetPointer)) }
+        set { gtk_widget_set_margin_top(widgetPointer, Int32(newValue)) }
+    }
+
+    /// The bottom margin.
+    public var marginBottom: Int {
+        get { Int(gtk_widget_get_margin_bottom(widgetPointer)) }
+        set { gtk_widget_set_margin_bottom(widgetPointer, Int32(newValue)) }
+    }
+
     /// The tooltip text.
     public var tooltipText: String? {
         get { gtk_widget_get_tooltip_text(widgetPointer).map { String(cString: $0) } }
@@ -142,5 +166,37 @@ open class Widget: GObjectRef {
     @discardableResult
     public func onDestroy(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: "destroy", handler: handler)
+    }
+
+    // MARK: - Keyboard Shortcuts
+
+    /// Adds a keyboard shortcut to this widget.
+    ///
+    /// - Parameters:
+    ///   - accelerator: The accelerator string (e.g. "\<Control\>s", "\<Alt\>F4", "\<Control\>\<Shift\>z").
+    ///   - handler: Called when the shortcut is triggered. Return true to stop propagation.
+    public func addKeyboardShortcut(_ accelerator: String, handler: @escaping @MainActor () -> Bool) {
+        guard let trigger = gtk_shortcut_trigger_parse_string(accelerator) else { return }
+        let box = Unmanaged.passRetained(PublicClosureBox(handler)).toOpaque()
+        let action = gtk_callback_action_new(
+            { _, _, userData in
+                guard let userData else { return 0 }
+                let box = Unmanaged<PublicClosureBox<@MainActor () -> Bool>>.fromOpaque(userData)
+                    .takeUnretainedValue()
+                return MainActor.assumeIsolated {
+                    box.closure() ? 1 : 0
+                }
+            },
+            box,
+            { userData in
+                guard let userData else { return }
+                Unmanaged<AnyObject>.fromOpaque(userData).release()
+            }
+        )
+        let shortcut = gtk_shortcut_new(trigger, action)
+        let controller = gtk_shortcut_controller_new()!
+        let controllerOpaque = OpaquePointer(UnsafeMutableRawPointer(controller))
+        gtk_shortcut_controller_add_shortcut(controllerOpaque, shortcut)
+        gtk_widget_add_controller(widgetPointer, controller)
     }
 }

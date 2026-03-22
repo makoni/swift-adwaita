@@ -1947,4 +1947,132 @@ func ensureAdwInit() {
         target.preload = true
         #expect(target.preload)
     }
+
+    // MARK: - FileFilter
+
+    @Test @MainActor func fileFilterCreation() {
+        ensureAdwInit()
+        let filter = FileFilter()
+        filter.name = "Swift Files"
+        #expect(filter.name == "Swift Files")
+    }
+
+    @Test @MainActor func fileFilterConvenienceInit() {
+        ensureAdwInit()
+        let filter = FileFilter(name: "Images", mimeTypes: ["image/png", "image/jpeg"])
+        #expect(filter.name == "Images")
+    }
+
+    @Test @MainActor func fileFilterSuffix() {
+        ensureAdwInit()
+        let filter = FileFilter(name: "Code", suffixes: ["swift", "c", "h"])
+        #expect(filter.name == "Code")
+    }
+
+    @Test @MainActor func fileDialogSetFilters() {
+        ensureAdwInit()
+        let dialog = FileDialog()
+        let filter1 = FileFilter(name: "Swift", suffixes: ["swift"])
+        let filter2 = FileFilter(name: "All", suffixes: ["*"])
+        dialog.setFilters([filter1, filter2])
+        dialog.setDefaultFilter(filter1)
+        // No crash = success
+    }
+
+    // MARK: - Frame
+
+    @Test @MainActor func frameCreation() {
+        ensureAdwInit()
+        let frame = Frame(label: "Test")
+        #expect(frame.pointer != nil)
+        #expect(frame.label == "Test")
+    }
+
+    @Test @MainActor func frameChild() {
+        ensureAdwInit()
+        let frame = Frame(label: "Container")
+        let label = Label("Content")
+        frame.child = label
+        #expect(frame.child != nil)
+        #expect(frame.child!.pointer == label.pointer)
+    }
+
+    @Test @MainActor func frameLabelAlign() {
+        ensureAdwInit()
+        let frame = Frame(label: "Aligned")
+        frame.labelXAlign = 0.5
+        #expect(frame.labelXAlign == 0.5)
+    }
+
+    // MARK: - CenterBox
+
+    @Test @MainActor func centerBoxCreation() {
+        ensureAdwInit()
+        let cb = CenterBox()
+        #expect(cb.pointer != nil)
+    }
+
+    @Test @MainActor func centerBoxChildren() {
+        ensureAdwInit()
+        let cb = CenterBox()
+        let start = Label("Start")
+        let center = Label("Center")
+        let end = Label("End")
+        cb.startWidget = start
+        cb.centerWidget = center
+        cb.endWidget = end
+        #expect(cb.startWidget!.pointer == start.pointer)
+        #expect(cb.centerWidget!.pointer == center.pointer)
+        #expect(cb.endWidget!.pointer == end.pointer)
+    }
+
+    // MARK: - ColorDialogButton
+
+    @Test @MainActor func colorDialogButtonCreation() {
+        ensureAdwInit()
+        let btn = ColorDialogButton()
+        #expect(btn.pointer != nil)
+    }
+
+    @Test @MainActor func colorDialogButtonRGBA() {
+        ensureAdwInit()
+        let btn = ColorDialogButton()
+        btn.rgba = RGBA(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+        let c = btn.rgba
+        #expect(c.red == 1.0)
+        #expect(c.green == 0.0)
+        #expect(c.blue == 0.0)
+    }
+
+    // MARK: - FontDialogButton
+
+    @Test @MainActor func fontDialogButtonCreation() {
+        ensureAdwInit()
+        let btn = FontDialogButton()
+        #expect(btn.pointer != nil)
+    }
+
+    // MARK: - Per-side margins
+
+    @Test @MainActor func widgetPerSideMargins() {
+        ensureAdwInit()
+        let label = Label("test")
+        label.marginTop = 10
+        label.marginBottom = 20
+        label.marginStart = 5
+        label.marginEnd = 15
+        #expect(label.marginTop == 10)
+        #expect(label.marginBottom == 20)
+        #expect(label.marginStart == 5)
+        #expect(label.marginEnd == 15)
+    }
+
+    // MARK: - Keyboard shortcuts
+
+    @Test @MainActor func widgetAddKeyboardShortcut() {
+        ensureAdwInit()
+        let button = Button(label: "test")
+        button.addKeyboardShortcut("<Control>s") { true }
+        // No crash = success
+    }
 }

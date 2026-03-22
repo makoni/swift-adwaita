@@ -43,4 +43,7 @@ let allExamples: [any DemoExample] = [
     GridExample(),
     DropDownExample(),
     ExpanderExample(),
+    ColorPickerExample(),
+    FontPickerExample(),
+    FrameExample(),
 ]
