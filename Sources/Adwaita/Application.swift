@@ -58,6 +58,26 @@ public final class Application: GObjectRef {
         SignalHelper.connect(self, signal: "shutdown", handler: handler)
     }
 
+    // MARK: - Lifecycle
+
+    /// Immediately exits the application.
+    public func quit() {
+        let gApp: UnsafeMutablePointer<GApplication> = castedPointer()
+        g_application_quit(gApp)
+    }
+
+    /// Increases the hold count, preventing the application from exiting.
+    public func hold() {
+        let gApp: UnsafeMutablePointer<GApplication> = castedPointer()
+        g_application_hold(gApp)
+    }
+
+    /// Decreases the hold count. When it reaches zero and there are no windows, the app exits.
+    public func release() {
+        let gApp: UnsafeMutablePointer<GApplication> = castedPointer()
+        g_application_release(gApp)
+    }
+
     // MARK: - Notifications
 
     /// Sends a desktop notification.

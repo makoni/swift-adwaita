@@ -51,4 +51,16 @@ public final class LevelBar: Widget {
         get { gtk_level_bar_get_mode(opaquePointer) }
         set { gtk_level_bar_set_mode(opaquePointer, newValue) }
     }
+
+    /// Adds an offset value to create custom level thresholds.
+    ///
+    /// Built-in offsets: "low", "high", "full".
+    public func addOffsetValue(name: String, value: Double) {
+        gtk_level_bar_add_offset_value(opaquePointer, name, value)
+    }
+
+    /// Removes an offset value by name.
+    public func removeOffsetValue(name: String) {
+        gtk_level_bar_remove_offset_value(opaquePointer, name)
+    }
 }

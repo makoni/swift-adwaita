@@ -31,6 +31,7 @@ let allExamples: [any DemoExample] = [
     StyleManagerExample(),
     AboutDialogExample(),
     AnimationExample(),
+    BreakpointExample(),
     // Individual widgets
     ButtonExample(),
     EntryExample(),

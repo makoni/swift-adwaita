@@ -198,12 +198,43 @@ extension AdwNavigationDirection {
 extension AdwEasing {
     /// Linear easing.
     public static let linear = ADW_LINEAR
+    /// Ease-in quad.
+    public static let easeInQuad = ADW_EASE_IN_QUAD
+    /// Ease-out quad.
+    public static let easeOutQuad = ADW_EASE_OUT_QUAD
+    /// Ease-in-out quad.
+    public static let easeInOutQuad = ADW_EASE_IN_OUT_QUAD
     /// Ease-in cubic.
     public static let easeInCubic = ADW_EASE_IN_CUBIC
     /// Ease-out cubic.
     public static let easeOutCubic = ADW_EASE_OUT_CUBIC
     /// Ease-in-out cubic.
     public static let easeInOutCubic = ADW_EASE_IN_OUT_CUBIC
+    /// Ease-in quart.
+    public static let easeInQuart = ADW_EASE_IN_QUART
+    /// Ease-out quart.
+    public static let easeOutQuart = ADW_EASE_OUT_QUART
+    /// Ease-in-out quart.
+    public static let easeInOutQuart = ADW_EASE_IN_OUT_QUART
+    /// Ease-in quint.
+    public static let easeInQuint = ADW_EASE_IN_QUINT
+    /// Ease-out quint.
+    public static let easeOutQuint = ADW_EASE_OUT_QUINT
+    /// Ease-in-out quint.
+    public static let easeInOutQuint = ADW_EASE_IN_OUT_QUINT
+    /// Ease-in bounce.
+    public static let easeInBounce = ADW_EASE_IN_BOUNCE
+    /// Ease-out bounce.
+    public static let easeOutBounce = ADW_EASE_OUT_BOUNCE
+    /// Ease-in-out bounce.
+    public static let easeInOutBounce = ADW_EASE_IN_OUT_BOUNCE
+}
+
+extension GtkOverflow {
+    /// Visible — no clipping.
+    public static let visible = GTK_OVERFLOW_VISIBLE
+    /// Hidden — clip to allocation.
+    public static let hidden = GTK_OVERFLOW_HIDDEN
 }
 
 extension AdwToastPriority {

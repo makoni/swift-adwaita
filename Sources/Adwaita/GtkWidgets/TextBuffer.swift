@@ -133,6 +133,45 @@ public final class TextBuffer: GObjectRef {
         SignalHelper.connect(self, signal: "modified-changed", handler: handler)
     }
 
+    // MARK: - Tags
+
+    /// Creates and registers a text tag with the given name.
+    ///
+    /// Returns the tag for further property configuration via GObject properties.
+    public func createTag(name: String?) -> TextTag {
+        let tag = TextTag(name: name)
+        let table = gtk_text_buffer_get_tag_table(bufferPointer)!
+        gtk_text_tag_table_add(table, tag.castedPointer())
+        return tag
+    }
+
+    /// Applies a tag to the text range [startOffset, endOffset).
+    public func applyTag(_ tag: TextTag, startOffset: Int, endOffset: Int) {
+        var start = GtkTextIter()
+        var end = GtkTextIter()
+        gtk_text_buffer_get_iter_at_offset(bufferPointer, &start, Int32(startOffset))
+        gtk_text_buffer_get_iter_at_offset(bufferPointer, &end, Int32(endOffset))
+        gtk_text_buffer_apply_tag(bufferPointer, tag.castedPointer(), &start, &end)
+    }
+
+    /// Removes a tag from the text range [startOffset, endOffset).
+    public func removeTag(_ tag: TextTag, startOffset: Int, endOffset: Int) {
+        var start = GtkTextIter()
+        var end = GtkTextIter()
+        gtk_text_buffer_get_iter_at_offset(bufferPointer, &start, Int32(startOffset))
+        gtk_text_buffer_get_iter_at_offset(bufferPointer, &end, Int32(endOffset))
+        gtk_text_buffer_remove_tag(bufferPointer, tag.castedPointer(), &start, &end)
+    }
+
+    /// Removes all tags from the text range [startOffset, endOffset).
+    public func removeAllTags(startOffset: Int, endOffset: Int) {
+        var start = GtkTextIter()
+        var end = GtkTextIter()
+        gtk_text_buffer_get_iter_at_offset(bufferPointer, &start, Int32(startOffset))
+        gtk_text_buffer_get_iter_at_offset(bufferPointer, &end, Int32(endOffset))
+        gtk_text_buffer_remove_all_tags(bufferPointer, &start, &end)
+    }
+
     // MARK: - Undo / Redo
 
     /// Whether undo is enabled on this buffer.

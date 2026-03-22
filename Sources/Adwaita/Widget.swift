@@ -41,6 +41,40 @@ open class Widget: GObjectRef {
         gtk_widget_remove_css_class(widgetPointer, cssClass)
     }
 
+    /// Whether the widget has the given CSS class.
+    public func hasCSSClass(_ cssClass: String) -> Bool {
+        gtk_widget_has_css_class(widgetPointer, cssClass) != 0
+    }
+
+    /// The list of CSS classes applied to the widget.
+    public var cssClasses: [String] {
+        get {
+            guard let cArray = gtk_widget_get_css_classes(widgetPointer) else { return [] }
+            var result: [String] = []
+            var i = 0
+            while let cStr = cArray[i] {
+                result.append(String(cString: cStr))
+                i += 1
+            }
+            g_strfreev(cArray)
+            return result
+        }
+        set {
+            var cArray: [UnsafePointer<CChar>?] = newValue.map { $0.withCString { UnsafePointer(strdup($0)) } }
+            cArray.append(nil)
+            cArray.withUnsafeMutableBufferPointer { buf in
+                gtk_widget_set_css_classes(widgetPointer, buf.baseAddress)
+            }
+            for ptr in cArray.dropLast() { free(UnsafeMutablePointer(mutating: ptr)) }
+        }
+    }
+
+    /// The overflow behavior (whether content is clipped).
+    public var overflow: GtkOverflow {
+        get { gtk_widget_get_overflow(widgetPointer) }
+        set { gtk_widget_set_overflow(widgetPointer, newValue) }
+    }
+
     /// Sets the horizontal expansion preference.
     public var hexpand: Bool {
         get { gtk_widget_get_hexpand(widgetPointer) != 0 }
