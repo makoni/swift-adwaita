@@ -64,4 +64,11 @@ let allExamples: [any DemoExample] = [
     SearchBarExample(),
     SplitButtonExample(),
     CheckButtonExample(),
+    ComboRowExample(),
+    ExpanderRowExample(),
+    ButtonRowExample(),
+    PasswordEntryExample(),
+    ToggleGroupExample(),
+    WrapBoxExample(),
+    ActionBarExample(),
 ]

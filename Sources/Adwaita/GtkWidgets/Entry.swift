@@ -12,6 +12,13 @@ public final class Entry: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates an entry with placeholder text and an optional change handler.
+    public convenience init(placeholder: String, onChanged handler: (@MainActor () -> Void)? = nil) {
+        self.init()
+        self.placeholderText = placeholder
+        if let handler { self.onChanged(handler) }
+    }
+
     override internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

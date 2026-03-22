@@ -61,6 +61,12 @@ func buildApp() {
 
         let sidebarBox = Box(orientation: .vertical, spacing: 0)
 
+        // Search entry
+        let searchEntry = SearchEntry()
+        searchEntry.placeholderText = "Search examples…"
+        searchEntry.setMargins(6)
+        sidebarBox.append(searchEntry)
+
         // Composite section
         let compositeHeading = Label("Composite Layouts")
         compositeHeading.addCSSClass("heading")
@@ -96,6 +102,38 @@ func buildApp() {
             widgetsList.append(label)
         }
         sidebarBox.append(widgetsList)
+
+        // Search filtering
+        searchEntry.onSearchChanged { [compositeList, widgetsList, compositeHeading, widgetsHeading] in
+            let query = searchEntry.text.lowercased()
+
+            compositeList.setFilterFunc { row in
+                guard !query.isEmpty else { return true }
+                let idx = Int(row.index)
+                guard idx >= 0, idx < compositeExamples.count else { return true }
+                return compositeExamples[idx].name.lowercased().contains(query)
+            }
+            compositeList.invalidateFilter()
+
+            widgetsList.setFilterFunc { row in
+                guard !query.isEmpty else { return true }
+                let idx = Int(row.index)
+                guard idx >= 0, idx < widgetExamples.count else { return true }
+                return widgetExamples[idx].name.lowercased().contains(query)
+            }
+            widgetsList.invalidateFilter()
+
+            // Hide section headings when all rows are filtered out or show them
+            if query.isEmpty {
+                compositeHeading.visible = true
+                widgetsHeading.visible = true
+            } else {
+                let hasComposite = compositeExamples.contains { $0.name.lowercased().contains(query) }
+                let hasWidgets = widgetExamples.contains { $0.name.lowercased().contains(query) }
+                compositeHeading.visible = hasComposite
+                widgetsHeading.visible = hasWidgets
+            }
+        }
 
         // Sidebar selection handlers
         compositeList.onRowActivated { [contentStack, contentWindowTitle, widgetsList, showCodeButton] row in

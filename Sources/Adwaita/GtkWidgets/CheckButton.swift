@@ -18,6 +18,12 @@ public final class CheckButton: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a check button with a label and a toggle handler.
+    public convenience init(label: String, onToggled handler: @escaping @MainActor () -> Void) {
+        self.init(label: label)
+        self.onToggled(handler)
+    }
+
     override internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

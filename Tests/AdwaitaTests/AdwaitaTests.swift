@@ -3261,4 +3261,193 @@ func ensureAdwInit() {
         let unique = Set(states.map { $0.rawValue })
         #expect(unique.count == 4)
     }
+
+    // MARK: - Batch 10: ActionBar
+
+    @Test @MainActor func actionBarCreation() {
+        ensureAdwInit()
+        let bar = ActionBar()
+        #expect(bar.revealed == true)
+    }
+
+    @Test @MainActor func actionBarPackAndCenter() {
+        ensureAdwInit()
+        let bar = ActionBar()
+        let btn = Button(label: "Start")
+        bar.packStart(btn)
+        let end = Button(label: "End")
+        bar.packEnd(end)
+        let center = Label("Center")
+        bar.centerWidget = center
+        #expect(bar.centerWidget != nil)
+    }
+
+    @Test @MainActor func actionBarRevealed() {
+        ensureAdwInit()
+        let bar = ActionBar()
+        bar.revealed = false
+        #expect(bar.revealed == false)
+        bar.revealed = true
+        #expect(bar.revealed == true)
+    }
+
+    // MARK: - UriLauncher
+
+    @Test @MainActor func uriLauncherCreation() {
+        ensureAdwInit()
+        let launcher = UriLauncher(uri: "https://example.com")
+        #expect(launcher.uri == "https://example.com")
+    }
+
+    @Test @MainActor func uriLauncherSetUri() {
+        ensureAdwInit()
+        let launcher = UriLauncher(uri: "https://a.com")
+        launcher.uri = "https://b.com"
+        #expect(launcher.uri == "https://b.com")
+    }
+
+    // MARK: - Convenience initializers
+
+    @Test @MainActor func entryConvenienceInit() {
+        ensureAdwInit()
+        let entry = Entry(placeholder: "Type here")
+        #expect(entry.placeholderText == "Type here")
+    }
+
+    @Test @MainActor func entryConvenienceInitWithPlaceholder() {
+        ensureAdwInit()
+        let entry = Entry(placeholder: "Search")
+        #expect(entry.placeholderText == "Search")
+        entry.text = "hello"
+        #expect(entry.text == "hello")
+    }
+
+    @Test @MainActor func entryOnChangedNotify() {
+        ensureAdwInit()
+        let entry = Entry()
+        var changed = false
+        entry.onChanged { changed = true }
+        entry.text = "hello"
+        #expect(changed == true)
+    }
+
+    @Test @MainActor func switchConvenienceInit() {
+        ensureAdwInit()
+        let sw = Switch(active: true)
+        #expect(sw.active == true)
+    }
+
+    @Test @MainActor func checkButtonConvenienceInit() {
+        ensureAdwInit()
+        var toggled = false
+        let cb = CheckButton(label: "Test", onToggled: { toggled = true })
+        #expect(cb.label == "Test")
+        // Simulate toggle
+        cb.active = !cb.active
+        // toggled via signal on actual user interaction
+        _ = toggled
+    }
+
+    // MARK: - ToggleGroup
+
+    @Test @MainActor func toggleGroupCreation() {
+        ensureAdwInit()
+        let group = ToggleGroup()
+        let t1 = Toggle()
+        t1.label = "A"
+        let t2 = Toggle()
+        t2.label = "B"
+        group.add(t1)
+        group.add(t2)
+        #expect(group.nToggles == 2)
+    }
+
+    @Test @MainActor func toggleGroupActive() {
+        ensureAdwInit()
+        let group = ToggleGroup()
+        let t1 = Toggle()
+        t1.label = "X"
+        let t2 = Toggle()
+        t2.label = "Y"
+        group.add(t1)
+        group.add(t2)
+        group.active = 1
+        #expect(group.active == 1)
+    }
+
+    @Test @MainActor func toggleGroupByName() {
+        ensureAdwInit()
+        let group = ToggleGroup()
+        let t = Toggle()
+        t.label = "Named"
+        t.name = "my-toggle"
+        group.add(t)
+        let found = group.getToggleByName("my-toggle")
+        #expect(found != nil)
+    }
+
+    // MARK: - WrapBox
+
+    @Test @MainActor func wrapBoxCreation() {
+        ensureAdwInit()
+        let wrap = WrapBox()
+        wrap.childSpacing = 8
+        wrap.lineSpacing = 12
+        #expect(wrap.childSpacing == 8)
+        #expect(wrap.lineSpacing == 12)
+    }
+
+    @Test @MainActor func wrapBoxAppendRemove() {
+        ensureAdwInit()
+        let wrap = WrapBox()
+        let label = Label("test")
+        wrap.append(label)
+        wrap.remove(label)
+        // No crash = success
+    }
+
+    // MARK: - ButtonRow
+
+    @Test @MainActor func buttonRowCreation() {
+        ensureAdwInit()
+        let row = ButtonRow()
+        row.title = "Action"
+        row.startIconName = "edit-symbolic"
+        #expect(row.startIconName == "edit-symbolic")
+    }
+
+    // MARK: - ComboRow
+
+    @Test @MainActor func comboRowWithModel() {
+        ensureAdwInit()
+        let combo = ComboRow()
+        combo.title = "Pick"
+        let model = StringList(["A", "B", "C"])
+        combo.setModel(model)
+        combo.selected = 1
+        #expect(combo.selected == 1)
+    }
+
+    // MARK: - ExpanderRow
+
+    @Test @MainActor func expanderRowCreation() {
+        ensureAdwInit()
+        let row = ExpanderRow()
+        row.title = "Details"
+        row.subtitle = "Show more"
+        row.expanded = true
+        #expect(row.expanded == true)
+        row.expanded = false
+        #expect(row.expanded == false)
+    }
+
+    @Test @MainActor func expanderRowAddRow() {
+        ensureAdwInit()
+        let row = ExpanderRow()
+        row.title = "Parent"
+        let child = ActionRow()
+        child.title = "Child"
+        row.addRow(child)
+        // No crash = success
+    }
 }

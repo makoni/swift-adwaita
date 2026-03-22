@@ -12,6 +12,13 @@ public final class Switch: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a switch with an initial state and an optional change handler.
+    public convenience init(active: Bool, onActiveChanged handler: (@MainActor () -> Void)? = nil) {
+        self.init()
+        self.active = active
+        if let handler { self.onActiveChanged(handler) }
+    }
+
     override internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

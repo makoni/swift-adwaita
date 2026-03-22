@@ -393,17 +393,41 @@ public enum SignalHelper {
     // MARK: - Property notification
 
     /// Connects to `notify::property-name` to observe property changes.
+    ///
+    /// The `notify` signal has the C signature `(GObject*, GParamSpec*, gpointer)`.
+    /// This uses a dedicated 3-arg trampoline that ignores the GParamSpec.
     @discardableResult
     public static func onNotify(
         _ instance: GObjectRef,
         property: String,
         handler: @escaping @MainActor () -> Void
     ) -> SignalConnection {
-        connect(instance, signal: "notify::\(property)", handler: handler)
+        connectRaw(
+            instance, signal: "notify::\(property)",
+            trampoline: unsafeBitCast(
+                signalTrampolineNotify as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, UnsafeMutableRawPointer) -> Void,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
     }
 }
 
 // MARK: - C-compatible trampoline functions
+
+/// Trampoline for `notify::property` signals: (GObject*, GParamSpec*, gpointer).
+/// Ignores the GParamSpec parameter and calls a void handler.
+private func signalTrampolineNotify(
+    _ instance: UnsafeMutableRawPointer,
+    _ pspec: OpaquePointer,
+    _ userData: UnsafeMutableRawPointer
+) {
+    let box = Unmanaged<ClosureBox<@MainActor () -> Void>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    MainActor.assumeIsolated {
+        box.closure()
+    }
+}
 
 private func signalTrampoline0(
     _ instance: UnsafeMutableRawPointer,
