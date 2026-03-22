@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct NavigationSplitViewExample: DemoExample {

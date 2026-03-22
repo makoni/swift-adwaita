@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct CarouselExample: DemoExample {

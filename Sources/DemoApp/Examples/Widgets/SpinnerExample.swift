@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct SpinnerExample: DemoExample {
@@ -69,12 +68,6 @@ struct SpinnerExample: DemoExample {
 
         box.append(controlGroup)
 
-        let clamp = Clamp()
-        clamp.maximumSize = 600
-        clamp.child = box
-
-        let scrolled = ScrolledWindow()
-        scrolled.child = clamp
-        return scrolled
+        return box.scrollableClamped()
     }
 }

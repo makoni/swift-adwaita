@@ -130,12 +130,6 @@ struct CssProviderExample: DemoExample {
 
         box.append(group4)
 
-        let clamp = Clamp()
-        clamp.maximumSize = 600
-        clamp.child = box
-
-        let scrolled = ScrolledWindow()
-        scrolled.child = clamp
-        return scrolled
+        return box.scrollableClamped()
     }
 }

@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct SeparatorExample: DemoExample {
@@ -83,12 +82,6 @@ struct SeparatorExample: DemoExample {
         group2.add(vbox)
         box.append(group2)
 
-        let clamp = Clamp()
-        clamp.maximumSize = 600
-        clamp.child = box
-
-        let scrolled = ScrolledWindow()
-        scrolled.child = clamp
-        return scrolled
+        return box.scrollableClamped()
     }
 }

@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct AvatarExample: DemoExample {
@@ -77,12 +76,6 @@ struct AvatarExample: DemoExample {
 
         box.append(rowGroup)
 
-        let clamp = Clamp()
-        clamp.maximumSize = 600
-        clamp.child = box
-
-        let scrolled = ScrolledWindow()
-        scrolled.child = clamp
-        return scrolled
+        return box.scrollableClamped()
     }
 }

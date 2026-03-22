@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct ListRowsExample: DemoExample {
@@ -122,12 +121,6 @@ struct ListRowsExample: DemoExample {
         box.append(group)
         box.append(dangerGroup)
 
-        let clamp = Clamp()
-        clamp.maximumSize = 600
-        clamp.child = box
-
-        let scrolled = ScrolledWindow()
-        scrolled.child = clamp
-        return scrolled
+        return box.scrollableClamped()
     }
 }

@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct SwitchExample: DemoExample {
@@ -75,12 +74,6 @@ struct SwitchExample: DemoExample {
         checkGroup.add(checkBox)
         box.append(checkGroup)
 
-        let clamp = Clamp()
-        clamp.maximumSize = 600
-        clamp.child = box
-
-        let scrolled = ScrolledWindow()
-        scrolled.child = clamp
-        return scrolled
+        return box.scrollableClamped()
     }
 }

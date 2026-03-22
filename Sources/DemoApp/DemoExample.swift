@@ -44,6 +44,7 @@ let allExamples: [any DemoExample] = [
     PreferencesDialogExample(),
     SpringAnimationExample(),
     MenuExample(),
+    MenuBarExample(),
     // Individual widgets
     ButtonExample(),
     EntryExample(),
@@ -88,4 +89,6 @@ let allExamples: [any DemoExample] = [
     FileDialogExample(),
     DragDropExample(),
     CssProviderExample(),
+    VideoExample(),
+    StackSwitcherExample(),
 ]

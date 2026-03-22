@@ -5,19 +5,37 @@ An imperative Swift 6.2 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [liba
 ## Features
 
 - **Imperative API** — no declarative DSL; create and configure widgets directly
-- **74 generated Adwaita wrappers** — `ActionRow`, `OverlaySplitView`, `TabView`, `Carousel`, `Toast`, and more
-- **22 hand-written GTK wrappers** — `Button`, `Box`, `Label`, `Entry`, `ListBox`, `Stack`, `Scale`, `TextView`, etc.
-- **49 signals** — type-safe signal connections with `@MainActor` closures
-- **Property bindings** — `GObjectRef.bind()` for `g_object_bind_property`
+- **141 widget wrappers** — 74 auto-generated Adwaita + 67 hand-written GTK widgets
+- **Type-safe signals** — 20+ signal signatures with `@MainActor` closures
+- **Keyboard shortcuts** — enum-based `Key` + `KeyModifiers` API
+- **Property bindings** — `GObjectRef.bind()` for reactive connections
+- **Menus & actions** — `GMenuRef`, `SimpleAction`, `MenuButton`
+- **Drag & drop** — `DragSource`, `DropTarget`
+- **File dialogs** — async open/save/folder with `FileDialog`
+- **Clipboard** — copy/paste with `Clipboard`
 - **CSS support** — `CSSProvider` for custom stylesheets
-- **Swift 6.2 concurrency** — full `@MainActor` isolation, `Sendable` widget types
-- **Code generator** — GIR-based generator produces wrappers from introspection data
+- **Animations** — `TimedAnimation`, `SpringAnimation` with callbacks
+- **Drawing** — `DrawingArea` with Cairo
+- **Swift 6.2 concurrency** — full `@MainActor` isolation, `Sendable` types
+- **386 tests**, **67 demo examples**
 
 ## Requirements
 
 - Swift 6.2+
-- libadwaita 1.x (`libadwaita-1-dev` on Ubuntu/Debian, `libadwaita` on Fedora/Arch)
-- Linux (GTK4 is Linux-native)
+- libadwaita 1.4+ development headers
+- Linux
+
+### Ubuntu/Debian
+
+```bash
+sudo apt install libadwaita-1-dev
+```
+
+### Fedora
+
+```bash
+sudo dnf install libadwaita-devel
+```
 
 ## Installation
 
@@ -25,7 +43,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/nicegamer7/swift-adwaita.git", branch: "main"),
+    .package(url: "https://github.com/nicegram/swift-adwaita.git", branch: "main"),
 ],
 targets: [
     .executableTarget(
@@ -41,7 +59,6 @@ targets: [
 
 ```swift
 import Adwaita
-import CAdwaita
 
 @MainActor
 func buildApp() {
@@ -53,7 +70,7 @@ func buildApp() {
         window.defaultWidth = 400
         window.defaultHeight = 300
 
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 12)
+        let box = Box(orientation: .vertical, spacing: 12)
         box.setMargins(24)
 
         let label = Label("Hello from swift-adwaita!")
@@ -61,6 +78,9 @@ func buildApp() {
         box.append(label)
 
         let button = Button(label: "Click Me")
+        button.addCSSClass("suggested-action")
+        button.addCSSClass("pill")
+        button.halign = .center
         button.onClicked {
             label.text = "Button clicked!"
         }
@@ -78,55 +98,146 @@ buildApp()
 
 ## Architecture
 
-The library has a three-layer architecture:
+Three-layer design:
 
 ```
-CAdwaita          — system module importing libadwaita via pkg-config
-    ↓
-GObjectSupport    — GObject lifecycle management (ref counting, signals, GValue)
-    ↓
-Adwaita           — Swift widget wrappers (generated + hand-written)
+CAdwaita          System library (pkg-config: libadwaita-1)
+  |
+GObjectSupport    GObject lifecycle (ARC), signals, GValue
+  |
+Adwaita           Widget wrappers (74 generated + 67 hand-written)
 ```
 
 ### Key Types
 
 | Type | Description |
 |------|-------------|
-| `GObjectRef` | Base class managing GObject lifecycle with ref counting |
-| `Widget` | Base class for all GTK/Adwaita widgets |
-| `SignalConnection` | Handle for connected signals (supports disconnect) |
-| `Application` | `AdwApplication` wrapper — entry point for apps |
-| `ApplicationWindow` | Main application window |
+| `GObjectRef` | Base class — GObject lifecycle with ARC |
+| `Widget` | Base for all GTK/Adwaita widgets |
+| `SignalConnection` | Handle for signal connections |
+| `Application` | App entry point (`AdwApplication`) |
+| `ApplicationWindow` | Main window |
 
 ### Widget Categories
 
-**Layout:** `Box`, `Stack`, `Overlay`, `FlowBox`, `Clamp`, `OverlaySplitView`, `NavigationView`
+**Layout:** `Box`, `Stack`, `Grid`, `Overlay`, `FlowBox`, `Clamp`, `Paned`, `WrapBox`, `CenterBox`, `Fixed`
 
-**Input:** `Button`, `Entry`, `Switch`, `CheckButton`, `ToggleButton`, `Scale`, `SpinRow`, `SearchEntry`
+**Navigation:** `NavigationView`, `NavigationSplitView`, `OverlaySplitView`, `TabView`, `ViewSwitcher`, `Notebook`, `Carousel`
 
-**Display:** `Label`, `Image`, `Spinner`, `ProgressBar`, `LevelBar`, `Avatar`, `Banner`
+**Input:** `Button`, `Entry`, `Switch`, `CheckButton`, `ToggleButton`, `Scale`, `SpinRow`, `SearchEntry`, `DropDown`, `Calendar`, `ToggleGroup`
 
-**Lists:** `ListBox`, `ActionRow`, `ExpanderRow`, `ComboRow`, `SwitchRow`, `PreferencesGroup`
+**Display:** `Label`, `Image`, `Picture`, `Spinner`, `ProgressBar`, `LevelBar`, `Avatar`, `Banner`, `Separator`, `Video`
 
-**Containers:** `ScrolledWindow`, `ToolbarView`, `HeaderBar`, `TabView`, `Carousel`, `BottomSheet`
+**Lists:** `ListBox`, `ActionRow`, `ExpanderRow`, `ComboRow`, `SwitchRow`, `ButtonRow`, `PreferencesGroup`
 
-**Dialogs:** `AlertDialog`, `Dialog`, `AboutDialog`, `PreferencesDialog`
+**Containers:** `ScrolledWindow`, `ToolbarView`, `HeaderBar`, `BottomSheet`, `Frame`, `Expander`, `Revealer`, `ActionBar`
 
-**Feedback:** `Toast`, `ToastOverlay`
+**Dialogs:** `AlertDialog`, `Dialog`, `AboutDialog`, `PreferencesDialog`, `FileDialog`
 
-## Demo App
+**Menus:** `MenuButton`, `PopoverMenu`, `PopoverMenuBar`, `SplitButton`, `GMenuRef`, `SimpleAction`
 
-A built-in demo app showcases all widgets with interactive examples and source code:
+**Event Controllers:** `GestureClick`, `GestureDrag`, `GestureLongPress`, `EventControllerKey`, `EventControllerMotion`, `EventControllerScroll`, `EventControllerFocus`, `DragSource`, `DropTarget`, `ShortcutController`
 
-```bash
-swift run DemoApp
+**Feedback:** `Toast`, `ToastOverlay`, `EmojiChooser`
+
+**Styling:** `CSSProvider`, `StyleManager`
+
+**Animation:** `TimedAnimation`, `SpringAnimation`, `CallbackAnimationTarget`, `PropertyAnimationTarget`
+
+## Examples
+
+### Keyboard Shortcuts
+
+```swift
+// Enum-based API
+button.addKeyboardShortcut(key: .s, modifiers: .control) {
+    print("Save!")
+    return true
+}
+
+// Multiple modifiers
+widget.addKeyboardShortcut(key: .z, modifiers: [.control, .shift]) {
+    print("Redo!")
+    return true
+}
+
+// ShortcutController for grouped shortcuts
+let controller = ShortcutController()
+controller.addShortcut(key: .n, modifiers: .control) {
+    print("New!")
+    return true
+}
+widget.addController(controller)
 ```
 
-The demo includes 20 examples organized into composite layouts and individual widgets, with a "Show Code" button for each example.
+### Menus & Actions
 
-## Signals
+```swift
+let menu = GMenuRef()
+menu.append("Cut", action: "win.cut")
+menu.append("Copy", action: "win.copy")
 
-Connect to widget signals with closures:
+let menuBtn = MenuButton()
+menuBtn.iconName = "open-menu-symbolic"
+menuBtn.setMenuModel(menu)
+
+let action = SimpleAction(name: "cut")
+action.onActivate { print("Cut!") }
+window.addAction(action)
+```
+
+### Property Binding
+
+```swift
+switch1.bind("active", to: switch2, property: "active",
+    flags: G_BINDING_SYNC_CREATE)
+```
+
+### File Dialog
+
+```swift
+let dialog = FileDialog()
+dialog.title = "Open File"
+dialog.setFilters([
+    FileFilter(name: "Swift files", suffixes: ["swift"]),
+    FileFilter(name: "All files", patterns: ["*"]),
+])
+dialog.open(parent: window) { path in
+    if let path { print("Selected: \(path)") }
+}
+```
+
+### Drag & Drop
+
+```swift
+// Drag source
+let drag = DragSource()
+drag.setTextContent("Hello!")
+sourceWidget.addController(drag)
+
+// Drop target
+let drop = DropTarget.forText()
+drop.onDrop { text in
+    if let text { label.text = text }
+    return true
+}
+targetWidget.addController(drop)
+```
+
+### Custom CSS
+
+```swift
+CSSProvider.loadGlobal("""
+.my-widget {
+    background: linear-gradient(135deg, @accent_bg_color, @headerbar_bg_color);
+    border-radius: 12px;
+    padding: 24px;
+}
+""")
+widget.addCSSClass("my-widget")
+```
+
+### Signals
 
 ```swift
 let button = Button(label: "Save")
@@ -134,49 +245,29 @@ button.onClicked {
     print("Saved!")
 }
 
-let entry = Entry()
-entry.onChanged {
-    print("Text: \(entry.text)")
-}
-
 // Disconnect later
 let connection = button.onClicked { ... }
 connection.disconnect()
 ```
 
-## Custom CSS
+## Demo App
 
-```swift
-let css = CSSProvider()
-css.loadFromString("""
-    .my-button {
-        background: #3584e4;
-        color: white;
-        border-radius: 12px;
-    }
-""")
-css.addToDefaultDisplay()
+An interactive gallery with 67 examples showcasing every widget:
 
-let button = Button(label: "Styled")
-button.addCSSClass("my-button")
+```bash
+swift run DemoApp
 ```
+
+Features sidebar search, source code viewer, and windowed demos for navigation/window-level widgets.
 
 ## Building
 
 ```bash
-# Install dependencies (Ubuntu/Debian)
-sudo apt install libadwaita-1-dev
-
-# Build
-swift build
-
-# Run tests
-swift test
-
-# Run demo
-swift run DemoApp
+swift build       # Build library
+swift test        # Run 386 tests
+swift run DemoApp # Launch demo gallery
 ```
 
 ## License
 
-MIT
+Apache License 2.0. See [LICENSE.txt](LICENSE.txt).

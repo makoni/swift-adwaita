@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct WrapBoxExample: DemoExample {
@@ -62,12 +61,6 @@ struct WrapBoxExample: DemoExample {
         group2.add(wrap2)
         box.append(group2)
 
-        let clamp = Clamp()
-        clamp.maximumSize = 600
-        clamp.child = box
-
-        let scrolled = ScrolledWindow()
-        scrolled.child = clamp
-        return scrolled
+        return box.scrollableClamped()
     }
 }
