@@ -31,6 +31,12 @@ public final class SearchEntry: Widget {
         set { gtk_search_entry_set_placeholder_text(opaquePointer, newValue) }
     }
 
+    /// The delay in milliseconds between the last keystroke and the search-changed signal.
+    public var searchDelay: Int {
+        get { Int(gtk_search_entry_get_search_delay(opaquePointer)) }
+        set { gtk_search_entry_set_search_delay(opaquePointer, UInt32(newValue)) }
+    }
+
     /// Connects to the `search-changed` signal (fired after typing stops).
     @discardableResult
     public func onSearchChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {

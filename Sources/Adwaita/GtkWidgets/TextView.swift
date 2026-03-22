@@ -119,4 +119,12 @@ public final class TextView: Widget {
         get { gtk_text_view_get_overwrite(castedPointer()) != 0 }
         set { gtk_text_view_set_overwrite(castedPointer(), newValue ? 1 : 0) }
     }
+
+    /// Connects to the buffer's `changed` signal (text was modified).
+    @discardableResult
+    public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        let buf = gtk_text_view_get_buffer(castedPointer())!
+        let bufRef = GObjectRef(borrowing: UnsafeMutableRawPointer(buf))
+        return SignalHelper.connect(bufRef, signal: "changed", handler: handler)
+    }
 }

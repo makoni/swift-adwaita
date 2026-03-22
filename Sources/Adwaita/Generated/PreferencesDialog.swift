@@ -31,6 +31,21 @@ open class PreferencesDialog: Dialog {
         set { adw_preferences_dialog_set_visible_page_name(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>, newValue) }
     }
 
+    /// Adds a preferences page to the dialog.
+    public func add(_ page: PreferencesPage) {
+        adw_preferences_dialog_add(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>, page.castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>)
+    }
+
+    /// Removes a preferences page from the dialog.
+    public func remove(_ page: PreferencesPage) {
+        adw_preferences_dialog_remove(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>, page.castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>)
+    }
+
+    /// Pushes a subpage onto the navigation stack.
+    public func pushSubpage(_ page: NavigationPage) {
+        adw_preferences_dialog_push_subpage(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>, page.castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)
+    }
+
     /// Displays a toast notification (transfer-full: adds a ref before passing).
     public func addToast(_ toast: Toast) {
         g_object_ref(toast.pointer)

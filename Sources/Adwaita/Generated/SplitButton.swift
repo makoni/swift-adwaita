@@ -60,6 +60,20 @@ public final class SplitButton: Widget {
         set { adw_split_button_set_use_underline(opaquePointer, newValue ? 1 : 0) }
     }
 
+    /// Sets the menu model for the dropdown.
+    public func setMenuModel(_ menu: GMenuRef?) {
+        adw_split_button_set_menu_model(opaquePointer, menu?.menuModelPointer)
+    }
+
+    /// Sets the popover for the dropdown.
+    public func setPopover(_ popover: Widget?) {
+        if let popover {
+            adw_split_button_set_popover(opaquePointer, popover.castedPointer() as UnsafeMutablePointer<GtkPopover>)
+        } else {
+            adw_split_button_set_popover(opaquePointer, nil)
+        }
+    }
+
     /// Calls `adw_split_button_popdown`.
     public func popdown() {
         adw_split_button_popdown(opaquePointer)

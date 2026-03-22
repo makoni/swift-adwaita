@@ -37,6 +37,27 @@ public final class CheckButton: Widget {
         set { gtk_check_button_set_label(castedPointer(), newValue) }
     }
 
+    /// Whether the check button is in an inconsistent (tri-state) state.
+    public var inconsistent: Bool {
+        get { gtk_check_button_get_inconsistent(castedPointer()) != 0 }
+        set { gtk_check_button_set_inconsistent(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// The child widget displayed instead of the label.
+    public var child: Widget? {
+        get {
+            guard let ptr = gtk_check_button_get_child(castedPointer()) else { return nil }
+            return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+        }
+        set { gtk_check_button_set_child(castedPointer(), newValue?.widgetPointer) }
+    }
+
+    /// Whether the check button uses underline for mnemonics.
+    public var useUnderline: Bool {
+        get { gtk_check_button_get_use_underline(castedPointer()) != 0 }
+        set { gtk_check_button_set_use_underline(castedPointer(), newValue ? 1 : 0) }
+    }
+
     /// Sets the radio group by linking to another check button.
     public func setGroup(_ other: CheckButton?) {
         gtk_check_button_set_group(castedPointer(), other.map { $0.castedPointer() })

@@ -61,4 +61,6 @@ let allExamples: [any DemoExample] = [
     PictureExample(),
     SeparatorExample(),
     SearchBarExample(),
+    SplitButtonExample(),
+    CheckButtonExample(),
 ]

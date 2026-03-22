@@ -2917,4 +2917,159 @@ func ensureAdwInit() {
         #expect(GtkNaturalWrapMode.none == GTK_NATURAL_WRAP_NONE)
         #expect(GtkNaturalWrapMode.word == GTK_NATURAL_WRAP_WORD)
     }
+
+    // MARK: - Batch 8: SplitButton menuModel/popover
+
+    @Test @MainActor func splitButtonMenuModel() {
+        ensureAdwInit()
+        let btn = SplitButton()
+        let menu = GMenuRef()
+        menu.append("Test", action: "app.test")
+        btn.setMenuModel(menu)
+        // No crash = success
+    }
+
+    @Test @MainActor func splitButtonPopover() {
+        ensureAdwInit()
+        let btn = SplitButton()
+        let pop = Popover()
+        pop.child = Label("Custom")
+        btn.setPopover(pop)
+        // No crash = success
+    }
+
+    @Test @MainActor func splitButtonClickedSignal() {
+        ensureAdwInit()
+        let btn = SplitButton()
+        btn.label = "Test"
+        btn.onClicked {}
+        btn.onActivate {}
+        // No crash = success
+    }
+
+    // MARK: - PreferencesDialog add/remove
+
+    @Test @MainActor func preferencesDialogAddRemove() {
+        ensureAdwInit()
+        let dialog = PreferencesDialog()
+        let page = PreferencesPage()
+        page.title = "General"
+        dialog.add(page)
+        dialog.remove(page)
+        // No crash = success
+    }
+
+    // MARK: - CheckButton enhancements
+
+    @Test @MainActor func checkButtonInconsistent() {
+        ensureAdwInit()
+        let check = CheckButton(label: "Test")
+        #expect(check.inconsistent == false)
+        check.inconsistent = true
+        #expect(check.inconsistent == true)
+    }
+
+    @Test @MainActor func checkButtonChild() {
+        ensureAdwInit()
+        let check = CheckButton()
+        let label = Label("Custom child")
+        check.child = label
+        #expect(check.child != nil)
+    }
+
+    @Test @MainActor func checkButtonUseUnderline() {
+        ensureAdwInit()
+        let check = CheckButton(label: "_Mnemonic")
+        check.useUnderline = true
+        #expect(check.useUnderline == true)
+    }
+
+    // MARK: - DropDown showArrow
+
+    @Test @MainActor func dropDownShowArrow() {
+        ensureAdwInit()
+        let dd = DropDown(strings: ["A", "B"])
+        #expect(dd.showArrow == true)
+        dd.showArrow = false
+        #expect(dd.showArrow == false)
+    }
+
+    // MARK: - SearchEntry searchDelay
+
+    @Test @MainActor func searchEntryDelay() {
+        ensureAdwInit()
+        let entry = SearchEntry()
+        entry.searchDelay = 500
+        #expect(entry.searchDelay == 500)
+    }
+
+    // MARK: - ToggleButton enhancements
+
+    @Test @MainActor func toggleButtonChild() {
+        ensureAdwInit()
+        let btn = ToggleButton()
+        let label = Label("Custom")
+        btn.child = label
+        #expect(btn.child != nil)
+    }
+
+    @Test @MainActor func toggleButtonHasFrame() {
+        ensureAdwInit()
+        let btn = ToggleButton(label: "Test")
+        #expect(btn.hasFrame == true)
+        btn.hasFrame = false
+        #expect(btn.hasFrame == false)
+    }
+
+    // MARK: - Widget tree navigation
+
+    @Test @MainActor func widgetParent() {
+        ensureAdwInit()
+        let box = Box(orientation: .vertical, spacing: 0)
+        let label = Label("Child")
+        box.append(label)
+        #expect(label.parent != nil)
+    }
+
+    @Test @MainActor func widgetFirstLastChild() {
+        ensureAdwInit()
+        let box = Box(orientation: .vertical, spacing: 0)
+        let a = Label("A")
+        let b = Label("B")
+        box.append(a)
+        box.append(b)
+        #expect(box.firstChild != nil)
+        #expect(box.lastChild != nil)
+    }
+
+    @Test @MainActor func widgetSiblings() {
+        ensureAdwInit()
+        let box = Box(orientation: .vertical, spacing: 0)
+        let a = Label("A")
+        let b = Label("B")
+        box.append(a)
+        box.append(b)
+        #expect(a.nextSibling != nil)
+        #expect(b.prevSibling != nil)
+    }
+
+    @Test @MainActor func widgetActivate() {
+        ensureAdwInit()
+        let btn = Button(label: "Test")
+        // activate() on a button without a parent returns false
+        let result = btn.activate()
+        _ = result
+        // No crash = success
+    }
+
+    // MARK: - TextView onChanged
+
+    @Test @MainActor func textViewOnChanged() {
+        ensureAdwInit()
+        let tv = TextView()
+        var changed = false
+        tv.onChanged { changed = true }
+        tv.text = "Hello"
+        #expect(changed == true)
+    }
 }

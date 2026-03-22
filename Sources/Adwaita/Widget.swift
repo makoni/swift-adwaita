@@ -121,6 +121,43 @@ open class Widget: GObjectRef {
         return Widget(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
+    /// The parent widget.
+    public var parent: Widget? {
+        guard let ptr = gtk_widget_get_parent(widgetPointer) else { return nil }
+        return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The first child widget.
+    public var firstChild: Widget? {
+        guard let ptr = gtk_widget_get_first_child(widgetPointer) else { return nil }
+        return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The last child widget.
+    public var lastChild: Widget? {
+        guard let ptr = gtk_widget_get_last_child(widgetPointer) else { return nil }
+        return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The next sibling widget.
+    public var nextSibling: Widget? {
+        guard let ptr = gtk_widget_get_next_sibling(widgetPointer) else { return nil }
+        return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The previous sibling widget.
+    public var prevSibling: Widget? {
+        guard let ptr = gtk_widget_get_prev_sibling(widgetPointer) else { return nil }
+        return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// Activates the widget (emits the default action).
+    /// Returns `true` if the widget was activated.
+    @discardableResult
+    public func activate() -> Bool {
+        gtk_widget_activate(widgetPointer) != 0
+    }
+
     /// The opacity of the widget, from 0.0 (fully transparent) to 1.0 (fully opaque).
     public var opacity: Double {
         get { gtk_widget_get_opacity(widgetPointer) }

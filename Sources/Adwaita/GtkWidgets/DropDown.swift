@@ -39,6 +39,12 @@ public final class DropDown: Widget {
         set { gtk_drop_down_set_enable_search(opaquePointer, newValue ? 1 : 0) }
     }
 
+    /// Whether to show an arrow indicator.
+    public var showArrow: Bool {
+        get { gtk_drop_down_get_show_arrow(opaquePointer) != 0 }
+        set { gtk_drop_down_set_show_arrow(opaquePointer, newValue ? 1 : 0) }
+    }
+
     /// Connects to the `notify::selected` signal to observe selection changes.
     @discardableResult
     public func onSelectedChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
