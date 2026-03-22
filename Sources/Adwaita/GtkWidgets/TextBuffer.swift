@@ -132,4 +132,32 @@ public final class TextBuffer: GObjectRef {
     public func onModifiedChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: "modified-changed", handler: handler)
     }
+
+    // MARK: - Undo / Redo
+
+    /// Whether undo is enabled on this buffer.
+    public var enableUndo: Bool {
+        get { gtk_text_buffer_get_enable_undo(bufferPointer) != 0 }
+        set { gtk_text_buffer_set_enable_undo(bufferPointer, newValue ? 1 : 0) }
+    }
+
+    /// Whether an undo action is available.
+    public var canUndo: Bool {
+        gtk_text_buffer_get_can_undo(bufferPointer) != 0
+    }
+
+    /// Whether a redo action is available.
+    public var canRedo: Bool {
+        gtk_text_buffer_get_can_redo(bufferPointer) != 0
+    }
+
+    /// Undoes the last user action.
+    public func undo() {
+        gtk_text_buffer_undo(bufferPointer)
+    }
+
+    /// Redoes the last undone user action.
+    public func redo() {
+        gtk_text_buffer_redo(bufferPointer)
+    }
 }

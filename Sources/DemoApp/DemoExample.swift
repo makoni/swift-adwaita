@@ -29,6 +29,7 @@ let allExamples: [any DemoExample] = [
     NavigationViewExample(),
     ViewSwitcherExample(),
     StyleManagerExample(),
+    AboutDialogExample(),
     // Individual widgets
     ButtonExample(),
     EntryExample(),
@@ -52,4 +53,7 @@ let allExamples: [any DemoExample] = [
     CalendarExample(),
     DrawingAreaExample(),
     TextViewExample(),
+    FlowBoxExample(),
+    OverlayExample(),
+    EmojiChooserExample(),
 ]

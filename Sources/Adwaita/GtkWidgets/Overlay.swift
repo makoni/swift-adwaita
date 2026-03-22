@@ -35,4 +35,24 @@ public final class Overlay: Widget {
     public func removeOverlay(_ widget: Widget) {
         gtk_overlay_remove_overlay(opaquePointer, widget.widgetPointer)
     }
+
+    /// Sets whether an overlay widget should be clipped to the main child's allocation.
+    public func setClipOverlay(_ widget: Widget, clip: Bool) {
+        gtk_overlay_set_clip_overlay(opaquePointer, widget.widgetPointer, clip ? 1 : 0)
+    }
+
+    /// Returns whether an overlay widget is clipped.
+    public func getClipOverlay(_ widget: Widget) -> Bool {
+        gtk_overlay_get_clip_overlay(opaquePointer, widget.widgetPointer) != 0
+    }
+
+    /// Sets whether an overlay widget is included in the measurement of the main child.
+    public func setMeasureOverlay(_ widget: Widget, measure: Bool) {
+        gtk_overlay_set_measure_overlay(opaquePointer, widget.widgetPointer, measure ? 1 : 0)
+    }
+
+    /// Returns whether an overlay widget is measured.
+    public func getMeasureOverlay(_ widget: Widget) -> Bool {
+        gtk_overlay_get_measure_overlay(opaquePointer, widget.widgetPointer) != 0
+    }
 }

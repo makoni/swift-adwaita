@@ -35,6 +35,15 @@ public final class MenuButton: Widget {
     }
 
     /// The popover widget.
+    public var popover: Widget? {
+        get {
+            guard let ptr = gtk_menu_button_get_popover(opaquePointer) else { return nil }
+            return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+        }
+        set { gtk_menu_button_set_popover(opaquePointer, newValue?.widgetPointer) }
+    }
+
+    /// Sets the popover widget.
     public func setPopover(_ popover: Widget?) {
         gtk_menu_button_set_popover(opaquePointer, popover?.widgetPointer)
     }

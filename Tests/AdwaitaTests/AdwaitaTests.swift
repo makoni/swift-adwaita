@@ -2336,4 +2336,169 @@ func ensureAdwInit() {
         #expect(GtkJustification.center == GTK_JUSTIFY_CENTER)
         #expect(GtkJustification.fill == GTK_JUSTIFY_FILL)
     }
+
+    // MARK: - SearchBar
+
+    @Test @MainActor func searchBarCreation() {
+        ensureAdwInit()
+        let bar = SearchBar()
+        #expect(bar.searchModeEnabled == false)
+        #expect(bar.showCloseButton == false)
+    }
+
+    @Test @MainActor func searchBarProperties() {
+        ensureAdwInit()
+        let bar = SearchBar()
+        bar.searchModeEnabled = true
+        #expect(bar.searchModeEnabled == true)
+        bar.showCloseButton = true
+        #expect(bar.showCloseButton == true)
+        let entry = SearchEntry()
+        bar.child = entry
+        #expect(bar.child != nil)
+    }
+
+    // MARK: - EmojiChooser
+
+    @Test @MainActor func emojiChooserCreation() {
+        ensureAdwInit()
+        let chooser = EmojiChooser()
+        // No crash = success
+        _ = chooser.widgetPointer
+    }
+
+    // MARK: - PopoverMenuBar
+
+    @Test @MainActor func popoverMenuBarCreation() {
+        ensureAdwInit()
+        let menu = GMenuRef()
+        menu.append("Open", action: "app.open")
+        menu.append("Quit", action: "app.quit")
+        let bar = PopoverMenuBar(model: menu)
+        // No crash = success
+        _ = bar.widgetPointer
+    }
+
+    // MARK: - Fixed
+
+    @Test @MainActor func fixedCreation() {
+        ensureAdwInit()
+        let fixed = Fixed()
+        let label = Label("Hello")
+        fixed.put(label, x: 10, y: 20)
+        // No crash = success
+    }
+
+    @Test @MainActor func fixedMove() {
+        ensureAdwInit()
+        let fixed = Fixed()
+        let btn = Button(label: "Move me")
+        fixed.put(btn, x: 0, y: 0)
+        fixed.move(btn, x: 50, y: 100)
+        // No crash = success
+    }
+
+    // MARK: - TextBuffer undo/redo
+
+    @Test @MainActor func textBufferUndoRedo() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        #expect(buf.enableUndo == true) // enabled by default
+        buf.beginUserAction()
+        buf.text = "Hello"
+        buf.endUserAction()
+        #expect(buf.canUndo == true)
+        buf.undo()
+        #expect(buf.text == "")
+        #expect(buf.canRedo == true)
+        buf.redo()
+        #expect(buf.text == "Hello")
+    }
+
+    // MARK: - ListBox enhancements
+
+    @Test @MainActor func listBoxSelectRow() {
+        ensureAdwInit()
+        let lb = ListBox()
+        lb.selectionMode = .single
+        let l1 = Label("Row 1")
+        let l2 = Label("Row 2")
+        lb.append(l1)
+        lb.append(l2)
+        lb.selectRow(at: 0)
+        #expect(lb.selectedRow != nil)
+    }
+
+    @Test @MainActor func listBoxRowAt() {
+        ensureAdwInit()
+        let lb = ListBox()
+        let l1 = Label("A")
+        lb.append(l1)
+        let row = lb.rowAt(0)
+        #expect(row != nil)
+        let noRow = lb.rowAt(99)
+        #expect(noRow == nil)
+    }
+
+    @Test @MainActor func listBoxPlaceholder() {
+        ensureAdwInit()
+        let lb = ListBox()
+        let placeholder = Label("No items")
+        lb.setPlaceholder(placeholder)
+        // No crash = success
+    }
+
+    // MARK: - Widget focus
+
+    @Test @MainActor func widgetFocusable() {
+        ensureAdwInit()
+        let label = Label("Focus test")
+        #expect(label.isFocusable == false)
+        label.isFocusable = true
+        #expect(label.isFocusable == true)
+    }
+
+    @Test @MainActor func widgetCanTarget() {
+        ensureAdwInit()
+        let btn = Button(label: "Target")
+        #expect(btn.canTarget == true)
+        btn.canTarget = false
+        #expect(btn.canTarget == false)
+    }
+
+    // MARK: - Overlay enhancements
+
+    @Test @MainActor func overlayClipAndMeasure() {
+        ensureAdwInit()
+        let overlay = Overlay()
+        let main = Label("Main")
+        let badge = Label("Badge")
+        overlay.child = main
+        overlay.addOverlay(badge)
+        overlay.setClipOverlay(badge, clip: true)
+        #expect(overlay.getClipOverlay(badge) == true)
+        overlay.setMeasureOverlay(badge, measure: true)
+        #expect(overlay.getMeasureOverlay(badge) == true)
+    }
+
+    // MARK: - MenuButton popover property
+
+    @Test @MainActor func menuButtonPopover() {
+        ensureAdwInit()
+        let btn = MenuButton()
+        #expect(btn.popover == nil)
+        let popover = Popover()
+        btn.popover = popover
+        #expect(btn.popover != nil)
+    }
+
+    // MARK: - Application signals
+
+    @Test @MainActor func applicationSignals() {
+        ensureAdwInit()
+        let app = Application(id: "com.test.signals")
+        // Just verify signal connection doesn't crash
+        app.onStartup {}
+        app.onShutdown {}
+    }
 }

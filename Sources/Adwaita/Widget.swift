@@ -136,6 +136,32 @@ open class Widget: GObjectRef {
         gtk_widget_add_controller(widgetPointer, OpaquePointer(controller.pointer))
     }
 
+    // MARK: - Focus
+
+    /// Requests keyboard focus for this widget.
+    /// Returns `true` if the widget successfully grabbed focus.
+    @discardableResult
+    public func grabFocus() -> Bool {
+        gtk_widget_grab_focus(widgetPointer) != 0
+    }
+
+    /// Whether the widget currently has keyboard focus.
+    public var hasFocus: Bool {
+        gtk_widget_has_focus(widgetPointer) != 0
+    }
+
+    /// Whether the widget can accept keyboard focus.
+    public var isFocusable: Bool {
+        get { gtk_widget_get_focusable(widgetPointer) != 0 }
+        set { gtk_widget_set_focusable(widgetPointer, newValue ? 1 : 0) }
+    }
+
+    /// Whether the widget can be the default widget (activated by Enter).
+    public var canTarget: Bool {
+        get { gtk_widget_get_can_target(widgetPointer) != 0 }
+        set { gtk_widget_set_can_target(widgetPointer, newValue ? 1 : 0) }
+    }
+
     // MARK: - Lifecycle Signals
 
     /// Connects to the `realize` signal -- widget has been associated with a display.

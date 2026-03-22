@@ -44,6 +44,20 @@ public final class Application: GObjectRef {
         SignalHelper.connect(self, signal: "activate", handler: handler)
     }
 
+    /// Connects a handler to the `startup` signal.
+    /// Called once when the application first starts, before `activate`.
+    @discardableResult
+    public func onStartup(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "startup", handler: handler)
+    }
+
+    /// Connects a handler to the `shutdown` signal.
+    /// Called when the application is shutting down.
+    @discardableResult
+    public func onShutdown(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "shutdown", handler: handler)
+    }
+
     // MARK: - Notifications
 
     /// Sends a desktop notification.

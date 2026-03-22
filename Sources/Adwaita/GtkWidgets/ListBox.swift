@@ -85,4 +85,33 @@ public final class ListBox: Widget {
             handler(ListBoxRow(borrowing: UnsafeMutableRawPointer(ptr)))
         }
     }
+
+    /// Selects the row at the given index.
+    public func selectRow(at index: Int) {
+        guard let row = gtk_list_box_get_row_at_index(opaquePointer, Int32(index)) else { return }
+        gtk_list_box_select_row(opaquePointer, row)
+    }
+
+    /// Deselects the row at the given index.
+    public func unselectRow(at index: Int) {
+        guard let row = gtk_list_box_get_row_at_index(opaquePointer, Int32(index)) else { return }
+        gtk_list_box_unselect_row(opaquePointer, row)
+    }
+
+    /// Returns the row at the given index, or nil if out of bounds.
+    public func rowAt(_ index: Int) -> ListBoxRow? {
+        guard let row = gtk_list_box_get_row_at_index(opaquePointer, Int32(index)) else { return nil }
+        return ListBoxRow(borrowing: UnsafeMutableRawPointer(row))
+    }
+
+    /// The currently selected row, or nil.
+    public var selectedRow: ListBoxRow? {
+        guard let row = gtk_list_box_get_selected_row(opaquePointer) else { return nil }
+        return ListBoxRow(borrowing: UnsafeMutableRawPointer(row))
+    }
+
+    /// Placeholder widget shown when the list is empty.
+    public func setPlaceholder(_ widget: Widget?) {
+        gtk_list_box_set_placeholder(opaquePointer, widget?.widgetPointer)
+    }
 }
