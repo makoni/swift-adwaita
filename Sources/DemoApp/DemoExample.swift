@@ -26,6 +26,9 @@ let allExamples: [any DemoExample] = [
     BottomSheetExample(),
     PanedExample(),
     NotebookExample(),
+    NavigationViewExample(),
+    ViewSwitcherExample(),
+    StyleManagerExample(),
     // Individual widgets
     ButtonExample(),
     EntryExample(),
@@ -46,4 +49,7 @@ let allExamples: [any DemoExample] = [
     ColorPickerExample(),
     FontPickerExample(),
     FrameExample(),
+    CalendarExample(),
+    DrawingAreaExample(),
+    TextViewExample(),
 ]

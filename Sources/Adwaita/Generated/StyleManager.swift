@@ -49,4 +49,54 @@ public final class StyleManager: GObjectRef {
     public var systemSupportsColorSchemes: Bool {
         adw_style_manager_get_system_supports_color_schemes(opaquePointer) != 0
     }
+
+    // MARK: - Convenience
+
+    /// Returns the default `StyleManager` instance.
+    public static var `default`: StyleManager {
+        StyleManager(borrowing: UnsafeMutableRawPointer(adw_style_manager_get_default()!))
+    }
+
+    /// Sets the application to force dark theme.
+    public func forceDark() {
+        colorScheme = .forceDark
+    }
+
+    /// Sets the application to force light theme.
+    public func forceLight() {
+        colorScheme = .forceLight
+    }
+
+    /// Sets the application to prefer dark theme (follows system when possible).
+    public func preferDark() {
+        colorScheme = .preferDark
+    }
+
+    /// Sets the application to prefer light theme (follows system when possible).
+    public func preferLight() {
+        colorScheme = .preferLight
+    }
+
+    /// Resets to the default color scheme (follows system).
+    public func resetColorScheme() {
+        colorScheme = .default
+    }
+
+    /// Connects to the `notify::dark` signal to be notified of theme changes.
+    @discardableResult
+    public func onDarkChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "notify::dark", handler: handler)
+    }
+
+    /// Connects to the `notify::accent-color` signal.
+    @discardableResult
+    public func onAccentColorChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "notify::accent-color", handler: handler)
+    }
+
+    /// Connects to the `notify::high-contrast` signal.
+    @discardableResult
+    public func onHighContrastChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: "notify::high-contrast", handler: handler)
+    }
 }

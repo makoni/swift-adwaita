@@ -220,6 +220,17 @@ extension AdwViewSwitcherPolicy {
     public static let wide = ADW_VIEW_SWITCHER_POLICY_WIDE
 }
 
+extension GtkJustification {
+    /// Left justified.
+    public static let left = GTK_JUSTIFY_LEFT
+    /// Right justified.
+    public static let right = GTK_JUSTIFY_RIGHT
+    /// Centered.
+    public static let center = GTK_JUSTIFY_CENTER
+    /// Fill the available width.
+    public static let fill = GTK_JUSTIFY_FILL
+}
+
 extension AdwAnimationState {
     /// Idle state.
     public static let idle = ADW_ANIMATION_IDLE

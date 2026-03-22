@@ -2075,4 +2075,265 @@ func ensureAdwInit() {
         button.addKeyboardShortcut("<Control>s") { true }
         // No crash = success
     }
+
+    // MARK: - DrawingArea
+
+    @Test @MainActor func drawingAreaCreation() {
+        ensureAdwInit()
+        let da = DrawingArea()
+        #expect(da.contentWidth == 0)
+        #expect(da.contentHeight == 0)
+    }
+
+    @Test @MainActor func drawingAreaContentSize() {
+        ensureAdwInit()
+        let da = DrawingArea()
+        da.contentWidth = 300
+        da.contentHeight = 200
+        #expect(da.contentWidth == 300)
+        #expect(da.contentHeight == 200)
+    }
+
+    @Test @MainActor func drawingAreaSetDrawFunc() {
+        ensureAdwInit()
+        let da = DrawingArea()
+        da.contentWidth = 100
+        da.contentHeight = 100
+        da.setDrawFunc { _, _, _ in }
+        // No crash = success
+    }
+
+    // MARK: - Calendar
+
+    @Test @MainActor func calendarCreation() {
+        ensureAdwInit()
+        let cal = Calendar()
+        #expect(cal.year > 2000)
+        #expect(cal.month >= 1 && cal.month <= 12)
+        #expect(cal.day >= 1 && cal.day <= 31)
+    }
+
+    @Test @MainActor func calendarShowProperties() {
+        ensureAdwInit()
+        let cal = Calendar()
+        cal.showWeekNumbers = true
+        #expect(cal.showWeekNumbers == true)
+        cal.showDayNames = false
+        #expect(cal.showDayNames == false)
+        cal.showHeading = false
+        #expect(cal.showHeading == false)
+    }
+
+    @Test @MainActor func calendarMarking() {
+        ensureAdwInit()
+        let cal = Calendar()
+        cal.markDay(15)
+        #expect(cal.dayIsMarked(15) == true)
+        cal.unmarkDay(15)
+        #expect(cal.dayIsMarked(15) == false)
+        cal.markDay(10)
+        cal.markDay(20)
+        cal.clearMarks()
+        #expect(cal.dayIsMarked(10) == false)
+        #expect(cal.dayIsMarked(20) == false)
+    }
+
+    // MARK: - TextBuffer
+
+    @Test @MainActor func textBufferCreation() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        #expect(buf.text == "")
+        #expect(buf.charCount == 0)
+        #expect(buf.lineCount == 1)
+    }
+
+    @Test @MainActor func textBufferSetText() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        buf.text = "Hello, World!"
+        #expect(buf.text == "Hello, World!")
+        #expect(buf.charCount == 13)
+    }
+
+    @Test @MainActor func textBufferMultiLine() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        buf.text = "Line 1\nLine 2\nLine 3"
+        #expect(buf.lineCount == 3)
+    }
+
+    @Test @MainActor func textBufferModified() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        #expect(buf.modified == false)
+        buf.text = "changed"
+        #expect(buf.modified == true)
+        buf.modified = false
+        #expect(buf.modified == false)
+    }
+
+    @Test @MainActor func textBufferInsertAtCursor() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        buf.insertAtCursor("Hello")
+        buf.insertAtCursor(" World")
+        #expect(buf.text == "Hello World")
+    }
+
+    @Test @MainActor func textBufferSelectAll() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        buf.text = "Select me"
+        buf.selectAll()
+        #expect(buf.hasSelection == true)
+        #expect(buf.selectedText == "Select me")
+    }
+
+    @Test @MainActor func textBufferPlaceCursor() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        buf.text = "Cursor test"
+        buf.placeCursorAtStart()
+        buf.placeCursorAtEnd()
+        // No crash = success
+    }
+
+    // MARK: - TextView enhancements
+
+    @Test @MainActor func textViewBuffer() {
+        ensureAdwInit()
+        let tv = TextView()
+        let buf = tv.buffer
+        buf.text = "Via buffer"
+        #expect(tv.text == "Via buffer")
+    }
+
+    @Test @MainActor func textViewJustification() {
+        ensureAdwInit()
+        let tv = TextView()
+        tv.justification = .center
+        #expect(tv.justification == .center)
+    }
+
+    @Test @MainActor func textViewAcceptsTab() {
+        ensureAdwInit()
+        let tv = TextView()
+        #expect(tv.acceptsTab == true)
+        tv.acceptsTab = false
+        #expect(tv.acceptsTab == false)
+    }
+
+    @Test @MainActor func textViewOverwrite() {
+        ensureAdwInit()
+        let tv = TextView()
+        #expect(tv.overwrite == false)
+        tv.overwrite = true
+        #expect(tv.overwrite == true)
+    }
+
+    // MARK: - Video
+
+    @Test @MainActor func videoCreation() {
+        ensureAdwInit()
+        let video = Video()
+        #expect(video.autoplay == false)
+        #expect(video.loop == false)
+    }
+
+    @Test @MainActor func videoProperties() {
+        ensureAdwInit()
+        let video = Video()
+        video.autoplay = true
+        #expect(video.autoplay == true)
+        video.loop = true
+        #expect(video.loop == true)
+    }
+
+    // MARK: - ApplicationWindow enhancements
+
+    @Test @MainActor func windowModalProperty() {
+        ensureAdwInit()
+        let app = Application(id: "com.test.windowmodal")
+        let win = ApplicationWindow(application: app)
+        #expect(win.modal == false)
+        win.modal = true
+        #expect(win.modal == true)
+    }
+
+    @Test @MainActor func windowResizableProperty() {
+        ensureAdwInit()
+        let app = Application(id: "com.test.windowresizable")
+        let win = ApplicationWindow(application: app)
+        #expect(win.resizable == true)
+        win.resizable = false
+        #expect(win.resizable == false)
+    }
+
+    @Test @MainActor func windowDecoratedProperty() {
+        ensureAdwInit()
+        let app = Application(id: "com.test.windowdecorated")
+        let win = ApplicationWindow(application: app)
+        #expect(win.decorated == true)
+        win.decorated = false
+        #expect(win.decorated == false)
+    }
+
+    // MARK: - StyleManager
+
+    @Test @MainActor func styleManagerDefault() {
+        ensureAdwInit()
+        let sm = StyleManager.default
+        // Should not crash and should be usable
+        _ = sm.dark
+        _ = sm.highContrast
+        _ = sm.systemSupportsColorSchemes
+    }
+
+    @Test @MainActor func styleManagerColorScheme() {
+        ensureAdwInit()
+        let sm = StyleManager.default
+        sm.forceDark()
+        #expect(sm.colorScheme == .forceDark)
+        sm.forceLight()
+        #expect(sm.colorScheme == .forceLight)
+        sm.preferDark()
+        #expect(sm.colorScheme == .preferDark)
+        sm.preferLight()
+        #expect(sm.colorScheme == .preferLight)
+        sm.resetColorScheme()
+        #expect(sm.colorScheme == .default)
+    }
+
+    // MARK: - NavigationView
+
+    @Test @MainActor func navigationViewAddPage() {
+        ensureAdwInit()
+        let navView = NavigationView()
+        let content = Label("Page")
+        let page = NavigationPage(child: content, title: "Test Page")
+        navView.add(page)
+        #expect(navView.visiblePage != nil)
+    }
+
+    @Test @MainActor func navigationViewPushPop() {
+        ensureAdwInit()
+        let navView = NavigationView()
+        let page1 = NavigationPage(child: Label("1"), title: "Page 1")
+        navView.add(page1)
+        let page2 = NavigationPage(child: Label("2"), title: "Page 2")
+        navView.push(page2)
+        // Pop should succeed
+        let popped = navView.pop()
+        #expect(popped == true)
+    }
+
+    // MARK: - GtkJustification enum
+
+    @Test @MainActor func justificationEnum() {
+        #expect(GtkJustification.left == GTK_JUSTIFY_LEFT)
+        #expect(GtkJustification.right == GTK_JUSTIFY_RIGHT)
+        #expect(GtkJustification.center == GTK_JUSTIFY_CENTER)
+        #expect(GtkJustification.fill == GTK_JUSTIFY_FILL)
+    }
 }

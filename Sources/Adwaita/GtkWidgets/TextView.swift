@@ -84,4 +84,39 @@ public final class TextView: Widget {
         get { Int(gtk_text_view_get_bottom_margin(castedPointer())) }
         set { gtk_text_view_set_bottom_margin(castedPointer(), Int32(newValue)) }
     }
+
+    /// The underlying `TextBuffer`.
+    public var buffer: TextBuffer {
+        get {
+            let ptr = gtk_text_view_get_buffer(castedPointer())!
+            return TextBuffer(borrowing: UnsafeMutableRawPointer(ptr))
+        }
+        set {
+            gtk_text_view_set_buffer(castedPointer(), newValue.castedPointer())
+        }
+    }
+
+    /// The justification of the text.
+    public var justification: GtkJustification {
+        get { gtk_text_view_get_justification(castedPointer()) }
+        set { gtk_text_view_set_justification(castedPointer(), newValue) }
+    }
+
+    /// Whether the text view accepts tab characters.
+    public var acceptsTab: Bool {
+        get { gtk_text_view_get_accepts_tab(castedPointer()) != 0 }
+        set { gtk_text_view_set_accepts_tab(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// The number of pixels to indent wrapped lines (beyond the first line).
+    public var indent: Int {
+        get { Int(gtk_text_view_get_indent(castedPointer())) }
+        set { gtk_text_view_set_indent(castedPointer(), Int32(newValue)) }
+    }
+
+    /// Whether the text view has overwrite mode enabled.
+    public var overwrite: Bool {
+        get { gtk_text_view_get_overwrite(castedPointer()) != 0 }
+        set { gtk_text_view_set_overwrite(castedPointer(), newValue ? 1 : 0) }
+    }
 }

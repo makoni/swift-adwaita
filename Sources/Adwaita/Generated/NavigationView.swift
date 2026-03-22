@@ -78,6 +78,17 @@ public final class NavigationView: Widget {
         adw_navigation_view_push_by_tag(opaquePointer, tag)
     }
 
+    /// Adds a page to the navigation view.
+    public func add(_ page: NavigationPage) {
+        adw_navigation_view_add(opaquePointer, page.castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)
+    }
+
+    /// Pushes a page onto the navigation stack.
+    public func push(_ page: NavigationPage) {
+        g_object_ref(page.pointer)
+        adw_navigation_view_push(opaquePointer, page.castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)
+    }
+
     /// Connects to the `get-next-page` signal.
     @discardableResult
     public func onGetNextPage(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {

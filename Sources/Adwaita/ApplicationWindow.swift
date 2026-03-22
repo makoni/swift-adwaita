@@ -81,4 +81,85 @@ public final class ApplicationWindow: Widget {
             gtk_window_set_title(castedPointer(), newValue)
         }
     }
+
+    // MARK: - Window State
+
+    /// Requests fullscreen mode.
+    public func fullscreen() {
+        gtk_window_fullscreen(castedPointer())
+    }
+
+    /// Exits fullscreen mode.
+    public func unfullscreen() {
+        gtk_window_unfullscreen(castedPointer())
+    }
+
+    /// Whether the window is fullscreen.
+    public var isFullscreen: Bool {
+        gtk_window_is_fullscreen(castedPointer()) != 0
+    }
+
+    /// Requests the window to be maximized.
+    public func maximize() {
+        gtk_window_maximize(castedPointer())
+    }
+
+    /// Unmaximizes the window.
+    public func unmaximize() {
+        gtk_window_unmaximize(castedPointer())
+    }
+
+    /// Whether the window is maximized.
+    public var isMaximized: Bool {
+        gtk_window_is_maximized(castedPointer()) != 0
+    }
+
+    /// Minimizes the window.
+    public func minimize() {
+        gtk_window_minimize(castedPointer())
+    }
+
+    /// Closes the window.
+    public func close() {
+        gtk_window_close(castedPointer())
+    }
+
+    /// Whether the window is modal.
+    public var modal: Bool {
+        get { gtk_window_get_modal(castedPointer()) != 0 }
+        set { gtk_window_set_modal(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// Whether the window is resizable.
+    public var resizable: Bool {
+        get { gtk_window_get_resizable(castedPointer()) != 0 }
+        set { gtk_window_set_resizable(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// Whether the window is decorated (has title bar).
+    public var decorated: Bool {
+        get { gtk_window_get_decorated(castedPointer()) != 0 }
+        set { gtk_window_set_decorated(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// Whether the window should be destroyed when its parent is.
+    public var destroyWithParent: Bool {
+        get { gtk_window_get_destroy_with_parent(castedPointer()) != 0 }
+        set { gtk_window_set_destroy_with_parent(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// The transient parent of the window (for dialogs).
+    public var transientFor: Widget? {
+        get {
+            guard let ptr = gtk_window_get_transient_for(castedPointer()) else { return nil }
+            return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+        }
+        set {
+            if let parent = newValue {
+                gtk_window_set_transient_for(castedPointer(), parent.castedPointer())
+            } else {
+                gtk_window_set_transient_for(castedPointer(), nil)
+            }
+        }
+    }
 }
