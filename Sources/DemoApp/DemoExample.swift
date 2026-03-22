@@ -24,6 +24,8 @@ let allExamples: [any DemoExample] = [
     TabViewExample(),
     CarouselExample(),
     BottomSheetExample(),
+    PanedExample(),
+    NotebookExample(),
     // Individual widgets
     ButtonExample(),
     EntryExample(),
@@ -38,4 +40,7 @@ let allExamples: [any DemoExample] = [
     AlertDialogExample(),
     ProgressBarExample(),
     ScaleExample(),
+    GridExample(),
+    DropDownExample(),
+    ExpanderExample(),
 ]

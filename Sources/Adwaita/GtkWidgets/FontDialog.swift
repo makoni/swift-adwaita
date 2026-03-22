@@ -1,0 +1,73 @@
+import CAdwaita
+import GObjectSupport
+
+/// A helper for the async callback pattern.
+private final class FontAsyncBox<T>: @unchecked Sendable {
+    let closure: T
+    init(_ closure: T) { self.closure = closure }
+}
+
+/// A font chooser dialog.
+///
+/// Wraps `GtkFontDialog` (GTK 4.10+).
+@MainActor
+public final class FontDialog: GObjectRef {
+    /// Creates a new font dialog.
+    public init() {
+        let ptr = gtk_font_dialog_new()!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The title of the dialog.
+    public var title: String? {
+        get { gtk_font_dialog_get_title(opaquePointer).map { String(cString: $0) } }
+        set { gtk_font_dialog_set_title(opaquePointer, newValue) }
+    }
+
+    /// Whether the dialog is modal.
+    public var modal: Bool {
+        get { gtk_font_dialog_get_modal(opaquePointer) != 0 }
+        set { gtk_font_dialog_set_modal(opaquePointer, newValue ? 1 : 0) }
+    }
+
+    /// Opens the font dialog for the user to choose a font.
+    ///
+    /// - Parameters:
+    ///   - parent: The parent window, or nil.
+    ///   - initialFont: A Pango font description string (e.g. "Sans 12"), or nil.
+    ///   - completion: Called with the selected font description string, or nil if cancelled.
+    public func chooseFont(parent: Widget?, initialFont: String? = nil, completion: @escaping @MainActor (String?) -> Void) {
+        let box = Unmanaged.passRetained(FontAsyncBox(completion)).toOpaque()
+        let initialDesc: OpaquePointer?
+        if let initialFont {
+            initialDesc = pango_font_description_from_string(initialFont)
+        } else {
+            initialDesc = nil
+        }
+        gtk_font_dialog_choose_font(
+            opaquePointer,
+            parent.map { cadw_cast_window($0.pointer) },
+            initialDesc,
+            nil,
+            { source, result, userData in
+                guard let userData, let source, let result else { return }
+                var error: UnsafeMutablePointer<GError>?
+                let fontDesc = gtk_font_dialog_choose_font_finish(OpaquePointer(source), result, &error)
+                let font: String?
+                if let fontDesc {
+                    let cStr = pango_font_description_to_string(fontDesc)
+                    font = cStr.map { String(cString: $0) }
+                    if let cStr { g_free(gpointer(mutating: cStr)) }
+                    pango_font_description_free(fontDesc)
+                } else {
+                    font = nil
+                }
+                if let error { g_error_free(error) }
+                let box = Unmanaged<FontAsyncBox<@MainActor (String?) -> Void>>.fromOpaque(userData).takeRetainedValue()
+                MainActor.assumeIsolated { box.closure(font) }
+            },
+            box
+        )
+        if let initialDesc { pango_font_description_free(initialDesc) }
+    }
+}
