@@ -14,6 +14,11 @@ struct ScaleExample: DemoExample {
     scale.value = 50
     scale.drawValue = true
 
+    // Custom value formatting
+    scale.setFormatValueFunc { value in
+        "\\(Int(value))%"
+    }
+
     // Scale with decimal precision
     let precise = Scale(orientation: .horizontal,
                         min: 0, max: 1, step: 0.01)
@@ -41,8 +46,9 @@ struct ScaleExample: DemoExample {
 
         let scale1 = Scale(orientation: .horizontal, min: 0, max: 100, step: 1)
         scale1.value = 50
-        scale1.drawValue = false
+        scale1.drawValue = true
         scale1.hasOrigin = true
+        scale1.setFormatValueFunc { value in "\(Int(value))%" }
         scale1.hexpand = true
         scale1.setMargins(12)
         scale1.onValueChanged { [scale1, valueLabel1] in

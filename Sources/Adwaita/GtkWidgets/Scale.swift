@@ -70,6 +70,40 @@ public final class Scale: Widget {
         gtk_scale_clear_marks(scalePointer)
     }
 
+    /// Sets a custom function to format the displayed value.
+    ///
+    /// The closure receives the current value and returns the string to display.
+    /// Pass `nil` to reset to the default formatting.
+    ///
+    /// Example:
+    /// ```swift
+    /// scale.setFormatValueFunc { value in "\(Int(value))%" }
+    /// ```
+    public func setFormatValueFunc(_ format: (@MainActor (Double) -> String)?) {
+        guard let format else {
+            gtk_scale_set_format_value_func(scalePointer, nil, nil, nil)
+            return
+        }
+        let box = Unmanaged.passRetained(PublicClosureBox(format)).toOpaque()
+        gtk_scale_set_format_value_func(
+            scalePointer,
+            { _, value, userData in
+                guard let userData else { return g_strdup("") }
+                let box = Unmanaged<PublicClosureBox<@MainActor (Double) -> String>>
+                    .fromOpaque(userData).takeUnretainedValue()
+                let str = MainActor.assumeIsolated {
+                    box.closure(value)
+                }
+                return g_strdup(str)
+            },
+            box,
+            { userData in
+                guard let userData else { return }
+                Unmanaged<AnyObject>.fromOpaque(userData).release()
+            }
+        )
+    }
+
     /// Connects to the `value-changed` signal.
     @discardableResult
     public func onValueChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {

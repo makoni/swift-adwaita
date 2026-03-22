@@ -41,6 +41,9 @@ let allExamples: [any DemoExample] = [
     NavigationSplitViewExample(),
     OverlaySplitViewExample(),
     DialogExample(),
+    PreferencesDialogExample(),
+    SpringAnimationExample(),
+    MenuExample(),
     // Individual widgets
     ButtonExample(),
     EntryExample(),
@@ -80,4 +83,9 @@ let allExamples: [any DemoExample] = [
     ToggleGroupExample(),
     WrapBoxExample(),
     ActionBarExample(),
+    ShortcutExample(),
+    ClipboardExample(),
+    FileDialogExample(),
+    DragDropExample(),
+    CssProviderExample(),
 ]

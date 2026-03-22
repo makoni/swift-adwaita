@@ -34,6 +34,17 @@ public final class FileFilter: GObjectRef {
         }
     }
 
+    /// Creates a file filter with a name and glob patterns.
+    ///
+    /// Example: `FileFilter(name: "All files", patterns: ["*"])`
+    public convenience init(name: String, patterns: [String]) {
+        self.init()
+        self.name = name
+        for pattern in patterns {
+            addPattern(pattern)
+        }
+    }
+
     /// The human-readable name of the filter.
     public var name: String? {
         get { gtk_file_filter_get_name(opaquePointer).map { String(cString: $0) } }

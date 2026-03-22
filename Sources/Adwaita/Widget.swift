@@ -370,7 +370,23 @@ open class Widget: GObjectRef {
 
     // MARK: - Keyboard Shortcuts
 
-    /// Adds a keyboard shortcut to this widget.
+    /// Adds a keyboard shortcut to this widget using key and modifier enums.
+    ///
+    /// ```swift
+    /// widget.addKeyboardShortcut(key: .s, modifiers: .control) {
+    ///     print("Save!")
+    ///     return true
+    /// }
+    /// widget.addKeyboardShortcut(key: .z, modifiers: [.control, .shift]) {
+    ///     print("Redo!")
+    ///     return true
+    /// }
+    /// ```
+    public func addKeyboardShortcut(key: Key, modifiers: KeyModifiers = [], handler: @escaping @MainActor () -> Bool) {
+        addKeyboardShortcut(acceleratorString(key: key, modifiers: modifiers), handler: handler)
+    }
+
+    /// Adds a keyboard shortcut to this widget using a raw accelerator string.
     ///
     /// - Parameters:
     ///   - accelerator: The accelerator string (e.g. "\<Control\>s", "\<Alt\>F4", "\<Control\>\<Shift\>z").
