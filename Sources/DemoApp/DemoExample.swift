@@ -45,6 +45,10 @@ let allExamples: [any DemoExample] = [
     SpringAnimationExample(),
     MenuExample(),
     MenuBarExample(),
+    MultiWindowExample(),
+    CustomCSSExample(),
+    DataBindingExample(),
+    KeyboardShortcutsExample(),
     // Individual widgets
     ButtonExample(),
     EntryExample(),
