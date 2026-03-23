@@ -158,6 +158,13 @@ public final class ApplicationWindow: Widget {
         set { gtk_window_set_destroy_with_parent(castedPointer(), newValue ? 1 : 0) }
     }
 
+    /// Connects to the `close-request` signal.
+    /// Return `true` from the handler to prevent the window from closing.
+    @discardableResult
+    public func onCloseRequest(_ handler: @escaping @MainActor () -> Bool) -> SignalConnection {
+        SignalHelper.connectReturnBool(self, signal: "close-request", handler: handler)
+    }
+
     /// The transient parent of the window (for dialogs).
     public var transientFor: Widget? {
         get {

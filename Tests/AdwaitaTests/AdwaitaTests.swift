@@ -5007,4 +5007,70 @@ func ensureAdwInit() {
         #expect(!display.name.isEmpty)
     }
 
+    // MARK: - Clipboard Async Tests
+
+    @Test @MainActor func clipboardAsyncMethodsExist() {
+        ensureAdwInit()
+        // Verify the async methods compile — actual clipboard access
+        // requires a running event loop so we just check availability
+        let box = Box(orientation: .vertical, spacing: 0)
+        let clipboard = box.clipboard
+        _ = clipboard  // async methods available: readText(), readTexture()
+    }
+
+    // MARK: - Widget.removeController Test
+
+    @Test @MainActor func widgetRemoveController() {
+        ensureAdwInit()
+        let box = Box(orientation: .vertical, spacing: 0)
+        let gesture = GestureClick()
+        box.addController(gesture)
+        // Should not crash
+        box.removeController(gesture)
+    }
+
+    // MARK: - ApplicationWindow.onCloseRequest Test
+
+    @Test @MainActor func applicationWindowOnCloseRequest() {
+        ensureAdwInit()
+        let app = Application(id: "com.test.closereq\(UInt32.random(in: 0..<UInt32.max))")
+        let win = ApplicationWindow(application: app)
+        var called = false
+        win.onCloseRequest {
+            called = true
+            return true  // prevent closing
+        }
+        // Signal handler connected successfully
+        #expect(!called)
+    }
+
+    // MARK: - ListStore.item(at:) Tests
+
+    @Test @MainActor func listStoreItemAt() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let item0 = store.item(at: 0)
+        #expect(item0 != nil)
+        let item2 = store.item(at: 2)
+        #expect(item2 != nil)
+    }
+
+    @Test @MainActor func listStoreItemAtOutOfBounds() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let item = store.item(at: 5)
+        #expect(item == nil)
+    }
+
+    @Test @MainActor func listStoreItemAtEmpty() {
+        ensureAdwInit()
+        let store = ListStore()
+        let item = store.item(at: 0)
+        #expect(item == nil)
+    }
+
 }

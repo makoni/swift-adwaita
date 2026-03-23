@@ -266,6 +266,11 @@ open class Widget: GObjectRef {
         gtk_widget_add_controller(widgetPointer, OpaquePointer(controller.pointer))
     }
 
+    /// Removes an event controller from this widget.
+    public func removeController(_ controller: GObjectRef) {
+        gtk_widget_remove_controller(widgetPointer, OpaquePointer(controller.pointer))
+    }
+
     /// Attaches an action group to this widget with the given prefix.
     ///
     /// Actions in the group can then be referenced in menus as `"prefix.actionName"`.

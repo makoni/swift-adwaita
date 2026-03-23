@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct TreeListExample: DemoExample {
@@ -130,9 +129,8 @@ struct TreeListExample: DemoExample {
         // Helper to populate a pointer map for a store's items
         func mapStoreItems(_ store: ListStore, to indices: [Int]) {
             for i in 0..<indices.count {
-                guard let itemPtr = g_list_model_get_item(store.opaquePointer, UInt32(i)) else { continue }
-                ptrMap.map[UnsafeMutableRawPointer(itemPtr)] = indices[i]
-                g_object_unref(itemPtr)
+                guard let item = store.item(at: i) else { continue }
+                ptrMap.map[item.pointer] = indices[i]
             }
         }
 

@@ -76,6 +76,17 @@ public final class ListStore: GObjectRef {
         Int(g_list_model_get_n_items(opaquePointer))
     }
 
+    /// Returns the item at the given position as a `GObjectRef`, or nil.
+    ///
+    /// The returned object has an extra reference (transfer full).
+    public func item(at position: Int) -> GObjectRef? {
+        guard let ptr = g_list_model_get_item(opaquePointer, UInt32(position)) else {
+            return nil
+        }
+        // g_list_model_get_item returns transfer-full, so we take ownership via raw:
+        return GObjectRef(raw: UnsafeMutableRawPointer(ptr))
+    }
+
     // MARK: - Pointers
 
     /// The `GListModel` pointer, for use with selection models.

@@ -83,6 +83,28 @@ public final class Clipboard: GObjectRef {
         )
     }
 
+    /// Reads text from the clipboard using async/await.
+    ///
+    /// - Returns: The clipboard text, or nil if not available.
+    public func readText() async -> String? {
+        await withCheckedContinuation { continuation in
+            readText { text in
+                continuation.resume(returning: text)
+            }
+        }
+    }
+
+    /// Reads a texture (image) from the clipboard using async/await.
+    ///
+    /// - Returns: The texture, or nil if not available.
+    public func readTexture() async -> Texture? {
+        await withCheckedContinuation { continuation in
+            readTexture { texture in
+                continuation.resume(returning: texture)
+            }
+        }
+    }
+
     /// Whether the clipboard content is local (set by this application).
     public var isLocal: Bool {
         gdk_clipboard_is_local(opaquePointer) != 0
