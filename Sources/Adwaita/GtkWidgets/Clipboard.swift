@@ -45,6 +45,17 @@ public final class Clipboard: GObjectRef {
         )
     }
 
+    /// Sets the clipboard content to an image via a `GdkTexture`.
+    ///
+    /// ```swift
+    /// if let texture = Texture(filename: "/path/to/image.png") {
+    ///     widget.clipboard.setTexture(texture)
+    /// }
+    /// ```
+    public func setTexture(_ texture: Texture) {
+        gdk_clipboard_set_texture(opaquePointer, OpaquePointer(texture.pointer))
+    }
+
     /// Whether the clipboard content is local (set by this application).
     public var isLocal: Bool {
         gdk_clipboard_is_local(opaquePointer) != 0

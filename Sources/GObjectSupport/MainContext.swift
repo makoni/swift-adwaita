@@ -1,8 +1,26 @@
 import CAdwaita
 
+/// A GLib main loop source identifier returned by timeout/idle functions.
+public typealias SourceID = UInt32
+
 /// Helpers for integrating with the GLib main loop.
 @MainActor
 public enum MainContext {
+
+    /// Cancels a source previously scheduled on the GLib main loop.
+    ///
+    /// Pass the source ID returned by `timeout(intervalMs:_:)`.
+    ///
+    /// ```swift
+    /// let id = MainContext.timeout(intervalMs: 1000) { true }
+    /// // Later:
+    /// MainContext.cancel(sourceId: id)
+    /// ```
+    /// - Returns: `true` if the source was found and removed.
+    @discardableResult
+    public static func cancel(sourceId: SourceID) -> Bool {
+        g_source_remove(sourceId) != 0
+    }
 
     /// Schedules a closure to run on the next iteration of the GLib main loop.
     ///
@@ -46,9 +64,9 @@ public enum MainContext {
     /// - Parameters:
     ///   - intervalMs: The interval in milliseconds.
     ///   - closure: The work to perform. Return `true` to continue, `false` to stop.
-    /// - Returns: The source ID (can be used with `g_source_remove` to cancel).
+    /// - Returns: A `SourceID` that can be passed to `cancel(sourceId:)`.
     @discardableResult
-    public static func timeout(intervalMs: UInt32, _ closure: @escaping @MainActor () -> Bool) -> UInt32 {
+    public static func timeout(intervalMs: UInt32, _ closure: @escaping @MainActor () -> Bool) -> SourceID {
         let box = Unmanaged.passRetained(ClosureBox(closure)).toOpaque()
         return g_timeout_add_full(
             G_PRIORITY_DEFAULT,

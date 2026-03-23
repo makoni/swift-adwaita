@@ -102,23 +102,105 @@ public final class GMenuItemRef: GObjectRef {
             g_variant_new_string(value)
         )
     }
+
+    /// Sets a custom attribute using a ``Variant`` value.
+    public func setAttribute(_ attribute: String, variant: Variant) {
+        g_menu_item_set_attribute_value(
+            itemPointer,
+            attribute,
+            variant.pointer
+        )
+    }
+
+    /// Sets the target value for this menu item.
+    ///
+    /// The target value is passed as the parameter when the action is activated.
+    /// This is commonly used with parameterized actions to distinguish which
+    /// menu item triggered the activation.
+    public func setTargetValue(_ target: Variant) {
+        g_menu_item_set_attribute_value(
+            itemPointer,
+            "target",
+            target.pointer
+        )
+    }
 }
 
 /// A simple GAction that triggers a callback when activated.
 ///
 /// Wraps `GSimpleAction`. Add to an application or window action map.
+///
+/// Three forms are supported:
+/// - **Stateless, no parameter:** `SimpleAction(name: "quit") { ... }`
+/// - **With parameter type:** `SimpleAction(name: "open", parameterType: "s") { variant in ... }`
+/// - **Stateful (toggle):** `SimpleAction(name: "bold", state: .boolean(false)) { ... }`
 @MainActor
 public final class SimpleAction: GObjectRef {
-    /// Creates a new stateless action.
+    /// Creates a new stateless action with no parameter.
     public init(name: String) {
         let ptr = g_simple_action_new(name, nil)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    /// Creates an action with a name and activation handler.
+    /// Creates an action with a name and activation handler (no parameter).
     public convenience init(name: String, handler: @escaping @MainActor () -> Void) {
         self.init(name: name)
         self.onActivate(handler)
+    }
+
+    /// Creates an action that receives a typed parameter on activation.
+    ///
+    /// The `parameterType` is a GVariant type string:
+    /// - `"s"` for string
+    /// - `"i"` for int32
+    /// - `"d"` for double
+    /// - `"b"` for boolean
+    ///
+    /// ```swift
+    /// let action = SimpleAction(name: "open-uri", parameterType: "s") { variant in
+    ///     if let uri = variant.stringValue {
+    ///         print("Opening \(uri)")
+    ///     }
+    /// }
+    /// ```
+    public init(name: String, parameterType: String, handler: @escaping @MainActor (Variant) -> Void) {
+        let variantType = g_variant_type_new(parameterType)
+        let ptr = g_simple_action_new(name, variantType)!
+        if let variantType { g_variant_type_free(variantType) }
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+        self.onActivateWithParameter(handler)
+    }
+
+    /// Creates a stateful action with an initial state.
+    ///
+    /// Stateful actions are used for toggles and radio buttons. The state
+    /// is a ``Variant`` value that persists across activations.
+    ///
+    /// ```swift
+    /// let boldAction = SimpleAction(name: "bold", state: .boolean(false)) {
+    ///     // Toggle the state
+    ///     let current = boldAction.state?.boolValue ?? false
+    ///     boldAction.state = .boolean(!current)
+    /// }
+    /// ```
+    public init(name: String, state: Variant, handler: @escaping @MainActor () -> Void) {
+        let ptr = g_simple_action_new_stateful(name, nil, state.pointer)!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+        self.onActivate(handler)
+    }
+
+    /// Creates a stateful action with a parameter type and initial state.
+    public init(
+        name: String,
+        parameterType: String,
+        state: Variant,
+        handler: @escaping @MainActor (Variant) -> Void
+    ) {
+        let variantType = g_variant_type_new(parameterType)
+        let ptr = g_simple_action_new_stateful(name, variantType, state.pointer)!
+        if let variantType { g_variant_type_free(variantType) }
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+        self.onActivateWithParameter(handler)
     }
 
     required internal init(raw pointer: UnsafeMutableRawPointer) {
@@ -131,10 +213,56 @@ public final class SimpleAction: GObjectRef {
         set { g_simple_action_set_enabled(OpaquePointer(pointer), newValue ? 1 : 0) }
     }
 
-    /// Connects a handler to the `activate` signal.
+    /// The current state of the action, or `nil` if the action is stateless.
+    public var state: Variant? {
+        get {
+            guard let ptr = g_action_get_state(OpaquePointer(pointer)) else { return nil }
+            // g_action_get_state transfers ownership (returns a new ref)
+            let variant = Variant(borrowing: ptr)
+            g_variant_unref(ptr)
+            return variant
+        }
+        set {
+            g_simple_action_set_state(OpaquePointer(pointer), newValue?.pointer)
+        }
+    }
+
+    /// Connects a handler to the `activate` signal (no parameter).
+    ///
+    /// The GSimpleAction `activate` signal always passes a `GVariant*` parameter
+    /// (nil for stateless actions), so we use a 3-arg trampoline that ignores it.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "activate", handler: handler)
+        SignalHelper.connectPointer(self, signal: "activate") { _ in
+            handler()
+        }
+    }
+
+    /// Connects a handler to the `activate` signal that receives the parameter.
+    ///
+    /// The `activate` signal for parameterized actions has the C signature:
+    /// `void (*)(GSimpleAction*, GVariant*, gpointer)`.
+    @discardableResult
+    public func onActivateWithParameter(
+        _ handler: @escaping @MainActor (Variant) -> Void
+    ) -> SignalConnection {
+        let trampoline: @convention(c) (
+            UnsafeMutableRawPointer, OpaquePointer?, UnsafeMutableRawPointer
+        ) -> Void = { _, variantPtr, userData in
+            let box = Unmanaged<PublicClosureBox<@MainActor (Variant) -> Void>>
+                .fromOpaque(userData).takeUnretainedValue()
+            guard let variantPtr else { return }
+            MainActor.assumeIsolated {
+                let variant = Variant(borrowing: variantPtr)
+                box.closure(variant)
+            }
+        }
+        return SignalHelper.connectCustom(
+            self,
+            signal: "activate",
+            trampoline: unsafeBitCast(trampoline, to: GCallback.self),
+            box: PublicClosureBox(handler)
+        )
     }
 }
 

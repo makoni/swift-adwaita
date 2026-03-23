@@ -86,6 +86,22 @@ public final class FileDialog: GObjectRef {
         }
     }
 
+    /// Opens the file dialog for selecting a file (throwing version).
+    ///
+    /// Throws a ``GLibError`` if the dialog fails for a reason other than
+    /// the user cancelling. Cancellation returns `nil`.
+    ///
+    /// ```swift
+    /// let path = try await dialog.openThrowing(parent: window)
+    /// ```
+    public func openThrowing(parent: Widget?) async throws -> String? {
+        try await withCheckedThrowingContinuation { continuation in
+            openThrowing(parent: parent) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
     /// Opens the file dialog for selecting a file.
     ///
     /// - Parameters:
@@ -118,6 +134,50 @@ public final class FileDialog: GObjectRef {
         )
     }
 
+    /// Opens the file dialog for selecting a file (throwing version).
+    ///
+    /// The completion handler receives a `Result` — `.success(nil)` on cancel,
+    /// `.success(path)` on selection, or `.failure(GLibError)` on error.
+    public func openThrowing(
+        parent: Widget?,
+        completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
+    ) {
+        let box = Unmanaged.passRetained(AsyncBox(completion)).toOpaque()
+        gtk_file_dialog_open(
+            opaquePointer,
+            parent.map { cadw_cast_window($0.pointer) },
+            nil,
+            { source, result, userData in
+                guard let userData, let source, let result else { return }
+                var error: UnsafeMutablePointer<GError>?
+                let file = gtk_file_dialog_open_finish(OpaquePointer(source), result, &error)
+                let callResult: Result<String?, GLibError>
+                if let file {
+                    let cPath = g_file_get_path(file)
+                    let path = cPath.map { String(cString: $0) }
+                    if let cPath { g_free(gpointer(mutating: cPath)) }
+                    g_object_unref(gpointer(file))
+                    callResult = .success(path)
+                } else if let error {
+                    // Check if it's a cancellation (GTK_DIALOG_ERROR_DISMISSED)
+                    let dismissed = g_quark_try_string("gtk-dialog-error-quark")
+                    if error.pointee.domain == dismissed && error.pointee.code == 2 {
+                        g_error_free(error)
+                        callResult = .success(nil)
+                    } else {
+                        callResult = .failure(GLibError(consuming: error))
+                    }
+                } else {
+                    callResult = .success(nil)
+                }
+                let box = Unmanaged<AsyncBox<@MainActor (Result<String?, GLibError>) -> Void>>
+                    .fromOpaque(userData).takeRetainedValue()
+                MainActor.assumeIsolated { box.closure(callResult) }
+            },
+            box
+        )
+    }
+
     /// Opens the file dialog for saving a file.
     ///
     /// Returns the selected save path, or `nil` if the user cancelled.
@@ -125,6 +185,17 @@ public final class FileDialog: GObjectRef {
         await withCheckedContinuation { continuation in
             save(parent: parent) { path in
                 continuation.resume(returning: path)
+            }
+        }
+    }
+
+    /// Opens the file dialog for saving a file (throwing version).
+    ///
+    /// Throws a ``GLibError`` on failure. Cancellation returns `nil`.
+    public func saveThrowing(parent: Widget?) async throws -> String? {
+        try await withCheckedThrowingContinuation { continuation in
+            saveThrowing(parent: parent) { result in
+                continuation.resume(with: result)
             }
         }
     }
@@ -161,6 +232,46 @@ public final class FileDialog: GObjectRef {
         )
     }
 
+    /// Opens the file dialog for saving a file (throwing version).
+    public func saveThrowing(
+        parent: Widget?,
+        completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
+    ) {
+        let box = Unmanaged.passRetained(AsyncBox(completion)).toOpaque()
+        gtk_file_dialog_save(
+            opaquePointer,
+            parent.map { cadw_cast_window($0.pointer) },
+            nil,
+            { source, result, userData in
+                guard let userData, let source, let result else { return }
+                var error: UnsafeMutablePointer<GError>?
+                let file = gtk_file_dialog_save_finish(OpaquePointer(source), result, &error)
+                let callResult: Result<String?, GLibError>
+                if let file {
+                    let cPath = g_file_get_path(file)
+                    let path = cPath.map { String(cString: $0) }
+                    if let cPath { g_free(gpointer(mutating: cPath)) }
+                    g_object_unref(gpointer(file))
+                    callResult = .success(path)
+                } else if let error {
+                    let dismissed = g_quark_try_string("gtk-dialog-error-quark")
+                    if error.pointee.domain == dismissed && error.pointee.code == 2 {
+                        g_error_free(error)
+                        callResult = .success(nil)
+                    } else {
+                        callResult = .failure(GLibError(consuming: error))
+                    }
+                } else {
+                    callResult = .success(nil)
+                }
+                let box = Unmanaged<AsyncBox<@MainActor (Result<String?, GLibError>) -> Void>>
+                    .fromOpaque(userData).takeRetainedValue()
+                MainActor.assumeIsolated { box.closure(callResult) }
+            },
+            box
+        )
+    }
+
     /// Opens the file dialog for selecting a folder.
     ///
     /// Returns the selected folder path, or `nil` if the user cancelled.
@@ -168,6 +279,17 @@ public final class FileDialog: GObjectRef {
         await withCheckedContinuation { continuation in
             selectFolder(parent: parent) { path in
                 continuation.resume(returning: path)
+            }
+        }
+    }
+
+    /// Opens the file dialog for selecting a folder (throwing version).
+    ///
+    /// Throws a ``GLibError`` on failure. Cancellation returns `nil`.
+    public func selectFolderThrowing(parent: Widget?) async throws -> String? {
+        try await withCheckedThrowingContinuation { continuation in
+            selectFolderThrowing(parent: parent) { result in
+                continuation.resume(with: result)
             }
         }
     }
@@ -199,6 +321,46 @@ public final class FileDialog: GObjectRef {
                 if let error { g_error_free(error) }
                 let box = Unmanaged<AsyncBox<@MainActor (String?) -> Void>>.fromOpaque(userData).takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(path) }
+            },
+            box
+        )
+    }
+
+    /// Opens the file dialog for selecting a folder (throwing version).
+    public func selectFolderThrowing(
+        parent: Widget?,
+        completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
+    ) {
+        let box = Unmanaged.passRetained(AsyncBox(completion)).toOpaque()
+        gtk_file_dialog_select_folder(
+            opaquePointer,
+            parent.map { cadw_cast_window($0.pointer) },
+            nil,
+            { source, result, userData in
+                guard let userData, let source, let result else { return }
+                var error: UnsafeMutablePointer<GError>?
+                let file = gtk_file_dialog_select_folder_finish(OpaquePointer(source), result, &error)
+                let callResult: Result<String?, GLibError>
+                if let file {
+                    let cPath = g_file_get_path(file)
+                    let path = cPath.map { String(cString: $0) }
+                    if let cPath { g_free(gpointer(mutating: cPath)) }
+                    g_object_unref(gpointer(file))
+                    callResult = .success(path)
+                } else if let error {
+                    let dismissed = g_quark_try_string("gtk-dialog-error-quark")
+                    if error.pointee.domain == dismissed && error.pointee.code == 2 {
+                        g_error_free(error)
+                        callResult = .success(nil)
+                    } else {
+                        callResult = .failure(GLibError(consuming: error))
+                    }
+                } else {
+                    callResult = .success(nil)
+                }
+                let box = Unmanaged<AsyncBox<@MainActor (Result<String?, GLibError>) -> Void>>
+                    .fromOpaque(userData).takeRetainedValue()
+                MainActor.assumeIsolated { box.closure(callResult) }
             },
             box
         )

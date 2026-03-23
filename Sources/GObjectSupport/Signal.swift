@@ -239,6 +239,23 @@ public enum SignalHelper {
         )
     }
 
+    /// Connects a signal with two `UInt32` parameters.
+    @discardableResult
+    public static func connectUIntUInt(
+        _ instance: GObjectRef,
+        signal: String,
+        handler: @escaping @MainActor (UInt32, UInt32) -> Void
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineUIntUInt as @convention(c) (UnsafeMutableRawPointer, UInt32, UInt32, UnsafeMutableRawPointer) -> Void,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
     /// Connects a signal with `OpaquePointer` + `Int32` parameters.
     @discardableResult
     public static func connectPointerInt(
@@ -521,6 +538,19 @@ private func signalTrampolineDoubleDouble(
     _ userData: UnsafeMutableRawPointer
 ) {
     let box = Unmanaged<ClosureBox<@MainActor (Double, Double) -> Void>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    MainActor.assumeIsolated {
+        box.closure(value1, value2)
+    }
+}
+
+private func signalTrampolineUIntUInt(
+    _ instance: UnsafeMutableRawPointer,
+    _ value1: UInt32,
+    _ value2: UInt32,
+    _ userData: UnsafeMutableRawPointer
+) {
+    let box = Unmanaged<ClosureBox<@MainActor (UInt32, UInt32) -> Void>>.fromOpaque(userData)
         .takeUnretainedValue()
     MainActor.assumeIsolated {
         box.closure(value1, value2)

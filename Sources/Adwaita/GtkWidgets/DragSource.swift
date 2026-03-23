@@ -39,6 +39,30 @@ public final class DragSource: GObjectRef {
         gtk_drag_source_drag_cancel(opaquePointer)
     }
 
+    /// Sets an icon paintable for the drag, with a hotspot offset.
+    ///
+    /// The hotspot determines the cursor position within the icon during
+    /// the drag. Pass (0, 0) for top-left.
+    ///
+    /// ```swift
+    /// if let texture = Texture(filename: "/path/to/icon.png") {
+    ///     dragSource.setIcon(texture, hotX: 16, hotY: 16)
+    /// }
+    /// ```
+    public func setIcon(_ paintable: Texture, hotX: Int = 0, hotY: Int = 0) {
+        gtk_drag_source_set_icon(
+            opaquePointer,
+            OpaquePointer(paintable.pointer),
+            Int32(hotX),
+            Int32(hotY)
+        )
+    }
+
+    /// Returns the active `GdkDrag` object during a drag operation, or `nil`.
+    public var drag: OpaquePointer? {
+        gtk_drag_source_get_drag(opaquePointer)
+    }
+
     /// Connects to the `drag-begin` signal.
     @discardableResult
     public func onDragBegin(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {

@@ -40,6 +40,14 @@ public final class ListView: Widget {
         gtk_list_view_set_factory(OpaquePointer(pointer), OpaquePointer(factory.pointer))
     }
 
+    /// Creates a list view with a multi-selection model and an item factory.
+    public init(model: MultiSelection, factory: SignalListItemFactory) {
+        let ptr = gtk_list_view_new(nil, nil)!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+        gtk_list_view_set_model(OpaquePointer(pointer), model.selectionModelPointer)
+        gtk_list_view_set_factory(OpaquePointer(pointer), OpaquePointer(factory.pointer))
+    }
+
     /// Creates a list view with no selection and an item factory.
     public init(model: NoSelection, factory: SignalListItemFactory) {
         let ptr = gtk_list_view_new(nil, nil)!

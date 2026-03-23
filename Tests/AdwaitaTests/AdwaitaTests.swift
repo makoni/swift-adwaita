@@ -1918,6 +1918,14 @@ func ensureAdwInit() {
         _ = button
     }
 
+    @Test @MainActor func clipboardSetTextureExists() {
+        ensureAdwInit()
+        // Verify the setTexture method compiles and exists on Clipboard.
+        let _: (Clipboard, Texture) -> Void = { clipboard, texture in
+            clipboard.setTexture(texture)
+        }
+    }
+
     // MARK: - DragSource
 
     @Test @MainActor func dragSourceCreation() {
@@ -1931,6 +1939,23 @@ func ensureAdwInit() {
         let source = DragSource()
         source.actions = GDK_ACTION_COPY
         #expect(source.actions == GDK_ACTION_COPY)
+    }
+
+    @Test @MainActor func dragSourceSetIcon() {
+        ensureAdwInit()
+        let source = DragSource()
+        // Create a 1x1 RGBA texture for testing
+        let pixels: [UInt8] = [255, 0, 0, 255]
+        let texture = Texture(rgbaData: pixels, width: 1, height: 1)
+        // Should not crash; icon is set for future drag operations
+        source.setIcon(texture, hotX: 0, hotY: 0)
+    }
+
+    @Test @MainActor func dragSourceDragProperty() {
+        ensureAdwInit()
+        let source = DragSource()
+        // No drag is active, so drag should be nil
+        #expect(source.drag == nil)
     }
 
     // MARK: - DropTarget
@@ -2248,6 +2273,20 @@ func ensureAdwInit() {
         #expect(video.autoplay == true)
         video.loop = true
         #expect(video.loop == true)
+    }
+
+    @Test @MainActor func videoMediaStreamConvenience() {
+        ensureAdwInit()
+        let video = Video()
+        // No media stream set yet, so convenience properties return defaults
+        #expect(video.isPlaying == false)
+        #expect(video.ended == false)
+        #expect(video.timestamp == 0)
+        #expect(video.duration == 0)
+        #expect(video.isMuted == false)
+        #expect(video.volume == 0.0)
+        // mediaStream should be nil for an empty video
+        #expect(video.mediaStream == nil)
     }
 
     // MARK: - ApplicationWindow enhancements
@@ -2891,6 +2930,14 @@ func ensureAdwInit() {
         var called = false
         MainContext.delay(ms: 1) { called = true }
         _ = called
+    }
+
+    @Test @MainActor func mainContextCancelAndSourceID() {
+        ensureAdwInit()
+        // Schedule a timeout and immediately cancel it
+        let id: SourceID = MainContext.timeout(intervalMs: 60000) { return true }
+        let removed = MainContext.cancel(sourceId: id)
+        #expect(removed == true)
     }
 
     // MARK: - New enum extensions
@@ -3831,6 +3878,761 @@ func ensureAdwInit() {
         let listView = ListView(model: selection, factory: factory)
         #expect(listView.pointer != nil)
         #expect(selection.selected == 0)
+    }
+
+    // MARK: - MultiSelection Tests
+
+    @Test @MainActor func multiSelectionCreation() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let selection = MultiSelection(model: store)
+        #expect(selection.selectionModelPointer != nil)
+    }
+
+    @Test @MainActor func multiSelectionWithStringList() {
+        ensureAdwInit()
+        let strings = StringList(["a", "b", "c"])
+        let selection = MultiSelection(model: strings)
+        #expect(selection.selectionModelPointer != nil)
+    }
+
+    @Test @MainActor func multiSelectionSelectItem() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let selection = MultiSelection(model: store)
+
+        // Initially nothing is selected
+        #expect(selection.isSelected(position: 0) == false)
+        #expect(selection.isSelected(position: 1) == false)
+
+        // Select first item
+        selection.selectItem(position: 0, unselectRest: false)
+        #expect(selection.isSelected(position: 0) == true)
+
+        // Select second item without unselecting first
+        selection.selectItem(position: 1, unselectRest: false)
+        #expect(selection.isSelected(position: 0) == true)
+        #expect(selection.isSelected(position: 1) == true)
+    }
+
+    @Test @MainActor func multiSelectionUnselectItem() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let selection = MultiSelection(model: store)
+
+        selection.selectItem(position: 0, unselectRest: false)
+        selection.selectItem(position: 1, unselectRest: false)
+        #expect(selection.isSelected(position: 0) == true)
+        #expect(selection.isSelected(position: 1) == true)
+
+        selection.unselectItem(position: 0)
+        #expect(selection.isSelected(position: 0) == false)
+        #expect(selection.isSelected(position: 1) == true)
+    }
+
+    @Test @MainActor func multiSelectionSelectUnselectAll() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let selection = MultiSelection(model: store)
+
+        selection.selectAll()
+        #expect(selection.isSelected(position: 0) == true)
+        #expect(selection.isSelected(position: 1) == true)
+        #expect(selection.isSelected(position: 2) == true)
+
+        selection.unselectAll()
+        #expect(selection.isSelected(position: 0) == false)
+        #expect(selection.isSelected(position: 1) == false)
+        #expect(selection.isSelected(position: 2) == false)
+    }
+
+    @Test @MainActor func multiSelectionSelectItemUnselectRest() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let selection = MultiSelection(model: store)
+
+        selection.selectAll()
+        #expect(selection.isSelected(position: 0) == true)
+        #expect(selection.isSelected(position: 1) == true)
+        #expect(selection.isSelected(position: 2) == true)
+
+        // Select position 1 with unselectRest: true should clear others
+        selection.selectItem(position: 1, unselectRest: true)
+        #expect(selection.isSelected(position: 0) == false)
+        #expect(selection.isSelected(position: 1) == true)
+        #expect(selection.isSelected(position: 2) == false)
+    }
+
+    @Test @MainActor func listViewWithMultiSelection() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let factory = SignalListItemFactory()
+        let selection = MultiSelection(model: store)
+        let listView = ListView(model: selection, factory: factory)
+        #expect(listView.pointer != nil)
+    }
+
+    // MARK: - CustomFilter & FilterListModel Tests
+
+    @Test @MainActor func customFilterCreation() {
+        ensureAdwInit()
+        let filter = CustomFilter { _ in true }
+        #expect(filter.pointer != nil)
+    }
+
+    @Test @MainActor func filterListModelCreation() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let filter = CustomFilter { _ in true }
+        let filtered = FilterListModel(model: store, filter: filter)
+        #expect(filtered.count == 3)
+        #expect(filtered.listModelPointer != nil)
+    }
+
+    @Test @MainActor func filterListModelRejectsAll() {
+        ensureAdwInit()
+        let store = ListStore()
+        for _ in 0..<5 {
+            store.appendPlaceholder()
+        }
+        #expect(store.count == 5)
+        let filter = CustomFilter { _ in false }
+        let filtered = FilterListModel(model: store, filter: filter)
+        #expect(filtered.count == 0)
+    }
+
+    @Test @MainActor func filterListModelWithListModelPointer() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let filter = CustomFilter { _ in true }
+        let filtered = FilterListModel(listModel: store.listModelPointer, filter: filter)
+        #expect(filtered.count == 2)
+    }
+
+    @Test @MainActor func customFilterChanged() {
+        ensureAdwInit()
+        var showAll = true
+        let filter = CustomFilter { _ in showAll }
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let filtered = FilterListModel(model: store, filter: filter)
+        #expect(filtered.count == 2)
+
+        showAll = false
+        filter.changed()
+        #expect(filtered.count == 0)
+
+        showAll = true
+        filter.changed()
+        #expect(filtered.count == 2)
+    }
+
+    @Test @MainActor func filterListModelWithSelectionModel() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let filter = CustomFilter { _ in true }
+        let filtered = FilterListModel(model: store, filter: filter)
+        let selection = NoSelection(listModel: filtered.listModelPointer)
+        #expect(selection.selectionModelPointer != nil)
+    }
+
+    // MARK: - CustomSorter & SortListModel Tests
+
+    @Test @MainActor func customSorterCreation() {
+        ensureAdwInit()
+        let sorter = CustomSorter { _, _ in 0 }
+        #expect(sorter.pointer != nil)
+    }
+
+    @Test @MainActor func sortListModelCreation() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let sorter = CustomSorter { _, _ in 0 }
+        let sorted = SortListModel(model: store, sorter: sorter)
+        #expect(sorted.count == 3)
+        #expect(sorted.listModelPointer != nil)
+    }
+
+    @Test @MainActor func sortListModelPreservesCount() {
+        ensureAdwInit()
+        let store = ListStore()
+        for _ in 0..<10 {
+            store.appendPlaceholder()
+        }
+        let sorter = CustomSorter { _, _ in 0 }
+        let sorted = SortListModel(model: store, sorter: sorter)
+        #expect(sorted.count == store.count)
+    }
+
+    @Test @MainActor func sortListModelWithListModelPointer() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let sorter = CustomSorter { _, _ in 0 }
+        let sorted = SortListModel(listModel: store.listModelPointer, sorter: sorter)
+        #expect(sorted.count == 2)
+    }
+
+    @Test @MainActor func customSorterChanged() {
+        ensureAdwInit()
+        let sorter = CustomSorter { _, _ in 0 }
+        let store = ListStore()
+        store.appendPlaceholder()
+        let sorted = SortListModel(model: store, sorter: sorter)
+        sorter.changed()
+        #expect(sorted.count == 1)
+    }
+
+    @Test @MainActor func sortListModelWithSelectionModel() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let sorter = CustomSorter { _, _ in 0 }
+        let sorted = SortListModel(model: store, sorter: sorter)
+        let selection = SingleSelection(listModel: sorted.listModelPointer)
+        #expect(selection.selectionModelPointer != nil)
+        #expect(selection.selected == 0)
+    }
+
+    @Test @MainActor func filterAndSortCombined() {
+        ensureAdwInit()
+        let store = ListStore()
+        for _ in 0..<5 {
+            store.appendPlaceholder()
+        }
+        let filter = CustomFilter { _ in true }
+        let filtered = FilterListModel(model: store, filter: filter)
+        let sorter = CustomSorter { _, _ in 0 }
+        let sorted = SortListModel(listModel: filtered.listModelPointer, sorter: sorter)
+        #expect(sorted.count == 5)
+
+        let selection = NoSelection(listModel: sorted.listModelPointer)
+        #expect(selection.selectionModelPointer != nil)
+    }
+
+    // MARK: - GLibError Tests
+
+    @Test @MainActor func glibErrorCreation() {
+        ensureAdwInit()
+        // Create a GError manually using g_error_new_literal
+        let quark = g_quark_from_string("test-error-domain")
+        let gerror = g_error_new_literal(quark, 42, "Something went wrong")!
+        let error = GLibError(consuming: gerror)
+        // The GError has been freed by the initializer
+
+        #expect(error.domain == quark)
+        #expect(error.code == 42)
+        #expect(error.message == "Something went wrong")
+        #expect(error.description == "Something went wrong")
+    }
+
+    @Test @MainActor func glibErrorConformsToSwiftError() {
+        ensureAdwInit()
+        let quark = g_quark_from_string("test-domain")
+        let gerror = g_error_new_literal(quark, 1, "test error")!
+        let error: any Error = GLibError(consuming: gerror)
+        #expect(error is GLibError)
+        let glibError = error as! GLibError
+        #expect(glibError.code == 1)
+        #expect(glibError.message == "test error")
+    }
+
+    // MARK: - Variant Tests
+
+    @Test @MainActor func variantStringRoundtrip() {
+        ensureAdwInit()
+        let v = Variant.string("hello world")
+        #expect(v.stringValue == "hello world")
+        #expect(v.typeString == "s")
+        #expect(v.isOfType("s") == true)
+        #expect(v.isOfType("i") == false)
+    }
+
+    @Test @MainActor func variantInt32Roundtrip() {
+        ensureAdwInit()
+        let v = Variant.int32(42)
+        #expect(v.int32Value == 42)
+        #expect(v.typeString == "i")
+        #expect(v.isOfType("i") == true)
+    }
+
+    @Test @MainActor func variantInt32Negative() {
+        ensureAdwInit()
+        let v = Variant.int32(-100)
+        #expect(v.int32Value == -100)
+    }
+
+    @Test @MainActor func variantInt64Roundtrip() {
+        ensureAdwInit()
+        let v = Variant.int64(Int64(Int32.max) + 1)
+        #expect(v.int64Value == Int64(Int32.max) + 1)
+        #expect(v.typeString == "x")
+        #expect(v.isOfType("x") == true)
+    }
+
+    @Test @MainActor func variantDoubleRoundtrip() {
+        ensureAdwInit()
+        let v = Variant.double(3.14)
+        #expect(v.doubleValue == 3.14)
+        #expect(v.typeString == "d")
+        #expect(v.isOfType("d") == true)
+    }
+
+    @Test @MainActor func variantBooleanRoundtrip() {
+        ensureAdwInit()
+        let vTrue = Variant.boolean(true)
+        #expect(vTrue.boolValue == true)
+        #expect(vTrue.typeString == "b")
+
+        let vFalse = Variant.boolean(false)
+        #expect(vFalse.boolValue == false)
+    }
+
+    @Test @MainActor func variantStringValueReturnsNilForNonString() {
+        ensureAdwInit()
+        let v = Variant.int32(42)
+        #expect(v.stringValue == nil)
+    }
+
+    @Test @MainActor func variantBorrowing() {
+        ensureAdwInit()
+        let v1 = Variant.string("shared")
+        let v2 = Variant(borrowing: v1.pointer)
+        #expect(v2.stringValue == "shared")
+    }
+
+    // MARK: - SimpleAction with Parameter Tests
+
+    @Test @MainActor func simpleActionWithParameterType() {
+        ensureAdwInit()
+        var received: String?
+        let action = SimpleAction(name: "test-param", parameterType: "s") { variant in
+            received = variant.stringValue
+        }
+        // Activate the action with a string parameter
+        g_action_activate(OpaquePointer(action.pointer), g_variant_new_string("hello"))
+        #expect(received == "hello")
+    }
+
+    @Test @MainActor func simpleActionStateful() {
+        ensureAdwInit()
+        let action = SimpleAction(name: "toggle", state: .boolean(false)) {
+            // no-op handler
+        }
+        // Check initial state
+        let initialState = action.state
+        #expect(initialState != nil)
+        #expect(initialState?.boolValue == false)
+
+        // Change state
+        action.state = .boolean(true)
+        #expect(action.state?.boolValue == true)
+    }
+
+    @Test @MainActor func simpleActionStatefulToggle() {
+        ensureAdwInit()
+        var activateCount = 0
+        let action = SimpleAction(name: "bold", state: .boolean(false)) {
+            activateCount += 1
+        }
+        // Activate the action
+        g_action_activate(OpaquePointer(action.pointer), nil)
+        #expect(activateCount == 1)
+        // Manually toggle state (as a real handler would do)
+        let current = action.state?.boolValue ?? false
+        action.state = .boolean(!current)
+        #expect(action.state?.boolValue == true)
+    }
+
+    @Test @MainActor func simpleActionStatefulWithStringState() {
+        ensureAdwInit()
+        let action = SimpleAction(name: "color", state: .string("red")) {
+            // no-op
+        }
+        #expect(action.state?.stringValue == "red")
+        action.state = .string("blue")
+        #expect(action.state?.stringValue == "blue")
+    }
+
+    // MARK: - GMenuItemRef Variant Attribute Tests
+
+    @Test @MainActor func menuItemSetVariantAttribute() {
+        ensureAdwInit()
+        let item = GMenuItemRef(label: "Test", action: "app.test")
+        // Should not crash
+        item.setAttribute("custom-attr", variant: .string("value"))
+        item.setTargetValue(.string("target-value"))
+    }
+
+    // MARK: - ColumnView Tests
+
+    @Test @MainActor func columnViewCreationWithSingleSelection() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let selection = SingleSelection(model: store)
+        let columnView = ColumnView(model: selection)
+        #expect(columnView.pointer != nil)
+    }
+
+    @Test @MainActor func columnViewCreationWithNoSelection() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let selection = NoSelection(model: store)
+        let columnView = ColumnView(model: selection)
+        #expect(columnView.pointer != nil)
+    }
+
+    @Test @MainActor func columnViewCreationWithMultiSelection() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let selection = MultiSelection(model: store)
+        let columnView = ColumnView(model: selection)
+        #expect(columnView.pointer != nil)
+    }
+
+    @Test @MainActor func columnViewShowRowSeparators() {
+        ensureAdwInit()
+        let store = ListStore()
+        let selection = NoSelection(model: store)
+        let columnView = ColumnView(model: selection)
+        #expect(columnView.showRowSeparators == false)
+        columnView.showRowSeparators = true
+        #expect(columnView.showRowSeparators == true)
+    }
+
+    @Test @MainActor func columnViewShowColumnSeparators() {
+        ensureAdwInit()
+        let store = ListStore()
+        let selection = NoSelection(model: store)
+        let columnView = ColumnView(model: selection)
+        #expect(columnView.showColumnSeparators == false)
+        columnView.showColumnSeparators = true
+        #expect(columnView.showColumnSeparators == true)
+    }
+
+    @Test @MainActor func columnViewSingleClickActivate() {
+        ensureAdwInit()
+        let store = ListStore()
+        let selection = NoSelection(model: store)
+        let columnView = ColumnView(model: selection)
+        #expect(columnView.singleClickActivate == false)
+        columnView.singleClickActivate = true
+        #expect(columnView.singleClickActivate == true)
+    }
+
+    @Test @MainActor func columnViewReorderable() {
+        ensureAdwInit()
+        let store = ListStore()
+        let selection = NoSelection(model: store)
+        let columnView = ColumnView(model: selection)
+        columnView.reorderable = true
+        #expect(columnView.reorderable == true)
+        columnView.reorderable = false
+        #expect(columnView.reorderable == false)
+    }
+
+    @Test @MainActor func columnViewEnableRubberband() {
+        ensureAdwInit()
+        let store = ListStore()
+        let selection = NoSelection(model: store)
+        let columnView = ColumnView(model: selection)
+        #expect(columnView.enableRubberband == false)
+        columnView.enableRubberband = true
+        #expect(columnView.enableRubberband == true)
+    }
+
+    // MARK: - ColumnViewColumn Tests
+
+    @Test @MainActor func columnViewColumnCreation() {
+        ensureAdwInit()
+        let factory = SignalListItemFactory()
+        let column = ColumnViewColumn(title: "Name", factory: factory)
+        #expect(column.title == "Name")
+    }
+
+    @Test @MainActor func columnViewColumnNilTitle() {
+        ensureAdwInit()
+        let factory = SignalListItemFactory()
+        let column = ColumnViewColumn(title: nil, factory: factory)
+        #expect(column.title == nil)
+    }
+
+    @Test @MainActor func columnViewColumnTitleSetGet() {
+        ensureAdwInit()
+        let factory = SignalListItemFactory()
+        let column = ColumnViewColumn(title: "Original", factory: factory)
+        #expect(column.title == "Original")
+        column.title = "Updated"
+        #expect(column.title == "Updated")
+    }
+
+    @Test @MainActor func columnViewColumnFixedWidth() {
+        ensureAdwInit()
+        let factory = SignalListItemFactory()
+        let column = ColumnViewColumn(title: "Col", factory: factory)
+        #expect(column.fixedWidth == -1)
+        column.fixedWidth = 200
+        #expect(column.fixedWidth == 200)
+    }
+
+    @Test @MainActor func columnViewColumnResizable() {
+        ensureAdwInit()
+        let factory = SignalListItemFactory()
+        let column = ColumnViewColumn(title: "Col", factory: factory)
+        column.resizable = true
+        #expect(column.resizable == true)
+        column.resizable = false
+        #expect(column.resizable == false)
+    }
+
+    @Test @MainActor func columnViewColumnExpand() {
+        ensureAdwInit()
+        let factory = SignalListItemFactory()
+        let column = ColumnViewColumn(title: "Col", factory: factory)
+        #expect(column.expand == false)
+        column.expand = true
+        #expect(column.expand == true)
+    }
+
+    @Test @MainActor func columnViewColumnVisible() {
+        ensureAdwInit()
+        let factory = SignalListItemFactory()
+        let column = ColumnViewColumn(title: "Col", factory: factory)
+        #expect(column.isVisible == true)
+        column.isVisible = false
+        #expect(column.isVisible == false)
+    }
+
+    @Test @MainActor func columnViewAppendColumn() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let selection = NoSelection(model: store)
+        let columnView = ColumnView(model: selection)
+
+        let factory1 = SignalListItemFactory()
+        let factory2 = SignalListItemFactory()
+        let col1 = ColumnViewColumn(title: "A", factory: factory1)
+        let col2 = ColumnViewColumn(title: "B", factory: factory2)
+
+        columnView.appendColumn(col1)
+        columnView.appendColumn(col2)
+        #expect(columnView.pointer != nil)
+    }
+
+    @Test @MainActor func columnViewRemoveColumn() {
+        ensureAdwInit()
+        let store = ListStore()
+        let selection = NoSelection(model: store)
+        let columnView = ColumnView(model: selection)
+
+        let factory = SignalListItemFactory()
+        let column = ColumnViewColumn(title: "Temp", factory: factory)
+        columnView.appendColumn(column)
+        columnView.removeColumn(column)
+        #expect(columnView.pointer != nil)
+    }
+
+    @Test @MainActor func columnViewInsertColumn() {
+        ensureAdwInit()
+        let store = ListStore()
+        let selection = NoSelection(model: store)
+        let columnView = ColumnView(model: selection)
+
+        let factory1 = SignalListItemFactory()
+        let factory2 = SignalListItemFactory()
+        let factory3 = SignalListItemFactory()
+        let col1 = ColumnViewColumn(title: "First", factory: factory1)
+        let col2 = ColumnViewColumn(title: "Last", factory: factory2)
+        let col3 = ColumnViewColumn(title: "Middle", factory: factory3)
+
+        columnView.appendColumn(col1)
+        columnView.appendColumn(col2)
+        columnView.insertColumn(col3, at: 1)
+        #expect(columnView.pointer != nil)
+    }
+
+    // MARK: - TreeListModel Tests
+
+    @Test @MainActor func treeListModelCreation() {
+        ensureAdwInit()
+        let rootStore = ListStore()
+        rootStore.appendPlaceholder()
+        rootStore.appendPlaceholder()
+
+        let treeModel = TreeListModel(root: rootStore) { _ in
+            return nil
+        }
+        #expect(treeModel.listModelPointer != nil)
+    }
+
+    @Test @MainActor func treeListModelAutoexpand() {
+        ensureAdwInit()
+        let rootStore = ListStore()
+        rootStore.appendPlaceholder()
+
+        let treeModel = TreeListModel(root: rootStore, autoexpand: true) { _ in
+            return nil
+        }
+        #expect(treeModel.autoexpand == true)
+        treeModel.autoexpand = false
+        #expect(treeModel.autoexpand == false)
+    }
+
+    @Test @MainActor func treeListModelPassthrough() {
+        ensureAdwInit()
+        let rootStore = ListStore()
+        rootStore.appendPlaceholder()
+
+        let treeModel = TreeListModel(root: rootStore, passthrough: true) { _ in
+            return nil
+        }
+        #expect(treeModel.passthrough == true)
+
+        let treeModel2 = TreeListModel(root: ListStore(), passthrough: false) { _ in
+            return nil
+        }
+        #expect(treeModel2.passthrough == false)
+    }
+
+    @Test @MainActor func treeListModelWithChildren() {
+        ensureAdwInit()
+        let rootStore = ListStore()
+        rootStore.appendPlaceholder()
+
+        // Use autoexpand: false to avoid infinite recursion when the
+        // callback always returns children.
+        let treeModel = TreeListModel(root: rootStore, autoexpand: false) { _ in
+            let childStore = ListStore()
+            childStore.appendPlaceholder()
+            return childStore
+        }
+        #expect(treeModel.listModelPointer != nil)
+    }
+
+    @Test @MainActor func treeListModelRowAccess() {
+        ensureAdwInit()
+        let rootStore = ListStore()
+        rootStore.appendPlaceholder()
+        rootStore.appendPlaceholder()
+
+        let treeModel = TreeListModel(root: rootStore, passthrough: false) { _ in
+            return nil
+        }
+
+        let row = treeModel.row(at: 0)
+        #expect(row != nil)
+        #expect(row?.depth == 0)
+    }
+
+    @Test @MainActor func treeListModelWithSelectionModel() {
+        ensureAdwInit()
+        let rootStore = ListStore()
+        rootStore.appendPlaceholder()
+        rootStore.appendPlaceholder()
+
+        let treeModel = TreeListModel(root: rootStore) { _ in
+            return nil
+        }
+
+        let selection = SingleSelection(listModel: treeModel.listModelPointer)
+        #expect(selection.selectionModelPointer != nil)
+    }
+
+    // MARK: - TreeExpander Tests
+
+    @Test @MainActor func treeExpanderCreation() {
+        ensureAdwInit()
+        let expander = TreeExpander()
+        #expect(expander.pointer != nil)
+    }
+
+    @Test @MainActor func treeExpanderChild() {
+        ensureAdwInit()
+        let expander = TreeExpander()
+        #expect(expander.child == nil)
+
+        let label = Label("")
+        expander.child = label
+        #expect(expander.child != nil)
+    }
+
+    @Test @MainActor func treeExpanderIndentForDepth() {
+        ensureAdwInit()
+        let expander = TreeExpander()
+        #expect(expander.indentForDepth == true)
+        expander.indentForDepth = false
+        #expect(expander.indentForDepth == false)
+    }
+
+    @Test @MainActor func treeExpanderIndentForIcon() {
+        ensureAdwInit()
+        let expander = TreeExpander()
+        #expect(expander.indentForIcon == true)
+        expander.indentForIcon = false
+        #expect(expander.indentForIcon == false)
+    }
+
+    @Test @MainActor func treeExpanderHideExpander() {
+        ensureAdwInit()
+        let expander = TreeExpander()
+        #expect(expander.hideExpander == false)
+        expander.hideExpander = true
+        #expect(expander.hideExpander == true)
+    }
+
+    @Test @MainActor func treeExpanderInheritsFromWidget() {
+        #expect(isSubclass(TreeExpander.self, of: Widget.self))
+        #expect(isSubclass(TreeExpander.self, of: GObjectRef.self))
+    }
+
+    @Test @MainActor func columnViewInheritsFromWidget() {
+        #expect(isSubclass(ColumnView.self, of: Widget.self))
+        #expect(isSubclass(ColumnView.self, of: GObjectRef.self))
+    }
+
+    @Test @MainActor func columnViewColumnInheritsFromGObjectRef() {
+        #expect(isSubclass(ColumnViewColumn.self, of: GObjectRef.self))
+    }
+
+    @Test @MainActor func treeListModelInheritsFromGObjectRef() {
+        #expect(isSubclass(TreeListModel.self, of: GObjectRef.self))
+    }
+
+    @Test @MainActor func treeListRowInheritsFromGObjectRef() {
+        #expect(isSubclass(TreeListRow.self, of: GObjectRef.self))
     }
 
 }
