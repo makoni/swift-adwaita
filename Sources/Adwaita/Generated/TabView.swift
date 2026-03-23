@@ -6,13 +6,8 @@ import GObjectSupport
 public final class TabView: Widget {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
-    }
-
-    /// Borrows a reference to an existing TabView.
-    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
-        super.init(borrowing: pointer)
     }
 
     /// Creates a new `TabView`.

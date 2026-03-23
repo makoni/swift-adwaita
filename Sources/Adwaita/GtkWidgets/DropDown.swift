@@ -21,6 +21,10 @@ public final class DropDown: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Creates an empty drop-down.
     public init() {
         let ptr = gtk_drop_down_new(nil, nil)!

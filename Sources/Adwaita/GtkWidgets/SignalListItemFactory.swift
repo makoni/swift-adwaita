@@ -27,7 +27,7 @@ public final class SignalListItemFactory: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

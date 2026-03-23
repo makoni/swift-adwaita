@@ -4,7 +4,7 @@ import GObjectSupport
 
 /// A row in a `ListBox`.
 @MainActor
-open class ListBoxRow: Widget {
+public class ListBoxRow: Widget {
     /// The index of this row, or -1 if not in a list box.
     public var index: Int {
         Int(gtk_list_box_row_get_index(castedPointer() as UnsafeMutablePointer<GtkListBoxRow>))

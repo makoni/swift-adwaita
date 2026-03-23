@@ -12,6 +12,10 @@ public final class GestureLongPress: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The delay factor applied to the long press trigger time.
     public var delayFactor: Double {
         get { gtk_gesture_long_press_get_delay_factor(opaquePointer) }

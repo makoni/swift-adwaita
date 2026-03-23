@@ -12,6 +12,10 @@ public final class Grid: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Attaches a child widget at the given position.
     ///
     /// - Parameters:

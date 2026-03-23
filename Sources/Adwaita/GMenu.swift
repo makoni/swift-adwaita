@@ -13,7 +13,7 @@ public final class GMenuRef: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -76,7 +76,7 @@ public final class GMenuItemRef: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -115,7 +115,13 @@ public final class SimpleAction: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    /// Creates an action with a name and activation handler.
+    public convenience init(name: String, handler: @escaping @MainActor () -> Void) {
+        self.init(name: name)
+        self.onActivate(handler)
+    }
+
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -129,6 +135,35 @@ public final class SimpleAction: GObjectRef {
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: "activate", handler: handler)
+    }
+}
+
+/// A group of actions that can be attached to a widget.
+///
+/// Wraps `GSimpleActionGroup`. Attach to a widget with
+/// `widget.insertActionGroup("prefix", group)`, then reference actions
+/// in menus as `"prefix.actionName"`.
+///
+/// ```swift
+/// let group = SimpleActionGroup()
+/// group.addAction(SimpleAction(name: "copy") { print("Copy!") })
+/// widget.insertActionGroup("edit", group)
+/// ```
+@MainActor
+public final class SimpleActionGroup: GObjectRef {
+    /// Creates a new empty action group.
+    public init() {
+        let ptr = g_simple_action_group_new()!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+    }
+
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
+    /// Adds an action to this group.
+    public func addAction(_ action: SimpleAction) {
+        g_action_map_add_action(OpaquePointer(pointer), OpaquePointer(action.pointer))
     }
 }
 

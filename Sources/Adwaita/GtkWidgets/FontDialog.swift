@@ -18,6 +18,10 @@ public final class FontDialog: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The title of the dialog.
     public var title: String? {
         get { gtk_font_dialog_get_title(opaquePointer).map { String(cString: $0) } }
@@ -28,6 +32,22 @@ public final class FontDialog: GObjectRef {
     public var modal: Bool {
         get { gtk_font_dialog_get_modal(opaquePointer) != 0 }
         set { gtk_font_dialog_set_modal(opaquePointer, newValue ? 1 : 0) }
+    }
+
+    /// Opens the font dialog for the user to choose a font.
+    ///
+    /// Returns the selected font description string, or `nil` if the user cancelled.
+    ///
+    /// ```swift
+    /// let font = await dialog.chooseFont(parent: window)
+    /// if let font { print("Selected: \(font)") }
+    /// ```
+    public func chooseFont(parent: Widget?, initialFont: String? = nil) async -> String? {
+        await withCheckedContinuation { continuation in
+            chooseFont(parent: parent, initialFont: initialFont) { font in
+                continuation.resume(returning: font)
+            }
+        }
     }
 
     /// Opens the font dialog for the user to choose a font.

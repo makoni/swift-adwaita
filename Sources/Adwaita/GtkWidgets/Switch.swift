@@ -19,7 +19,7 @@ public final class Switch: Widget {
         if let handler { self.onActiveChanged(handler) }
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

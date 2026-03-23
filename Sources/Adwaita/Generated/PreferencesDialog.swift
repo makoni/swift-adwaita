@@ -4,10 +4,10 @@ import GObjectSupport
 /// A dialog showing application's preferences.
 /// - Since: libadwaita 1.5
 @MainActor
-open class PreferencesDialog: Dialog {
+public class PreferencesDialog: Dialog {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

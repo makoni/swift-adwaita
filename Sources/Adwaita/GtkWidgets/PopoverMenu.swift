@@ -12,6 +12,10 @@ public final class PopoverMenu: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The menu model used to create the popover content.
     public var menuModel: UnsafeMutablePointer<GMenuModel>? {
         get { gtk_popover_menu_get_menu_model(opaquePointer) }

@@ -19,7 +19,7 @@ public final class Entry: Widget {
         if let handler { self.onChanged(handler) }
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

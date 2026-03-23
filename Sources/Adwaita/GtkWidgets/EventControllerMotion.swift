@@ -12,6 +12,10 @@ public final class EventControllerMotion: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Connects to the `motion` signal.
     /// Handler receives: x coordinate, y coordinate.
     @discardableResult

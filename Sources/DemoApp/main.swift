@@ -39,10 +39,7 @@ func buildApp() {
                     demoWindow.defaultWidth = 700
                     demoWindow.defaultHeight = 500
                     demoWindow.content = example.buildWidget()
-                    gtk_window_set_transient_for(
-                        demoWindow.pointer.assumingMemoryBound(to: CAdwaita.GtkWindow.self),
-                        window.pointer.assumingMemoryBound(to: CAdwaita.GtkWindow.self)
-                    )
+                    demoWindow.transientFor = window.cast(GtkWindow.self)
                     demoWindow.present()
                 }
                 preview.child = tryBtn

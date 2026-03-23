@@ -33,6 +33,10 @@ public final class ColorDialog: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The title of the dialog.
     public var title: String? {
         get { gtk_color_dialog_get_title(opaquePointer).map { String(cString: $0) } }
@@ -49,6 +53,22 @@ public final class ColorDialog: GObjectRef {
     public var withAlpha: Bool {
         get { gtk_color_dialog_get_with_alpha(opaquePointer) != 0 }
         set { gtk_color_dialog_set_with_alpha(opaquePointer, newValue ? 1 : 0) }
+    }
+
+    /// Opens the color dialog for the user to choose a color.
+    ///
+    /// Returns the selected color, or `nil` if the user cancelled.
+    ///
+    /// ```swift
+    /// let color = await dialog.chooseRGBA(parent: window)
+    /// if let color { print("Selected: \(color)") }
+    /// ```
+    public func chooseRGBA(parent: Widget?, initialColor: RGBA? = nil) async -> RGBA? {
+        await withCheckedContinuation { continuation in
+            chooseRGBA(parent: parent, initialColor: initialColor) { color in
+                continuation.resume(returning: color)
+            }
+        }
     }
 
     /// Opens the color dialog for the user to choose a color.

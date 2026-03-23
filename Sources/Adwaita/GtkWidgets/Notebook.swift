@@ -12,6 +12,10 @@ public final class Notebook: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Appends a page with a text label. Returns the page index.
     @discardableResult
     public func appendPage(_ child: Widget, label: String) -> Int {

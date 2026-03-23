@@ -4,10 +4,10 @@ import GObjectSupport
 /// A [class@Gtk.ListBoxRow] with an embedded text entry.
 /// - Since: libadwaita 1.2
 @MainActor
-open class EntryRow: PreferencesRow {
+public class EntryRow: PreferencesRow {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

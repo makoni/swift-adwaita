@@ -82,6 +82,10 @@ public final class ApplicationWindow: Widget {
         }
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     // MARK: - Window State
 
     /// Requests fullscreen mode.

@@ -12,6 +12,10 @@ public final class DragSource: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The allowed drag actions (copy, move, link).
     public var actions: GdkDragAction {
         get { gtk_drag_source_get_actions(opaquePointer) }

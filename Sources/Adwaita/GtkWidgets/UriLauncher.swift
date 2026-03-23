@@ -13,6 +13,10 @@ public final class UriLauncher: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The URI to launch.
     public var uri: String? {
         get {

@@ -12,6 +12,10 @@ public final class FileFilter: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Creates a file filter with a name and suffix patterns.
     ///
     /// Example: `FileFilter(name: "Swift files", suffixes: ["swift"])`

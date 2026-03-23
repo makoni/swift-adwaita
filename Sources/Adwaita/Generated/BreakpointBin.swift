@@ -4,10 +4,10 @@ import GObjectSupport
 /// A widget that changes layout based on available size.
 /// - Since: libadwaita 1.4
 @MainActor
-open class BreakpointBin: Widget {
+public class BreakpointBin: Widget {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

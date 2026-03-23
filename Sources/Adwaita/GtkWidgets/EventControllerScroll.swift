@@ -12,6 +12,10 @@ public final class EventControllerScroll: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Connects to the `scroll` signal.
     /// Handler receives: dx, dy deltas. Return `true` to stop propagation.
     @discardableResult

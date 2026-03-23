@@ -24,7 +24,7 @@ public final class CheckButton: Widget {
         self.onToggled(handler)
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

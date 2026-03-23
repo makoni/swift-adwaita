@@ -3,10 +3,10 @@ import CAdwaita
 import GObjectSupport
 /// A widget with one child.
 @MainActor
-open class Bin: Widget {
+public class Bin: Widget {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

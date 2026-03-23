@@ -12,6 +12,10 @@ public final class EventControllerFocus: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Whether the widget has focus.
     public var isFocus: Bool {
         gtk_event_controller_focus_is_focus(opaquePointer) != 0

@@ -12,6 +12,10 @@ public final class GestureClick: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Connects to the `pressed` signal.
     /// Handler receives: number of presses, x coordinate, y coordinate.
     @discardableResult

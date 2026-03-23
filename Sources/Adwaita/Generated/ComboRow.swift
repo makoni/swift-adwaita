@@ -3,10 +3,10 @@ import CAdwaita
 import GObjectSupport
 /// A [class@Gtk.ListBoxRow] used to choose from a list of items.
 @MainActor
-open class ComboRow: ActionRow {
+public class ComboRow: ActionRow {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

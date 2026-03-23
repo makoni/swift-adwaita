@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct MenuExample: DemoExample {
@@ -66,7 +65,7 @@ struct MenuExample: DemoExample {
         menuBtn.halign = .center
 
         // Create actions using a simple pattern
-        let actionGroup = g_simple_action_group_new()!
+        let actionGroup = SimpleActionGroup()
 
         let actions = ["cut", "copy", "paste", "new", "open", "save"]
         for name in actions {
@@ -75,12 +74,11 @@ struct MenuExample: DemoExample {
             action.onActivate { [logLabel] in
                 logLabel.text = "\(actionName) activated!"
             }
-            g_action_map_add_action(OpaquePointer(actionGroup), OpaquePointer(action.pointer))
+            actionGroup.addAction(action)
         }
 
         // Attach action group to the menu button
-        gtk_widget_insert_action_group(menuBtn.widgetPointer, "demo", OpaquePointer(actionGroup))
-        g_object_unref(gpointer(actionGroup))
+        menuBtn.insertActionGroup("demo", actionGroup)
 
         group1.add(menuBtn)
 
@@ -114,17 +112,16 @@ struct MenuExample: DemoExample {
         iconMenuBtn.setMenuModel(iconMenu)
         iconMenuBtn.halign = .center
 
-        let actionGroup2 = g_simple_action_group_new()!
+        let actionGroup2 = SimpleActionGroup()
         for name in ["prefs", "about", "quit"] {
             let action = SimpleAction(name: name)
             let actionName = name
             action.onActivate { [logLabel] in
                 logLabel.text = "\(actionName) (with icon) activated!"
             }
-            g_action_map_add_action(OpaquePointer(actionGroup2), OpaquePointer(action.pointer))
+            actionGroup2.addAction(action)
         }
-        gtk_widget_insert_action_group(iconMenuBtn.widgetPointer, "demo2", OpaquePointer(actionGroup2))
-        g_object_unref(gpointer(actionGroup2))
+        iconMenuBtn.insertActionGroup("demo2", actionGroup2)
 
         group2.add(iconMenuBtn)
         box.append(group2)
@@ -147,17 +144,16 @@ struct MenuExample: DemoExample {
         subMenuBtn.setMenuModel(mainMenu)
         subMenuBtn.halign = .center
 
-        let actionGroup3 = g_simple_action_group_new()!
+        let actionGroup3 = SimpleActionGroup()
         for name in ["action1", "a", "b"] {
             let action = SimpleAction(name: name)
             let actionName = name
             action.onActivate { [logLabel] in
                 logLabel.text = "submenu: \(actionName) activated!"
             }
-            g_action_map_add_action(OpaquePointer(actionGroup3), OpaquePointer(action.pointer))
+            actionGroup3.addAction(action)
         }
-        gtk_widget_insert_action_group(subMenuBtn.widgetPointer, "sub", OpaquePointer(actionGroup3))
-        g_object_unref(gpointer(actionGroup3))
+        subMenuBtn.insertActionGroup("sub", actionGroup3)
 
         group3.add(subMenuBtn)
         box.append(group3)

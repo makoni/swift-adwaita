@@ -3,10 +3,10 @@ import CAdwaita
 import GObjectSupport
 /// A [class@Gtk.ListBoxRow] used to reveal widgets.
 @MainActor
-open class ExpanderRow: PreferencesRow {
+public class ExpanderRow: PreferencesRow {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

@@ -4,10 +4,10 @@ import GObjectSupport
 /// A dialog presenting a message or a question.
 /// - Since: libadwaita 1.5
 @MainActor
-open class AlertDialog: Dialog {
+public class AlertDialog: Dialog {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

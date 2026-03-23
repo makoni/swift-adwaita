@@ -19,6 +19,10 @@ public final class FontDialogButton: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The currently selected font as a Pango font description string.
     public var fontDescription: String? {
         get {

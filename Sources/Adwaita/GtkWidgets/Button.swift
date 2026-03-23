@@ -36,7 +36,7 @@ public final class Button: Widget {
         self.onClicked(handler)
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

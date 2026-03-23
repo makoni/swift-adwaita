@@ -12,6 +12,10 @@ public final class Expander: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Whether the expander is expanded (child visible).
     public var expanded: Bool {
         get { gtk_expander_get_expanded(opaquePointer) != 0 }

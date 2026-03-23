@@ -30,7 +30,7 @@ public final class Image: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

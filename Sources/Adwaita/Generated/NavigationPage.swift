@@ -4,16 +4,11 @@ import GObjectSupport
 /// a navigation page
 /// - Since: libadwaita 1.4
 @MainActor
-open class NavigationPage: Widget {
+public class NavigationPage: Widget {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
-    }
-
-    /// Borrows a reference to an existing NavigationPage.
-    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
-        super.init(borrowing: pointer)
     }
 
     /// Creates a new `NavigationPage`.

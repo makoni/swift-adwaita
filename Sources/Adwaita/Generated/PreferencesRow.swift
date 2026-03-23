@@ -3,10 +3,10 @@ import CAdwaita
 import GObjectSupport
 /// A [class@Gtk.ListBoxRow] used to present preferences.
 @MainActor
-open class PreferencesRow: ListBoxRow {
+public class PreferencesRow: ListBoxRow {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

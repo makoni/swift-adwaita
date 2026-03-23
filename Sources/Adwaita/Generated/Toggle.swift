@@ -7,13 +7,8 @@ import GObjectSupport
 public final class Toggle: GObjectRef {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
-    }
-
-    /// Borrows a reference to an existing Toggle.
-    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
-        super.init(borrowing: pointer)
     }
 
     /// Creates a new `Toggle`.

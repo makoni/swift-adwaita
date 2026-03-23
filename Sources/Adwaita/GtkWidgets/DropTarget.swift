@@ -14,6 +14,10 @@ public final class DropTarget: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Creates a drop target that accepts text.
     public static func forText(actions: GdkDragAction = GDK_ACTION_COPY) -> DropTarget {
         DropTarget(type: cadw_type_string(), actions: actions)

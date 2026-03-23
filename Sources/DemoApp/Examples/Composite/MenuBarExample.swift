@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct MenuBarExample: DemoExample {
@@ -71,7 +70,7 @@ struct MenuBarExample: DemoExample {
         box.append(statusLabel)
 
         // Create actions
-        let actionGroup = g_simple_action_group_new()!
+        let actionGroup = SimpleActionGroup()
         let actionNames = [
             "new", "open", "save", "quit",
             "cut", "copy", "paste", "selectall",
@@ -84,10 +83,9 @@ struct MenuBarExample: DemoExample {
             action.onActivate { [statusLabel] in
                 statusLabel.text = "\(actionName) activated!"
             }
-            g_action_map_add_action(OpaquePointer(actionGroup), OpaquePointer(action.pointer))
+            actionGroup.addAction(action)
         }
-        gtk_widget_insert_action_group(box.widgetPointer, "bar", OpaquePointer(actionGroup))
-        g_object_unref(gpointer(actionGroup))
+        box.insertActionGroup("bar", actionGroup)
 
         return box
     }

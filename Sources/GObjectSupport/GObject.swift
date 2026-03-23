@@ -18,7 +18,7 @@ open class GObjectRef {
     /// If the object has a floating reference (common for widgets created with
     /// `_new()` functions), it is sunk so this wrapper owns exactly one strong
     /// reference.
-    public init(raw pointer: UnsafeMutableRawPointer) {
+    public required init(raw pointer: UnsafeMutableRawPointer) {
         self.pointer = pointer
         // Sink floating reference if present (GInitiallyUnowned subclasses)
         if g_object_is_floating(pointer) != 0 {
@@ -27,9 +27,12 @@ open class GObjectRef {
     }
 
     /// Borrows a reference to an existing GObject by adding a new strong ref.
-    public init(borrowing pointer: UnsafeMutableRawPointer) {
-        self.pointer = pointer
+    ///
+    /// This is a convenience initializer so all subclasses inherit it
+    /// automatically — enabling `Widget.cast(_:)` to create typed wrappers.
+    public convenience init(borrowing pointer: UnsafeMutableRawPointer) {
         g_object_ref(pointer)
+        self.init(raw: pointer)
     }
 
     deinit {

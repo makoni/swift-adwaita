@@ -13,6 +13,10 @@ public final class HeaderBar: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Adds a widget to the start of the header bar.
     public func packStart(_ child: Widget) {
         adw_header_bar_pack_start(opaquePointer, child.widgetPointer)

@@ -4,16 +4,11 @@ import GObjectSupport
 /// An adaptive dialog container.
 /// - Since: libadwaita 1.5
 @MainActor
-open class Dialog: Widget {
+public class Dialog: Widget {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
-    }
-
-    /// Borrows a reference to an existing Dialog.
-    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
-        super.init(borrowing: pointer)
     }
 
     /// Creates a new `Dialog`.

@@ -14,6 +14,10 @@ public final class StatusPage: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The icon name displayed on the status page.
     public var iconName: String? {
         get {

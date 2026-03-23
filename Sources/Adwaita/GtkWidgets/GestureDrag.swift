@@ -12,6 +12,10 @@ public final class GestureDrag: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Returns the start point of the current drag, or nil if no drag is active.
     public var startPoint: (x: Double, y: Double)? {
         var x: Double = 0

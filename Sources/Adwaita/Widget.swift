@@ -60,12 +60,13 @@ open class Widget: GObjectRef {
             return result
         }
         set {
-            var cArray: [UnsafePointer<CChar>?] = newValue.map { $0.withCString { UnsafePointer(strdup($0)) } }
+            let cStrings = newValue.map { g_strdup($0)! }
+            var cArray: [UnsafePointer<CChar>?] = cStrings.map { UnsafePointer($0) }
             cArray.append(nil)
             cArray.withUnsafeMutableBufferPointer { buf in
                 gtk_widget_set_css_classes(widgetPointer, buf.baseAddress)
             }
-            for ptr in cArray.dropLast() { free(UnsafeMutablePointer(mutating: ptr)) }
+            cStrings.forEach { g_free(gpointer(mutating: $0)) }
         }
     }
 
@@ -185,6 +186,64 @@ open class Widget: GObjectRef {
         return Widget(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Re-wraps this widget's pointer as a specific subclass.
+    ///
+    /// Use this when you know the concrete type of a widget returned as the
+    /// base `Widget` class (e.g., from `ListItem.child` or `firstChild`).
+    ///
+    /// ```swift
+    /// // In a ListView onBind callback:
+    /// if let label = listItem.child?.cast(Label.self) {
+    ///     label.text = "Hello"
+    /// }
+    /// ```
+    ///
+    /// - Important: The caller must ensure the widget is actually the given type.
+    ///   Passing a wrong type will trigger a fatal error in debug builds.
+    public func cast<T: Widget>(_ type: T.Type) -> T {
+        g_object_ref(pointer)
+        return T(raw: pointer)
+    }
+
+    /// Attempts to re-wrap this widget's pointer as a specific subclass.
+    ///
+    /// Returns `nil` if the cast cannot be verified. Use this instead of
+    /// `cast(_:)` when you are not certain of the widget's concrete type.
+    ///
+    /// ```swift
+    /// if let label = listItem.child?.tryCast(Label.self) {
+    ///     label.text = "Hello"
+    /// }
+    /// ```
+    public func tryCast<T: Widget>(_ type: T.Type) -> T? {
+        // All casts within the Widget hierarchy succeed at the Swift level
+        // since we use the same underlying pointer. For safety, verify the
+        // GObject is at least a valid widget.
+        guard g_type_check_instance_is_a(
+            pointer.assumingMemoryBound(to: GTypeInstance.self),
+            gtk_widget_get_type()
+        ) != 0 else {
+            return nil
+        }
+        g_object_ref(pointer)
+        return T(raw: pointer)
+    }
+
+    /// Configures the widget in a closure and returns it for chaining.
+    ///
+    /// ```swift
+    /// let label = Label("Hello").configure {
+    ///     $0.halign = .center
+    ///     $0.addCSSClass("title-1")
+    ///     $0.setMargins(12)
+    /// }
+    /// ```
+    @discardableResult
+    public func configure(_ block: (Self) -> Void) -> Self {
+        block(self)
+        return self
+    }
+
     /// Activates the widget (emits the default action).
     /// Returns `true` if the widget was activated.
     @discardableResult
@@ -205,6 +264,20 @@ open class Widget: GObjectRef {
     public func addController(_ controller: GObjectRef) {
         g_object_ref(controller.pointer)
         gtk_widget_add_controller(widgetPointer, OpaquePointer(controller.pointer))
+    }
+
+    /// Attaches an action group to this widget with the given prefix.
+    ///
+    /// Actions in the group can then be referenced in menus as `"prefix.actionName"`.
+    ///
+    /// ```swift
+    /// let group = SimpleActionGroup()
+    /// group.addAction(SimpleAction(name: "copy") { ... })
+    /// widget.insertActionGroup("edit", group)
+    /// // Menu items use "edit.copy"
+    /// ```
+    public func insertActionGroup(_ prefix: String, _ group: SimpleActionGroup) {
+        gtk_widget_insert_action_group(widgetPointer, prefix, OpaquePointer(group.pointer))
     }
 
     // MARK: - Focus
@@ -282,6 +355,23 @@ open class Widget: GObjectRef {
     @discardableResult
     public func onDestroy(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: "destroy", handler: handler)
+    }
+
+    /// Called when the widget's size changes.
+    ///
+    /// The handler receives the new width and height.
+    ///
+    /// ```swift
+    /// widget.onSizeAllocate { width, height in
+    ///     print("New size: \(width)x\(height)")
+    /// }
+    /// ```
+    @discardableResult
+    public func onSizeAllocate(_ handler: @escaping @MainActor (Int, Int) -> Void) -> SignalConnection {
+        SignalHelper.onNotify(self, property: "width") { [weak self] in
+            guard let self else { return }
+            handler(self.width, self.height)
+        }
     }
 
     // MARK: - Cursor

@@ -3,7 +3,7 @@ import CAdwaita
 import GObjectSupport
 /// A base class for animations.
 @MainActor
-open class Animation: GObjectRef {
+public class Animation: GObjectRef {
 
     /// The `state` property (read-only).
     public var state: AdwAnimationState {

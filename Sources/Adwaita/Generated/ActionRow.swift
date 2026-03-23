@@ -3,10 +3,10 @@ import CAdwaita
 import GObjectSupport
 /// an action row
 @MainActor
-open class ActionRow: PreferencesRow {
+public class ActionRow: PreferencesRow {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

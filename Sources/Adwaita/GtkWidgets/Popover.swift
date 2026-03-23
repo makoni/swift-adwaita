@@ -12,6 +12,10 @@ public final class Popover: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The child widget of the popover.
     public var child: Widget? {
         get {

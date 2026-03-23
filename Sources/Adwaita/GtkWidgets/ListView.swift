@@ -48,7 +48,7 @@ public final class ListView: Widget {
         gtk_list_view_set_factory(OpaquePointer(pointer), OpaquePointer(factory.pointer))
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

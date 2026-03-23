@@ -8,13 +8,15 @@ import GObjectSupport
 @MainActor
 public final class ListItem: GObjectRef {
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
-    /// Wraps an existing `GtkListItem` pointer without taking ownership.
+    /// Wraps an existing `GtkListItem` pointer, adding a ref to borrow it.
     internal init(borrowedListItem pointer: OpaquePointer) {
-        super.init(borrowing: UnsafeMutableRawPointer(pointer))
+        let raw = UnsafeMutableRawPointer(pointer)
+        g_object_ref(raw)
+        super.init(raw: raw)
     }
 
     // MARK: - Properties

@@ -3,10 +3,10 @@ import CAdwaita
 import GObjectSupport
 /// A page from [class@PreferencesDialog].
 @MainActor
-open class PreferencesPage: Widget {
+public class PreferencesPage: Widget {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

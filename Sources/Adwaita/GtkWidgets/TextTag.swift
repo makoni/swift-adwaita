@@ -12,12 +12,8 @@ public final class TextTag: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
-    }
-
-    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
-        super.init(borrowing: pointer)
     }
 
     // MARK: - Common Properties

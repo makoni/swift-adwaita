@@ -13,6 +13,10 @@ public final class ToolbarView: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The content widget displayed between the toolbars.
     public var content: Widget? {
         get {

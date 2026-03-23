@@ -12,6 +12,10 @@ public final class Frame: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The label text.
     public var label: String? {
         get { gtk_frame_get_label(castedPointer()).map { String(cString: $0) } }

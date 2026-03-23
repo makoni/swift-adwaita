@@ -12,6 +12,10 @@ public final class Paned: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The start (left or top) child.
     public var startChild: Widget? {
         get {

@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct ListViewExample: DemoExample {
@@ -67,13 +66,12 @@ struct ListViewExample: DemoExample {
             listItem.child = label
         }
 
-        factory.onBind { [messages] listItem in
+        factory.onBind { listItem in
             let pos = listItem.position
             guard pos < messages.count else { return }
             let msg = messages[pos]
-            // Use C function to set label text on the child widget
             let text = "\(msg.sender): \(msg.text)"
-            gtk_label_set_label(listItem.child!.opaquePointer, text)
+            listItem.child?.cast(Label.self).text = text
         }
 
         let selection = NoSelection(model: store)

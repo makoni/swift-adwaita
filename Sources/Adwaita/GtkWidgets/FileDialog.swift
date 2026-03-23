@@ -19,6 +19,10 @@ public final class FileDialog: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The title of the dialog.
     public var title: String? {
         get { gtk_file_dialog_get_title(opaquePointer).map { String(cString: $0) } }
@@ -68,6 +72,22 @@ public final class FileDialog: GObjectRef {
 
     /// Opens the file dialog for selecting a file.
     ///
+    /// Returns the selected file path, or `nil` if the user cancelled.
+    ///
+    /// ```swift
+    /// let path = await dialog.open(parent: window)
+    /// if let path { print("Selected: \(path)") }
+    /// ```
+    public func open(parent: Widget?) async -> String? {
+        await withCheckedContinuation { continuation in
+            open(parent: parent) { path in
+                continuation.resume(returning: path)
+            }
+        }
+    }
+
+    /// Opens the file dialog for selecting a file.
+    ///
     /// - Parameters:
     ///   - parent: The parent window, or nil.
     ///   - completion: Called with the selected file path, or nil if cancelled.
@@ -100,6 +120,17 @@ public final class FileDialog: GObjectRef {
 
     /// Opens the file dialog for saving a file.
     ///
+    /// Returns the selected save path, or `nil` if the user cancelled.
+    public func save(parent: Widget?) async -> String? {
+        await withCheckedContinuation { continuation in
+            save(parent: parent) { path in
+                continuation.resume(returning: path)
+            }
+        }
+    }
+
+    /// Opens the file dialog for saving a file.
+    ///
     /// - Parameters:
     ///   - parent: The parent window, or nil.
     ///   - completion: Called with the selected save path, or nil if cancelled.
@@ -128,6 +159,17 @@ public final class FileDialog: GObjectRef {
             },
             box
         )
+    }
+
+    /// Opens the file dialog for selecting a folder.
+    ///
+    /// Returns the selected folder path, or `nil` if the user cancelled.
+    public func selectFolder(parent: Widget?) async -> String? {
+        await withCheckedContinuation { continuation in
+            selectFolder(parent: parent) { path in
+                continuation.resume(returning: path)
+            }
+        }
     }
 
     /// Opens the file dialog for selecting a folder.

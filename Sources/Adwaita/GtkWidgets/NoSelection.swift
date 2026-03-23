@@ -34,7 +34,7 @@ public final class NoSelection: GObjectRef {
         gtk_no_selection_set_model(OpaquePointer(pointer), listModel)
     }
 
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

@@ -4,4 +4,4 @@ import GObjectSupport
 
 /// Minimal wrapper for GtkLayoutManager.
 @MainActor
-open class LayoutManager: GObjectRef {}
+public class LayoutManager: GObjectRef {}

@@ -15,6 +15,10 @@ public final class Settings: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// Gets a string value for the given key.
     public func getString(_ key: String) -> String {
         let cStr = g_settings_get_string(castedPointer(), key)!

@@ -3,10 +3,10 @@ import CAdwaita
 import GObjectSupport
 /// A freeform window.
 @MainActor
-open class Window: GtkWindow {
+public class Window: GtkWindow {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

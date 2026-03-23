@@ -3,5 +3,5 @@ import CAdwaita
 import GObjectSupport
 /// Represents a value [class@Animation] can animate.
 @MainActor
-open class AnimationTarget: GObjectRef {
+public class AnimationTarget: GObjectRef {
 }

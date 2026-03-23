@@ -12,6 +12,10 @@ public final class CenterBox: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The start (leading) widget.
     public var startWidget: Widget? {
         get {

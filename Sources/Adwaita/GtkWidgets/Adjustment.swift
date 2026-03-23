@@ -27,6 +27,10 @@ public final class Adjustment: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
+    }
+
     /// The current value.
     public var value: Double {
         get { gtk_adjustment_get_value(castedPointer()) }

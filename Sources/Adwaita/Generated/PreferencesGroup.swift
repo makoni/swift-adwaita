@@ -3,16 +3,11 @@ import CAdwaita
 import GObjectSupport
 /// A group of preference rows.
 @MainActor
-open class PreferencesGroup: Widget {
+public class PreferencesGroup: Widget {
 
     /// Internal raw-pointer initializer.
-    override internal init(raw pointer: UnsafeMutableRawPointer) {
+    required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
-    }
-
-    /// Borrows a reference to an existing PreferencesGroup.
-    override internal init(borrowing pointer: UnsafeMutableRawPointer) {
-        super.init(borrowing: pointer)
     }
 
     /// Creates a new `PreferencesGroup`.
