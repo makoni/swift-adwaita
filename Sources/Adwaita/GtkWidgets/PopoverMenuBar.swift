@@ -27,4 +27,25 @@ public final class PopoverMenuBar: Widget {
             gtk_popover_menu_bar_set_menu_model(opaquePointer, newValue?.menuModelPointer)
         }
     }
+
+    /// Adds a custom widget to the menu bar, replacing the menu item
+    /// with the given `id` from the model.
+    ///
+    /// - Parameters:
+    ///   - child: The widget to insert.
+    ///   - id: The ID of the menu item to replace.
+    /// - Returns: `true` if the widget was added.
+    @discardableResult
+    public func addChild(_ child: Widget, id: String) -> Bool {
+        gtk_popover_menu_bar_add_child(opaquePointer, child.widgetPointer, id) != 0
+    }
+
+    /// Removes a custom widget previously added with ``addChild(_:id:)``.
+    ///
+    /// - Parameter child: The widget to remove.
+    /// - Returns: `true` if the widget was removed.
+    @discardableResult
+    public func removeChild(_ child: Widget) -> Bool {
+        gtk_popover_menu_bar_remove_child(opaquePointer, child.widgetPointer) != 0
+    }
 }

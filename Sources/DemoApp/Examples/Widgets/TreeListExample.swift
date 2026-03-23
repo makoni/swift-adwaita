@@ -188,11 +188,8 @@ struct TreeListExample: DemoExample {
                    let nodeIndex = ptrMap.map[underlyingItem.pointer],
                    let node = data.nodes[nodeIndex],
                    let box = expander.child {
-                    // Update icon (first child) and label (last child)
-                    let firstPtr = gtk_widget_get_first_child(box.widgetPointer)!
-                    let icon = Image(borrowing: UnsafeMutableRawPointer(firstPtr))
-                    let lastPtr = gtk_widget_get_last_child(box.widgetPointer)!
-                    let label = Label(borrowing: UnsafeMutableRawPointer(lastPtr))
+                    let icon = box.firstChild!.cast(Image.self)
+                    let label = box.lastChild!.cast(Label.self)
 
                     label.text = node.label
                     icon.iconName = node.icon

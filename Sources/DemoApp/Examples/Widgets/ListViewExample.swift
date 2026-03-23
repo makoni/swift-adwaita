@@ -23,8 +23,7 @@ struct ListViewExample: DemoExample {
     }
     factory.onBind { listItem in
         let text = items[listItem.position]
-        // Re-wrap the child pointer as Label
-        gtk_label_set_text(listItem.child!.opaquePointer, text)
+        listItem.child?.cast(Label.self).text = text
     }
 
     // View

@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct MultiWindowExample: DemoExample {
@@ -10,10 +9,7 @@ struct MultiWindowExample: DemoExample {
 
     let sourceCode = """
     // Get the running application instance
-    let gApp = g_application_get_default()!
-    let gtkApp = UnsafeMutableRawPointer(gApp)
-        .assumingMemoryBound(to: GtkApplication.self)
-    let app = Application(borrowing: UnsafeMutableRawPointer(gtkApp))
+    guard let app = Application.current else { return }
 
     // Create a secondary window
     let secondary = ApplicationWindow(application: app)
@@ -55,11 +51,7 @@ struct MultiWindowExample: DemoExample {
         newWindowBtn.onClicked { [counterLabel] in
             windowCount += 1
 
-            // Get the running GtkApplication from the default GApplication
-            let gApp = g_application_get_default()!
-            let gtkApp = UnsafeMutableRawPointer(gApp)
-                .assumingMemoryBound(to: GtkApplication.self)
-            let app = Application(borrowing: UnsafeMutableRawPointer(gtkApp))
+            guard let app = Application.current else { return }
 
             let secondary = ApplicationWindow(application: app)
             secondary.title = "Window #\(windowCount)"
@@ -113,10 +105,7 @@ struct MultiWindowExample: DemoExample {
         modalBtn.onClicked { [counterLabel] in
             windowCount += 1
 
-            let gApp = g_application_get_default()!
-            let gtkApp = UnsafeMutableRawPointer(gApp)
-                .assumingMemoryBound(to: GtkApplication.self)
-            let app = Application(borrowing: UnsafeMutableRawPointer(gtkApp))
+            guard let app = Application.current else { return }
 
             let modal = ApplicationWindow(application: app)
             modal.title = "Modal #\(windowCount)"

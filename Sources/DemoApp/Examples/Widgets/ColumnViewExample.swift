@@ -89,11 +89,8 @@ struct ColumnViewExample: DemoExample {
         nameFactory.onBind { listItem in
             let pos = listItem.position
             guard pos < names.count, let child = listItem.child else { return }
-            // Navigate the box's children: first child = icon, next sibling = label
-            let firstPtr = gtk_widget_get_first_child(child.widgetPointer)!
-            let icon = Image(borrowing: UnsafeMutableRawPointer(firstPtr))
-            let lastPtr = gtk_widget_get_last_child(child.widgetPointer)!
-            let label = Label(borrowing: UnsafeMutableRawPointer(lastPtr))
+            let icon = child.firstChild!.cast(Image.self)
+            let label = child.lastChild!.cast(Label.self)
 
             label.text = names[pos]
             let iconName: String

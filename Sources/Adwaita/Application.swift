@@ -62,6 +62,16 @@ public final class Application: GObjectRef {
         super.init(raw: pointer)
     }
 
+    // MARK: - Current Instance
+
+    /// Returns the running application instance, if any.
+    ///
+    /// Uses `g_application_get_default()` under the hood.
+    public static var current: Application? {
+        guard let gApp = g_application_get_default() else { return nil }
+        return Application(borrowing: UnsafeMutableRawPointer(gApp))
+    }
+
     // MARK: - Lifecycle
 
     /// Immediately exits the application.

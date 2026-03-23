@@ -4708,4 +4708,189 @@ func ensureAdwInit() {
         #expect(isSubclass(GridView.self, of: GObjectRef.self))
     }
 
+    // MARK: - MapListModel Tests
+
+    @Test @MainActor func mapListModelCreation() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+
+        let mapped = MapListModel(model: store) { item in
+            GObjectRef(raw: cadw_object_new(cadw_type_object())!)
+        }
+        #expect(mapped.pointer != nil)
+        #expect(mapped.count == 3)
+    }
+
+    @Test @MainActor func mapListModelEmptyStore() {
+        ensureAdwInit()
+        let store = ListStore()
+        let mapped = MapListModel(model: store) { item in
+            GObjectRef(raw: cadw_object_new(cadw_type_object())!)
+        }
+        #expect(mapped.count == 0)
+    }
+
+    @Test @MainActor func mapListModelListModelPointer() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let mapped = MapListModel(model: store) { item in
+            GObjectRef(raw: cadw_object_new(cadw_type_object())!)
+        }
+        #expect(mapped.listModelPointer != nil)
+    }
+
+    @Test @MainActor func mapListModelFromListModelPointer() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let mapped = MapListModel(listModel: store.listModelPointer) { item in
+            GObjectRef(raw: cadw_object_new(cadw_type_object())!)
+        }
+        #expect(mapped.count == 2)
+    }
+
+    @Test @MainActor func mapListModelReflectsStoreChanges() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let mapped = MapListModel(model: store) { item in
+            GObjectRef(raw: cadw_object_new(cadw_type_object())!)
+        }
+        #expect(mapped.count == 1)
+        store.appendPlaceholder()
+        #expect(mapped.count == 2)
+        store.remove(at: 0)
+        #expect(mapped.count == 1)
+    }
+
+    @Test @MainActor func mapListModelWithSelectionModel() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let mapped = MapListModel(model: store) { item in
+            GObjectRef(raw: cadw_object_new(cadw_type_object())!)
+        }
+        let selection = NoSelection(listModel: mapped.listModelPointer)
+        #expect(selection.pointer != nil)
+    }
+
+    @Test @MainActor func mapListModelInheritsFromGObjectRef() {
+        #expect(isSubclass(MapListModel.self, of: GObjectRef.self))
+    }
+
+    // MARK: - FlattenListModel Tests
+
+    @Test @MainActor func flattenListModelCreation() {
+        ensureAdwInit()
+        let store = ListStore()
+        let flattened = FlattenListModel(model: store)
+        #expect(flattened.pointer != nil)
+    }
+
+    @Test @MainActor func flattenListModelEmptyStore() {
+        ensureAdwInit()
+        let store = ListStore()
+        let flattened = FlattenListModel(model: store)
+        #expect(flattened.count == 0)
+    }
+
+    @Test @MainActor func flattenListModelListModelPointer() {
+        ensureAdwInit()
+        let store = ListStore()
+        let flattened = FlattenListModel(model: store)
+        #expect(flattened.listModelPointer != nil)
+    }
+
+    @Test @MainActor func flattenListModelFromOpaquePointer() {
+        ensureAdwInit()
+        let store = ListStore()
+        let flattened = FlattenListModel(listModel: store.listModelPointer)
+        #expect(flattened.pointer != nil)
+        #expect(flattened.count == 0)
+    }
+
+    @Test @MainActor func flattenListModelWithSelectionModel() {
+        ensureAdwInit()
+        let store = ListStore()
+        let flattened = FlattenListModel(model: store)
+        let selection = NoSelection(listModel: flattened.listModelPointer)
+        #expect(selection.pointer != nil)
+    }
+
+    @Test @MainActor func flattenListModelInheritsFromGObjectRef() {
+        #expect(isSubclass(FlattenListModel.self, of: GObjectRef.self))
+    }
+
+    // MARK: - SelectionFilterModel Tests
+
+    @Test @MainActor func selectionFilterModelWithSingleSelection() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let selection = SingleSelection(model: store)
+        let filtered = SelectionFilterModel(model: selection)
+        #expect(filtered.pointer != nil)
+        // SingleSelection selects item 0 by default
+        #expect(filtered.count == 1)
+    }
+
+    @Test @MainActor func selectionFilterModelWithMultiSelection() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let selection = MultiSelection(model: store)
+        let filtered = SelectionFilterModel(model: selection)
+        #expect(filtered.pointer != nil)
+        // No items selected by default in MultiSelection
+        #expect(filtered.count == 0)
+    }
+
+    @Test @MainActor func selectionFilterModelListModelPointer() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let selection = SingleSelection(model: store)
+        let filtered = SelectionFilterModel(model: selection)
+        #expect(filtered.listModelPointer != nil)
+    }
+
+    @Test @MainActor func selectionFilterModelReflectsSelectionChanges() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let selection = MultiSelection(model: store)
+        let filtered = SelectionFilterModel(model: selection)
+        #expect(filtered.count == 0)
+        selection.selectItem(position: 0, unselectRest: false)
+        #expect(filtered.count == 1)
+        selection.selectItem(position: 2, unselectRest: false)
+        #expect(filtered.count == 2)
+    }
+
+    @Test @MainActor func selectionFilterModelFromRawPointer() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let selection = SingleSelection(model: store)
+        let filtered = SelectionFilterModel(selectionModel: selection.selectionModelPointer)
+        #expect(filtered.pointer != nil)
+        #expect(filtered.count == 1)
+    }
+
+    @Test @MainActor func selectionFilterModelInheritsFromGObjectRef() {
+        #expect(isSubclass(SelectionFilterModel.self, of: GObjectRef.self))
+    }
+
 }
