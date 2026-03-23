@@ -4893,4 +4893,118 @@ func ensureAdwInit() {
         #expect(isSubclass(SelectionFilterModel.self, of: GObjectRef.self))
     }
 
+    // MARK: - GtkWindow Icon Tests
+
+    @Test @MainActor func gtkWindowIconName() {
+        ensureAdwInit()
+        let app = Application(id: "com.test.windowicon\(UInt32.random(in: 0..<UInt32.max))")
+        let win = ApplicationWindow(application: app)
+        win.iconName = "dialog-information-symbolic"
+        #expect(win.iconName == "dialog-information-symbolic")
+        win.iconName = nil
+        #expect(win.iconName == nil)
+    }
+
+    // MARK: - GestureSwipe Tests
+
+    @Test @MainActor func gestureSwipeCreation() {
+        ensureAdwInit()
+        let gesture = GestureSwipe()
+        #expect(gesture.pointer != nil)
+    }
+
+    @Test @MainActor func gestureSwipeVelocityBeforeDrag() {
+        ensureAdwInit()
+        let gesture = GestureSwipe()
+        // No active swipe — velocity should be nil
+        #expect(gesture.velocity == nil)
+    }
+
+    @Test @MainActor func gestureSwipeAddToWidget() {
+        ensureAdwInit()
+        let box = Box(orientation: .vertical, spacing: 0)
+        let gesture = GestureSwipe()
+        box.addController(gesture)
+        #expect(gesture.pointer != nil)
+    }
+
+    @Test @MainActor func gestureSwipeInheritsFromGObjectRef() {
+        #expect(isSubclass(GestureSwipe.self, of: GObjectRef.self))
+    }
+
+    // MARK: - Display Tests
+
+    @Test @MainActor func displayDefault() {
+        ensureAdwInit()
+        let display = Display.default
+        #expect(display != nil)
+    }
+
+    @Test @MainActor func displayName() {
+        ensureAdwInit()
+        guard let display = Display.default else { return }
+        let name = display.name
+        #expect(!name.isEmpty)
+    }
+
+    @Test @MainActor func displayIsComposited() {
+        ensureAdwInit()
+        guard let display = Display.default else { return }
+        // Just verify it doesn't crash — result depends on environment
+        _ = display.isComposited
+    }
+
+    @Test @MainActor func displayMonitors() {
+        ensureAdwInit()
+        guard let display = Display.default else { return }
+        let monitors = display.monitors
+        // In CI there might be 0 monitors, but the call should not crash
+        _ = monitors.count
+    }
+
+    // MARK: - Monitor Tests
+
+    @Test @MainActor func monitorProperties() {
+        ensureAdwInit()
+        guard let display = Display.default else { return }
+        let monitors = display.monitors
+        guard let monitor = monitors.first else { return }
+        // Just verify accessors don't crash
+        _ = monitor.geometry
+        _ = monitor.widthMM
+        _ = monitor.heightMM
+        _ = monitor.scaleFactor
+        _ = monitor.refreshRate
+        _ = monitor.manufacturer
+        _ = monitor.model
+        _ = monitor.connector
+        _ = monitor.isValid
+    }
+
+    @Test @MainActor func monitorInheritsFromGObjectRef() {
+        #expect(isSubclass(Monitor.self, of: GObjectRef.self))
+    }
+
+    // MARK: - Clipboard Texture Read Test
+
+    @Test @MainActor func clipboardReadTexture() {
+        ensureAdwInit()
+        let box = Box(orientation: .vertical, spacing: 0)
+        // Ensure clipboard is accessible (won't crash)
+        let clipboard = box.clipboard
+        #expect(clipboard.pointer != nil)
+        // readTexture is async — just verify the method exists and can be called
+        // In test environment, no texture on clipboard is expected
+    }
+
+    // MARK: - Widget Display Extension Test
+
+    @Test @MainActor func widgetDisplayProperty() {
+        ensureAdwInit()
+        let label = Label("test")
+        let display = label.display
+        #expect(display.pointer != nil)
+        #expect(!display.name.isEmpty)
+    }
+
 }

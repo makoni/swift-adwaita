@@ -134,6 +134,12 @@ public final class ApplicationWindow: Widget {
         set { gtk_window_set_modal(castedPointer(), newValue ? 1 : 0) }
     }
 
+    /// The icon name for the window, used by the window manager.
+    public var iconName: String? {
+        get { gtk_window_get_icon_name(castedPointer()).map { String(cString: $0) } }
+        set { gtk_window_set_icon_name(castedPointer(), newValue) }
+    }
+
     /// Whether the window is resizable.
     public var resizable: Bool {
         get { gtk_window_get_resizable(castedPointer()) != 0 }

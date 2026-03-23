@@ -79,6 +79,12 @@ public class GtkWindow: Widget {
         }
     }
 
+    /// The icon name for the window, used by the window manager.
+    public var iconName: String? {
+        get { gtk_window_get_icon_name(windowPointer).map { String(cString: $0) } }
+        set { gtk_window_set_icon_name(windowPointer, newValue) }
+    }
+
     /// Whether the window is resizable.
     public var resizable: Bool {
         get { gtk_window_get_resizable(windowPointer) != 0 }

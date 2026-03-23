@@ -56,6 +56,33 @@ public final class Clipboard: GObjectRef {
         gdk_clipboard_set_texture(opaquePointer, OpaquePointer(texture.pointer))
     }
 
+    /// Reads a texture (image) from the clipboard asynchronously.
+    ///
+    /// - Parameter completion: Called with the texture, or nil if not available.
+    public func readTexture(completion: @escaping @MainActor (Texture?) -> Void) {
+        let box = Unmanaged.passRetained(ClipboardAsyncBox(completion)).toOpaque()
+        gdk_clipboard_read_texture_async(
+            opaquePointer,
+            nil,
+            { source, result, userData in
+                guard let userData, let source, let result else { return }
+                var error: UnsafeMutablePointer<GError>?
+                let texture = gdk_clipboard_read_texture_finish(OpaquePointer(source), result, &error)
+                let value: Texture?
+                if let texture {
+                    // Transfer full — we own the reference
+                    value = Texture(raw: UnsafeMutableRawPointer(texture))
+                } else {
+                    value = nil
+                }
+                if let error { g_error_free(error) }
+                let box = Unmanaged<ClipboardAsyncBox<@MainActor (Texture?) -> Void>>.fromOpaque(userData).takeRetainedValue()
+                MainActor.assumeIsolated { box.closure(value) }
+            },
+            box
+        )
+    }
+
     /// Whether the clipboard content is local (set by this application).
     public var isLocal: Bool {
         gdk_clipboard_is_local(opaquePointer) != 0
