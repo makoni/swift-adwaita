@@ -60,6 +60,13 @@ public final class ColumnView: Widget {
         gtk_column_view_set_model(opaquePointer, model.selectionModelPointer)
     }
 
+    /// Creates a column view with any selection model.
+    public init(model: any SelectionModelConvertible) {
+        let ptr = gtk_column_view_new(nil)!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+        gtk_column_view_set_model(opaquePointer, model.selectionModelPointer)
+    }
+
     required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

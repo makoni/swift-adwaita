@@ -52,7 +52,7 @@ struct TreeListExample: DemoExample {
         }
     }
 
-    let selection = SingleSelection(listModel: treeModel.listModelPointer)
+    let selection = SingleSelection(model: treeModel)
     let listView = ListView(model: selection, factory: factory)
     """
 
@@ -178,7 +178,7 @@ struct TreeListExample: DemoExample {
 
             // Bind the TreeListRow so the expander can show expand/collapse arrows
             if let treeRowObj = listItem.item {
-                expander.setListRow(treeRowObj.opaquePointer)
+                expander.setListRow(treeRowObj)
 
                 // The underlying item is inside the TreeListRow
                 let treeRow = TreeListRow(borrowing: treeRowObj.pointer)
@@ -196,7 +196,7 @@ struct TreeListExample: DemoExample {
         }
 
         // SingleSelection — allows selecting one node at a time
-        let selection = SingleSelection(listModel: treeModel.listModelPointer)
+        let selection = SingleSelection(model: treeModel)
         let listView = ListView(model: selection, factory: factory)
         listView.showSeparators = true
 

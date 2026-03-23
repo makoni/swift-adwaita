@@ -65,7 +65,7 @@ struct FilterSortExample: DemoExample {
         let sorter = CustomSorter { a, b in
             return 0  // No sort by default
         }
-        let sorted = SortListModel(listModel: filtered.listModelPointer, sorter: sorter)
+        let sorted = SortListModel(model: filtered, sorter: sorter)
 
         // Factory
         let factory = SignalListItemFactory()
@@ -81,7 +81,7 @@ struct FilterSortExample: DemoExample {
             listItem.child?.cast(Label.self).text = fruits[pos]
         }
 
-        let selection = NoSelection(listModel: sorted.listModelPointer)
+        let selection = NoSelection(model: sorted)
         let listView = ListView(model: selection, factory: factory)
         listView.showSeparators = true
 

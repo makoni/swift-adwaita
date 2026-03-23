@@ -1586,7 +1586,8 @@ func ensureAdwInit() {
 
     @Test @MainActor func popoverMenuCreation() {
         ensureAdwInit()
-        let menu = PopoverMenu(model: nil)
+        let menuModel = GMenuRef()
+        let menu = PopoverMenu(model: menuModel)
         #expect(menu.pointer != nil)
     }
 

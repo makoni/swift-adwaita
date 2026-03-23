@@ -79,7 +79,7 @@ public final class CustomSorter: GObjectRef {
 /// let selection = NoSelection(listModel: sorted.listModelPointer)
 /// ```
 @MainActor
-public final class SortListModel: GObjectRef {
+public final class SortListModel: GObjectRef, ListModelConvertible {
 
     /// Creates a sorted list model.
     ///
@@ -87,6 +87,18 @@ public final class SortListModel: GObjectRef {
     ///   - model: The source ``ListStore`` to sort.
     ///   - sorter: The ``CustomSorter`` whose comparison function determines order.
     public init(model: ListStore, sorter: CustomSorter) {
+        let ptr = gtk_sort_list_model_new(nil, nil)!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+        gtk_sort_list_model_set_model(opaquePointer, model.listModelPointer)
+        gtk_sort_list_model_set_sorter(opaquePointer, UnsafeMutablePointer(OpaquePointer(sorter.pointer)))
+    }
+
+    /// Creates a sorted list model from any list model.
+    ///
+    /// - Parameters:
+    ///   - model: Any ``ListModelConvertible`` source to sort.
+    ///   - sorter: The ``CustomSorter`` whose comparison function determines order.
+    public init(model: any ListModelConvertible, sorter: CustomSorter) {
         let ptr = gtk_sort_list_model_new(nil, nil)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
         gtk_sort_list_model_set_model(opaquePointer, model.listModelPointer)

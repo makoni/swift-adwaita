@@ -76,7 +76,7 @@ public final class CustomFilter: GObjectRef {
 /// let selection = NoSelection(listModel: filtered.listModelPointer)
 /// ```
 @MainActor
-public final class FilterListModel: GObjectRef {
+public final class FilterListModel: GObjectRef, ListModelConvertible {
 
     /// Creates a filtered list model.
     ///
@@ -84,6 +84,18 @@ public final class FilterListModel: GObjectRef {
     ///   - model: The source ``ListStore`` to filter.
     ///   - filter: The ``CustomFilter`` whose predicate determines visibility.
     public init(model: ListStore, filter: CustomFilter) {
+        let ptr = gtk_filter_list_model_new(nil, nil)!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+        gtk_filter_list_model_set_model(opaquePointer, model.listModelPointer)
+        gtk_filter_list_model_set_filter(opaquePointer, UnsafeMutablePointer(OpaquePointer(filter.pointer)))
+    }
+
+    /// Creates a filtered list model from any list model.
+    ///
+    /// - Parameters:
+    ///   - model: Any ``ListModelConvertible`` source to filter.
+    ///   - filter: The ``CustomFilter`` whose predicate determines visibility.
+    public init(model: any ListModelConvertible, filter: CustomFilter) {
         let ptr = gtk_filter_list_model_new(nil, nil)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
         gtk_filter_list_model_set_model(opaquePointer, model.listModelPointer)

@@ -56,6 +56,14 @@ public final class ListView: Widget {
         gtk_list_view_set_factory(OpaquePointer(pointer), OpaquePointer(factory.pointer))
     }
 
+    /// Creates a list view with any selection model and an item factory.
+    public init(model: any SelectionModelConvertible, factory: SignalListItemFactory) {
+        let ptr = gtk_list_view_new(nil, nil)!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+        gtk_list_view_set_model(OpaquePointer(pointer), model.selectionModelPointer)
+        gtk_list_view_set_factory(OpaquePointer(pointer), OpaquePointer(factory.pointer))
+    }
+
     required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

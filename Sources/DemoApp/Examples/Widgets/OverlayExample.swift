@@ -49,9 +49,9 @@ struct OverlayExample: DemoExample {
         da.contentWidth = 200
         da.contentHeight = 100
         da.setDrawFunc { cr, width, height in
-            cairo_set_source_rgb(cr, 0.2, 0.5, 0.8)
-            cairo_rectangle(cr, 0, 0, Double(width), Double(height))
-            cairo_fill(cr)
+            cr.setSourceRGB(0.2, 0.5, 0.8)
+            cr.rectangle(x: 0, y: 0, width: Double(width), height: Double(height))
+            cr.fill()
         }
         overlay2.child = da
 

@@ -32,21 +32,27 @@ public final class DrawingArea: Widget {
 
     /// Sets the draw function that is called to render the contents.
     ///
-    /// The closure receives a Cairo context pointer, the width, and the height.
-    /// Use Cairo C functions (`cairo_set_source_rgb`, `cairo_rectangle`, etc.)
-    /// to draw.
+    /// The closure receives a ``CairoContext``, the width, and the height.
+    ///
+    /// ```swift
+    /// drawingArea.setDrawFunc { cr, width, height in
+    ///     cr.setSourceRGB(0.2, 0.6, 1.0)
+    ///     cr.rectangle(x: 0, y: 0, width: Double(width), height: Double(height))
+    ///     cr.fill()
+    /// }
+    /// ```
     ///
     /// - Parameter drawFunc: `(cairoContext, width, height) -> Void`
-    public func setDrawFunc(_ drawFunc: @escaping @MainActor (OpaquePointer, Int, Int) -> Void) {
+    public func setDrawFunc(_ drawFunc: @escaping @MainActor (CairoContext, Int, Int) -> Void) {
         let box = Unmanaged.passRetained(PublicClosureBox(drawFunc)).toOpaque()
         gtk_drawing_area_set_draw_func(
             drawingAreaPointer,
             { _, cr, width, height, userData in
                 guard let userData, let cr else { return }
-                let box = Unmanaged<PublicClosureBox<@MainActor (OpaquePointer, Int, Int) -> Void>>
+                let box = Unmanaged<PublicClosureBox<@MainActor (CairoContext, Int, Int) -> Void>>
                     .fromOpaque(userData).takeUnretainedValue()
                 MainActor.assumeIsolated {
-                    box.closure(cr, Int(width), Int(height))
+                    box.closure(CairoContext(cr), Int(width), Int(height))
                 }
             },
             box,

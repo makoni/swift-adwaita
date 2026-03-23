@@ -14,7 +14,7 @@ import GObjectSupport
 /// store.remove(at: 3)         // mirrors changes in your data array
 /// ```
 @MainActor
-public final class ListStore: GObjectRef {
+public final class ListStore: GObjectRef, ListModelConvertible {
 
     /// Creates an empty `GListStore` for `GObject` items.
     public init() {

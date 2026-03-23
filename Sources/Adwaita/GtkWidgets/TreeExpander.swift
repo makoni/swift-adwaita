@@ -74,10 +74,10 @@ public final class TreeExpander: Widget {
 
     /// Sets the `GtkTreeListRow` that this expander manages.
     ///
-    /// Pass the raw `OpaquePointer` from the list item's item (which is a
-    /// `GtkTreeListRow` when using a non-passthrough ``TreeListModel``).
-    public func setListRow(_ listRow: OpaquePointer) {
-        gtk_tree_expander_set_list_row(opaquePointer, listRow)
+    /// Pass the item from the list item (which is a `GtkTreeListRow` when
+    /// using a non-passthrough ``TreeListModel``).
+    public func setListRow(_ listRow: GObjectRef) {
+        gtk_tree_expander_set_list_row(opaquePointer, OpaquePointer(listRow.pointer))
     }
 
     /// Returns the `GtkTreeListRow` this expander manages, or `nil`.

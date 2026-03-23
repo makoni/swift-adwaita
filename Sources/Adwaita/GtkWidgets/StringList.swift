@@ -6,7 +6,7 @@ import GObjectSupport
 /// Wraps `GtkStringList`. Useful for populating `ComboRow` and other
 /// widgets that need a `GListModel` of strings.
 @MainActor
-public final class StringList: GObjectRef {
+public final class StringList: GObjectRef, ListModelConvertible {
     /// Creates a new string list from the given strings.
     public init(_ strings: [String]) {
         let list = gtk_string_list_new(nil)!

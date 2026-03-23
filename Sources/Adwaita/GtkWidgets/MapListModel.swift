@@ -40,7 +40,7 @@ private func _mapListModelCallback(
 /// let selection = NoSelection(listModel: mapped.listModelPointer)
 /// ```
 @MainActor
-public final class MapListModel: GObjectRef {
+public final class MapListModel: GObjectRef, ListModelConvertible {
 
     /// Prevent the closure box from being released while the model is alive.
     private var closureBox: AnyObject?

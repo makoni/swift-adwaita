@@ -11,7 +11,7 @@ import GObjectSupport
 /// let listView = ListView(model: selection, factory: factory)
 /// ```
 @MainActor
-public final class SingleSelection: GObjectRef {
+public final class SingleSelection: GObjectRef, SelectionModelConvertible {
 
     /// Creates a single-selection model wrapping the given list model.
     public init(model: ListStore) {
@@ -22,6 +22,13 @@ public final class SingleSelection: GObjectRef {
 
     /// Creates a single-selection model wrapping a `StringList`.
     public init(model: StringList) {
+        let ptr = gtk_single_selection_new(nil)!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+        gtk_single_selection_set_model(OpaquePointer(pointer), model.listModelPointer)
+    }
+
+    /// Creates a single-selection model wrapping any list model.
+    public init(model: any ListModelConvertible) {
         let ptr = gtk_single_selection_new(nil)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
         gtk_single_selection_set_model(OpaquePointer(pointer), model.listModelPointer)

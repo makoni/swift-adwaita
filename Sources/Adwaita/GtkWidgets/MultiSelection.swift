@@ -11,7 +11,7 @@ import GObjectSupport
 /// let listView = ListView(model: selection, factory: factory)
 /// ```
 @MainActor
-public final class MultiSelection: GObjectRef {
+public final class MultiSelection: GObjectRef, SelectionModelConvertible {
 
     /// Creates a multi-selection model wrapping the given list model.
     public init(model: ListStore) {
@@ -22,6 +22,13 @@ public final class MultiSelection: GObjectRef {
 
     /// Creates a multi-selection model wrapping a `StringList`.
     public init(model: StringList) {
+        let ptr = gtk_multi_selection_new(nil)!
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+        gtk_multi_selection_set_model(OpaquePointer(pointer), model.listModelPointer)
+    }
+
+    /// Creates a multi-selection model wrapping any list model.
+    public init(model: any ListModelConvertible) {
         let ptr = gtk_multi_selection_new(nil)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
         gtk_multi_selection_set_model(OpaquePointer(pointer), model.listModelPointer)

@@ -26,7 +26,7 @@ import GObjectSupport
 /// let selection = SingleSelection(listModel: treeModel.listModelPointer)
 /// ```
 @MainActor
-public final class TreeListModel: GObjectRef {
+public final class TreeListModel: GObjectRef, ListModelConvertible {
 
     /// Prevent the create-children closure from being deallocated.
     private var closureBox: AnyObject?

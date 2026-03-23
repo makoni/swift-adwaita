@@ -82,18 +82,9 @@ struct GridViewExample: DemoExample {
             let b = Double(gdkColor.blue)
 
             swatch?.cast(DrawingArea.self).setDrawFunc { cr, width, height in
-                // Draw rounded rectangle with the color
-                let radius = 12.0
-                let x = 0.0, y = 0.0
-                let w = Double(width), h = Double(height)
-                cairo_new_sub_path(cr)
-                cairo_arc(cr, x + w - radius, y + radius, radius, -Double.pi / 2, 0)
-                cairo_arc(cr, x + w - radius, y + h - radius, radius, 0, Double.pi / 2)
-                cairo_arc(cr, x + radius, y + h - radius, radius, Double.pi / 2, Double.pi)
-                cairo_arc(cr, x + radius, y + radius, radius, Double.pi, 3 * Double.pi / 2)
-                cairo_close_path(cr)
-                cairo_set_source_rgb(cr, r, g, b)
-                cairo_fill(cr)
+                cr.roundedRectangle(x: 0, y: 0, width: Double(width), height: Double(height), radius: 12)
+                cr.setSourceRGB(r, g, b)
+                cr.fill()
             }
         }
 

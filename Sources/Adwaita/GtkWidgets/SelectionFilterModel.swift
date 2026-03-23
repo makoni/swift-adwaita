@@ -15,7 +15,7 @@ import GObjectSupport
 /// let selectedOnly = SelectionFilterModel(model: selection)
 /// ```
 @MainActor
-public final class SelectionFilterModel: GObjectRef {
+public final class SelectionFilterModel: GObjectRef, ListModelConvertible {
 
     /// Creates a selection filter model wrapping a ``SingleSelection``.
     ///

@@ -14,7 +14,7 @@ import GObjectSupport
 /// let selection = NoSelection(listModel: flattened.listModelPointer)
 /// ```
 @MainActor
-public final class FlattenListModel: GObjectRef {
+public final class FlattenListModel: GObjectRef, ListModelConvertible {
 
     /// Creates a flattened list model.
     ///
