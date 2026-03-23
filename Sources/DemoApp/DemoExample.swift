@@ -96,4 +96,8 @@ let allExamples: [any DemoExample] = [
     VideoExample(),
     StackSwitcherExample(),
     ListViewExample(),
+    GridViewExample(),
+    ColumnViewExample(),
+    TreeListExample(),
+    FilterSortExample(),
 ]

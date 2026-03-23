@@ -4635,4 +4635,77 @@ func ensureAdwInit() {
         #expect(isSubclass(TreeListRow.self, of: GObjectRef.self))
     }
 
+    // MARK: - GridView Tests
+
+    @Test @MainActor func gridViewCreation() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        let factory = SignalListItemFactory()
+        let selection = NoSelection(model: store)
+        let gridView = GridView(model: selection, factory: factory)
+        #expect(gridView.pointer != nil)
+    }
+
+    @Test @MainActor func gridViewMinColumns() {
+        ensureAdwInit()
+        let store = ListStore()
+        let factory = SignalListItemFactory()
+        let selection = NoSelection(model: store)
+        let gridView = GridView(model: selection, factory: factory)
+        #expect(gridView.minColumns == 1)
+        gridView.minColumns = 3
+        #expect(gridView.minColumns == 3)
+    }
+
+    @Test @MainActor func gridViewMaxColumns() {
+        ensureAdwInit()
+        let store = ListStore()
+        let factory = SignalListItemFactory()
+        let selection = NoSelection(model: store)
+        let gridView = GridView(model: selection, factory: factory)
+        #expect(gridView.maxColumns == 7)
+        gridView.maxColumns = 4
+        #expect(gridView.maxColumns == 4)
+    }
+
+    @Test @MainActor func gridViewSingleClickActivate() {
+        ensureAdwInit()
+        let store = ListStore()
+        let factory = SignalListItemFactory()
+        let selection = NoSelection(model: store)
+        let gridView = GridView(model: selection, factory: factory)
+        #expect(gridView.singleClickActivate == false)
+        gridView.singleClickActivate = true
+        #expect(gridView.singleClickActivate == true)
+    }
+
+    @Test @MainActor func gridViewWithSingleSelection() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let factory = SignalListItemFactory()
+        let selection = SingleSelection(model: store)
+        let gridView = GridView(model: selection, factory: factory)
+        #expect(gridView.pointer != nil)
+        #expect(selection.selected == 0)
+    }
+
+    @Test @MainActor func gridViewWithMultiSelection() {
+        ensureAdwInit()
+        let store = ListStore()
+        store.appendPlaceholder()
+        store.appendPlaceholder()
+        let factory = SignalListItemFactory()
+        let selection = MultiSelection(model: store)
+        let gridView = GridView(model: selection, factory: factory)
+        #expect(gridView.pointer != nil)
+    }
+
+    @Test @MainActor func gridViewInheritsFromWidget() {
+        #expect(isSubclass(GridView.self, of: Widget.self))
+        #expect(isSubclass(GridView.self, of: GObjectRef.self))
+    }
+
 }
