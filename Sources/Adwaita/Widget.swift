@@ -201,6 +201,26 @@ open class Widget: GObjectRef {
         return Widget(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Returns all direct child widgets.
+    public func children() -> [Widget] {
+        var result: [Widget] = []
+        var child = gtk_widget_get_first_child(widgetPointer)
+        while let ptr = child {
+            result.append(Widget(borrowing: UnsafeMutableRawPointer(ptr)))
+            child = gtk_widget_get_next_sibling(ptr)
+        }
+        return result
+    }
+
+    /// Calls a closure for each direct child widget.
+    public func forEachChild(_ body: (Widget) -> Void) {
+        var child = gtk_widget_get_first_child(widgetPointer)
+        while let ptr = child {
+            body(Widget(borrowing: UnsafeMutableRawPointer(ptr)))
+            child = gtk_widget_get_next_sibling(ptr)
+        }
+    }
+
     /// Re-wraps this widget's pointer as a specific subclass.
     ///
     /// Use this when you know the concrete type of a widget returned as the
@@ -613,6 +633,34 @@ extension Widget {
     @discardableResult
     public func opacity(_ opacity: Double) -> Self {
         self.opacity = opacity
+        return self
+    }
+
+    /// Sets the start margin and returns self for chaining.
+    @discardableResult
+    public func marginStart(_ margin: Int) -> Self {
+        self.marginStart = margin
+        return self
+    }
+
+    /// Sets the end margin and returns self for chaining.
+    @discardableResult
+    public func marginEnd(_ margin: Int) -> Self {
+        self.marginEnd = margin
+        return self
+    }
+
+    /// Sets the top margin and returns self for chaining.
+    @discardableResult
+    public func marginTop(_ margin: Int) -> Self {
+        self.marginTop = margin
+        return self
+    }
+
+    /// Sets the bottom margin and returns self for chaining.
+    @discardableResult
+    public func marginBottom(_ margin: Int) -> Self {
+        self.marginBottom = margin
         return self
     }
 }

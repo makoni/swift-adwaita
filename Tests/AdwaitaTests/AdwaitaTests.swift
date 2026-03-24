@@ -5856,4 +5856,97 @@ func ensureAdwInit() {
         #expect(iconName.name == "dialog-information-symbolic")
     }
 
+    // MARK: - Individual Margin Fluent Setters
+
+    @Test @MainActor func fluentMarginStart() {
+        ensureAdwInit()
+        let label = Label("Test").marginStart(8)
+        #expect(label.marginStart == 8)
+    }
+
+    @Test @MainActor func fluentMarginEnd() {
+        ensureAdwInit()
+        let label = Label("Test").marginEnd(16)
+        #expect(label.marginEnd == 16)
+    }
+
+    @Test @MainActor func fluentMarginTop() {
+        ensureAdwInit()
+        let label = Label("Test").marginTop(4)
+        #expect(label.marginTop == 4)
+    }
+
+    @Test @MainActor func fluentMarginBottom() {
+        ensureAdwInit()
+        let label = Label("Test").marginBottom(12)
+        #expect(label.marginBottom == 12)
+    }
+
+    // MARK: - Children Iteration Tests
+
+    @Test @MainActor func widgetChildren() {
+        ensureAdwInit()
+        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 0)
+        let a = Label("A")
+        let b = Label("B")
+        let c = Label("C")
+        box.append(a)
+        box.append(b)
+        box.append(c)
+        let kids = box.children()
+        #expect(kids.count == 3)
+    }
+
+    @Test @MainActor func widgetForEachChild() {
+        ensureAdwInit()
+        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 0)
+        box.append(Label("A"))
+        box.append(Label("B"))
+        var count = 0
+        box.forEachChild { _ in count += 1 }
+        #expect(count == 2)
+    }
+
+    // MARK: - MenuButton Convenience Tests
+
+    @Test @MainActor func menuButtonLabelInit() {
+        ensureAdwInit()
+        let btn = MenuButton(label: "File")
+        #expect(btn.label == "File")
+    }
+
+    @Test @MainActor func menuButtonIconInit() {
+        ensureAdwInit()
+        let btn = MenuButton(icon: .openMenu)
+        #expect(btn.iconName == "open-menu-symbolic")
+    }
+
+    // MARK: - Revealer Signal Tests
+
+    @Test @MainActor func revealerOnChildRevealed() {
+        ensureAdwInit()
+        let revealer = Revealer()
+        // Just verify it connects without crashing
+        let conn = revealer.onChildRevealed { }
+        #expect(conn is SignalConnection)
+    }
+
+    // MARK: - Expander Signal Tests
+
+    @Test @MainActor func expanderOnExpanded() {
+        ensureAdwInit()
+        let expander = Expander(label: "Details")
+        let conn = expander.onExpanded { }
+        #expect(conn is SignalConnection)
+    }
+
+    // MARK: - Popover Signal Tests
+
+    @Test @MainActor func popoverOnVisibilityChanged() {
+        ensureAdwInit()
+        let popover = Popover()
+        let conn = popover.onVisibilityChanged { }
+        #expect(conn is SignalConnection)
+    }
+
 }

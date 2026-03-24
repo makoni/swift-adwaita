@@ -12,6 +12,18 @@ public final class MenuButton: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a menu button with a text label.
+    public convenience init(label: String) {
+        self.init()
+        self.label = label
+    }
+
+    /// Creates a menu button with an icon.
+    public convenience init(icon: IconName) {
+        self.init()
+        self.iconName = icon.name
+    }
+
     required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

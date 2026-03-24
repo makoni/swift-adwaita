@@ -67,4 +67,10 @@ public final class Expander: Widget {
         get { gtk_expander_get_resize_toplevel(opaquePointer) != 0 }
         set { gtk_expander_set_resize_toplevel(opaquePointer, newValue ? 1 : 0) }
     }
+
+    /// Called when the expanded state changes.
+    @discardableResult
+    public func onExpanded(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.onNotify(self, property: .custom("expanded"), handler: handler)
+    }
 }

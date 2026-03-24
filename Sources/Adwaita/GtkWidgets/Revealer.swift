@@ -47,4 +47,10 @@ public final class Revealer: Widget {
         get { Int(gtk_revealer_get_transition_duration(opaquePointer)) }
         set { gtk_revealer_set_transition_duration(opaquePointer, UInt32(newValue)) }
     }
+
+    /// Called when the reveal animation completes (child-revealed property changes).
+    @discardableResult
+    public func onChildRevealed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.onNotify(self, property: .custom("child-revealed"), handler: handler)
+    }
 }

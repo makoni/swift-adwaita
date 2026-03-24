@@ -66,4 +66,10 @@ public final class Popover: Widget {
     public func onClosed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .closed, handler: handler)
     }
+
+    /// Called when the popover visibility changes (shown or hidden).
+    @discardableResult
+    public func onVisibilityChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.onNotify(self, property: .visible, handler: handler)
+    }
 }
