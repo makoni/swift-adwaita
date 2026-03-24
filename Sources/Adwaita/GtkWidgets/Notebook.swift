@@ -131,4 +131,18 @@ public final class Notebook: Widget {
             handler(Int(pageNum))
         }
     }
+
+    /// Sets scrollable and returns self for chaining.
+    @discardableResult
+    public func scrollable(_ enabled: Bool = true) -> Self {
+        self.scrollable = enabled
+        return self
+    }
+
+    /// Sets the tab position and returns self for chaining.
+    @discardableResult
+    public func tabPos(_ position: GtkPositionType) -> Self {
+        self.tabPos = position
+        return self
+    }
 }

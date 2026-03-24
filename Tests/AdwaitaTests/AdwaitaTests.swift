@@ -6101,4 +6101,63 @@ func ensureAdwInit() {
         #expect(tag is TextTag)
     }
 
+    // MARK: - Stack Signal Tests
+
+    @Test @MainActor func stackOnVisibleChildChanged() {
+        ensureAdwInit()
+        let stack = Stack()
+        let conn = stack.onVisibleChildChanged { }
+        #expect(conn is SignalConnection)
+    }
+
+    // MARK: - Entry Selection Tests
+
+    @Test @MainActor func entrySelectAll() {
+        ensureAdwInit()
+        let entry = Entry()
+        entry.text = "Hello World"
+        entry.selectAll()
+        #expect(entry.hasSelection)
+    }
+
+    @Test @MainActor func entryCursorPosition() {
+        ensureAdwInit()
+        let entry = Entry()
+        entry.text = "Hello"
+        entry.cursorPosition = 3
+        #expect(entry.cursorPosition == 3)
+    }
+
+    @Test @MainActor func entryClearSelection() {
+        ensureAdwInit()
+        let entry = Entry()
+        entry.text = "Hello"
+        entry.selectAll()
+        entry.clearSelection()
+        #expect(!entry.hasSelection)
+    }
+
+    // MARK: - Paned Signal Tests
+
+    @Test @MainActor func panedOnPositionChanged() {
+        ensureAdwInit()
+        let paned = Paned()
+        let conn = paned.onPositionChanged { }
+        #expect(conn is SignalConnection)
+    }
+
+    // MARK: - Notebook Fluent Tests
+
+    @Test @MainActor func notebookScrollableFluent() {
+        ensureAdwInit()
+        let nb = Notebook().scrollable()
+        #expect(nb.scrollable == true)
+    }
+
+    @Test @MainActor func notebookTabPosFluent() {
+        ensureAdwInit()
+        let nb = Notebook().tabPos(GTK_POS_LEFT)
+        #expect(nb.tabPos == GTK_POS_LEFT)
+    }
+
 }

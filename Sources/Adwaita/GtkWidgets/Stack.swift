@@ -65,4 +65,10 @@ public final class Stack: Widget {
         get { Int(gtk_stack_get_transition_duration(opaquePointer)) }
         set { gtk_stack_set_transition_duration(opaquePointer, UInt32(newValue)) }
     }
+
+    /// Called when the visible child changes.
+    @discardableResult
+    public func onVisibleChildChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.onNotify(self, property: .custom("visible-child-name"), handler: handler)
+    }
 }

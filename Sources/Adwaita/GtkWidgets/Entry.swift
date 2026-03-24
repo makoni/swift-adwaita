@@ -142,4 +142,30 @@ public final class Entry: Widget {
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.onNotify(self, property: .text, handler: handler)
     }
+
+    // MARK: - Text Selection & Cursor
+
+    /// Selects all text in the entry.
+    public func selectAll() {
+        gtk_editable_select_region(opaquePointer, 0, -1)
+    }
+
+    /// Clears the text selection.
+    public func clearSelection() {
+        let pos = gtk_editable_get_position(opaquePointer)
+        gtk_editable_select_region(opaquePointer, pos, pos)
+    }
+
+    /// The cursor position (character offset).
+    public var cursorPosition: Int {
+        get { Int(gtk_editable_get_position(opaquePointer)) }
+        set { gtk_editable_set_position(opaquePointer, Int32(newValue)) }
+    }
+
+    /// Whether the entry currently has a text selection.
+    public var hasSelection: Bool {
+        var start: Int32 = 0
+        var end: Int32 = 0
+        return gtk_editable_get_selection_bounds(opaquePointer, &start, &end) != 0
+    }
 }

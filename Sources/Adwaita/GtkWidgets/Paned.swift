@@ -80,4 +80,10 @@ public final class Paned: Widget {
         get { gtk_paned_get_wide_handle(opaquePointer) != 0 }
         set { gtk_paned_set_wide_handle(opaquePointer, newValue ? 1 : 0) }
     }
+
+    /// Called when the divider position changes.
+    @discardableResult
+    public func onPositionChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.onNotify(self, property: .custom("position"), handler: handler)
+    }
 }
