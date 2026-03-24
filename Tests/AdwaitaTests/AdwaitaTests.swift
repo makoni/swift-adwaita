@@ -5603,6 +5603,100 @@ func ensureAdwInit() {
         #expect(PropertyName.custom("x") != PropertyName.custom("y"))
     }
 
+    // MARK: - CSSClass Tests
+
+    @Test func cssClassRawValues() {
+        #expect(CSSClass.suggestedAction.rawValue == "suggested-action")
+        #expect(CSSClass.destructiveAction.rawValue == "destructive-action")
+        #expect(CSSClass.flat.rawValue == "flat")
+        #expect(CSSClass.pill.rawValue == "pill")
+        #expect(CSSClass.card.rawValue == "card")
+        #expect(CSSClass.boxedList.rawValue == "boxed-list")
+        #expect(CSSClass.title1.rawValue == "title-1")
+        #expect(CSSClass.dimLabel.rawValue == "dim-label")
+        #expect(CSSClass.navigationSidebar.rawValue == "navigation-sidebar")
+    }
+
+    @Test @MainActor func widgetCSSClassEnum() {
+        ensureAdwInit()
+        let label = Label("Test")
+        label.addCSSClass(.title1)
+        #expect(label.hasCSSClass(.title1))
+        label.removeCSSClass(.title1)
+        #expect(!label.hasCSSClass(.title1))
+    }
+
+    // MARK: - IconName Tests
+
+    @Test func iconNameValues() {
+        #expect(IconName.goNext.name == "go-next-symbolic")
+        #expect(IconName.documentSave.name == "document-save-symbolic")
+        #expect(IconName.dialogError.name == "dialog-error-symbolic")
+        #expect(IconName.emblemOk.name == "emblem-ok-symbolic")
+        #expect(IconName.networkWireless.name == "network-wireless-symbolic")
+        #expect(IconName.custom("my-icon").name == "my-icon")
+    }
+
+    @Test @MainActor func imageWithIconName() {
+        ensureAdwInit()
+        let img = Image(icon: .dialogInformation)
+        #expect(img.iconName == "dialog-information-symbolic")
+    }
+
+    @Test @MainActor func buttonWithIconName() {
+        ensureAdwInit()
+        let btn = Button(icon: .goNext)
+        #expect(btn is Widget)
+    }
+
+    // MARK: - Fluent Setter Tests
+
+    @Test @MainActor func widgetFluentSetters() {
+        ensureAdwInit()
+        let label = Label("Test")
+            .halign(.center)
+            .valign(.end)
+            .hexpand()
+            .vexpand()
+            .margins(12)
+            .tooltip("Hello")
+            .cssClass(.title1)
+            .opacity(0.5)
+
+        #expect(label.halign == GTK_ALIGN_CENTER)
+        #expect(label.valign == GTK_ALIGN_END)
+        #expect(label.hexpand == true)
+        #expect(label.vexpand == true)
+        #expect(label.marginStart == 12)
+        #expect(label.marginEnd == 12)
+        #expect(label.marginTop == 12)
+        #expect(label.marginBottom == 12)
+        #expect(label.tooltipText == "Hello")
+        #expect(label.hasCSSClass(.title1))
+        #expect(abs(label.opacity - 0.5) < 0.01)
+    }
+
+    @Test @MainActor func fluentSettersReturnSelf() {
+        ensureAdwInit()
+        let box = Box(orientation: .vertical, spacing: 0)
+        let result = box.halign(.start)
+        #expect(result === box)
+    }
+
+    // MARK: - Throwing Dialog Tests
+
+    @Test @MainActor func fontDialogThrowingMethodExists() {
+        ensureAdwInit()
+        let dialog = FontDialog()
+        let _: (Widget?, String?, @escaping @MainActor (Result<String?, GLibError>) -> Void) -> Void = dialog.chooseFontThrowing
+    }
+
+    @Test @MainActor func colorDialogThrowingMethodExists() {
+        ensureAdwInit()
+        let dialog = ColorDialog()
+        let _: (Widget?, RGBA?, @escaping @MainActor (Result<RGBA?, GLibError>) -> Void) -> Void = dialog.chooseRGBAThrowing
+    }
+
     // MARK: - Pango enum extensions
 
     @Test func pangoWeightExtensions() {

@@ -24,6 +24,11 @@ public final class Button: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a button from a type-safe icon name.
+    public convenience init(icon: IconName) {
+        self.init(iconName: icon.name)
+    }
+
     /// Creates a button with a label and a click handler.
     public convenience init(label: String, onClicked handler: @escaping @MainActor () -> Void) {
         self.init(label: label)
@@ -33,6 +38,12 @@ public final class Button: Widget {
     /// Creates a button with an icon and a click handler.
     public convenience init(iconName: String, onClicked handler: @escaping @MainActor () -> Void) {
         self.init(iconName: iconName)
+        self.onClicked(handler)
+    }
+
+    /// Creates a button with a type-safe icon and a click handler.
+    public convenience init(icon: IconName, onClicked handler: @escaping @MainActor () -> Void) {
+        self.init(iconName: icon.name)
         self.onClicked(handler)
     }
 

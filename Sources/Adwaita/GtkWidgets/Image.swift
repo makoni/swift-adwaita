@@ -18,6 +18,11 @@ public final class Image: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates an image from a type-safe icon name.
+    public convenience init(icon: IconName) {
+        self.init(iconName: icon.name)
+    }
+
     /// Creates an image from a file path.
     public init(filename: String) {
         let ptr = gtk_image_new_from_file(filename)!

@@ -107,4 +107,64 @@ public final class ColorDialog: GObjectRef {
             gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, nil, nil, callback, box)
         }
     }
+
+    /// Opens the color dialog (throwing version).
+    ///
+    /// Throws a ``GLibError`` if the dialog fails for a reason other than
+    /// the user cancelling. Cancellation returns `nil`.
+    public func chooseRGBAThrowing(parent: Widget?, initialColor: RGBA? = nil) async throws -> RGBA? {
+        try await withCheckedThrowingContinuation { continuation in
+            chooseRGBAThrowing(parent: parent, initialColor: initialColor) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
+    /// Opens the color dialog (throwing version).
+    ///
+    /// The completion handler receives a `Result` — `.success(nil)` on cancel,
+    /// `.success(color)` on selection, or `.failure(GLibError)` on error.
+    public func chooseRGBAThrowing(
+        parent: Widget?,
+        initialColor: RGBA? = nil,
+        completion: @escaping @MainActor (Result<RGBA?, GLibError>) -> Void
+    ) {
+        let box = Unmanaged.passRetained(ColorAsyncBox(completion)).toOpaque()
+        let parentPtr = parent.flatMap { cadw_cast_window($0.pointer) }
+        let callback: GAsyncReadyCallback = { source, result, userData in
+            guard let userData, let source, let result else { return }
+            var error: UnsafeMutablePointer<GError>?
+            let rgba = gtk_color_dialog_choose_rgba_finish(OpaquePointer(source), result, &error)
+            let callResult: Result<RGBA?, GLibError>
+            if let rgba {
+                let color = RGBA(
+                    red: Double(rgba.pointee.red),
+                    green: Double(rgba.pointee.green),
+                    blue: Double(rgba.pointee.blue),
+                    alpha: Double(rgba.pointee.alpha)
+                )
+                gdk_rgba_free(UnsafeMutablePointer(mutating: rgba))
+                callResult = .success(color)
+            } else if let error {
+                let dismissed = g_quark_try_string("gtk-dialog-error-quark")
+                if error.pointee.domain == dismissed && error.pointee.code == 2 {
+                    g_error_free(error)
+                    callResult = .success(nil)
+                } else {
+                    callResult = .failure(GLibError(consuming: error))
+                }
+            } else {
+                callResult = .success(nil)
+            }
+            let box = Unmanaged<ColorAsyncBox<@MainActor (Result<RGBA?, GLibError>) -> Void>>
+                .fromOpaque(userData).takeRetainedValue()
+            MainActor.assumeIsolated { box.closure(callResult) }
+        }
+        if let initialColor {
+            var gdkColor = GdkRGBA(red: Float(initialColor.red), green: Float(initialColor.green), blue: Float(initialColor.blue), alpha: Float(initialColor.alpha))
+            gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, &gdkColor, nil, callback, box)
+        } else {
+            gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, nil, nil, callback, box)
+        }
+    }
 }

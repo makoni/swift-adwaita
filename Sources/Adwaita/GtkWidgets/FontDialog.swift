@@ -90,4 +90,68 @@ public final class FontDialog: GObjectRef {
         )
         if let initialDesc { pango_font_description_free(initialDesc) }
     }
+
+    /// Opens the font dialog (throwing version).
+    ///
+    /// Throws a ``GLibError`` if the dialog fails for a reason other than
+    /// the user cancelling. Cancellation returns `nil`.
+    public func chooseFontThrowing(parent: Widget?, initialFont: String? = nil) async throws -> String? {
+        try await withCheckedThrowingContinuation { continuation in
+            chooseFontThrowing(parent: parent, initialFont: initialFont) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
+    /// Opens the font dialog (throwing version).
+    ///
+    /// The completion handler receives a `Result` — `.success(nil)` on cancel,
+    /// `.success(font)` on selection, or `.failure(GLibError)` on error.
+    public func chooseFontThrowing(
+        parent: Widget?,
+        initialFont: String? = nil,
+        completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
+    ) {
+        let box = Unmanaged.passRetained(FontAsyncBox(completion)).toOpaque()
+        let initialDesc: OpaquePointer?
+        if let initialFont {
+            initialDesc = pango_font_description_from_string(initialFont)
+        } else {
+            initialDesc = nil
+        }
+        gtk_font_dialog_choose_font(
+            opaquePointer,
+            parent.map { cadw_cast_window($0.pointer) },
+            initialDesc,
+            nil,
+            { source, result, userData in
+                guard let userData, let source, let result else { return }
+                var error: UnsafeMutablePointer<GError>?
+                let fontDesc = gtk_font_dialog_choose_font_finish(OpaquePointer(source), result, &error)
+                let callResult: Result<String?, GLibError>
+                if let fontDesc {
+                    let cStr = pango_font_description_to_string(fontDesc)
+                    let font = cStr.map { String(cString: $0) }
+                    if let cStr { g_free(gpointer(mutating: cStr)) }
+                    pango_font_description_free(fontDesc)
+                    callResult = .success(font)
+                } else if let error {
+                    let dismissed = g_quark_try_string("gtk-dialog-error-quark")
+                    if error.pointee.domain == dismissed && error.pointee.code == 2 {
+                        g_error_free(error)
+                        callResult = .success(nil)
+                    } else {
+                        callResult = .failure(GLibError(consuming: error))
+                    }
+                } else {
+                    callResult = .success(nil)
+                }
+                let box = Unmanaged<FontAsyncBox<@MainActor (Result<String?, GLibError>) -> Void>>
+                    .fromOpaque(userData).takeRetainedValue()
+                MainActor.assumeIsolated { box.closure(callResult) }
+            },
+            box
+        )
+        if let initialDesc { pango_font_description_free(initialDesc) }
+    }
 }
