@@ -91,6 +91,22 @@ public final class NavigationView: Widget, Swipeable {
         adw_navigation_view_push(opaquePointer, page.castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)
     }
 
+    /// Creates a NavigationPage and pushes it onto the stack.
+    @discardableResult
+    public func push(title: String, child: Widget) -> NavigationPage {
+        let page = NavigationPage(child: child, title: title)
+        push(page)
+        return page
+    }
+
+    /// Creates a tagged NavigationPage and pushes it onto the stack.
+    @discardableResult
+    public func push(title: String, tag: String, child: Widget) -> NavigationPage {
+        let page = NavigationPage.newWithTag(child: child, title: title, tag: tag)
+        push(page)
+        return page
+    }
+
     /// Connects to the `get-next-page` signal.
     @discardableResult
     public func onGetNextPage(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {

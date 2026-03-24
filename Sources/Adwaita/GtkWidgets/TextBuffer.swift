@@ -195,4 +195,35 @@ public final class TextBuffer: GObjectRef {
     public func redo() {
         gtk_text_buffer_redo(bufferPointer)
     }
+
+    /// Returns the text in the given character offset range.
+    public func text(in range: Range<Int>) -> String {
+        var start = GtkTextIter()
+        var end = GtkTextIter()
+        gtk_text_buffer_get_iter_at_offset(bufferPointer, &start, Int32(range.lowerBound))
+        gtk_text_buffer_get_iter_at_offset(bufferPointer, &end, Int32(range.upperBound))
+        guard let cStr = gtk_text_buffer_get_text(bufferPointer, &start, &end, 0) else {
+            return ""
+        }
+        let result = String(cString: cStr)
+        g_free(UnsafeMutableRawPointer(mutating: cStr))
+        return result
+    }
+
+    /// Applies a tag to the given character offset range.
+    public func applyTag(_ tag: TextTag, in range: Range<Int>) {
+        applyTag(tag, startOffset: range.lowerBound, endOffset: range.upperBound)
+    }
+
+    /// Removes a tag from the given character offset range.
+    public func removeTag(_ tag: TextTag, in range: Range<Int>) {
+        removeTag(tag, startOffset: range.lowerBound, endOffset: range.upperBound)
+    }
+
+    /// Inserts text at the given character offset.
+    public func insert(_ text: String, at offset: Int) {
+        var iter = GtkTextIter()
+        gtk_text_buffer_get_iter_at_offset(bufferPointer, &iter, Int32(offset))
+        gtk_text_buffer_insert(bufferPointer, &iter, text, Int32(text.utf8.count))
+    }
 }

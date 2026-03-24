@@ -89,6 +89,36 @@ public final class TextTag: GObjectRef {
         get { g_object_get_double(pointer, "scale") }
         set { g_object_set_double(pointer, "scale", newValue) }
     }
+
+    // MARK: - Style Presets
+
+    /// Creates a bold text tag.
+    public static func bold(name: String? = "bold") -> TextTag {
+        let tag = TextTag(name: name)
+        tag.weight = 700
+        return tag
+    }
+
+    /// Creates an italic text tag.
+    public static func italic(name: String? = "italic") -> TextTag {
+        let tag = TextTag(name: name)
+        tag.style = .italic
+        return tag
+    }
+
+    /// Creates a monospace text tag.
+    public static func monospace(name: String? = "monospace") -> TextTag {
+        let tag = TextTag(name: name)
+        tag.family = "monospace"
+        return tag
+    }
+
+    /// Creates a colored text tag.
+    public static func colored(_ color: String, name: String? = nil) -> TextTag {
+        let tag = TextTag(name: name)
+        tag.foreground = color
+        return tag
+    }
 }
 
 // MARK: - GObject property helpers

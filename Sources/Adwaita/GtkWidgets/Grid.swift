@@ -12,6 +12,13 @@ public final class Grid: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a grid with column and row spacing.
+    public convenience init(columnSpacing: Int, rowSpacing: Int) {
+        self.init()
+        self.columnSpacing = columnSpacing
+        self.rowSpacing = rowSpacing
+    }
+
     required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

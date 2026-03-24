@@ -5949,4 +5949,156 @@ func ensureAdwInit() {
         #expect(conn is SignalConnection)
     }
 
+    // MARK: - Gesture Convenience Tests
+
+    @Test @MainActor func widgetOnClick() {
+        ensureAdwInit()
+        var clicked = false
+        let label = Label("Click me")
+        let conn = label.onClick { clicked = true }
+        #expect(conn is SignalConnection)
+        #expect(!clicked)
+    }
+
+    @Test @MainActor func widgetOnClickDetailed() {
+        ensureAdwInit()
+        let label = Label("Click me")
+        let conn = label.onClick { nPress, x, y in
+            _ = (nPress, x, y)
+        }
+        #expect(conn is SignalConnection)
+    }
+
+    @Test @MainActor func widgetOnLongPress() {
+        ensureAdwInit()
+        let label = Label("Hold me")
+        let conn = label.onLongPress { x, y in _ = (x, y) }
+        #expect(conn is SignalConnection)
+    }
+
+    @Test @MainActor func widgetOnSwipe() {
+        ensureAdwInit()
+        let label = Label("Swipe me")
+        let conn = label.onSwipe { vx, vy in _ = (vx, vy) }
+        #expect(conn is SignalConnection)
+    }
+
+    // MARK: - findChild Tests
+
+    @Test @MainActor func widgetFindChild() {
+        ensureAdwInit()
+        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 0)
+        let inner = Box(orientation: GTK_ORIENTATION_HORIZONTAL, spacing: 0)
+        let label = Label("Deep")
+        inner.append(label)
+        box.append(inner)
+        // Should find the label inside the inner box
+        let found = box.findChild(ofType: Label.self)
+        #expect(found != nil)
+    }
+
+    @Test @MainActor func widgetFindChildEmpty() {
+        ensureAdwInit()
+        let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 0)
+        let found = box.findChild(ofType: Label.self)
+        #expect(found == nil)
+    }
+
+    // MARK: - Grid Convenience Tests
+
+    @Test @MainActor func gridConvenienceInit() {
+        ensureAdwInit()
+        let grid = Grid(columnSpacing: 8, rowSpacing: 12)
+        #expect(grid.columnSpacing == 8)
+        #expect(grid.rowSpacing == 12)
+    }
+
+    // MARK: - Paned Convenience Tests
+
+    @Test @MainActor func panedConvenienceInit() {
+        ensureAdwInit()
+        let start = Label("Left")
+        let end = Label("Right")
+        let paned = Paned(start: start, end: end)
+        #expect(paned.startChild != nil)
+        #expect(paned.endChild != nil)
+    }
+
+    // MARK: - NavigationView Push Convenience Tests
+
+    @Test @MainActor func navigationViewPushConvenience() {
+        ensureAdwInit()
+        let nav = NavigationView()
+        let root = NavigationPage(child: Label("Root"), title: "Root")
+        nav.add(root)
+        let page = nav.push(title: "Detail", child: Label("Detail Content"))
+        #expect(page.title == "Detail")
+    }
+
+    @Test @MainActor func navigationViewPushTagConvenience() {
+        ensureAdwInit()
+        let nav = NavigationView()
+        let root = NavigationPage(child: Label("Root"), title: "Root")
+        nav.add(root)
+        let page = nav.push(title: "Settings", tag: "settings", child: Label("Settings"))
+        #expect(page.title == "Settings")
+        #expect(page.tag == "settings")
+    }
+
+    // MARK: - TextBuffer Convenience Tests
+
+    @Test @MainActor func textBufferTextInRange() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        buf.text = "Hello World"
+        #expect(buf.text(in: 0..<5) == "Hello")
+        #expect(buf.text(in: 6..<11) == "World")
+    }
+
+    @Test @MainActor func textBufferInsertAtOffset() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        buf.text = "Hello World"
+        buf.insert("Beautiful ", at: 6)
+        #expect(buf.text == "Hello Beautiful World")
+    }
+
+    @Test @MainActor func textBufferApplyTagInRange() {
+        ensureAdwInit()
+        let buf = TextBuffer()
+        buf.text = "Hello World"
+        let tag = buf.createTag(name: "test-tag")
+        tag.weight = 700
+        buf.applyTag(tag, in: 0..<5)
+        // Should not crash
+        buf.removeTag(tag, in: 0..<5)
+    }
+
+    // MARK: - TextTag Preset Tests
+
+    @Test @MainActor func textTagBoldPreset() {
+        ensureAdwInit()
+        let tag = TextTag.bold()
+        #expect(tag.weight == 700)
+    }
+
+    @Test @MainActor func textTagItalicPreset() {
+        ensureAdwInit()
+        let tag = TextTag.italic()
+        #expect(tag.style == .italic)
+    }
+
+    @Test @MainActor func textTagMonospacePreset() {
+        ensureAdwInit()
+        let tag = TextTag.monospace()
+        // Just verify it doesn't crash — family is write-only
+        #expect(tag is TextTag)
+    }
+
+    @Test @MainActor func textTagColoredPreset() {
+        ensureAdwInit()
+        let tag = TextTag.colored("red", name: "error")
+        #expect(tag is TextTag)
+    }
+
 }
