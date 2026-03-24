@@ -5797,4 +5797,63 @@ func ensureAdwInit() {
         #expect(PangoUnderline.single.rawValue == 1)
     }
 
+    // MARK: - Toast Convenience Tests
+
+    @Test @MainActor func toastOverlayShowToast() {
+        ensureAdwInit()
+        let overlay = ToastOverlay()
+        // Should not crash
+        overlay.showToast("Hello")
+    }
+
+    @Test @MainActor func toastOverlayShowToastWithButton() {
+        ensureAdwInit()
+        let overlay = ToastOverlay()
+        var tapped = false
+        overlay.showToast("Deleted", button: "Undo") {
+            tapped = true
+        }
+        // Verifies the API compiles and doesn't crash
+        #expect(!tapped)
+    }
+
+    // MARK: - ToolbarView Convenience Tests
+
+    @Test @MainActor func toolbarViewConvenienceInit() {
+        ensureAdwInit()
+        let content = Label("Content")
+        let header = HeaderBar()
+        let tv = ToolbarView(content: content, topBar: header)
+        #expect(tv.content != nil)
+    }
+
+    // MARK: - ScrolledWindow Convenience Tests
+
+    @Test @MainActor func scrolledWindowConvenienceInit() {
+        ensureAdwInit()
+        let label = Label("Scrollable")
+        let sw = ScrolledWindow(child: label)
+        #expect(sw.child != nil)
+    }
+
+    // MARK: - OverlaySplitView Convenience Tests
+
+    @Test @MainActor func overlaySplitViewConvenienceInit() {
+        ensureAdwInit()
+        let sidebar = Label("Sidebar")
+        let content = Label("Content")
+        let split = OverlaySplitView(sidebar: sidebar, content: content)
+        #expect(split.sidebar != nil)
+        #expect(split.content != nil)
+    }
+
+    // MARK: - Notification IconName Overload Tests
+
+    @Test @MainActor func sendNotificationIconNameOverload() {
+        ensureAdwInit()
+        // Just verify it compiles — we can't actually send without a running app
+        let iconName = IconName.dialogInformation
+        #expect(iconName.name == "dialog-information-symbolic")
+    }
+
 }

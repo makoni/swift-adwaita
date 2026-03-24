@@ -13,6 +13,12 @@ public final class ScrolledWindow: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a scrolled window wrapping the given child.
+    public convenience init(child: Widget) {
+        self.init()
+        self.child = child
+    }
+
     required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

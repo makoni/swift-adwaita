@@ -19,6 +19,13 @@ public final class OverlaySplitView: Widget, Swipeable {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates an overlay split view with sidebar and content.
+    public convenience init(sidebar: Widget, content: Widget) {
+        self.init()
+        self.sidebar = sidebar
+        self.content = content
+    }
+
     /// The `collapsed` property.
     /// - Since: libadwaita 1.4
     public var collapsed: Bool {

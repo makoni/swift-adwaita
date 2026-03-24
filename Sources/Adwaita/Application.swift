@@ -100,7 +100,18 @@ public final class Application: GObjectRef {
     ///   - id: A unique identifier for the notification. Can be used to withdraw it later.
     ///   - title: The notification title.
     ///   - body: The notification body text.
-    ///   - icon: An optional icon name (e.g. "dialog-information-symbolic").
+    ///   - icon: An optional icon name.
+    public func sendNotification(id: String, title: String, body: String? = nil, icon: IconName) {
+        sendNotification(id: id, title: title, body: body, icon: icon.name)
+    }
+
+    /// Sends a desktop notification.
+    ///
+    /// - Parameters:
+    ///   - id: A unique identifier for the notification. Can be used to withdraw it later.
+    ///   - title: The notification title.
+    ///   - body: The notification body text.
+    ///   - icon: An optional icon name string (e.g. "dialog-information-symbolic").
     public func sendNotification(id: String, title: String, body: String? = nil, icon: String? = nil) {
         let gApp: UnsafeMutablePointer<GApplication> = castedPointer()
         guard let notification = g_notification_new(title) else { return }

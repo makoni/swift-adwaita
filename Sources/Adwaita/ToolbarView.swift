@@ -13,6 +13,13 @@ public final class ToolbarView: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a toolbar view with content and a top bar.
+    public convenience init(content: Widget, topBar: Widget) {
+        self.init()
+        setContent(content)
+        addTopBar(topBar)
+    }
+
     required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

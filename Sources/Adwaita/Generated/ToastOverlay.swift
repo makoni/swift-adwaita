@@ -36,4 +36,18 @@ public final class ToastOverlay: Widget {
     public func dismissAll() {
         adw_toast_overlay_dismiss_all(opaquePointer)
     }
+
+    /// Shows a simple toast with the given title.
+    public func showToast(_ title: String) {
+        let toast = Toast(title: title)
+        addToast(toast)
+    }
+
+    /// Shows a toast with a button that triggers a handler.
+    public func showToast(_ title: String, button: String, handler: @escaping @MainActor () -> Void) {
+        let toast = Toast(title: title)
+        toast.buttonLabel = button
+        toast.onButtonClicked(handler)
+        addToast(toast)
+    }
 }
