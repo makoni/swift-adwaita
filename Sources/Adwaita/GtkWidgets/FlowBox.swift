@@ -93,12 +93,12 @@ public final class FlowBox: Widget {
     /// Connects to the `child-activated` signal.
     @discardableResult
     public func onChildActivated(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "child-activated", handler: handler)
+        SignalHelper.connect(self, signal: .childActivated, handler: handler)
     }
 
     /// Connects to the `selected-children-changed` signal.
     @discardableResult
     public func onSelectedChildrenChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "selected-children-changed", handler: handler)
+        SignalHelper.connect(self, signal: .selectedChildrenChanged, handler: handler)
     }
 }

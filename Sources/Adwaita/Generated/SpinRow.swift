@@ -79,18 +79,18 @@ public final class SpinRow: ActionRow {
     /// Connects to the `input` signal.
     @discardableResult
     public func onInput(_ handler: @escaping @MainActor (Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDouble(self, signal: "input", handler: handler)
+        SignalHelper.connectDouble(self, signal: .input, handler: handler)
     }
 
     /// Connects to the `output` signal.
     @discardableResult
     public func onOutput(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "output", handler: handler)
+        SignalHelper.connect(self, signal: .output, handler: handler)
     }
 
     /// Connects to the `wrapped` signal.
     @discardableResult
     public func onWrapped(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "wrapped", handler: handler)
+        SignalHelper.connect(self, signal: .wrapped, handler: handler)
     }
 }

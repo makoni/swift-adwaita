@@ -73,7 +73,7 @@ public final class Settings: GObjectRef {
     /// Connects to the `changed` signal for a specific key.
     @discardableResult
     public func onChanged(key: String, handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connectString(self, signal: "changed") { changedKey in
+        SignalHelper.connectString(self, signal: .changed) { changedKey in
             if changedKey == key {
                 handler()
             }

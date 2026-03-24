@@ -29,12 +29,12 @@ public final class EventControllerFocus: GObjectRef {
     /// Connects to the `enter` signal — widget gains focus.
     @discardableResult
     public func onEnter(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "enter", handler: handler)
+        SignalHelper.connect(self, signal: .enter, handler: handler)
     }
 
     /// Connects to the `leave` signal — widget loses focus.
     @discardableResult
     public func onLeave(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "leave", handler: handler)
+        SignalHelper.connect(self, signal: .leave, handler: handler)
     }
 }

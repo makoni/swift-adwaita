@@ -69,12 +69,12 @@ public final class Breakpoint: GObjectRef {
     /// Connects to the `apply` signal.
     @discardableResult
     public func onApply(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "apply", handler: handler)
+        SignalHelper.connect(self, signal: .apply, handler: handler)
     }
 
     /// Connects to the `unapply` signal.
     @discardableResult
     public func onUnapply(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "unapply", handler: handler)
+        SignalHelper.connect(self, signal: .unapply, handler: handler)
     }
 }

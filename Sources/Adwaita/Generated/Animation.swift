@@ -54,6 +54,6 @@ public class Animation: GObjectRef {
     /// Connects to the `done` signal.
     @discardableResult
     public func onDone(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "done", handler: handler)
+        SignalHelper.connect(self, signal: .done, handler: handler)
     }
 }

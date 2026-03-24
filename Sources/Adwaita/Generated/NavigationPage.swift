@@ -54,24 +54,24 @@ public class NavigationPage: Widget {
     /// Connects to the `hidden` signal.
     @discardableResult
     public func onHidden(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "hidden", handler: handler)
+        SignalHelper.connect(self, signal: .hidden, handler: handler)
     }
 
     /// Connects to the `hiding` signal.
     @discardableResult
     public func onHiding(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "hiding", handler: handler)
+        SignalHelper.connect(self, signal: .hiding, handler: handler)
     }
 
     /// Connects to the `showing` signal.
     @discardableResult
     public func onShowing(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "showing", handler: handler)
+        SignalHelper.connect(self, signal: .showing, handler: handler)
     }
 
     /// Connects to the `shown` signal.
     @discardableResult
     public func onShown(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "shown", handler: handler)
+        SignalHelper.connect(self, signal: .shown, handler: handler)
     }
 }

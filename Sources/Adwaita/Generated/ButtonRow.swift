@@ -34,6 +34,6 @@ public final class ButtonRow: PreferencesRow {
     /// Connects to the `activated` signal.
     @discardableResult
     public func onActivated(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "activated", handler: handler)
+        SignalHelper.connect(self, signal: .activated, handler: handler)
     }
 }

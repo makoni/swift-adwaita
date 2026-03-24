@@ -233,7 +233,7 @@ public final class SimpleAction: GObjectRef {
     /// (nil for stateless actions), so we use a 3-arg trampoline that ignores it.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "activate") { _ in
+        SignalHelper.connectPointer(self, signal: .activate) { _ in
             handler()
         }
     }
@@ -259,7 +259,7 @@ public final class SimpleAction: GObjectRef {
         }
         return SignalHelper.connectCustom(
             self,
-            signal: "activate",
+            signal: .activate,
             trampoline: unsafeBitCast(trampoline, to: GCallback.self),
             box: PublicClosureBox(handler)
         )

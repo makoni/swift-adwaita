@@ -20,19 +20,19 @@ public final class EventControllerMotion: GObjectRef {
     /// Handler receives: x coordinate, y coordinate.
     @discardableResult
     public func onMotion(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: "motion", handler: handler)
+        SignalHelper.connectDoubleDouble(self, signal: .motion, handler: handler)
     }
 
     /// Connects to the `enter` signal.
     /// Handler receives: x coordinate, y coordinate.
     @discardableResult
     public func onEnter(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: "enter", handler: handler)
+        SignalHelper.connectDoubleDouble(self, signal: .enter, handler: handler)
     }
 
     /// Connects to the `leave` signal.
     @discardableResult
     public func onLeave(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "leave", handler: handler)
+        SignalHelper.connect(self, signal: .leave, handler: handler)
     }
 }

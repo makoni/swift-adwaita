@@ -113,7 +113,7 @@ public final class Clipboard: GObjectRef {
     /// Connects to the `changed` signal — clipboard content changed.
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "changed", handler: handler)
+        SignalHelper.connect(self, signal: .changed, handler: handler)
     }
 }
 

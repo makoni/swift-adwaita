@@ -97,7 +97,7 @@ public final class GridView: Widget {
     /// The parameter is the position of the activated item.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor (Int) -> Void) -> SignalConnection {
-        SignalHelper.connectUInt(self, signal: "activate") { position in
+        SignalHelper.connectUInt(self, signal: .activate) { position in
             handler(Int(position))
         }
     }

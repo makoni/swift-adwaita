@@ -85,18 +85,18 @@ public final class StyleManager: GObjectRef {
     /// Connects to the `notify::dark` signal to be notified of theme changes.
     @discardableResult
     public func onDarkChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "notify::dark", handler: handler)
+        SignalHelper.connect(self, signal: .notify("dark"), handler: handler)
     }
 
     /// Connects to the `notify::accent-color` signal.
     @discardableResult
     public func onAccentColorChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "notify::accent-color", handler: handler)
+        SignalHelper.connect(self, signal: .notify("accent-color"), handler: handler)
     }
 
     /// Connects to the `notify::high-contrast` signal.
     @discardableResult
     public func onHighContrastChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "notify::high-contrast", handler: handler)
+        SignalHelper.connect(self, signal: .notify("high-contrast"), handler: handler)
     }
 }

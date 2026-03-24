@@ -21,6 +21,6 @@ public final class EmojiChooser: Widget {
     /// The handler receives the picked emoji as a string.
     @discardableResult
     public func onEmojiPicked(_ handler: @escaping @MainActor (String) -> Void) -> SignalConnection {
-        SignalHelper.connectString(self, signal: "emoji-picked", handler: handler)
+        SignalHelper.connectString(self, signal: .emojiPicked, handler: handler)
     }
 }

@@ -37,7 +37,7 @@ public final class SignalListItemFactory: GObjectRef {
     /// This is called once per recycled slot, not once per data item.
     @discardableResult
     public func onSetup(_ handler: @escaping @MainActor (ListItem) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "setup") { ptr in
+        SignalHelper.connectPointer(self, signal: .setup) { ptr in
             let listItem = ListItem(borrowedListItem: ptr)
             handler(listItem)
         }
@@ -49,7 +49,7 @@ public final class SignalListItemFactory: GObjectRef {
     /// then configure the child widget accordingly.
     @discardableResult
     public func onBind(_ handler: @escaping @MainActor (ListItem) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "bind") { ptr in
+        SignalHelper.connectPointer(self, signal: .bind) { ptr in
             let listItem = ListItem(borrowedListItem: ptr)
             handler(listItem)
         }
@@ -60,7 +60,7 @@ public final class SignalListItemFactory: GObjectRef {
     /// Use this to clean up any state set during `onBind`.
     @discardableResult
     public func onUnbind(_ handler: @escaping @MainActor (ListItem) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "unbind") { ptr in
+        SignalHelper.connectPointer(self, signal: .unbind) { ptr in
             let listItem = ListItem(borrowedListItem: ptr)
             handler(listItem)
         }
@@ -69,7 +69,7 @@ public final class SignalListItemFactory: GObjectRef {
     /// Called when a widget slot is destroyed (optional).
     @discardableResult
     public func onTeardown(_ handler: @escaping @MainActor (ListItem) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "teardown") { ptr in
+        SignalHelper.connectPointer(self, signal: .teardown) { ptr in
             let listItem = ListItem(borrowedListItem: ptr)
             handler(listItem)
         }

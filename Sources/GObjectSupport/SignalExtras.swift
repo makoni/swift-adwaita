@@ -11,7 +11,7 @@ extension SignalHelper {
     @discardableResult
     public static func connectCustom(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         trampoline: GCallback?,
         box: AnyObject
     ) -> SignalConnection {

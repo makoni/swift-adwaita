@@ -153,6 +153,6 @@ public final class AboutDialog: Dialog {
     /// Connects to the `activate-link` signal.
     @discardableResult
     public func onActivateLink(_ handler: @escaping @MainActor (String) -> Void) -> SignalConnection {
-        SignalHelper.connectString(self, signal: "activate-link", handler: handler)
+        SignalHelper.connectString(self, signal: .activateLink, handler: handler)
     }
 }

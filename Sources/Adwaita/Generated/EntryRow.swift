@@ -98,12 +98,12 @@ public class EntryRow: PreferencesRow {
     /// Connects to the `apply` signal.
     @discardableResult
     public func onApply(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "apply", handler: handler)
+        SignalHelper.connect(self, signal: .apply, handler: handler)
     }
 
     /// Connects to the `entry-activated` signal.
     @discardableResult
     public func onEntryActivated(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "entry-activated", handler: handler)
+        SignalHelper.connect(self, signal: .entryActivated, handler: handler)
     }
 }

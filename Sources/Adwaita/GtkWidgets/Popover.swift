@@ -64,6 +64,6 @@ public final class Popover: Widget {
     /// Connects to the `closed` signal.
     @discardableResult
     public func onClosed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "closed", handler: handler)
+        SignalHelper.connect(self, signal: .closed, handler: handler)
     }
 }

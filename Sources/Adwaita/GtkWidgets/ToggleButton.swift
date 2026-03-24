@@ -57,6 +57,6 @@ public final class ToggleButton: Widget {
     /// Connects to the `toggled` signal.
     @discardableResult
     public func onToggled(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "toggled", handler: handler)
+        SignalHelper.connect(self, signal: .toggled, handler: handler)
     }
 }

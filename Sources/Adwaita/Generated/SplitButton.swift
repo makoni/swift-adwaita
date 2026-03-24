@@ -87,12 +87,12 @@ public final class SplitButton: Widget {
     /// Connects to the `activate` signal.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "activate", handler: handler)
+        SignalHelper.connect(self, signal: .activate, handler: handler)
     }
 
     /// Connects to the `clicked` signal.
     @discardableResult
     public func onClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "clicked", handler: handler)
+        SignalHelper.connect(self, signal: .clicked, handler: handler)
     }
 }

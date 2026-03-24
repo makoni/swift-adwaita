@@ -29,6 +29,6 @@ public final class GestureSwipe: GObjectRef {
     /// Handler receives: velocity x, velocity y (pixels per second).
     @discardableResult
     public func onSwipe(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: "swipe", handler: handler)
+        SignalHelper.connectDoubleDouble(self, signal: .swipe, handler: handler)
     }
 }

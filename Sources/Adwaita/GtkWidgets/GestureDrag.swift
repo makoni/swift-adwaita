@@ -36,20 +36,20 @@ public final class GestureDrag: GObjectRef {
     /// Handler receives: start x, start y.
     @discardableResult
     public func onDragBegin(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: "drag-begin", handler: handler)
+        SignalHelper.connectDoubleDouble(self, signal: .dragBegin, handler: handler)
     }
 
     /// Connects to the `drag-update` signal.
     /// Handler receives: offset x, offset y from start.
     @discardableResult
     public func onDragUpdate(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: "drag-update", handler: handler)
+        SignalHelper.connectDoubleDouble(self, signal: .dragUpdate, handler: handler)
     }
 
     /// Connects to the `drag-end` signal.
     /// Handler receives: offset x, offset y from start.
     @discardableResult
     public func onDragEnd(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: "drag-end", handler: handler)
+        SignalHelper.connectDoubleDouble(self, signal: .dragEnd, handler: handler)
     }
 }

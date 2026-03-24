@@ -78,7 +78,7 @@ public final class TabBar: Widget {
     /// Connects to the `extra-drag-drop` signal.
     @discardableResult
     public func onExtraDragDrop(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> Bool) -> SignalConnection {
-        SignalHelper.connectPointerGValueReturnBool(self, signal: "extra-drag-drop") { (ptr: OpaquePointer, val: UnsafePointer<GValue>) in
+        SignalHelper.connectPointerGValueReturnBool(self, signal: .extraDragDrop) { (ptr: OpaquePointer, val: UnsafePointer<GValue>) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), val)
         }
     }
@@ -86,7 +86,7 @@ public final class TabBar: Widget {
     /// Connects to the `extra-drag-value` signal.
     @discardableResult
     public func onExtraDragValue(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> GdkDragAction) -> SignalConnection {
-        SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: "extra-drag-value") { (ptr: OpaquePointer, val: UnsafePointer<GValue>) in
+        SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: .extraDragValue) { (ptr: OpaquePointer, val: UnsafePointer<GValue>) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), val)
         }
     }

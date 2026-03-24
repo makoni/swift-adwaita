@@ -82,12 +82,12 @@ public final class Toast: GObjectRef {
     /// Connects to the `button-clicked` signal.
     @discardableResult
     public func onButtonClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "button-clicked", handler: handler)
+        SignalHelper.connect(self, signal: .buttonClicked, handler: handler)
     }
 
     /// Connects to the `dismissed` signal.
     @discardableResult
     public func onDismissed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "dismissed", handler: handler)
+        SignalHelper.connect(self, signal: .dismissed, handler: handler)
     }
 }

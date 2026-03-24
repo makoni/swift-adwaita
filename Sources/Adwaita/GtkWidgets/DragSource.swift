@@ -66,18 +66,18 @@ public final class DragSource: GObjectRef {
     /// Connects to the `drag-begin` signal.
     @discardableResult
     public func onDragBegin(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "drag-begin") { _ in handler() }
+        SignalHelper.connectPointer(self, signal: .dragBegin) { _ in handler() }
     }
 
     /// Connects to the `drag-end` signal.
     @discardableResult
     public func onDragEnd(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "drag-end") { _ in handler() }
+        SignalHelper.connectPointer(self, signal: .dragEnd) { _ in handler() }
     }
 
     /// Connects to the `drag-cancel` signal.
     @discardableResult
     public func onDragCancelled(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "drag-cancel") { _ in handler() }
+        SignalHelper.connectPointer(self, signal: .dragCancel) { _ in handler() }
     }
 }

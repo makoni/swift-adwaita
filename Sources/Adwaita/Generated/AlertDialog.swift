@@ -123,6 +123,6 @@ public class AlertDialog: Dialog {
     /// Connects to the `response` signal.
     @discardableResult
     public func onResponse(_ handler: @escaping @MainActor (String) -> Void) -> SignalConnection {
-        SignalHelper.connectString(self, signal: "response", handler: handler)
+        SignalHelper.connectString(self, signal: .response, handler: handler)
     }
 }

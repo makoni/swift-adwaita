@@ -76,6 +76,6 @@ public final class Button: Widget {
     /// Connects to the `clicked` signal.
     @discardableResult
     public func onClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "clicked", handler: handler)
+        SignalHelper.connect(self, signal: .clicked, handler: handler)
     }
 }

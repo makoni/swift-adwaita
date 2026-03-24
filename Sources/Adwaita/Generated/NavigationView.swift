@@ -95,13 +95,13 @@ public final class NavigationView: Widget, Swipeable {
     /// Connects to the `get-next-page` signal.
     @discardableResult
     public func onGetNextPage(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "get-next-page", handler: handler)
+        SignalHelper.connect(self, signal: .getNextPage, handler: handler)
     }
 
     /// Connects to the `popped` signal.
     @discardableResult
     public func onPopped(_ handler: @escaping @MainActor (NavigationPage) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "popped") { (ptr: OpaquePointer) in
+        SignalHelper.connectPointer(self, signal: .popped) { (ptr: OpaquePointer) in
             handler(NavigationPage(borrowing: UnsafeMutableRawPointer(ptr)))
         }
     }
@@ -109,12 +109,12 @@ public final class NavigationView: Widget, Swipeable {
     /// Connects to the `pushed` signal.
     @discardableResult
     public func onPushed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "pushed", handler: handler)
+        SignalHelper.connect(self, signal: .pushed, handler: handler)
     }
 
     /// Connects to the `replaced` signal.
     @discardableResult
     public func onReplaced(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "replaced", handler: handler)
+        SignalHelper.connect(self, signal: .replaced, handler: handler)
     }
 }

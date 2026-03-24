@@ -120,13 +120,13 @@ public final class TextBuffer: GObjectRef {
     /// Connects to the `changed` signal.
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "changed", handler: handler)
+        SignalHelper.connect(self, signal: .changed, handler: handler)
     }
 
     /// Connects to the `modified-changed` signal.
     @discardableResult
     public func onModifiedChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "modified-changed", handler: handler)
+        SignalHelper.connect(self, signal: .modifiedChanged, handler: handler)
     }
 
     // MARK: - Tags

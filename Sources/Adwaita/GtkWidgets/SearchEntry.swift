@@ -40,12 +40,12 @@ public final class SearchEntry: Widget {
     /// Connects to the `search-changed` signal (fired after typing stops).
     @discardableResult
     public func onSearchChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "search-changed", handler: handler)
+        SignalHelper.connect(self, signal: .searchChanged, handler: handler)
     }
 
     /// Connects to the `activate` signal (user pressed Enter).
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "activate", handler: handler)
+        SignalHelper.connect(self, signal: .activate, handler: handler)
     }
 }

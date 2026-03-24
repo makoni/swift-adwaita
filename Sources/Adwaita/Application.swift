@@ -41,21 +41,21 @@ public final class Application: GObjectRef {
     /// This is called when the application is launched (e.g. the user opens it).
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "activate", handler: handler)
+        SignalHelper.connect(self, signal: .activate, handler: handler)
     }
 
     /// Connects a handler to the `startup` signal.
     /// Called once when the application first starts, before `activate`.
     @discardableResult
     public func onStartup(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "startup", handler: handler)
+        SignalHelper.connect(self, signal: .startup, handler: handler)
     }
 
     /// Connects a handler to the `shutdown` signal.
     /// Called when the application is shutting down.
     @discardableResult
     public func onShutdown(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "shutdown", handler: handler)
+        SignalHelper.connect(self, signal: .shutdown, handler: handler)
     }
 
     required internal init(raw pointer: UnsafeMutableRawPointer) {

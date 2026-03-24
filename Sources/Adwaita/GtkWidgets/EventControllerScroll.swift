@@ -20,18 +20,18 @@ public final class EventControllerScroll: GObjectRef {
     /// Handler receives: dx, dy deltas. Return `true` to stop propagation.
     @discardableResult
     public func onScroll(_ handler: @escaping @MainActor (Double, Double) -> Bool) -> SignalConnection {
-        SignalHelper.connectDoubleDoubleReturnBool(self, signal: "scroll", handler: handler)
+        SignalHelper.connectDoubleDoubleReturnBool(self, signal: .scroll, handler: handler)
     }
 
     /// Connects to the `scroll-begin` signal.
     @discardableResult
     public func onScrollBegin(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "scroll-begin", handler: handler)
+        SignalHelper.connect(self, signal: .scrollBegin, handler: handler)
     }
 
     /// Connects to the `scroll-end` signal.
     @discardableResult
     public func onScrollEnd(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "scroll-end", handler: handler)
+        SignalHelper.connect(self, signal: .scrollEnd, handler: handler)
     }
 }

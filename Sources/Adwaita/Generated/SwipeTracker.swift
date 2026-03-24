@@ -76,24 +76,24 @@ public final class SwipeTracker: GObjectRef {
     /// Connects to the `begin-swipe` signal.
     @discardableResult
     public func onBeginSwipe(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "begin-swipe", handler: handler)
+        SignalHelper.connect(self, signal: .beginSwipe, handler: handler)
     }
 
     /// Connects to the `end-swipe` signal.
     @discardableResult
     public func onEndSwipe(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: "end-swipe", handler: handler)
+        SignalHelper.connectDoubleDouble(self, signal: .endSwipe, handler: handler)
     }
 
     /// Connects to the `prepare` signal.
     @discardableResult
     public func onPrepare(_ handler: @escaping @MainActor (AdwNavigationDirection) -> Void) -> SignalConnection {
-        SignalHelper.connectEnum(self, signal: "prepare", handler: handler)
+        SignalHelper.connectEnum(self, signal: .prepare, handler: handler)
     }
 
     /// Connects to the `update-swipe` signal.
     @discardableResult
     public func onUpdateSwipe(_ handler: @escaping @MainActor (Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDouble(self, signal: "update-swipe", handler: handler)
+        SignalHelper.connectDouble(self, signal: .updateSwipe, handler: handler)
     }
 }

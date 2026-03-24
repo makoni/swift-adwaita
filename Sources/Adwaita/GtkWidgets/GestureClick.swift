@@ -20,7 +20,7 @@ public final class GestureClick: GObjectRef {
     /// Handler receives: number of presses, x coordinate, y coordinate.
     @discardableResult
     public func onPressed(_ handler: @escaping @MainActor (Int, Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectIntDoubleDouble(self, signal: "pressed") { nPress, x, y in
+        SignalHelper.connectIntDoubleDouble(self, signal: .pressed) { nPress, x, y in
             handler(Int(nPress), x, y)
         }
     }
@@ -29,7 +29,7 @@ public final class GestureClick: GObjectRef {
     /// Handler receives: number of presses, x coordinate, y coordinate.
     @discardableResult
     public func onReleased(_ handler: @escaping @MainActor (Int, Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectIntDoubleDouble(self, signal: "released") { nPress, x, y in
+        SignalHelper.connectIntDoubleDouble(self, signal: .released) { nPress, x, y in
             handler(Int(nPress), x, y)
         }
     }

@@ -34,7 +34,7 @@ public enum SignalHelper {
     @discardableResult
     static func connectRaw(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         trampoline: GCallback?,
         box: AnyObject
     ) -> SignalConnection {
@@ -42,7 +42,7 @@ public enum SignalHelper {
 
         let handlerID = g_signal_connect_data(
             instance.pointer,
-            signal,
+            signal.name,
             trampoline,
             boxPtr,
             { userData, _ in
@@ -59,16 +59,16 @@ public enum SignalHelper {
 
     /// Connects a signal that takes no parameters.
     ///
-    /// Automatically detects `notify::` signals and uses the correct
+    /// Automatically detects `notify` signals and uses the correct
     /// trampoline signature (which includes a `GParamSpec` parameter).
     @discardableResult
     public static func connect(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor () -> Void
     ) -> SignalConnection {
         let trampoline: GCallback
-        if signal.hasPrefix("notify::") {
+        if signal.isNotify {
             // notify signals pass (instance, GParamSpec*, userData)
             trampoline = unsafeBitCast(
                 signalTrampolineNotify as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, UnsafeMutableRawPointer) -> Void,
@@ -93,7 +93,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectString(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (String) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -110,7 +110,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectUInt(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (UInt32) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -127,7 +127,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectInt(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (Int32) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -144,7 +144,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectDouble(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (Double) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -161,7 +161,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectBool(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (Bool) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -178,7 +178,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectEnum<E: RawRepresentable>(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (E) -> Void
     ) -> SignalConnection where E.RawValue == UInt32 {
         connectRaw(
@@ -199,7 +199,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectEnum<E: RawRepresentable>(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (E) -> Void
     ) -> SignalConnection where E.RawValue == Int32 {
         connectRaw(
@@ -220,7 +220,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectPointer(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (OpaquePointer) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -239,7 +239,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectDoubleDouble(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (Double, Double) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -256,7 +256,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectUIntUInt(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (UInt32, UInt32) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -273,7 +273,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectPointerInt(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (OpaquePointer, Int32) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -293,7 +293,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectIntDoubleDouble(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (Int32, Double, Double) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -311,7 +311,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectUIntUIntUIntReturnBool(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (UInt32, UInt32, UInt32) -> Bool
     ) -> SignalConnection {
         connectRaw(
@@ -329,7 +329,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectUIntUIntUInt(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (UInt32, UInt32, UInt32) -> Void
     ) -> SignalConnection {
         connectRaw(
@@ -349,7 +349,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectReturnBool(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor () -> Bool
     ) -> SignalConnection {
         connectRaw(
@@ -369,7 +369,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectDoubleDoubleReturnBool(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (Double, Double) -> Bool
     ) -> SignalConnection {
         connectRaw(
@@ -389,7 +389,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectPointerGValueReturnBool(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> Bool
     ) -> SignalConnection {
         connectRaw(
@@ -407,7 +407,7 @@ public enum SignalHelper {
     @discardableResult
     public static func connectPointerGValueReturnGdkDragAction(
         _ instance: GObjectRef,
-        signal: String,
+        signal: SignalName,
         handler: @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction
     ) -> SignalConnection {
         connectRaw(
@@ -433,7 +433,7 @@ public enum SignalHelper {
         handler: @escaping @MainActor () -> Void
     ) -> SignalConnection {
         connectRaw(
-            instance, signal: "notify::\(property)",
+            instance, signal: .notify(property),
             trampoline: unsafeBitCast(
                 signalTrampolineNotify as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, UnsafeMutableRawPointer) -> Void,
                 to: GCallback.self

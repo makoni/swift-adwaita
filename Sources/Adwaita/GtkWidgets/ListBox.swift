@@ -73,7 +73,7 @@ public final class ListBox: Widget {
     /// Connects to the `row-activated` signal.
     @discardableResult
     public func onRowActivated(_ handler: @escaping @MainActor (ListBoxRow) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "row-activated") { (ptr: OpaquePointer) in
+        SignalHelper.connectPointer(self, signal: .rowActivated) { (ptr: OpaquePointer) in
             handler(ListBoxRow(borrowing: UnsafeMutableRawPointer(ptr)))
         }
     }
@@ -81,7 +81,7 @@ public final class ListBox: Widget {
     /// Connects to the `row-selected` signal.
     @discardableResult
     public func onRowSelected(_ handler: @escaping @MainActor (ListBoxRow) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "row-selected") { (ptr: OpaquePointer) in
+        SignalHelper.connectPointer(self, signal: .rowSelected) { (ptr: OpaquePointer) in
             handler(ListBoxRow(borrowing: UnsafeMutableRawPointer(ptr)))
         }
     }

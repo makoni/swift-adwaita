@@ -26,12 +26,12 @@ public final class GestureLongPress: GObjectRef {
     /// Handler receives: x coordinate, y coordinate.
     @discardableResult
     public func onPressed(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: "pressed", handler: handler)
+        SignalHelper.connectDoubleDouble(self, signal: .pressed, handler: handler)
     }
 
     /// Connects to the `cancelled` signal.
     @discardableResult
     public func onCancelled(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "cancelled", handler: handler)
+        SignalHelper.connect(self, signal: .cancelled, handler: handler)
     }
 }

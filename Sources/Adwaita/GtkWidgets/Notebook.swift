@@ -127,7 +127,7 @@ public final class Notebook: Widget {
     /// Connects to the `switch-page` signal.
     @discardableResult
     public func onSwitchPage(_ handler: @escaping @MainActor (Int) -> Void) -> SignalConnection {
-        SignalHelper.connectPointerInt(self, signal: "switch-page") { _, pageNum in
+        SignalHelper.connectPointerInt(self, signal: .switchPage) { _, pageNum in
             handler(Int(pageNum))
         }
     }

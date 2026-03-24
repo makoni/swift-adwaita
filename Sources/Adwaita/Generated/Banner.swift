@@ -55,6 +55,6 @@ public final class Banner: Widget {
     /// Connects to the `button-clicked` signal.
     @discardableResult
     public func onButtonClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "button-clicked", handler: handler)
+        SignalHelper.connect(self, signal: .buttonClicked, handler: handler)
     }
 }

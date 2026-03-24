@@ -125,6 +125,6 @@ public final class TextView: Widget {
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         let buf = gtk_text_view_get_buffer(castedPointer())!
         let bufRef = GObjectRef(borrowing: UnsafeMutableRawPointer(buf))
-        return SignalHelper.connect(bufRef, signal: "changed", handler: handler)
+        return SignalHelper.connect(bufRef, signal: .changed, handler: handler)
     }
 }

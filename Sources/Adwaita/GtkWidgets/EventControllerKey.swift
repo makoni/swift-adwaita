@@ -21,7 +21,7 @@ public final class EventControllerKey: GObjectRef {
     /// Return `true` to stop propagation.
     @discardableResult
     public func onKeyPressed(_ handler: @escaping @MainActor (UInt32, UInt32, GdkModifierType) -> Bool) -> SignalConnection {
-        SignalHelper.connectUIntUIntUIntReturnBool(self, signal: "key-pressed") { keyval, keycode, state in
+        SignalHelper.connectUIntUIntUIntReturnBool(self, signal: .keyPressed) { keyval, keycode, state in
             handler(keyval, keycode, GdkModifierType(rawValue: state))
         }
     }
@@ -30,7 +30,7 @@ public final class EventControllerKey: GObjectRef {
     /// Handler receives: keyval (GDK key code), keycode, modifier state.
     @discardableResult
     public func onKeyReleased(_ handler: @escaping @MainActor (UInt32, UInt32, GdkModifierType) -> Void) -> SignalConnection {
-        SignalHelper.connectUIntUIntUInt(self, signal: "key-released") { keyval, keycode, state in
+        SignalHelper.connectUIntUIntUInt(self, signal: .keyReleased) { keyval, keycode, state in
             handler(keyval, keycode, GdkModifierType(rawValue: state))
         }
     }

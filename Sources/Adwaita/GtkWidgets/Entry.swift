@@ -59,7 +59,7 @@ public final class Entry: Widget {
     /// Connects to the `activate` signal (user pressed Enter).
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "activate", handler: handler)
+        SignalHelper.connect(self, signal: .activate, handler: handler)
     }
 
     /// Whether the entry has a visible frame.
@@ -132,7 +132,7 @@ public final class Entry: Widget {
     /// Connects to the `icon-press` signal.
     @discardableResult
     public func onIconPress(_ handler: @escaping @MainActor (GtkEntryIconPosition) -> Void) -> SignalConnection {
-        SignalHelper.connectInt(self, signal: "icon-press") { pos in
+        SignalHelper.connectInt(self, signal: .iconPress) { pos in
             handler(GtkEntryIconPosition(UInt32(pos)))
         }
     }

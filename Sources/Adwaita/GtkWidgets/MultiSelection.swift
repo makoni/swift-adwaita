@@ -97,7 +97,7 @@ public final class MultiSelection: GObjectRef, SelectionModelConvertible {
     public func onSelectionChanged(
         _ handler: @escaping @MainActor (Int, Int) -> Void
     ) -> SignalConnection {
-        SignalHelper.connectUIntUInt(self, signal: "selection-changed") { position, nItems in
+        SignalHelper.connectUIntUInt(self, signal: .selectionChanged) { position, nItems in
             handler(Int(position), Int(nItems))
         }
     }
@@ -107,7 +107,7 @@ public final class MultiSelection: GObjectRef, SelectionModelConvertible {
     public func onSelectionChanged(
         _ handler: @escaping @MainActor () -> Void
     ) -> SignalConnection {
-        SignalHelper.connectUIntUInt(self, signal: "selection-changed") { _, _ in
+        SignalHelper.connectUIntUInt(self, signal: .selectionChanged) { _, _ in
             handler()
         }
     }

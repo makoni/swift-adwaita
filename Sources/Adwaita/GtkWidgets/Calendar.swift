@@ -84,30 +84,30 @@ public final class Calendar: Widget {
     /// Connects to the `day-selected` signal.
     @discardableResult
     public func onDaySelected(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "day-selected", handler: handler)
+        SignalHelper.connect(self, signal: .daySelected, handler: handler)
     }
 
     /// Connects to the `prev-month` signal.
     @discardableResult
     public func onPrevMonth(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "prev-month", handler: handler)
+        SignalHelper.connect(self, signal: .prevMonth, handler: handler)
     }
 
     /// Connects to the `next-month` signal.
     @discardableResult
     public func onNextMonth(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "next-month", handler: handler)
+        SignalHelper.connect(self, signal: .nextMonth, handler: handler)
     }
 
     /// Connects to the `prev-year` signal.
     @discardableResult
     public func onPrevYear(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "prev-year", handler: handler)
+        SignalHelper.connect(self, signal: .prevYear, handler: handler)
     }
 
     /// Connects to the `next-year` signal.
     @discardableResult
     public func onNextYear(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "next-year", handler: handler)
+        SignalHelper.connect(self, signal: .nextYear, handler: handler)
     }
 }

@@ -79,7 +79,13 @@ struct DialogExample: DemoExample {
 
             let scrolled = ScrolledWindow()
             scrolled.child = content
-            dialog.child = scrolled
+
+            let headerBar = HeaderBar()
+            let toolbar = ToolbarView()
+            toolbar.addTopBar(headerBar)
+            toolbar.content = scrolled
+
+            dialog.child = toolbar
             dialog.present(box)
         }
 
@@ -116,7 +122,13 @@ struct DialogExample: DemoExample {
 
             let scrolled = ScrolledWindow()
             scrolled.child = content
-            dialog.child = scrolled
+
+            let headerBar = HeaderBar()
+            let toolbar = ToolbarView()
+            toolbar.addTopBar(headerBar)
+            toolbar.content = scrolled
+
+            dialog.child = toolbar
             dialog.present(box)
         }
 

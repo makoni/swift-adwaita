@@ -112,7 +112,7 @@ public final class Carousel: Widget, Swipeable {
     /// Connects to the `page-changed` signal.
     @discardableResult
     public func onPageChanged(_ handler: @escaping @MainActor (Int) -> Void) -> SignalConnection {
-        SignalHelper.connectUInt(self, signal: "page-changed") { (value: UInt32) in
+        SignalHelper.connectUInt(self, signal: .pageChanged) { (value: UInt32) in
             handler(Int(value))
         }
     }

@@ -87,12 +87,12 @@ public final class Adjustment: GObjectRef {
     /// Connects to the `value-changed` signal.
     @discardableResult
     public func onValueChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "value-changed", handler: handler)
+        SignalHelper.connect(self, signal: .valueChanged, handler: handler)
     }
 
     /// Connects to the `changed` signal (bounds or increments changed).
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "changed", handler: handler)
+        SignalHelper.connect(self, signal: .changed, handler: handler)
     }
 }

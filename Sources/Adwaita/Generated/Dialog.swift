@@ -110,12 +110,12 @@ public class Dialog: Widget {
     /// Connects to the `close-attempt` signal.
     @discardableResult
     public func onCloseAttempt(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "close-attempt", handler: handler)
+        SignalHelper.connect(self, signal: .closeAttempt, handler: handler)
     }
 
     /// Connects to the `closed` signal.
     @discardableResult
     public func onClosed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "closed", handler: handler)
+        SignalHelper.connect(self, signal: .closed, handler: handler)
     }
 }

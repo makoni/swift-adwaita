@@ -8,92 +8,95 @@ struct BreakpointExample: DemoExample {
 
     let sourceCode = """
     // Create a breakpoint for narrow windows
-    let condition = BreakpointCondition(parse: "max-width: 500px")
+    let condition = BreakpointCondition(parse: "max-width: 500sp")
     let bp = Breakpoint(condition: condition)
 
-    // Change properties when breakpoint is applied
-    bp.addSetter(splitView, property: "collapsed", value: true)
+    // Change layout when breakpoint activates
+    bp.addSetter(box, property: "orientation", value: 1) // vertical
+    bp.addSetter(box, property: "spacing", value: 8)
 
-    // React to breakpoint changes
     bp.onApply { print("Narrow layout") }
     bp.onUnapply { print("Wide layout") }
 
-    // Add to window/dialog
-    dialog.addBreakpoint(bp)
+    let bin = BreakpointBin()
+    bin.child = box
+    bin.addBreakpoint(bp)
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: .vertical, spacing: 24)
-        box.setMargins(24)
+        // Status label
+        let statusLabel = Label("Wide layout")
+        statusLabel.addCSSClass("title-4")
 
-        let group1 = PreferencesGroup()
-        group1.title = "Responsive Breakpoints"
-        group1.description = "AdwBreakpoint adapts UI for different window sizes"
+        // Two content cards side by side (horizontal) that stack vertically when narrow
+        let card1 = Box(orientation: .vertical, spacing: 8)
+        card1.setMargins(16)
+        let icon1 = Image(iconName: "weather-clear-symbolic")
+        icon1.pixelSize = 48
+        let label1 = Label("Card One")
+        label1.addCSSClass("heading")
+        let desc1 = Label("This card sits beside the other in wide layout")
+        desc1.addCSSClass("dim-label")
+        desc1.wrap = true
+        card1.append(icon1)
+        card1.append(label1)
+        card1.append(desc1)
+        card1.addCSSClass("card")
+        card1.hexpand = true
 
-        let statusLabel = Label("Resize the window to trigger breakpoints")
-        statusLabel.addCSSClass("dim-label")
-        statusLabel.wrap = true
-        statusLabel.setMargins(12)
-        group1.add(statusLabel)
+        let card2 = Box(orientation: .vertical, spacing: 8)
+        card2.setMargins(16)
+        let icon2 = Image(iconName: "weather-overcast-symbolic")
+        icon2.pixelSize = 48
+        let label2 = Label("Card Two")
+        label2.addCSSClass("heading")
+        let desc2 = Label("In narrow layout, cards stack vertically")
+        desc2.addCSSClass("dim-label")
+        desc2.wrap = true
+        card2.append(icon2)
+        card2.append(label2)
+        card2.append(desc2)
+        card2.addCSSClass("card")
+        card2.hexpand = true
 
-        let infoRow = ActionRow()
-        infoRow.title = "Breakpoint Conditions"
-        infoRow.subtitle = "Defined with strings like \"max-width: 500px\" or length/ratio API"
-        let infoIcon = Image(iconName: "dialog-information-symbolic")
-        infoIcon.valign = .center
-        infoRow.addSuffix(infoIcon)
-        group1.add(infoRow)
+        // The layout box that changes orientation
+        let cardsBox = Box(orientation: .horizontal, spacing: 16)
+        cardsBox.append(card1)
+        cardsBox.append(card2)
 
-        box.append(group1)
+        // Breakpoint: switch to vertical below 500sp
+        let condition = BreakpointCondition(parse: "max-width: 500sp")
+        let bp = Breakpoint(condition: condition)
+        // orientation: 1 = vertical (GTK_ORIENTATION_VERTICAL)
+        bp.addSetter(cardsBox, property: "orientation", value: 1)
+        bp.addSetter(cardsBox, property: "spacing", value: 8)
+        bp.onApply { statusLabel.text = "Narrow layout (< 500sp)" }
+        bp.onUnapply { statusLabel.text = "Wide layout (\u{2265} 500sp)" }
 
-        // Condition types
-        let group2 = PreferencesGroup()
-        group2.title = "Condition Types"
+        // Outer layout
+        let outerBox = Box(orientation: .vertical, spacing: 16)
+        outerBox.setMargins(24)
+        outerBox.halign = .fill
 
-        let lengthRow = ActionRow()
-        lengthRow.title = "Length Condition"
-        lengthRow.subtitle = "BreakpointCondition.length(type:value:unit:)"
-        group2.add(lengthRow)
+        let title = Label("Responsive Breakpoint")
+        title.addCSSClass("title-3")
+        outerBox.append(title)
 
-        let ratioRow = ActionRow()
-        ratioRow.title = "Ratio Condition"
-        ratioRow.subtitle = "BreakpointCondition.ratio(type:width:height:)"
-        group2.add(ratioRow)
+        let hint = Label("Resize the window to see cards reflow between horizontal and vertical layout")
+        hint.addCSSClass("dim-label")
+        hint.wrap = true
+        outerBox.append(hint)
 
-        let parseRow = ActionRow()
-        parseRow.title = "Parse from String"
-        parseRow.subtitle = "BreakpointCondition(parse: \"max-width: 400sp\")"
-        group2.add(parseRow)
+        outerBox.append(statusLabel)
+        outerBox.append(cardsBox)
 
-        let andRow = ActionRow()
-        andRow.title = "Combine with AND / OR"
-        andRow.subtitle = "BreakpointCondition.and(a, b)"
-        group2.add(andRow)
+        // Wrap in BreakpointBin so the breakpoint responds to this widget's size
+        let bin = BreakpointBin()
+        bin.child = outerBox
+        bin.addBreakpoint(bp)
+        bin.hexpand = true
+        bin.vexpand = true
 
-        box.append(group2)
-
-        // Setter types
-        let group3 = PreferencesGroup()
-        group3.title = "Property Setters"
-        group3.description = "addSetter() changes widget properties when breakpoint activates"
-
-        let boolRow = ActionRow()
-        boolRow.title = "Bool setter"
-        boolRow.subtitle = "bp.addSetter(view, property: \"collapsed\", value: true)"
-        group3.add(boolRow)
-
-        let intRow = ActionRow()
-        intRow.title = "Int setter"
-        intRow.subtitle = "bp.addSetter(view, property: \"spacing\", value: 8)"
-        group3.add(intRow)
-
-        let stringRow = ActionRow()
-        stringRow.title = "String setter"
-        stringRow.subtitle = "bp.addSetter(label, property: \"label\", value: \"Compact\")"
-        group3.add(stringRow)
-
-        box.append(group3)
-
-        return box.scrollableClamped()
+        return bin
     }
 }

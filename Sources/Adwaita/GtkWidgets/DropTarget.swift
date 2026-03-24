@@ -54,7 +54,7 @@ public final class DropTarget: GObjectRef {
         // The "drop" signal has signature (GtkDropTarget, GValue, double, double) -> gboolean
         SignalHelper.connectCustom(
             self,
-            signal: "drop",
+            signal: .drop,
             trampoline: unsafeBitCast(
                 dropTrampoline as @convention(c) (UnsafeMutableRawPointer, UnsafePointer<GValue>, Double, Double, UnsafeMutableRawPointer) -> gboolean,
                 to: GCallback.self
@@ -66,19 +66,19 @@ public final class DropTarget: GObjectRef {
     /// Connects to the `enter` signal. Returns the preferred action.
     @discardableResult
     public func onEnter(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: "enter") { x, y in handler(x, y) }
+        SignalHelper.connectDoubleDouble(self, signal: .enter) { x, y in handler(x, y) }
     }
 
     /// Connects to the `leave` signal.
     @discardableResult
     public func onLeave(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "leave", handler: handler)
+        SignalHelper.connect(self, signal: .leave, handler: handler)
     }
 
     /// Connects to the `motion` signal.
     @discardableResult
     public func onMotion(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: "motion") { x, y in handler(x, y) }
+        SignalHelper.connectDoubleDouble(self, signal: .motion) { x, y in handler(x, y) }
     }
 }
 

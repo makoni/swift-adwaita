@@ -201,7 +201,7 @@ public final class TabView: Widget {
     /// Connects to the `close-page` signal.
     @discardableResult
     public func onClosePage(_ handler: @escaping @MainActor (TabPage) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "close-page") { (ptr: OpaquePointer) in
+        SignalHelper.connectPointer(self, signal: .closePage) { (ptr: OpaquePointer) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)))
         }
     }
@@ -209,13 +209,13 @@ public final class TabView: Widget {
     /// Connects to the `create-window` signal.
     @discardableResult
     public func onCreateWindow(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "create-window", handler: handler)
+        SignalHelper.connect(self, signal: .createWindow, handler: handler)
     }
 
     /// Connects to the `indicator-activated` signal.
     @discardableResult
     public func onIndicatorActivated(_ handler: @escaping @MainActor (TabPage) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "indicator-activated") { (ptr: OpaquePointer) in
+        SignalHelper.connectPointer(self, signal: .indicatorActivated) { (ptr: OpaquePointer) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)))
         }
     }
@@ -223,7 +223,7 @@ public final class TabView: Widget {
     /// Connects to the `page-attached` signal.
     @discardableResult
     public func onPageAttached(_ handler: @escaping @MainActor (TabPage, Int) -> Void) -> SignalConnection {
-        SignalHelper.connectPointerInt(self, signal: "page-attached") { (ptr: OpaquePointer, pos: Int32) in
+        SignalHelper.connectPointerInt(self, signal: .pageAttached) { (ptr: OpaquePointer, pos: Int32) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), Int(pos))
         }
     }
@@ -231,7 +231,7 @@ public final class TabView: Widget {
     /// Connects to the `page-detached` signal.
     @discardableResult
     public func onPageDetached(_ handler: @escaping @MainActor (TabPage, Int) -> Void) -> SignalConnection {
-        SignalHelper.connectPointerInt(self, signal: "page-detached") { (ptr: OpaquePointer, pos: Int32) in
+        SignalHelper.connectPointerInt(self, signal: .pageDetached) { (ptr: OpaquePointer, pos: Int32) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), Int(pos))
         }
     }
@@ -239,7 +239,7 @@ public final class TabView: Widget {
     /// Connects to the `page-reordered` signal.
     @discardableResult
     public func onPageReordered(_ handler: @escaping @MainActor (TabPage, Int) -> Void) -> SignalConnection {
-        SignalHelper.connectPointerInt(self, signal: "page-reordered") { (ptr: OpaquePointer, pos: Int32) in
+        SignalHelper.connectPointerInt(self, signal: .pageReordered) { (ptr: OpaquePointer, pos: Int32) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), Int(pos))
         }
     }
@@ -247,7 +247,7 @@ public final class TabView: Widget {
     /// Connects to the `setup-menu` signal.
     @discardableResult
     public func onSetupMenu(_ handler: @escaping @MainActor (TabPage) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: "setup-menu") { (ptr: OpaquePointer) in
+        SignalHelper.connectPointer(self, signal: .setupMenu) { (ptr: OpaquePointer) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)))
         }
     }

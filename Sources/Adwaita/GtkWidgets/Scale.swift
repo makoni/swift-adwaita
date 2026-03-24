@@ -107,6 +107,6 @@ public final class Scale: Widget {
     /// Connects to the `value-changed` signal.
     @discardableResult
     public func onValueChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "value-changed", handler: handler)
+        SignalHelper.connect(self, signal: .valueChanged, handler: handler)
     }
 }

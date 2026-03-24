@@ -62,6 +62,6 @@ public final class Monitor: GObjectRef {
     /// is disconnected or its properties change.
     @discardableResult
     public func onInvalidate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: "invalidate", handler: handler)
+        SignalHelper.connect(self, signal: .invalidate, handler: handler)
     }
 }
