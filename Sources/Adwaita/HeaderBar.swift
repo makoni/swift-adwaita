@@ -13,6 +13,12 @@ public final class HeaderBar: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a header bar with a title.
+    public convenience init(title: String, subtitle: String = "") {
+        self.init()
+        self.titleWidget = WindowTitle(title: title, subtitle: subtitle)
+    }
+
     required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

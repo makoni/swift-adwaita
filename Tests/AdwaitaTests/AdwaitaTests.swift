@@ -5697,6 +5697,88 @@ func ensureAdwInit() {
         let _: (Widget?, RGBA?, @escaping @MainActor (Result<RGBA?, GLibError>) -> Void) -> Void = dialog.chooseRGBAThrowing
     }
 
+    // MARK: - Localization
+
+    @Test func localizedPassthrough() {
+        // Without a domain set, localized() should return the original string
+        let result = localized("Hello")
+        #expect(result == "Hello")
+    }
+
+    @Test func stringLocalizedPassthrough() {
+        let result = "Hello".localized
+        #expect(result == "Hello")
+    }
+
+    @Test func nlocalizedPassthrough() {
+        let one = nlocalized("%d file", "%d files", count: 1)
+        #expect(one == "%d file")
+        let many = nlocalized("%d file", "%d files", count: 5)
+        #expect(many == "%d files")
+    }
+
+    // MARK: - HeaderBar convenience init
+
+    @Test @MainActor func headerBarConvenienceInit() {
+        ensureAdwInit()
+        let hb = HeaderBar(title: "Settings")
+        #expect(hb.titleWidget != nil)
+    }
+
+    @Test @MainActor func headerBarConvenienceInitSubtitle() {
+        ensureAdwInit()
+        let hb = HeaderBar(title: "App", subtitle: "v1.0")
+        #expect(hb.titleWidget != nil)
+    }
+
+    // MARK: - AboutDialog convenience init
+
+    @Test @MainActor func aboutDialogConvenienceInit() {
+        ensureAdwInit()
+        let dialog = AboutDialog(
+            appName: "TestApp",
+            version: "1.0",
+            developer: "Dev"
+        )
+        #expect(dialog.applicationName == "TestApp")
+        #expect(dialog.version == "1.0")
+        #expect(dialog.developerName == "Dev")
+    }
+
+    @Test @MainActor func aboutDialogConvenienceInitFull() {
+        ensureAdwInit()
+        let dialog = AboutDialog(
+            appName: "TestApp",
+            version: "2.0",
+            developer: "Dev",
+            website: "https://example.com",
+            copyright: "2026 Dev"
+        )
+        #expect(dialog.applicationName == "TestApp")
+        #expect(dialog.website == "https://example.com")
+        #expect(dialog.copyright == "2026 Dev")
+    }
+
+    // MARK: - Breakpoint convenience constructors
+
+    @Test @MainActor func breakpointMinWidth() {
+        ensureAdwInit()
+        let bp = Breakpoint.minWidth(500)
+        #expect(bp.condition != nil)
+    }
+
+    @Test @MainActor func breakpointMaxWidth() {
+        ensureAdwInit()
+        let bp = Breakpoint.maxWidth(800)
+        #expect(bp.condition != nil)
+    }
+
+    @Test @MainActor func breakpointMinHeight() {
+        ensureAdwInit()
+        let bp = Breakpoint.minHeight(400)
+        #expect(bp.condition != nil)
+    }
+
     // MARK: - Pango enum extensions
 
     @Test func pangoWeightExtensions() {

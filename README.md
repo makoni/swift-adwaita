@@ -1,29 +1,36 @@
 # swift-adwaita
 
-An imperative Swift 6.2 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadwaita](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/latest/), designed for building native GNOME desktop applications.
+An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadwaita](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/latest/), designed for building native GNOME desktop applications.
 
 ## Features
 
 - **Imperative API** — no declarative DSL; create and configure widgets directly
 - **164 widget wrappers** — 74 auto-generated Adwaita + 90 hand-written GTK widgets
 - **Zero raw pointers in public API** — all `OpaquePointer`/`gpointer` hidden behind Swift types
+- **Type-safe enums** — `SignalName`, `PropertyName`, `CSSClass`, `IconName` instead of raw strings
+- **Fluent setters** — method chaining: `Label("Hi").halign(.center).cssClass(.title1)`
 - **Type-safe signals** — 50+ signal signatures with `@MainActor` closures
 - **Async/await** — `FileDialog.open()`, `UriLauncher.launch()`, `Clipboard.readText()`
 - **Keyboard shortcuts** — enum-based `Key` + `KeyModifiers` API
 - **Property bindings** — `GObjectRef.bind()` for reactive connections
+- **Container protocol** — unified `append()`/`remove()` for Box, ListBox, FlowBox, WrapBox, Carousel
+- **Convenience initializers** — `SwitchRow(title:)`, `PreferencesGroup(title:description:)`, etc.
 - **Menus & actions** — `GMenuRef`, `SimpleAction`, `MenuButton`
 - **Drag & drop** — `DragSource`, `DropTarget`
-- **CSS support** — `CSSProvider` for custom stylesheets
+- **CSS support** — `CSSProvider` + type-safe `CSSClass` enum
 - **Animations** — `TimedAnimation`, `SpringAnimation` with callbacks
 - **Drawing** — `DrawingArea` with `CairoContext` wrapper
 - **Text attributes** — `TextAttributes` for styling entry text (bold, italic, color)
 - **Media playback** — `MediaStream`, `Video`, `MediaControls`
-- **Swift 6.2 concurrency** — full `@MainActor` isolation, `Sendable` types
-- **555 tests**, **76 demo examples**
+- **Localization** — gettext integration via `localized()` and `String.localized`
+- **@Setting property wrapper** — type-safe GSettings binding
+- **Adaptive layout** — `Breakpoint.minWidth()`, `Breakpoint.maxWidth()` helpers
+- **Swift 6 concurrency** — full `@MainActor` isolation, `Sendable` types
+- **588 tests**, **76 demo examples**, **CI with GitHub Actions**
 
 ## Requirements
 
-- Swift 6.2+
+- Swift 6.0+
 - libadwaita 1.4+ development headers
 - Linux
 
@@ -76,13 +83,13 @@ func buildApp() {
         box.setMargins(24)
 
         let label = Label("Hello from swift-adwaita!")
-        label.addCSSClass("title-1")
+            .cssClass(.title1)
         box.append(label)
 
         let button = Button(label: "Click Me")
-        button.addCSSClass("suggested-action")
-        button.addCSSClass("pill")
-        button.halign = .center
+            .cssClass(.suggestedAction)
+            .cssClass(.pill)
+            .halign(.center)
         button.onClicked {
             label.text = "Button clicked!"
         }
@@ -126,7 +133,17 @@ Adwaita           Widget wrappers (74 generated + 90 hand-written)
 |----------|---------|-----------------|
 | `ListModelConvertible` | Pass models to list views | `ListStore`, `StringList`, `FilterListModel`, `SortListModel`, `MapListModel`, `FlattenListModel`, `TreeListModel`, `SelectionFilterModel` |
 | `SelectionModelConvertible` | Pass selection to views | `SingleSelection`, `MultiSelection`, `NoSelection` |
+| `Container` | Widgets with append/remove | `Box`, `ListBox`, `FlowBox`, `WrapBox`, `Carousel` |
 | `Swipeable` | Swipe gesture target | `Carousel`, `NavigationView`, `OverlaySplitView` |
+
+### Type-Safe Enums
+
+| Enum | Replaces | Example |
+|------|----------|---------|
+| `SignalName` | `"clicked"` | `.clicked`, `.changed`, `.notify("title")` |
+| `PropertyName` | `"active"` | `.active`, `.title`, `.custom("my-prop")` |
+| `CSSClass` | `"suggested-action"` | `.suggestedAction`, `.pill`, `.title1` |
+| `IconName` | `"go-next-symbolic"` | `.goNext`, `.dialogError`, `.custom("my-icon")` |
 
 ### Widget Categories
 
@@ -152,7 +169,7 @@ Adwaita           Widget wrappers (74 generated + 90 hand-written)
 
 **Feedback:** `Toast`, `ToastOverlay`, `EmojiChooser`
 
-**Styling:** `CSSProvider`, `StyleManager`, `TextAttributes`
+**Styling:** `CSSProvider`, `CSSClass`, `StyleManager`, `TextAttributes`
 
 **Animation:** `TimedAnimation`, `SpringAnimation`, `CallbackAnimationTarget`, `PropertyAnimationTarget`
 
@@ -160,9 +177,35 @@ Adwaita           Widget wrappers (74 generated + 90 hand-written)
 
 **Drawing:** `DrawingArea`, `CairoContext`
 
-**System:** `Clipboard`, `Display`, `Monitor`, `UriLauncher`
+**System:** `Clipboard`, `Display`, `Monitor`, `UriLauncher`, `Settings`
 
 ## Examples
+
+### Fluent Setters
+
+```swift
+let label = Label("Welcome")
+    .halign(.center)
+    .vexpand()
+    .margins(24)
+    .cssClass(.title1)
+    .tooltip("A greeting label")
+
+let button = Button(icon: .goNext)
+    .cssClass(.suggestedAction)
+    .cssClass(.circular)
+```
+
+### Type-Safe Icons and CSS
+
+```swift
+let img = Image(icon: .dialogInformation)
+let btn = Button(icon: .documentSave, onClicked: { print("Saved!") })
+
+label.addCSSClass(.dimLabel)
+list.addCSSClass(.boxedList)
+button.addCSSClass(.destructiveAction)
+```
 
 ### Async/Await
 
@@ -170,8 +213,11 @@ Adwaita           Widget wrappers (74 generated + 90 hand-written)
 // File dialog
 let dialog = FileDialog()
 if let file = await dialog.open(parent: window) {
-    print("Selected: \(file.path)")
+    print("Selected: \(file)")
 }
+
+// Throwing variant (distinguishes cancel from error)
+let path = try await dialog.openThrowing(parent: window)
 
 // URI launcher
 let launcher = UriLauncher(uri: "https://gnome.org")
@@ -179,6 +225,16 @@ let success = await launcher.launch()
 
 // Clipboard
 let text = await clipboard.readText()
+```
+
+### Adaptive Layout
+
+```swift
+let bp = Breakpoint.maxWidth(500)
+bp.addSetter(box, property: .custom("orientation"), value: "vertical")
+bp.onApply { sidebar.visible = false }
+bp.onUnapply { sidebar.visible = true }
+window.addBreakpoint(bp)
 ```
 
 ### Drawing
@@ -224,13 +280,12 @@ action.onActivate { print("Cut!") }
 window.addAction(action)
 ```
 
-### Text Attributes
+### Localization
 
 ```swift
-let attrs = TextAttributes()
-attrs.addBold()
-attrs.addForegroundColor(red: 0.8, green: 0.2, blue: 0.2)
-entryRow.textAttributes = attrs
+setTextDomain("myapp")
+let greeting = localized("Hello")
+let label = Label("Welcome".localized)
 ```
 
 ### Virtualized Lists
@@ -294,10 +349,10 @@ Features sidebar navigation with search, source code viewer, and windowed demos 
 
 ```bash
 swift build       # Build library
-swift test        # Run 555 tests
+swift test        # Run 588 tests
 swift run DemoApp # Launch demo gallery
 ```
 
 ## License
 
-Apache License 2.0. See [LICENSE.txt](LICENSE.txt).
+MIT License. See [LICENSE.txt](LICENSE.txt).

@@ -66,6 +66,36 @@ public final class Breakpoint: GObjectRef {
         g_value_unset(&gval)
     }
 
+    /// Creates a breakpoint that triggers when the minimum width is reached.
+    ///
+    /// ```swift
+    /// let bp = Breakpoint.minWidth(500)
+    /// bp.addSetter(box, property: .orientation, value: "vertical")
+    /// window.addBreakpoint(bp)
+    /// ```
+    public static func minWidth(_ width: Double, unit: AdwLengthUnit = .sp) -> Breakpoint {
+        let cond = BreakpointCondition.length(type: ADW_BREAKPOINT_CONDITION_MIN_WIDTH, value: width, unit: unit)
+        return Breakpoint(condition: cond)
+    }
+
+    /// Creates a breakpoint that triggers when the maximum width is reached.
+    public static func maxWidth(_ width: Double, unit: AdwLengthUnit = .sp) -> Breakpoint {
+        let cond = BreakpointCondition.length(type: ADW_BREAKPOINT_CONDITION_MAX_WIDTH, value: width, unit: unit)
+        return Breakpoint(condition: cond)
+    }
+
+    /// Creates a breakpoint that triggers when the minimum height is reached.
+    public static func minHeight(_ height: Double, unit: AdwLengthUnit = .sp) -> Breakpoint {
+        let cond = BreakpointCondition.length(type: ADW_BREAKPOINT_CONDITION_MIN_HEIGHT, value: height, unit: unit)
+        return Breakpoint(condition: cond)
+    }
+
+    /// Creates a breakpoint that triggers when the maximum height is reached.
+    public static func maxHeight(_ height: Double, unit: AdwLengthUnit = .sp) -> Breakpoint {
+        let cond = BreakpointCondition.length(type: ADW_BREAKPOINT_CONDITION_MAX_HEIGHT, value: height, unit: unit)
+        return Breakpoint(condition: cond)
+    }
+
     /// Connects to the `apply` signal.
     @discardableResult
     public func onApply(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {

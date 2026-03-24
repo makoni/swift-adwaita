@@ -17,6 +17,28 @@ public final class AboutDialog: Dialog {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates an `AboutDialog` with common fields.
+    public convenience init(
+        appName: String,
+        version: String,
+        developer: String,
+        appIcon: String? = nil,
+        website: String? = nil,
+        issueUrl: String? = nil,
+        copyright: String? = nil,
+        licenseType: GtkLicense? = nil
+    ) {
+        self.init()
+        self.applicationName = appName
+        self.version = version
+        self.developerName = developer
+        if let appIcon { self.applicationIcon = appIcon }
+        if let website { self.website = website }
+        if let issueUrl { self.issueUrl = issueUrl }
+        if let copyright { self.copyright = copyright }
+        if let licenseType { self.licenseType = licenseType }
+    }
+
     /// Creates a new `AboutDialog`.
     public static func newFromAppdata(resourcePath: String, releaseNotesVersion: String?) -> AboutDialog {
         let ptr = adw_about_dialog_new_from_appdata(resourcePath, releaseNotesVersion)!
