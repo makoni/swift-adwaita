@@ -16,6 +16,19 @@ public class PreferencesGroup: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a `PreferencesGroup` with a title.
+    public convenience init(title: String) {
+        self.init()
+        self.title = title
+    }
+
+    /// Creates a `PreferencesGroup` with a title and description.
+    public convenience init(title: String, description: String) {
+        self.init()
+        self.title = title
+        self.description = description
+    }
+
     /// The `description` property.
     public var description: String? {
         get { (adw_preferences_group_get_description(castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>)).map { String(cString: $0) } }

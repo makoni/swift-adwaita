@@ -43,6 +43,6 @@ public final class FontDialogButton: Widget {
     /// Connects to the `notify::font-desc` signal to observe font changes.
     @discardableResult
     public func onFontChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.onNotify(self, property: "font-desc", handler: handler)
+        SignalHelper.onNotify(self, property: .fontDesc, handler: handler)
     }
 }

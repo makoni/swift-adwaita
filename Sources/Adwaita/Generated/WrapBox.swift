@@ -4,7 +4,7 @@ import GObjectSupport
 /// A box-like widget that can wrap into multiple lines.
 /// - Since: libadwaita 1.7
 @MainActor
-public final class WrapBox: Widget {
+public final class WrapBox: Widget, Container {
 
     /// Internal raw-pointer initializer.
     required internal init(raw pointer: UnsafeMutableRawPointer) {

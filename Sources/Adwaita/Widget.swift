@@ -373,7 +373,7 @@ open class Widget: GObjectRef {
     /// ```
     @discardableResult
     public func onSizeAllocate(_ handler: @escaping @MainActor (Int, Int) -> Void) -> SignalConnection {
-        SignalHelper.onNotify(self, property: "width") { [weak self] in
+        SignalHelper.onNotify(self, property: .width) { [weak self] in
             guard let self else { return }
             handler(self.width, self.height)
         }

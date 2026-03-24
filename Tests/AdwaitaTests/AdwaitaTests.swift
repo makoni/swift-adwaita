@@ -230,18 +230,18 @@ func ensureAdwInit() {
     }
 
     @Test @MainActor func signalHelperMethodsExist() {
-        let _: (GObjectRef, String, @escaping @MainActor () -> Void) -> SignalConnection = SignalHelper.connect
-        let _: (GObjectRef, String, @escaping @MainActor (String) -> Void) -> SignalConnection = SignalHelper.connectString
-        let _: (GObjectRef, String, @escaping @MainActor (UInt32) -> Void) -> SignalConnection = SignalHelper.connectUInt
-        let _: (GObjectRef, String, @escaping @MainActor (Int32) -> Void) -> SignalConnection = SignalHelper.connectInt
-        let _: (GObjectRef, String, @escaping @MainActor (Double) -> Void) -> SignalConnection = SignalHelper.connectDouble
-        let _: (GObjectRef, String, @escaping @MainActor (Bool) -> Void) -> SignalConnection = SignalHelper.connectBool
-        let _: (GObjectRef, String, @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection = SignalHelper.connectPointer
-        let _: (GObjectRef, String, @escaping @MainActor (Double, Double) -> Void) -> SignalConnection = SignalHelper.connectDoubleDouble
-        let _: (GObjectRef, String, @escaping @MainActor (OpaquePointer, Int32) -> Void) -> SignalConnection = SignalHelper.connectPointerInt
-        let _: (GObjectRef, String, @escaping @MainActor () -> Void) -> SignalConnection = SignalHelper.onNotify
-        let _: (GObjectRef, String, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> Bool) -> SignalConnection = SignalHelper.connectPointerGValueReturnBool
-        let _: (GObjectRef, String, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction) -> SignalConnection = SignalHelper.connectPointerGValueReturnGdkDragAction
+        let _: (GObjectRef, SignalName, @escaping @MainActor () -> Void) -> SignalConnection = SignalHelper.connect
+        let _: (GObjectRef, SignalName, @escaping @MainActor (String) -> Void) -> SignalConnection = SignalHelper.connectString
+        let _: (GObjectRef, SignalName, @escaping @MainActor (UInt32) -> Void) -> SignalConnection = SignalHelper.connectUInt
+        let _: (GObjectRef, SignalName, @escaping @MainActor (Int32) -> Void) -> SignalConnection = SignalHelper.connectInt
+        let _: (GObjectRef, SignalName, @escaping @MainActor (Double) -> Void) -> SignalConnection = SignalHelper.connectDouble
+        let _: (GObjectRef, SignalName, @escaping @MainActor (Bool) -> Void) -> SignalConnection = SignalHelper.connectBool
+        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection = SignalHelper.connectPointer
+        let _: (GObjectRef, SignalName, @escaping @MainActor (Double, Double) -> Void) -> SignalConnection = SignalHelper.connectDoubleDouble
+        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, Int32) -> Void) -> SignalConnection = SignalHelper.connectPointerInt
+        let _: (GObjectRef, PropertyName, @escaping @MainActor () -> Void) -> SignalConnection = SignalHelper.onNotify
+        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> Bool) -> SignalConnection = SignalHelper.connectPointerGValueReturnBool
+        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction) -> SignalConnection = SignalHelper.connectPointerGValueReturnGdkDragAction
     }
 
     // MARK: - GTK Widget Wrapper Tests
@@ -945,7 +945,7 @@ func ensureAdwInit() {
     @Test @MainActor func notifySignalConnects() {
         ensureAdwInit()
         let label = Label("before")
-        let conn = SignalHelper.onNotify(label, property: "label") { }
+        let conn = SignalHelper.onNotify(label, property: .label) { }
         conn.disconnect()
     }
 
@@ -1499,7 +1499,7 @@ func ensureAdwInit() {
     // MARK: - SignalHelper connectReturnBool
 
     @Test @MainActor func signalHelperConnectReturnBoolExists() {
-        let _: (GObjectRef, String, @escaping @MainActor () -> Bool) -> SignalConnection = SignalHelper.connectReturnBool
+        let _: (GObjectRef, SignalName, @escaping @MainActor () -> Bool) -> SignalConnection = SignalHelper.connectReturnBool
     }
 
     // MARK: - Grid
@@ -3157,7 +3157,7 @@ func ensureAdwInit() {
         let bp = Breakpoint(condition: cond)
         let label = Label("test")
         // Should not crash
-        bp.addSetter(label, property: "visible", value: false)
+        bp.addSetter(label, property: .visible, value: false)
     }
 
     @Test @MainActor func breakpointAddSetterInt() {
@@ -3165,7 +3165,7 @@ func ensureAdwInit() {
         let cond = BreakpointCondition(parse: "max-width: 500px")
         let bp = Breakpoint(condition: cond)
         let box = Box(orientation: .vertical, spacing: 0)
-        bp.addSetter(box, property: "spacing", value: 12)
+        bp.addSetter(box, property: .spacing, value: 12)
     }
 
     @Test @MainActor func breakpointAddSetterString() {
@@ -3173,7 +3173,7 @@ func ensureAdwInit() {
         let cond = BreakpointCondition(parse: "max-width: 500px")
         let bp = Breakpoint(condition: cond)
         let label = Label("original")
-        bp.addSetter(label, property: "label", value: "compact")
+        bp.addSetter(label, property: .label, value: "compact")
     }
 
     @Test @MainActor func breakpointAddSetterDouble() {
@@ -3181,7 +3181,7 @@ func ensureAdwInit() {
         let cond = BreakpointCondition(parse: "max-width: 500px")
         let bp = Breakpoint(condition: cond)
         let label = Label("test")
-        bp.addSetter(label, property: "opacity", value: 0.5)
+        bp.addSetter(label, property: .opacity, value: 0.5)
     }
 
     // MARK: - Application lifecycle
@@ -3641,7 +3641,7 @@ func ensureAdwInit() {
         let switch2 = Switch()
         switch1.active = true
         // Bind active properties — syncCreate means switch2 gets switch1's value
-        switch1.bind("active", to: switch2, property: "active", flags: G_BINDING_SYNC_CREATE)
+        switch1.bind(.active, to: switch2, property: .active, flags: G_BINDING_SYNC_CREATE)
         #expect(switch2.active == true)
     }
 
@@ -3649,7 +3649,7 @@ func ensureAdwInit() {
         ensureAdwInit()
         let label1 = Label("Hello")
         let label2 = Label("World")
-        label1.bind("label", to: label2, property: "label",
+        label1.bind(.label, to: label2, property: .label,
                      flags: GBindingFlags(rawValue: G_BINDING_BIDIRECTIONAL.rawValue | G_BINDING_SYNC_CREATE.rawValue))
         #expect(label2.text == "Hello")
     }
@@ -5420,6 +5420,187 @@ func ensureAdwInit() {
         #expect(tracker.enabled == true)
         tracker.enabled = false
         #expect(tracker.enabled == false)
+    }
+
+    // MARK: - Container Protocol Conformance
+
+    @Test @MainActor func boxConformsToContainer() {
+        ensureAdwInit()
+        let box = Box(orientation: .horizontal, spacing: 0)
+        let _: any Container = box
+        let child = Label("hi")
+        box.append(child)
+        box.remove(child)
+    }
+
+    @Test @MainActor func listBoxConformsToContainer() {
+        ensureAdwInit()
+        let list = ListBox()
+        let _: any Container = list
+        let child = Label("hi")
+        list.append(child)
+        list.remove(child)
+    }
+
+    @Test @MainActor func flowBoxConformsToContainer() {
+        ensureAdwInit()
+        let flow = FlowBox()
+        let _: any Container = flow
+        let child = Label("hi")
+        flow.append(child)
+        flow.remove(child)
+    }
+
+    @Test @MainActor func carouselConformsToContainer() {
+        ensureAdwInit()
+        let carousel = Carousel()
+        let _: any Container = carousel
+        let child = Label("hi")
+        carousel.append(child)
+        carousel.remove(child)
+    }
+
+    @Test @MainActor func wrapBoxConformsToContainer() {
+        ensureAdwInit()
+        let wrap = WrapBox()
+        let _: any Container = wrap
+        let child = Label("hi")
+        wrap.append(child)
+        wrap.remove(child)
+    }
+
+    // MARK: - Convenience Initializer Tests
+
+    @Test @MainActor func switchRowConvenienceInit() {
+        ensureAdwInit()
+        let row = SwitchRow(title: "Dark Mode")
+        #expect(row.title == "Dark Mode")
+    }
+
+    @Test @MainActor func switchRowConvenienceInitActive() {
+        ensureAdwInit()
+        let row = SwitchRow(title: "Enabled", active: true)
+        #expect(row.title == "Enabled")
+        #expect(row.active == true)
+    }
+
+    @Test @MainActor func entryRowConvenienceInit() {
+        ensureAdwInit()
+        let row = EntryRow(title: "Username")
+        #expect(row.title == "Username")
+    }
+
+    @Test @MainActor func spinRowConvenienceInit() {
+        ensureAdwInit()
+        let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)
+        #expect(row.title == "Volume")
+    }
+
+    @Test @MainActor func expanderRowConvenienceInit() {
+        ensureAdwInit()
+        let row = ExpanderRow(title: "Advanced")
+        #expect(row.title == "Advanced")
+    }
+
+    @Test @MainActor func expanderRowConvenienceInitSubtitle() {
+        ensureAdwInit()
+        let row = ExpanderRow(title: "Advanced", subtitle: "More options")
+        #expect(row.title == "Advanced")
+        #expect(row.subtitle == "More options")
+    }
+
+    @Test @MainActor func comboRowConvenienceInit() {
+        ensureAdwInit()
+        let row = ComboRow(title: "Theme")
+        #expect(row.title == "Theme")
+    }
+
+    @Test @MainActor func passwordEntryRowConvenienceInit() {
+        ensureAdwInit()
+        let row = PasswordEntryRow(title: "Password")
+        #expect(row.title == "Password")
+    }
+
+    @Test @MainActor func preferencesGroupConvenienceInit() {
+        ensureAdwInit()
+        let group = PreferencesGroup(title: "General")
+        #expect(group.title == "General")
+    }
+
+    @Test @MainActor func preferencesGroupConvenienceInitDescription() {
+        ensureAdwInit()
+        let group = PreferencesGroup(title: "General", description: "Basic settings")
+        #expect(group.title == "General")
+        #expect(group.description == "Basic settings")
+    }
+
+    @Test @MainActor func preferencesPageConvenienceInit() {
+        ensureAdwInit()
+        let page = PreferencesPage(title: "Appearance")
+        #expect(page.title == "Appearance")
+    }
+
+    @Test @MainActor func preferencesPageConvenienceInitIcon() {
+        ensureAdwInit()
+        let page = PreferencesPage(title: "Appearance", iconName: "display-symbolic")
+        #expect(page.title == "Appearance")
+        #expect(page.iconName == "display-symbolic")
+    }
+
+    @Test @MainActor func statusPageConvenienceInit() {
+        ensureAdwInit()
+        let page = StatusPage(title: "No Results", description: "Try a different search")
+        #expect(page.title == "No Results")
+        #expect(page.description == "Try a different search")
+    }
+
+    @Test @MainActor func statusPageConvenienceInitIcon() {
+        ensureAdwInit()
+        let page = StatusPage(title: "Error", description: "Something went wrong", iconName: "dialog-error-symbolic")
+        #expect(page.title == "Error")
+        #expect(page.description == "Something went wrong")
+        #expect(page.iconName == "dialog-error-symbolic")
+    }
+
+    @Test @MainActor func actionRowConvenienceInit() {
+        ensureAdwInit()
+        let row = ActionRow(title: "Wi-Fi")
+        #expect(row.title == "Wi-Fi")
+    }
+
+    @Test @MainActor func actionRowConvenienceInitSubtitle() {
+        ensureAdwInit()
+        let row = ActionRow(title: "Wi-Fi", subtitle: "Connected")
+        #expect(row.title == "Wi-Fi")
+        #expect(row.subtitle == "Connected")
+    }
+
+    // MARK: - PropertyName Tests
+
+    @Test func propertyNameValues() {
+        #expect(PropertyName.active.name == "active")
+        #expect(PropertyName.child.name == "child")
+        #expect(PropertyName.content.name == "content")
+        #expect(PropertyName.label.name == "label")
+        #expect(PropertyName.orientation.name == "orientation")
+        #expect(PropertyName.selected.name == "selected")
+        #expect(PropertyName.spacing.name == "spacing")
+        #expect(PropertyName.text.name == "text")
+        #expect(PropertyName.title.name == "title")
+        #expect(PropertyName.visible.name == "visible")
+        #expect(PropertyName.width.name == "width")
+    }
+
+    @Test func propertyNameCustom() {
+        let custom = PropertyName.custom("my-property")
+        #expect(custom.name == "my-property")
+    }
+
+    @Test func propertyNameEquality() {
+        #expect(PropertyName.active == PropertyName.active)
+        #expect(PropertyName.active != PropertyName.label)
+        #expect(PropertyName.custom("x") == PropertyName.custom("x"))
+        #expect(PropertyName.custom("x") != PropertyName.custom("y"))
     }
 
     // MARK: - Pango enum extensions

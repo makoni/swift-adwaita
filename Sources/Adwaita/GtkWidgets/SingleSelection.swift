@@ -68,11 +68,7 @@ public final class SingleSelection: GObjectRef, SelectionModelConvertible {
     /// Connects to selection changes.
     @discardableResult
     public func onSelectionChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.onNotify(self, property: "selected", handler: handler)
+        SignalHelper.onNotify(self, property: .selected, handler: handler)
     }
 
-    /// The `GtkSelectionModel` pointer, for use with ``ListView``.
-    public var selectionModelPointer: OpaquePointer {
-        OpaquePointer(pointer)
-    }
 }

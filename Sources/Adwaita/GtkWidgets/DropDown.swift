@@ -52,6 +52,6 @@ public final class DropDown: Widget {
     /// Connects to the `notify::selected` signal to observe selection changes.
     @discardableResult
     public func onSelectedChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.onNotify(self, property: "selected", handler: handler)
+        SignalHelper.onNotify(self, property: .selected, handler: handler)
     }
 }

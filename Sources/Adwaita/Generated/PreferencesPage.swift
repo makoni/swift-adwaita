@@ -16,6 +16,19 @@ public class PreferencesPage: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a `PreferencesPage` with a title.
+    public convenience init(title: String) {
+        self.init()
+        self.title = title
+    }
+
+    /// Creates a `PreferencesPage` with a title and icon name.
+    public convenience init(title: String, iconName: String) {
+        self.init()
+        self.title = title
+        self.iconName = iconName
+    }
+
     /// The `banner` property.
     /// - Since: libadwaita 1.7
     public var banner: Banner? {

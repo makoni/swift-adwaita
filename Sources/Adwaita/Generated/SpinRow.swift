@@ -17,6 +17,13 @@ public final class SpinRow: ActionRow {
         return SpinRow(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a `SpinRow` with a title and range.
+    public convenience init(title: String, min: Double, max: Double, step: Double) {
+        let ptr = adw_spin_row_new_with_range(min, max, step)!
+        self.init(raw: UnsafeMutableRawPointer(ptr))
+        self.title = title
+    }
+
     /// The `climb-rate` property.
     /// - Since: libadwaita 1.4
     public var climbRate: Double {

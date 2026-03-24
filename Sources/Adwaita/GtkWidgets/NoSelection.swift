@@ -45,10 +45,4 @@ public final class NoSelection: GObjectRef, SelectionModelConvertible {
         super.init(raw: pointer)
     }
 
-    // MARK: - Pointers
-
-    /// The `GtkSelectionModel` pointer, for use with ``ListView``.
-    public var selectionModelPointer: OpaquePointer {
-        OpaquePointer(pointer)
-    }
 }

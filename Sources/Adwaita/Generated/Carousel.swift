@@ -3,10 +3,7 @@ import CAdwaita
 import GObjectSupport
 /// A paginated scrolling widget.
 @MainActor
-public final class Carousel: Widget, Swipeable {
-
-    /// The underlying `AdwSwipeable` pointer.
-    public var swipeablePointer: OpaquePointer { opaquePointer }
+public final class Carousel: Widget, Swipeable, Container {
 
     /// Internal raw-pointer initializer.
     required internal init(raw pointer: UnsafeMutableRawPointer) {

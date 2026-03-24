@@ -17,6 +17,19 @@ public final class SwitchRow: ActionRow {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a `SwitchRow` with a title.
+    public convenience init(title: String) {
+        self.init()
+        self.title = title
+    }
+
+    /// Creates a `SwitchRow` with a title and initial active state.
+    public convenience init(title: String, active: Bool) {
+        self.init()
+        self.title = title
+        self.active = active
+    }
+
     /// The `active` property.
     /// - Since: libadwaita 1.4
     public var active: Bool {

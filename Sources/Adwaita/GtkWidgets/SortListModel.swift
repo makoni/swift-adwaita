@@ -128,10 +128,4 @@ public final class SortListModel: GObjectRef, ListModelConvertible {
         Int(g_list_model_get_n_items(opaquePointer))
     }
 
-    // MARK: - Pointers
-
-    /// The `GListModel` pointer, for use with selection models.
-    public var listModelPointer: OpaquePointer {
-        OpaquePointer(pointer)
-    }
 }

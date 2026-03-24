@@ -104,12 +104,7 @@ public final class TreeListModel: GObjectRef, ListModelConvertible {
         gtk_tree_list_model_get_passthrough(opaquePointer) != 0
     }
 
-    // MARK: - Pointers
 
-    /// The `GListModel` pointer, for use with selection models.
-    public var listModelPointer: OpaquePointer {
-        OpaquePointer(pointer)
-    }
 
     // MARK: - Row Access
 

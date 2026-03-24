@@ -32,6 +32,6 @@ public final class Switch: Widget {
     /// Connects to changes of the `active` property.
     @discardableResult
     public func onActiveChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.onNotify(self, property: "active", handler: handler)
+        SignalHelper.onNotify(self, property: .active, handler: handler)
     }
 }

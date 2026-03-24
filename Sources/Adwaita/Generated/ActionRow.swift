@@ -16,6 +16,19 @@ public class ActionRow: PreferencesRow {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates an `ActionRow` with a title.
+    public convenience init(title: String) {
+        self.init()
+        self.title = title
+    }
+
+    /// Creates an `ActionRow` with a title and subtitle.
+    public convenience init(title: String, subtitle: String) {
+        self.init()
+        self.title = title
+        self.subtitle = subtitle
+    }
+
     /// The `activatable-widget` property.
     public var activatableWidget: Widget? {
         get { (adw_action_row_get_activatable_widget(castedPointer() as UnsafeMutablePointer<AdwActionRow>)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }

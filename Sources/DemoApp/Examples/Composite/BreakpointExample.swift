@@ -12,8 +12,8 @@ struct BreakpointExample: DemoExample {
     let bp = Breakpoint(condition: condition)
 
     // Change layout when breakpoint activates
-    bp.addSetter(box, property: "orientation", value: 1) // vertical
-    bp.addSetter(box, property: "spacing", value: 8)
+    bp.addSetter(box, property: .orientation, value: 1) // vertical
+    bp.addSetter(box, property: .spacing, value: 8)
 
     bp.onApply { print("Narrow layout") }
     bp.onUnapply { print("Wide layout") }
@@ -68,8 +68,8 @@ struct BreakpointExample: DemoExample {
         let condition = BreakpointCondition(parse: "max-width: 500sp")
         let bp = Breakpoint(condition: condition)
         // orientation: 1 = vertical (GTK_ORIENTATION_VERTICAL)
-        bp.addSetter(cardsBox, property: "orientation", value: 1)
-        bp.addSetter(cardsBox, property: "spacing", value: 8)
+        bp.addSetter(cardsBox, property: .orientation, value: 1)
+        bp.addSetter(cardsBox, property: .spacing, value: 8)
         bp.onApply { statusLabel.text = "Narrow layout (< 500sp)" }
         bp.onUnapply { statusLabel.text = "Wide layout (\u{2265} 500sp)" }
 

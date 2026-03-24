@@ -7,7 +7,6 @@ import GObjectSupport
 public final class NavigationView: Widget, Swipeable {
 
     /// The underlying `AdwSwipeable` pointer.
-    public var swipeablePointer: OpaquePointer { opaquePointer }
 
     /// Internal raw-pointer initializer.
     required internal init(raw pointer: UnsafeMutableRawPointer) {

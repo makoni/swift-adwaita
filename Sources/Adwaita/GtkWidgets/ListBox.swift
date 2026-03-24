@@ -6,7 +6,7 @@ import GObjectSupport
 /// Wraps `GtkListBox`. For Adwaita-styled lists, combine with
 /// `PreferencesGroup` or add the `"boxed-list"` CSS class.
 @MainActor
-public final class ListBox: Widget {
+public final class ListBox: Widget, Container {
     /// Creates a new list box.
     public init() {
         let ptr = gtk_list_box_new()!

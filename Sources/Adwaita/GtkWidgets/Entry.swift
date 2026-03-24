@@ -140,6 +140,6 @@ public final class Entry: Widget {
     /// Connects to the `changed` signal on the entry buffer.
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.onNotify(self, property: "text", handler: handler)
+        SignalHelper.onNotify(self, property: .text, handler: handler)
     }
 }

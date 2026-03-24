@@ -51,8 +51,4 @@ public final class StringList: GObjectRef, ListModelConvertible {
         Int(g_list_model_get_n_items(OpaquePointer(pointer)))
     }
 
-    /// The underlying GListModel pointer for use with ComboRow etc.
-    public var listModelPointer: OpaquePointer {
-        OpaquePointer(pointer)
-    }
 }

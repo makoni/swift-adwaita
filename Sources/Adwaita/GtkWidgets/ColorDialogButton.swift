@@ -48,6 +48,6 @@ public final class ColorDialogButton: Widget {
     /// Connects to the `notify::rgba` signal to observe color changes.
     @discardableResult
     public func onColorChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.onNotify(self, property: "rgba", handler: handler)
+        SignalHelper.onNotify(self, property: .rgba, handler: handler)
     }
 }

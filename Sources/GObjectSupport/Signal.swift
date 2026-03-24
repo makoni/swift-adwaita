@@ -429,11 +429,11 @@ public enum SignalHelper {
     @discardableResult
     public static func onNotify(
         _ instance: GObjectRef,
-        property: String,
+        property: PropertyName,
         handler: @escaping @MainActor () -> Void
     ) -> SignalConnection {
         connectRaw(
-            instance, signal: .notify(property),
+            instance, signal: .notify(property.name),
             trampoline: unsafeBitCast(
                 signalTrampolineNotify as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, UnsafeMutableRawPointer) -> Void,
                 to: GCallback.self

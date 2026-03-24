@@ -17,6 +17,12 @@ public class EntryRow: PreferencesRow {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates an `EntryRow` with a title.
+    public convenience init(title: String) {
+        self.init()
+        self.title = title
+    }
+
     /// The `activates-default` property.
     /// - Since: libadwaita 1.2
     public var activatesDefault: Bool {

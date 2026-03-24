@@ -44,10 +44,6 @@ public final class UriLauncher: GObjectRef {
     ///
     /// - Parameter parent: An optional parent widget for positioning dialogs.
     /// - Returns: `true` if the URI was launched successfully.
-    /// Launches the URI and returns whether it was successful.
-    ///
-    /// - Parameter parent: An optional parent widget for positioning dialogs.
-    /// - Returns: `true` if the URI was launched successfully.
     public func launch(parent: Widget? = nil) async -> Bool {
         await withCheckedContinuation { continuation in
             let box = Unmanaged.passRetained(UriAsyncBox(continuation)).toOpaque()

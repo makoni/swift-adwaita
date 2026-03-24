@@ -16,6 +16,12 @@ public class ComboRow: ActionRow {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a `ComboRow` with a title.
+    public convenience init(title: String) {
+        self.init()
+        self.title = title
+    }
+
     /// The `enable-search` property.
     /// - Since: libadwaita 1.4
     public var enableSearch: Bool {

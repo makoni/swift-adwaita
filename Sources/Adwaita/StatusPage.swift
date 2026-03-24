@@ -14,6 +14,21 @@ public final class StatusPage: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a status page with a title and description.
+    public convenience init(title: String, description: String) {
+        self.init()
+        self.title = title
+        self.description = description
+    }
+
+    /// Creates a status page with a title, description, and icon.
+    public convenience init(title: String, description: String, iconName: String) {
+        self.init()
+        self.title = title
+        self.description = description
+        self.iconName = iconName
+    }
+
     required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

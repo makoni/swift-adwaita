@@ -67,16 +67,16 @@ open class GObjectRef {
     /// - Returns: The binding, which can be used to unbind later.
     @discardableResult
     public func bind(
-        _ sourceProperty: String,
+        _ sourceProperty: PropertyName,
         to target: GObjectRef,
-        property targetProperty: String,
+        property targetProperty: PropertyName,
         flags: GBindingFlags = G_BINDING_SYNC_CREATE
     ) -> OpaquePointer {
         g_object_bind_property(
             pointer,
-            sourceProperty,
+            sourceProperty.name,
             target.pointer,
-            targetProperty,
+            targetProperty.name,
             flags
         )
     }

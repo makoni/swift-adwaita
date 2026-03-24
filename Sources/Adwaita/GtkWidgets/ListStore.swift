@@ -87,10 +87,4 @@ public final class ListStore: GObjectRef, ListModelConvertible {
         return GObjectRef(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    // MARK: - Pointers
-
-    /// The `GListModel` pointer, for use with selection models.
-    public var listModelPointer: OpaquePointer {
-        OpaquePointer(pointer)
-    }
 }

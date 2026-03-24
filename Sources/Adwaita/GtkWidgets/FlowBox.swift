@@ -7,7 +7,7 @@ import GObjectSupport
 /// the next row when space runs out. For Adwaita apps, consider
 /// `WrapBox` as an alternative.
 @MainActor
-public final class FlowBox: Widget {
+public final class FlowBox: Widget, Container {
     /// Creates a new flow box.
     public init() {
         let ptr = gtk_flow_box_new()!

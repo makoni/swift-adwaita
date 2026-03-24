@@ -16,4 +16,10 @@ public final class PasswordEntryRow: EntryRow {
         let ptr = adw_password_entry_row_new()!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
+
+    /// Creates a `PasswordEntryRow` with a title.
+    public convenience init(title: String) {
+        self.init()
+        self.title = title
+    }
 }

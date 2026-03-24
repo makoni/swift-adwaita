@@ -16,6 +16,19 @@ public class ExpanderRow: PreferencesRow {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates an `ExpanderRow` with a title.
+    public convenience init(title: String) {
+        self.init()
+        self.title = title
+    }
+
+    /// Creates an `ExpanderRow` with a title and subtitle.
+    public convenience init(title: String, subtitle: String) {
+        self.init()
+        self.title = title
+        self.subtitle = subtitle
+    }
+
     /// The `enable-expansion` property.
     public var enableExpansion: Bool {
         get { adw_expander_row_get_enable_expansion(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>) != 0 }

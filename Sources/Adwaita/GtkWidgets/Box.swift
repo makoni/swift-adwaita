@@ -5,7 +5,7 @@ import GObjectSupport
 ///
 /// Wraps `GtkBox`. The most common container for linear layouts.
 @MainActor
-public final class Box: Widget {
+public final class Box: Widget, Container {
     /// Creates a new box.
     ///
     /// - Parameters:
