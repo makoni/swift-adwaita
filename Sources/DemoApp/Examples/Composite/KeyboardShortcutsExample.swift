@@ -149,7 +149,7 @@ struct KeyboardShortcutsExample: DemoExample {
 
         // -- Key and modifier reference --
         let refGroup = PreferencesGroup()
-        refGroup.title = "Key & Modifier Reference"
+        refGroup.title = "Key &amp; Modifier Reference"
         refGroup.description = "Available Key enum values and KeyModifiers"
 
         let modRow = ActionRow()

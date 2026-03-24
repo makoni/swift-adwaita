@@ -58,18 +58,31 @@ public enum SignalHelper {
     // MARK: - No parameters
 
     /// Connects a signal that takes no parameters.
+    ///
+    /// Automatically detects `notify::` signals and uses the correct
+    /// trampoline signature (which includes a `GParamSpec` parameter).
     @discardableResult
     public static func connect(
         _ instance: GObjectRef,
         signal: String,
         handler: @escaping @MainActor () -> Void
     ) -> SignalConnection {
-        connectRaw(
-            instance, signal: signal,
-            trampoline: unsafeBitCast(
+        let trampoline: GCallback
+        if signal.hasPrefix("notify::") {
+            // notify signals pass (instance, GParamSpec*, userData)
+            trampoline = unsafeBitCast(
+                signalTrampolineNotify as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, UnsafeMutableRawPointer) -> Void,
+                to: GCallback.self
+            )
+        } else {
+            trampoline = unsafeBitCast(
                 signalTrampoline0 as @convention(c) (UnsafeMutableRawPointer, UnsafeMutableRawPointer) -> Void,
                 to: GCallback.self
-            ),
+            )
+        }
+        return connectRaw(
+            instance, signal: signal,
+            trampoline: trampoline,
             box: ClosureBox(handler)
         )
     }

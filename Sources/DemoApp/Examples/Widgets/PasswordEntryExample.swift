@@ -21,7 +21,7 @@ struct PasswordEntryExample: DemoExample {
         box.setMargins(24)
 
         let group = PreferencesGroup()
-        group.title = "Entry & Password Rows"
+        group.title = "Entry &amp; Password Rows"
         group.description = "Adwaita-styled text inputs for lists and forms"
 
         let entryRow = EntryRow()

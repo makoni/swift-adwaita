@@ -90,7 +90,7 @@ struct FilterSortExample: DemoExample {
         outerBox.setMargins(24)
 
         let group = PreferencesGroup()
-        group.title = "Filterable & Sortable List"
+        group.title = "Filterable &amp; Sortable List"
         group.description = "Type to filter, click to sort"
 
         // Search

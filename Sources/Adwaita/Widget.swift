@@ -510,4 +510,5 @@ open class Widget: GObjectRef {
         gtk_shortcut_controller_add_shortcut(controllerOpaque, shortcut)
         gtk_widget_add_controller(widgetPointer, controller)
     }
+
 }

@@ -50,7 +50,7 @@ struct SpringAnimationExample: DemoExample {
 
         let dampingRow = ActionRow()
         dampingRow.title = "Damping Ratio"
-        dampingRow.subtitle = "< 1 = bouncy, 1 = critical, > 1 = overdamped"
+        dampingRow.subtitle = "&lt; 1 = bouncy, 1 = critical, &gt; 1 = overdamped"
         dampingRow.addSuffix(dampingScale)
         group2.add(dampingRow)
 
