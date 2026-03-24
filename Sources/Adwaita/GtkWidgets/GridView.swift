@@ -105,8 +105,8 @@ public final class GridView: Widget {
     // MARK: - Scrolling
 
     /// Scrolls to the item at the given position.
-    public func scrollTo(_ position: Int, flags: GtkListScrollFlags = GTK_LIST_SCROLL_NONE) {
-        gtk_grid_view_scroll_to(opaquePointer, UInt32(position), flags, nil)
+    public func scrollTo(_ position: Int, flags: ListScrollFlags = .none) {
+        gtk_grid_view_scroll_to(opaquePointer, UInt32(position), GtkListScrollFlags(rawValue: flags.rawValue), nil)
     }
 
 }

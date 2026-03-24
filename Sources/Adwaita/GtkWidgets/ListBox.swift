@@ -184,4 +184,43 @@ public final class ListBox: Widget {
     public func invalidateFilter() {
         gtk_list_box_invalidate_filter(opaquePointer)
     }
+
+    /// Sets a header function for grouping rows.
+    ///
+    /// The closure receives the current row and the row before it (nil for
+    /// the first row). Call `row.setHeader(widget)` to add a header above
+    /// the row, or `row.setHeader(nil)` to remove it.
+    public func setHeaderFunc(_ update: @escaping @MainActor (ListBoxRow, ListBoxRow?) -> Void) {
+        let box = Unmanaged.passRetained(PublicClosureBox(update)).toOpaque()
+        gtk_list_box_set_header_func(
+            opaquePointer,
+            { row, before, userData in
+                guard let userData, let row else { return }
+                let box = Unmanaged<PublicClosureBox<@MainActor (ListBoxRow, ListBoxRow?) -> Void>>
+                    .fromOpaque(userData).takeUnretainedValue()
+                MainActor.assumeIsolated {
+                    let beforeRow: ListBoxRow? = before.map { ListBoxRow(borrowing: UnsafeMutableRawPointer($0)) }
+                    box.closure(
+                        ListBoxRow(borrowing: UnsafeMutableRawPointer(row)),
+                        beforeRow
+                    )
+                }
+            },
+            box,
+            { userData in
+                guard let userData else { return }
+                Unmanaged<AnyObject>.fromOpaque(userData).release()
+            }
+        )
+    }
+
+    /// Clears the header function.
+    public func clearHeaderFunc() {
+        gtk_list_box_set_header_func(opaquePointer, nil, nil, nil)
+    }
+
+    /// Re-evaluates the header function for all rows.
+    public func invalidateHeaders() {
+        gtk_list_box_invalidate_headers(opaquePointer)
+    }
 }

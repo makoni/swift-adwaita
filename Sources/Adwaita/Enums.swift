@@ -318,3 +318,20 @@ extension AdwAnimationState {
     /// Finished state.
     public static let finished = ADW_ANIMATION_FINISHED
 }
+
+/// Swift-friendly option set for `GtkListScrollFlags`.
+///
+/// Controls behavior when programmatically scrolling list widgets
+/// (`ListView`, `GridView`, `ColumnView`).
+public struct ListScrollFlags: OptionSet, Sendable {
+    public let rawValue: UInt32
+
+    public init(rawValue: UInt32) { self.rawValue = rawValue }
+
+    /// Don't do anything extra — just scroll.
+    public static let none = ListScrollFlags(rawValue: GTK_LIST_SCROLL_NONE.rawValue)
+    /// Focus the target item after scrolling.
+    public static let focus = ListScrollFlags(rawValue: GTK_LIST_SCROLL_FOCUS.rawValue)
+    /// Select the target item and deselect all others.
+    public static let select = ListScrollFlags(rawValue: GTK_LIST_SCROLL_SELECT.rawValue)
+}

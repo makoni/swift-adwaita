@@ -5074,4 +5074,163 @@ func ensureAdwInit() {
         #expect(item == nil)
     }
 
+    // MARK: - ListScrollFlags
+
+    @Test func listScrollFlagsNone() {
+        let flags: ListScrollFlags = .none
+        #expect(flags.rawValue == 0)
+    }
+
+    @Test func listScrollFlagsFocus() {
+        let flags: ListScrollFlags = .focus
+        #expect(flags.rawValue == 1)
+    }
+
+    @Test func listScrollFlagsSelect() {
+        let flags: ListScrollFlags = .select
+        #expect(flags.rawValue == 2)
+    }
+
+    @Test func listScrollFlagsCombined() {
+        let flags: ListScrollFlags = [.focus, .select]
+        #expect(flags.contains(.focus))
+        #expect(flags.contains(.select))
+        #expect(flags.rawValue == 3)
+    }
+
+    // MARK: - ComboRow protocol-based model
+
+    @Test @MainActor func comboRowSetModelProtocol() {
+        ensureAdwInit()
+        let combo = ComboRow()
+        let model = StringList(["X", "Y", "Z"])
+        combo.setModel(model)
+        combo.selected = 2
+        #expect(combo.selected == 2)
+    }
+
+    @Test @MainActor func comboRowClearModel() {
+        ensureAdwInit()
+        let combo = ComboRow()
+        let model = StringList(["A"])
+        combo.setModel(model)
+        combo.clearModel()
+        // No crash = success
+    }
+
+    @Test @MainActor func comboRowSelectedItem() {
+        ensureAdwInit()
+        let combo = ComboRow()
+        let model = StringList(["A", "B"])
+        combo.setModel(model)
+        combo.selected = 0
+        // selectedItem should now return a GObjectRef
+        let item = combo.selectedItem
+        #expect(item != nil)
+    }
+
+    // MARK: - Toast actionTarget with Variant
+
+    @Test @MainActor func toastActionTargetVariant() {
+        ensureAdwInit()
+        let toast = Toast(title: "Test")
+        // Initially nil
+        #expect(toast.actionTarget == nil)
+
+        // Set a string variant
+        let variant = Variant.string("hello")
+        toast.actionTarget = variant
+        let retrieved = toast.actionTarget
+        #expect(retrieved != nil)
+        #expect(retrieved?.stringValue == "hello")
+    }
+
+    @Test @MainActor func toastActionTargetClear() {
+        ensureAdwInit()
+        let toast = Toast(title: "Test")
+        toast.actionTarget = Variant.int32(42)
+        #expect(toast.actionTarget != nil)
+        toast.actionTarget = nil
+        #expect(toast.actionTarget == nil)
+    }
+
+    // MARK: - ListBox header func
+
+    @Test @MainActor func listBoxSetHeaderFunc() {
+        ensureAdwInit()
+        let listBox = ListBox()
+        let row1 = ListBoxRow()
+        row1.child = Label("A")
+        let row2 = ListBoxRow()
+        row2.child = Label("B")
+        listBox.append(row1)
+        listBox.append(row2)
+
+        var headerCalled = false
+        listBox.setHeaderFunc { row, before in
+            headerCalled = true
+            if before == nil {
+                row.header = Label("Header")
+            }
+        }
+        listBox.invalidateHeaders()
+        // No crash = success, header func was set
+    }
+
+    @Test @MainActor func listBoxClearHeaderFunc() {
+        ensureAdwInit()
+        let listBox = ListBox()
+        listBox.setHeaderFunc { _, _ in }
+        listBox.clearHeaderFunc()
+        // No crash = success
+    }
+
+    @Test @MainActor func listBoxInvalidateHeaders() {
+        ensureAdwInit()
+        let listBox = ListBox()
+        listBox.invalidateHeaders()
+        // No crash = success
+    }
+
+    // MARK: - ListBoxRow properties
+
+    @Test @MainActor func listBoxRowHeader() {
+        ensureAdwInit()
+        let row = ListBoxRow()
+        #expect(row.header == nil)
+        let header = Label("Section")
+        row.header = header
+        #expect(row.header != nil)
+        row.header = nil
+        #expect(row.header == nil)
+    }
+
+    @Test @MainActor func listBoxRowActivatable() {
+        ensureAdwInit()
+        let row = ListBoxRow()
+        row.activatable = false
+        #expect(row.activatable == false)
+        row.activatable = true
+        #expect(row.activatable == true)
+    }
+
+    @Test @MainActor func listBoxRowSelectable() {
+        ensureAdwInit()
+        let row = ListBoxRow()
+        row.selectable = false
+        #expect(row.selectable == false)
+        row.selectable = true
+        #expect(row.selectable == true)
+    }
+
+    @Test @MainActor func listBoxRowChanged() {
+        ensureAdwInit()
+        let listBox = ListBox()
+        let row = ListBoxRow()
+        row.child = Label("Test")
+        listBox.append(row)
+        row.changed()
+        // No crash = success
+    }
+
 }

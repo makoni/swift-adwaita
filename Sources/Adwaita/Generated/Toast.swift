@@ -22,10 +22,13 @@ public final class Toast: GObjectRef {
         set { adw_toast_set_action_name(opaquePointer, newValue) }
     }
 
-    /// The `action-target` property.
-    public var actionTarget: OpaquePointer? {
-        get { adw_toast_get_action_target_value(opaquePointer) }
-        set { adw_toast_set_action_target_value(opaquePointer, newValue) }
+    /// The action target value, used to activate the action with a parameter.
+    public var actionTarget: Variant? {
+        get {
+            guard let ptr = adw_toast_get_action_target_value(opaquePointer) else { return nil }
+            return Variant(borrowing: ptr)
+        }
+        set { adw_toast_set_action_target_value(opaquePointer, newValue?.pointer) }
     }
 
     /// The `button-label` property.

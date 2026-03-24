@@ -11,7 +11,7 @@ public class PreferencesRow: ListBoxRow {
     }
 
     /// Creates a new `PreferencesRow`.
-    public init() {
+    override public init() {
         let ptr = adw_preferences_row_new()!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }

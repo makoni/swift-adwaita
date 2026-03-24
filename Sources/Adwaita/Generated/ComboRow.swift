@@ -36,9 +36,10 @@ public class ComboRow: ActionRow {
         set { adw_combo_row_set_selected(castedPointer() as UnsafeMutablePointer<AdwComboRow>, UInt32(newValue)) }
     }
 
-    /// The `selected-item` property (read-only).
-    public var selectedItem: gpointer {
-        adw_combo_row_get_selected_item(castedPointer() as UnsafeMutablePointer<AdwComboRow>)
+    /// The currently selected item, or `nil` if nothing is selected.
+    public var selectedItem: GObjectRef? {
+        guard let ptr = adw_combo_row_get_selected_item(castedPointer() as UnsafeMutablePointer<AdwComboRow>) else { return nil }
+        return GObjectRef(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// The `use-subtitle` property.
@@ -47,14 +48,16 @@ public class ComboRow: ActionRow {
         set { adw_combo_row_set_use_subtitle(castedPointer() as UnsafeMutablePointer<AdwComboRow>, newValue ? 1 : 0) }
     }
 
-    /// The `model` property.
-    public var model: OpaquePointer? {
-        get { adw_combo_row_get_model(castedPointer() as UnsafeMutablePointer<AdwComboRow>) }
-        set { adw_combo_row_set_model(castedPointer() as UnsafeMutablePointer<AdwComboRow>, newValue) }
+    /// Sets the model for this combo row.
+    ///
+    /// Accepts any `ListModelConvertible` (e.g. `StringList`, `ListStore`,
+    /// `FilterListModel`, `SortListModel`).
+    public func setModel(_ model: any ListModelConvertible) {
+        adw_combo_row_set_model(castedPointer() as UnsafeMutablePointer<AdwComboRow>, model.listModelPointer)
     }
 
-    /// Sets a `StringList` as the model for this combo row.
-    public func setModel(_ stringList: StringList) {
-        adw_combo_row_set_model(castedPointer() as UnsafeMutablePointer<AdwComboRow>, stringList.listModelPointer)
+    /// Removes the model from this combo row.
+    public func clearModel() {
+        adw_combo_row_set_model(castedPointer() as UnsafeMutablePointer<AdwComboRow>, nil)
     }
 }

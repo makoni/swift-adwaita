@@ -135,12 +135,12 @@ public final class ColumnView: Widget {
     // MARK: - Scrolling
 
     /// Scrolls to the item at the given position.
-    public func scrollTo(_ position: Int, column: ColumnViewColumn? = nil, flags: GtkListScrollFlags = GTK_LIST_SCROLL_NONE) {
+    public func scrollTo(_ position: Int, column: ColumnViewColumn? = nil, flags: ListScrollFlags = .none) {
         gtk_column_view_scroll_to(
             opaquePointer,
             UInt32(position),
             column?.opaquePointer,
-            flags,
+            GtkListScrollFlags(rawValue: flags.rawValue),
             nil
         )
     }
