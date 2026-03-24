@@ -18,6 +18,12 @@ public final class ToggleButton: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Creates a toggle button with a label and toggled handler.
+    public convenience init(label: String, onToggled handler: @escaping @MainActor () -> Void) {
+        self.init(label: label)
+        self.onToggled(handler)
+    }
+
     required internal init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }

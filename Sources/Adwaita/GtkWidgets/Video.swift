@@ -54,9 +54,14 @@ public final class Video: Widget {
     ///
     /// Use the media stream for fine-grained playback control such as
     /// seeking, volume, and querying duration.
-    public var mediaStream: UnsafeMutablePointer<GtkMediaStream>? {
-        get { gtk_video_get_media_stream(opaquePointer) }
-        set { gtk_video_set_media_stream(opaquePointer, newValue) }
+    public var mediaStream: MediaStream? {
+        get {
+            guard let ptr = gtk_video_get_media_stream(opaquePointer) else { return nil }
+            return MediaStream(borrowing: UnsafeMutableRawPointer(ptr))
+        }
+        set {
+            gtk_video_set_media_stream(opaquePointer, newValue?.streamPointer)
+        }
     }
 
     // MARK: - Media Stream Convenience
@@ -65,67 +70,44 @@ public final class Video: Widget {
     ///
     /// Requires a media stream to be set (e.g., by setting a filename).
     public var isPlaying: Bool {
-        get {
-            guard let stream = mediaStream else { return false }
-            return gtk_media_stream_get_playing(stream) != 0
-        }
-        set {
-            guard let stream = mediaStream else { return }
-            gtk_media_stream_set_playing(stream, newValue ? 1 : 0)
-        }
+        get { mediaStream?.isPlaying ?? false }
+        set { mediaStream?.isPlaying = newValue }
     }
 
     /// Starts playback via the media stream.
     public func play() {
-        guard let stream = mediaStream else { return }
-        gtk_media_stream_play(stream)
+        mediaStream?.play()
     }
 
     /// Pauses playback via the media stream.
     public func pause() {
-        guard let stream = mediaStream else { return }
-        gtk_media_stream_pause(stream)
+        mediaStream?.pause()
     }
 
     /// Whether the media stream has reached the end of content.
     public var ended: Bool {
-        guard let stream = mediaStream else { return false }
-        return gtk_media_stream_get_ended(stream) != 0
+        mediaStream?.ended ?? false
     }
 
     /// The current playback position in microseconds.
     public var timestamp: Int {
-        guard let stream = mediaStream else { return 0 }
-        return gtk_media_stream_get_timestamp(stream)
+        mediaStream?.timestamp ?? 0
     }
 
     /// The total duration in microseconds, or 0 if unknown.
     public var duration: Int {
-        guard let stream = mediaStream else { return 0 }
-        return gtk_media_stream_get_duration(stream)
+        mediaStream?.duration ?? 0
     }
 
     /// Whether the media stream is muted.
     public var isMuted: Bool {
-        get {
-            guard let stream = mediaStream else { return false }
-            return gtk_media_stream_get_muted(stream) != 0
-        }
-        set {
-            guard let stream = mediaStream else { return }
-            gtk_media_stream_set_muted(stream, newValue ? 1 : 0)
-        }
+        get { mediaStream?.isMuted ?? false }
+        set { mediaStream?.isMuted = newValue }
     }
 
     /// The playback volume (0.0 to 1.0).
     public var volume: Double {
-        get {
-            guard let stream = mediaStream else { return 0.0 }
-            return gtk_media_stream_get_volume(stream)
-        }
-        set {
-            guard let stream = mediaStream else { return }
-            gtk_media_stream_set_volume(stream, newValue)
-        }
+        get { mediaStream?.volume ?? 0.0 }
+        set { mediaStream?.volume = newValue }
     }
 }

@@ -10,8 +10,8 @@ public final class CallbackAnimationTarget: AnimationTarget {
         super.init(raw: pointer)
     }
 
-    /// Creates a new `CallbackAnimationTarget`.
-    public init(callback: AdwAnimationTargetFunc, userData: gpointer, destroy: GDestroyNotify) {
+    /// Creates a new `CallbackAnimationTarget` from raw C callback components.
+    internal init(callback: AdwAnimationTargetFunc, userData: gpointer, destroy: GDestroyNotify) {
         let ptr = adw_callback_animation_target_new(callback, userData, destroy)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }

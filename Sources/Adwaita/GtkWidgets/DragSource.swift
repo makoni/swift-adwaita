@@ -58,9 +58,9 @@ public final class DragSource: GObjectRef {
         )
     }
 
-    /// Returns the active `GdkDrag` object during a drag operation, or `nil`.
-    public var drag: OpaquePointer? {
-        gtk_drag_source_get_drag(opaquePointer)
+    /// Whether a drag operation is currently active.
+    public var isDragging: Bool {
+        gtk_drag_source_get_drag(opaquePointer) != nil
     }
 
     /// Connects to the `drag-begin` signal.

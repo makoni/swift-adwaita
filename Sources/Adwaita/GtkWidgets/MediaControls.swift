@@ -7,8 +7,8 @@ import GObjectSupport
 @MainActor
 public final class MediaControls: Widget {
     /// Creates new media controls, optionally for a media stream.
-    public init(stream: UnsafeMutablePointer<GtkMediaStream>? = nil) {
-        let ptr = gtk_media_controls_new(stream)!
+    public init(stream: MediaStream? = nil) {
+        let ptr = gtk_media_controls_new(stream?.streamPointer)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
@@ -17,8 +17,11 @@ public final class MediaControls: Widget {
     }
 
     /// The media stream being controlled.
-    public var mediaStream: UnsafeMutablePointer<GtkMediaStream>? {
-        get { gtk_media_controls_get_media_stream(opaquePointer) }
-        set { gtk_media_controls_set_media_stream(opaquePointer, newValue) }
+    public var mediaStream: MediaStream? {
+        get {
+            guard let ptr = gtk_media_controls_get_media_stream(opaquePointer) else { return nil }
+            return MediaStream(borrowing: UnsafeMutableRawPointer(ptr))
+        }
+        set { gtk_media_controls_set_media_stream(opaquePointer, newValue?.streamPointer) }
     }
 }

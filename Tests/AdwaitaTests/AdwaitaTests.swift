@@ -1952,11 +1952,11 @@ func ensureAdwInit() {
         source.setIcon(texture, hotX: 0, hotY: 0)
     }
 
-    @Test @MainActor func dragSourceDragProperty() {
+    @Test @MainActor func dragSourceIsDraggingProperty() {
         ensureAdwInit()
         let source = DragSource()
-        // No drag is active, so drag should be nil
-        #expect(source.drag == nil)
+        // No drag is active
+        #expect(source.isDragging == false)
     }
 
     // MARK: - DropTarget
@@ -5231,6 +5231,110 @@ func ensureAdwInit() {
         listBox.append(row)
         row.changed()
         // No crash = success
+    }
+
+    // MARK: - MediaStream
+
+    @Test @MainActor func mediaStreamCreation() {
+        ensureAdwInit()
+        // Creating from a non-existent file should still create the object
+        let stream = MediaStream(filename: "/dev/null")
+        #expect(stream.isPlaying == false)
+        #expect(stream.ended == false)
+        #expect(stream.isMuted == false)
+    }
+
+    @Test @MainActor func mediaStreamVolume() {
+        ensureAdwInit()
+        let stream = MediaStream(filename: "/dev/null")
+        stream.volume = 0.5
+        #expect(stream.volume > 0.49 && stream.volume < 0.51)
+        stream.isMuted = true
+        #expect(stream.isMuted == true)
+    }
+
+    @Test @MainActor func mediaStreamLoop() {
+        ensureAdwInit()
+        let stream = MediaStream(filename: "/dev/null")
+        stream.loop = true
+        #expect(stream.loop == true)
+        stream.loop = false
+        #expect(stream.loop == false)
+    }
+
+    @Test @MainActor func mediaStreamInfo() {
+        ensureAdwInit()
+        let stream = MediaStream(filename: "/dev/null")
+        // Duration and timestamp default to 0 for an unprepared stream
+        #expect(stream.duration == 0)
+        #expect(stream.timestamp == 0)
+    }
+
+    // MARK: - Video with MediaStream
+
+    @Test @MainActor func videoMediaStreamType() {
+        ensureAdwInit()
+        let video = Video()
+        // Initially no media stream
+        #expect(video.mediaStream == nil)
+    }
+
+    @Test @MainActor func videoSetMediaStream() {
+        ensureAdwInit()
+        let video = Video()
+        let stream = MediaStream(filename: "/dev/null")
+        video.mediaStream = stream
+        #expect(video.mediaStream != nil)
+    }
+
+    // MARK: - MediaControls with MediaStream
+
+    @Test @MainActor func mediaControlsWithStream() {
+        ensureAdwInit()
+        let stream = MediaStream(filename: "/dev/null")
+        let controls = MediaControls(stream: stream)
+        #expect(controls.mediaStream != nil)
+    }
+
+    @Test @MainActor func mediaControlsSetStream() {
+        ensureAdwInit()
+        let controls = MediaControls()
+        #expect(controls.mediaStream == nil)
+        let stream = MediaStream(filename: "/dev/null")
+        controls.mediaStream = stream
+        #expect(controls.mediaStream != nil)
+    }
+
+    // MARK: - ToggleButton convenience init
+
+    @Test @MainActor func toggleButtonConvenienceInit() {
+        ensureAdwInit()
+        var toggled = false
+        let btn = ToggleButton(label: "Toggle", onToggled: {
+            toggled = true
+        })
+        #expect(btn.active == false)
+        // No crash = success, handler was set
+    }
+
+    // MARK: - DragSource isDragging
+
+    @Test @MainActor func dragSourceIsDragging() {
+        ensureAdwInit()
+        let drag = DragSource()
+        #expect(drag.isDragging == false)
+    }
+
+    // MARK: - CallbackAnimationTarget Swift init
+
+    @Test @MainActor func callbackAnimationTargetSwiftInit() {
+        ensureAdwInit()
+        var called = false
+        let target = CallbackAnimationTarget { value in
+            called = true
+        }
+        // The target is created with a Swift closure, not raw C pointers
+        #expect(target.pointer != UnsafeMutableRawPointer(bitPattern: 0))
     }
 
 }
