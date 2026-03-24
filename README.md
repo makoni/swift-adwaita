@@ -26,7 +26,7 @@ An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadw
 - **@Setting property wrapper** — type-safe GSettings binding
 - **Adaptive layout** — `Breakpoint.minWidth()`, `Breakpoint.maxWidth()` helpers
 - **Swift 6 concurrency** — full `@MainActor` isolation, `Sendable` types
-- **639 tests**, **76 demo examples**, **CI with GitHub Actions**
+- **649 tests**, **76 demo examples**, **CI with GitHub Actions**
 
 ## Requirements
 

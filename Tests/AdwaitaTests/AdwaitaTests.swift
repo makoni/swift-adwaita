@@ -6160,4 +6160,86 @@ func ensureAdwInit() {
         #expect(nb.tabPos == GTK_POS_LEFT)
     }
 
+    // MARK: - SpinButton Tests
+
+    @Test @MainActor func spinButtonCreation() {
+        ensureAdwInit()
+        let spin = SpinButton(min: 0, max: 10, step: 1)
+        #expect(spin.value == 0)
+    }
+
+    @Test @MainActor func spinButtonValue() {
+        ensureAdwInit()
+        let spin = SpinButton(min: 0, max: 100, step: 1)
+        spin.value = 42
+        #expect(spin.value == 42)
+        #expect(spin.intValue == 42)
+    }
+
+    @Test @MainActor func spinButtonProperties() {
+        ensureAdwInit()
+        let spin = SpinButton(min: 0, max: 100, step: 1)
+        spin.digits = 2
+        #expect(spin.digits == 2)
+        spin.numeric = true
+        #expect(spin.numeric == true)
+        spin.wrap = true
+        #expect(spin.wrap == true)
+        spin.snapToTicks = true
+        #expect(spin.snapToTicks == true)
+    }
+
+    @Test @MainActor func spinButtonOnValueChanged() {
+        ensureAdwInit()
+        let spin = SpinButton(min: 0, max: 100, step: 1)
+        let conn = spin.onValueChanged { }
+        #expect(conn is SignalConnection)
+    }
+
+    // MARK: - GestureClick Button Tests
+
+    @Test @MainActor func gestureClickButton() {
+        ensureAdwInit()
+        let gesture = GestureClick()
+        gesture.button = 3
+        #expect(gesture.button == 3)
+    }
+
+    // MARK: - Double/Right Click Tests
+
+    @Test @MainActor func widgetOnDoubleClick() {
+        ensureAdwInit()
+        let label = Label("Test")
+        let conn = label.onDoubleClick { }
+        #expect(conn is SignalConnection)
+    }
+
+    @Test @MainActor func widgetOnRightClick() {
+        ensureAdwInit()
+        let label = Label("Test")
+        let conn = label.onRightClick { x, y in _ = (x, y) }
+        #expect(conn is SignalConnection)
+    }
+
+    @Test @MainActor func widgetOnRightClickSimple() {
+        ensureAdwInit()
+        let label = Label("Test")
+        let conn = label.onRightClick { }
+        #expect(conn is SignalConnection)
+    }
+
+    // MARK: - Scale Fluent Tests
+
+    @Test @MainActor func scaleDrawValueFluent() {
+        ensureAdwInit()
+        let scale = Scale().drawValue()
+        #expect(scale.drawValue == true)
+    }
+
+    @Test @MainActor func scaleDigitsFluent() {
+        ensureAdwInit()
+        let scale = Scale().digits(2)
+        #expect(scale.digits == 2)
+    }
+
 }

@@ -33,4 +33,12 @@ public final class GestureClick: GObjectRef {
             handler(Int(nPress), x, y)
         }
     }
+
+    /// The mouse button this gesture responds to.
+    ///
+    /// 0 means any button, 1 = primary (left), 2 = middle, 3 = secondary (right).
+    public var button: UInt32 {
+        get { gtk_gesture_single_get_button(opaquePointer) }
+        set { gtk_gesture_single_set_button(opaquePointer, newValue) }
+    }
 }

@@ -109,4 +109,18 @@ public final class Scale: Widget {
     public func onValueChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .valueChanged, handler: handler)
     }
+
+    /// Sets whether to draw the value and returns self for chaining.
+    @discardableResult
+    public func drawValue(_ draw: Bool = true) -> Self {
+        self.drawValue = draw
+        return self
+    }
+
+    /// Sets the number of decimal places and returns self for chaining.
+    @discardableResult
+    public func digits(_ digits: Int) -> Self {
+        self.digits = digits
+        return self
+    }
 }
