@@ -5,19 +5,21 @@ An imperative Swift 6.2 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [liba
 ## Features
 
 - **Imperative API** — no declarative DSL; create and configure widgets directly
-- **141 widget wrappers** — 74 auto-generated Adwaita + 67 hand-written GTK widgets
-- **Type-safe signals** — 20+ signal signatures with `@MainActor` closures
+- **164 widget wrappers** — 74 auto-generated Adwaita + 90 hand-written GTK widgets
+- **Zero raw pointers in public API** — all `OpaquePointer`/`gpointer` hidden behind Swift types
+- **Type-safe signals** — 50+ signal signatures with `@MainActor` closures
+- **Async/await** — `FileDialog.open()`, `UriLauncher.launch()`, `Clipboard.readText()`
 - **Keyboard shortcuts** — enum-based `Key` + `KeyModifiers` API
 - **Property bindings** — `GObjectRef.bind()` for reactive connections
 - **Menus & actions** — `GMenuRef`, `SimpleAction`, `MenuButton`
 - **Drag & drop** — `DragSource`, `DropTarget`
-- **File dialogs** — async open/save/folder with `FileDialog`
-- **Clipboard** — copy/paste with `Clipboard`
 - **CSS support** — `CSSProvider` for custom stylesheets
 - **Animations** — `TimedAnimation`, `SpringAnimation` with callbacks
-- **Drawing** — `DrawingArea` with Cairo
+- **Drawing** — `DrawingArea` with `CairoContext` wrapper
+- **Text attributes** — `TextAttributes` for styling entry text (bold, italic, color)
+- **Media playback** — `MediaStream`, `Video`, `MediaControls`
 - **Swift 6.2 concurrency** — full `@MainActor` isolation, `Sendable` types
-- **396 tests**, **68 demo examples**
+- **555 tests**, **76 demo examples**
 
 ## Requirements
 
@@ -43,7 +45,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/nicegram/swift-adwaita.git", branch: "main"),
+    .package(url: "https://github.com/makoni/swift-adwaita.git", branch: "main"),
 ],
 targets: [
     .executableTarget(
@@ -102,10 +104,10 @@ Three-layer design:
 
 ```
 CAdwaita          System library (pkg-config: libadwaita-1)
-  |
-GObjectSupport    GObject lifecycle (ARC), signals, GValue
-  |
-Adwaita           Widget wrappers (74 generated + 67 hand-written)
+  │
+GObjectSupport    GObject lifecycle (ARC), signals, Variant, GValue
+  │
+Adwaita           Widget wrappers (74 generated + 90 hand-written)
 ```
 
 ### Key Types
@@ -117,6 +119,14 @@ Adwaita           Widget wrappers (74 generated + 67 hand-written)
 | `SignalConnection` | Handle for signal connections |
 | `Application` | App entry point (`AdwApplication`) |
 | `ApplicationWindow` | Main window |
+
+### Protocols
+
+| Protocol | Purpose | Conforming Types |
+|----------|---------|-----------------|
+| `ListModelConvertible` | Pass models to list views | `ListStore`, `StringList`, `FilterListModel`, `SortListModel`, `MapListModel`, `FlattenListModel`, `TreeListModel`, `SelectionFilterModel` |
+| `SelectionModelConvertible` | Pass selection to views | `SingleSelection`, `MultiSelection`, `NoSelection` |
+| `Swipeable` | Swipe gesture target | `Carousel`, `NavigationView`, `OverlaySplitView` |
 
 ### Widget Categories
 
@@ -130,44 +140,72 @@ Adwaita           Widget wrappers (74 generated + 67 hand-written)
 
 **Lists:** `ListBox`, `ActionRow`, `ExpanderRow`, `ComboRow`, `SwitchRow`, `ButtonRow`, `PreferencesGroup`
 
+**Virtualized Lists:** `ListView`, `GridView`, `ColumnView` + `ListStore`, `StringList`, `SignalListItemFactory`, `TreeListModel`, `FilterListModel`, `SortListModel`
+
 **Containers:** `ScrolledWindow`, `ToolbarView`, `HeaderBar`, `BottomSheet`, `Frame`, `Expander`, `Revealer`, `ActionBar`
 
 **Dialogs:** `AlertDialog`, `Dialog`, `AboutDialog`, `PreferencesDialog`, `FileDialog`
 
 **Menus:** `MenuButton`, `PopoverMenu`, `PopoverMenuBar`, `SplitButton`, `GMenuRef`, `SimpleAction`
 
-**Event Controllers:** `GestureClick`, `GestureDrag`, `GestureLongPress`, `EventControllerKey`, `EventControllerMotion`, `EventControllerScroll`, `EventControllerFocus`, `DragSource`, `DropTarget`, `ShortcutController`
+**Event Controllers:** `GestureClick`, `GestureDrag`, `GestureLongPress`, `GestureSwipe`, `EventControllerKey`, `EventControllerMotion`, `EventControllerScroll`, `EventControllerFocus`, `DragSource`, `DropTarget`, `ShortcutController`
 
 **Feedback:** `Toast`, `ToastOverlay`, `EmojiChooser`
 
-**Styling:** `CSSProvider`, `StyleManager`
+**Styling:** `CSSProvider`, `StyleManager`, `TextAttributes`
 
 **Animation:** `TimedAnimation`, `SpringAnimation`, `CallbackAnimationTarget`, `PropertyAnimationTarget`
 
+**Media:** `MediaStream`, `Video`, `MediaControls`
+
+**Drawing:** `DrawingArea`, `CairoContext`
+
+**System:** `Clipboard`, `Display`, `Monitor`, `UriLauncher`
+
 ## Examples
+
+### Async/Await
+
+```swift
+// File dialog
+let dialog = FileDialog()
+if let file = await dialog.open(parent: window) {
+    print("Selected: \(file.path)")
+}
+
+// URI launcher
+let launcher = UriLauncher(uri: "https://gnome.org")
+let success = await launcher.launch()
+
+// Clipboard
+let text = await clipboard.readText()
+```
+
+### Drawing
+
+```swift
+let da = DrawingArea()
+da.contentWidth = 200
+da.contentHeight = 200
+da.setDrawFunc { cr, width, height in
+    cr.setSourceRGB(0.2, 0.4, 0.8)
+    cr.roundedRectangle(x: 10, y: 10, width: 180, height: 180, radius: 20)
+    cr.fill()
+}
+```
 
 ### Keyboard Shortcuts
 
 ```swift
-// Enum-based API
 button.addKeyboardShortcut(key: .s, modifiers: .control) {
     print("Save!")
     return true
 }
 
-// Multiple modifiers
 widget.addKeyboardShortcut(key: .z, modifiers: [.control, .shift]) {
     print("Redo!")
     return true
 }
-
-// ShortcutController for grouped shortcuts
-let controller = ShortcutController()
-controller.addShortcut(key: .n, modifiers: .control) {
-    print("New!")
-    return true
-}
-widget.addController(controller)
 ```
 
 ### Menus & Actions
@@ -186,36 +224,41 @@ action.onActivate { print("Cut!") }
 window.addAction(action)
 ```
 
-### Property Binding
+### Text Attributes
 
 ```swift
-switch1.bind("active", to: switch2, property: "active",
-    flags: G_BINDING_SYNC_CREATE)
+let attrs = TextAttributes()
+attrs.addBold()
+attrs.addForegroundColor(red: 0.8, green: 0.2, blue: 0.2)
+entryRow.textAttributes = attrs
 ```
 
-### File Dialog
+### Virtualized Lists
 
 ```swift
-let dialog = FileDialog()
-dialog.title = "Open File"
-dialog.setFilters([
-    FileFilter(name: "Swift files", suffixes: ["swift"]),
-    FileFilter(name: "All files", patterns: ["*"]),
-])
-dialog.open(parent: window) { path in
-    if let path { print("Selected: \(path)") }
+var items = ["Apple", "Banana", "Cherry"]
+let store = ListStore()
+for _ in items { store.appendPlaceholder() }
+
+let factory = SignalListItemFactory()
+factory.onSetup { listItem in
+    listItem.child = Label("")
 }
+factory.onBind { listItem in
+    listItem.child?.cast(Label.self).text = items[listItem.position]
+}
+
+let selection = SingleSelection(model: store)
+let listView = ListView(model: selection, factory: factory)
 ```
 
 ### Drag & Drop
 
 ```swift
-// Drag source
 let drag = DragSource()
 drag.setTextContent("Hello!")
 sourceWidget.addController(drag)
 
-// Drop target
 let drop = DropTarget.forText()
 drop.onDrop { text in
     if let text { label.text = text }
@@ -237,34 +280,21 @@ CSSProvider.loadGlobal("""
 widget.addCSSClass("my-widget")
 ```
 
-### Signals
-
-```swift
-let button = Button(label: "Save")
-button.onClicked {
-    print("Saved!")
-}
-
-// Disconnect later
-let connection = button.onClicked { ... }
-connection.disconnect()
-```
-
 ## Demo App
 
-An interactive gallery with 68 examples showcasing every widget:
+An interactive gallery with 76 examples showcasing every widget:
 
 ```bash
 swift run DemoApp
 ```
 
-Features sidebar search, source code viewer, and windowed demos for navigation/window-level widgets.
+Features sidebar navigation with search, source code viewer, and windowed demos for navigation/window-level widgets.
 
 ## Building
 
 ```bash
 swift build       # Build library
-swift test        # Run 386 tests
+swift test        # Run 555 tests
 swift run DemoApp # Launch demo gallery
 ```
 

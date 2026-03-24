@@ -11,9 +11,9 @@ public final class SwipeTracker: GObjectRef {
         super.init(raw: pointer)
     }
 
-    /// Creates a new `SwipeTracker`.
-    public init(swipeable: OpaquePointer) {
-        let ptr = adw_swipe_tracker_new(swipeable)!
+    /// Creates a new `SwipeTracker` for the given swipeable widget.
+    public init(swipeable: any Swipeable) {
+        let ptr = adw_swipe_tracker_new(swipeable.swipeablePointer)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
@@ -55,9 +55,10 @@ public final class SwipeTracker: GObjectRef {
         set { adw_swipe_tracker_set_reversed(opaquePointer, newValue ? 1 : 0) }
     }
 
-    /// The `swipeable` property (read-only).
-    public var swipeable: OpaquePointer {
-        adw_swipe_tracker_get_swipeable(opaquePointer)
+    /// The swipeable widget this tracker is attached to.
+    public var swipeable: GObjectRef {
+        let ptr = adw_swipe_tracker_get_swipeable(opaquePointer)!
+        return GObjectRef(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
     /// The `upper-overshoot` property.

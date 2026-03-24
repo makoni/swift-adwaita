@@ -24,11 +24,14 @@ public class EntryRow: PreferencesRow {
         set { adw_entry_row_set_activates_default(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue ? 1 : 0) }
     }
 
-    /// The `attributes` property.
+    /// Text attributes for styling the entry text (bold, italic, color, etc.).
     /// - Since: libadwaita 1.2
-    public var attributes: OpaquePointer? {
-        get { adw_entry_row_get_attributes(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) }
-        set { adw_entry_row_set_attributes(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue) }
+    public var textAttributes: TextAttributes? {
+        get {
+            guard let ptr = adw_entry_row_get_attributes(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) else { return nil }
+            return TextAttributes(borrowing: ptr)
+        }
+        set { adw_entry_row_set_attributes(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue?.pointer) }
     }
 
     /// The `enable-emoji-completion` property.

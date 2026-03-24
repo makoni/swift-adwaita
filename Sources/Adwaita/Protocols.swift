@@ -25,3 +25,13 @@ public protocol SelectionModelConvertible: AnyObject {
     /// The underlying `GtkSelectionModel` pointer.
     var selectionModelPointer: OpaquePointer { get }
 }
+
+/// A widget that supports swipe gestures via ``SwipeTracker``.
+///
+/// Conform to this protocol to allow your widget to be used as
+/// the swipeable target for a ``SwipeTracker``.
+@MainActor
+public protocol Swipeable: AnyObject {
+    /// The underlying `AdwSwipeable` pointer.
+    var swipeablePointer: OpaquePointer { get }
+}

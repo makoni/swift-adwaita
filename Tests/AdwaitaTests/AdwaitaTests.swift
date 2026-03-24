@@ -5337,4 +5337,107 @@ func ensureAdwInit() {
         #expect(target.pointer != UnsafeMutableRawPointer(bitPattern: 0))
     }
 
+    // MARK: - TextAttributes
+
+    @Test @MainActor func textAttributesCreation() {
+        ensureAdwInit()
+        let attrs = TextAttributes()
+        attrs.addBold()
+        attrs.addItalic()
+        // No crash = success
+    }
+
+    @Test @MainActor func textAttributesForegroundColor() {
+        ensureAdwInit()
+        let attrs = TextAttributes()
+        attrs.addForegroundColor(red: 1.0, green: 0.0, blue: 0.0)
+        attrs.addUnderline(.single)
+        // No crash = success
+    }
+
+    @Test @MainActor func textAttributesFamily() {
+        ensureAdwInit()
+        let attrs = TextAttributes()
+        attrs.addFamily("monospace")
+        attrs.addSizePoints(14)
+        // No crash = success
+    }
+
+    @Test @MainActor func textAttributesStrikethrough() {
+        ensureAdwInit()
+        let attrs = TextAttributes()
+        attrs.addStrikethrough()
+        attrs.addStrikethroughColor(red: 0.5, green: 0.5, blue: 0.5)
+        // No crash = success
+    }
+
+    @Test @MainActor func textAttributesWeight() {
+        ensureAdwInit()
+        let attrs = TextAttributes()
+        attrs.addWeight(.semibold)
+        attrs.addLight()
+        // No crash = success
+    }
+
+    @Test @MainActor func entryRowTextAttributes() {
+        ensureAdwInit()
+        let row = EntryRow()
+        #expect(row.textAttributes == nil)
+        let attrs = TextAttributes()
+        attrs.addBold()
+        row.textAttributes = attrs
+        let retrieved = row.textAttributes
+        #expect(retrieved != nil)
+    }
+
+    // MARK: - Swipeable protocol
+
+    @Test @MainActor func carouselIsSwipeable() {
+        ensureAdwInit()
+        let carousel = Carousel()
+        let _: any Swipeable = carousel
+        // Carousel conforms to Swipeable
+    }
+
+    @Test @MainActor func navigationViewIsSwipeable() {
+        ensureAdwInit()
+        let nav = NavigationView()
+        let _: any Swipeable = nav
+        // NavigationView conforms to Swipeable
+    }
+
+    @Test @MainActor func overlaySplitViewIsSwipeable() {
+        ensureAdwInit()
+        let split = OverlaySplitView()
+        let _: any Swipeable = split
+        // OverlaySplitView conforms to Swipeable
+    }
+
+    @Test @MainActor func swipeTrackerWithSwipeable() {
+        ensureAdwInit()
+        let carousel = Carousel()
+        let tracker = SwipeTracker(swipeable: carousel)
+        #expect(tracker.enabled == true)
+        tracker.enabled = false
+        #expect(tracker.enabled == false)
+    }
+
+    // MARK: - Pango enum extensions
+
+    @Test func pangoWeightExtensions() {
+        #expect(PangoWeight.bold.rawValue == 700)
+        #expect(PangoWeight.normal.rawValue == 400)
+        #expect(PangoWeight.light.rawValue == 300)
+    }
+
+    @Test func pangoStyleExtensions() {
+        #expect(PangoStyle.normal.rawValue == 0)
+        #expect(PangoStyle.italic.rawValue == 2)
+    }
+
+    @Test func pangoUnderlineExtensions() {
+        #expect(PangoUnderline.none.rawValue == 0)
+        #expect(PangoUnderline.single.rawValue == 1)
+    }
+
 }

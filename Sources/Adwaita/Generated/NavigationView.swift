@@ -4,7 +4,10 @@ import GObjectSupport
 /// A page-based navigation container.
 /// - Since: libadwaita 1.4
 @MainActor
-public final class NavigationView: Widget {
+public final class NavigationView: Widget, Swipeable {
+
+    /// The underlying `AdwSwipeable` pointer.
+    public var swipeablePointer: OpaquePointer { opaquePointer }
 
     /// Internal raw-pointer initializer.
     required internal init(raw pointer: UnsafeMutableRawPointer) {

@@ -4,7 +4,10 @@ import GObjectSupport
 /// A widget presenting sidebar and content side by side or as an overlay.
 /// - Since: libadwaita 1.4
 @MainActor
-public final class OverlaySplitView: Widget {
+public final class OverlaySplitView: Widget, Swipeable {
+
+    /// The underlying `AdwSwipeable` pointer.
+    public var swipeablePointer: OpaquePointer { opaquePointer }
 
     /// Internal raw-pointer initializer.
     required internal init(raw pointer: UnsafeMutableRawPointer) {
