@@ -1,7 +1,7 @@
 /// Type-safe CSS class names for standard Adwaita/GNOME styles.
 ///
-/// Use these with ``Widget/addCSSClass(_:)-enum``,
-/// ``Widget/removeCSSClass(_:)-enum``, and ``Widget/hasCSSClass(_:)-enum``
+/// Use these with `Widget.addCSSClass(_:)`,
+/// `Widget.removeCSSClass(_:)`, and `Widget.hasCSSClass(_:)`
 /// instead of raw strings. For custom classes not listed here, use the
 /// string-based overloads.
 public enum CSSClass: String, Sendable, Equatable {

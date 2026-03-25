@@ -1,11 +1,11 @@
 import CAdwaita
 
-/// The app's gettext domain, set via ``setTextDomain(_:localeDir:)``.
+/// The app's gettext domain, set via ``setTextDomain(_:)``.
 nonisolated(unsafe) private var _textDomain: String?
 
 /// Looks up a translated string in the app's gettext domain.
 ///
-/// Set the domain first with ``setTextDomain(_:localeDir:)``, then
+/// Set the domain first with ``setTextDomain(_:)``, then
 /// use this function (or ``String/localized``) to look up translations.
 ///
 /// ```swift

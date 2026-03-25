@@ -88,7 +88,9 @@ public final class Settings: GObjectRef {
 
     /// Emitted when a setting changes.
     ///
-    /// - Parameter handler: Called when the specified key changes.
+    /// - Parameters:
+    ///   - key: The settings key to observe.
+    ///   - handler: Called when the specified key changes.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onChanged(key: String, handler: @escaping @MainActor () -> Void) -> SignalConnection {
