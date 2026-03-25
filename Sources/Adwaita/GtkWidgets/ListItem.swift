@@ -5,6 +5,19 @@ import GObjectSupport
 ///
 /// In `onSetup`, create widgets and set them as `child`.
 /// In `onBind`, read `position` to look up your data and configure the child.
+///
+/// ```swift
+/// let factory = SignalListItemFactory()
+/// factory.onSetup { listItem in
+///     listItem.child = Label("")
+/// }
+/// factory.onBind { listItem in
+///     let index = listItem.position
+///     if let label = listItem.child as? Label {
+///         label.text = myData[index]
+///     }
+/// }
+/// ```
 @MainActor
 public final class ListItem: GObjectRef {
 

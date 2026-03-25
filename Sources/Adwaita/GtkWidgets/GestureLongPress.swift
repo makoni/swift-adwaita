@@ -3,7 +3,20 @@ import GObjectSupport
 
 /// Recognizes long press gestures on a widget.
 ///
-/// Wraps `GtkGestureLongPress`.
+/// Wraps `GtkGestureLongPress`. Fires when the user presses and holds for
+/// a threshold duration. Attach to a widget with `addController()`.
+///
+/// ```swift
+/// let longPress = GestureLongPress()
+/// longPress.delayFactor = 1.0  // default trigger delay
+/// longPress.onPressed { x, y in
+///     print("Long press detected at (\(x), \(y))")
+/// }
+/// longPress.onCancelled {
+///     print("Long press cancelled")
+/// }
+/// myWidget.addController(longPress)
+/// ```
 @MainActor
 public final class GestureLongPress: GObjectRef {
     /// Creates a new long press gesture recognizer.

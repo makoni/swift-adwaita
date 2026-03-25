@@ -1,6 +1,14 @@
 import CAdwaita
 
 /// Represents a connected signal that can be disconnected later.
+///
+/// ```swift
+/// let conn = SignalHelper.connect(button, signal: .clicked) {
+///     print("Button was clicked")
+/// }
+/// // Later, disconnect:
+/// conn.disconnect()
+/// ```
 public final class SignalConnection: @unchecked Sendable {
     private let handlerID: gulong
     private weak var source: GObjectRef?
@@ -25,6 +33,28 @@ final class ClosureBox<T>: @unchecked Sendable {
 }
 
 /// Helpers for connecting GObject signals to Swift closures.
+///
+/// Provides type-safe overloads for the most common signal parameter
+/// signatures. Each method boxes the Swift closure, connects it to
+/// the GObject signal system, and returns a ``SignalConnection`` for
+/// later disconnection.
+///
+/// ```swift
+/// // No-parameter signal
+/// SignalHelper.connect(button, signal: .clicked) {
+///     print("Clicked!")
+/// }
+///
+/// // Signal with a String parameter
+/// SignalHelper.connectString(entry, signal: .changed) { text in
+///     print("Text is now: \(text)")
+/// }
+///
+/// // Observe property changes
+/// SignalHelper.onNotify(spinRow, property: .value) {
+///     print("Value changed")
+/// }
+/// ```
 @MainActor
 public enum SignalHelper {
 
@@ -440,242 +470,5 @@ public enum SignalHelper {
             ),
             box: ClosureBox(handler)
         )
-    }
-}
-
-// MARK: - C-compatible trampoline functions
-
-/// Trampoline for `notify::property` signals: (GObject*, GParamSpec*, gpointer).
-/// Ignores the GParamSpec parameter and calls a void handler.
-private func signalTrampolineNotify(
-    _ instance: UnsafeMutableRawPointer,
-    _ pspec: OpaquePointer,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor () -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    MainActor.assumeIsolated {
-        box.closure()
-    }
-}
-
-private func signalTrampoline0(
-    _ instance: UnsafeMutableRawPointer,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor () -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    MainActor.assumeIsolated {
-        box.closure()
-    }
-}
-
-private func signalTrampolineString(
-    _ instance: UnsafeMutableRawPointer,
-    _ value: UnsafePointer<CChar>,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (String) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    let string = String(cString: value)
-    MainActor.assumeIsolated {
-        box.closure(string)
-    }
-}
-
-private func signalTrampolineUInt(
-    _ instance: UnsafeMutableRawPointer,
-    _ value: UInt32,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (UInt32) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    MainActor.assumeIsolated {
-        box.closure(value)
-    }
-}
-
-private func signalTrampolineInt(
-    _ instance: UnsafeMutableRawPointer,
-    _ value: Int32,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (Int32) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    MainActor.assumeIsolated {
-        box.closure(value)
-    }
-}
-
-private func signalTrampolineDouble(
-    _ instance: UnsafeMutableRawPointer,
-    _ value: Double,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (Double) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    MainActor.assumeIsolated {
-        box.closure(value)
-    }
-}
-
-private func signalTrampolineBool(
-    _ instance: UnsafeMutableRawPointer,
-    _ value: gboolean,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (Bool) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    MainActor.assumeIsolated {
-        box.closure(value != 0)
-    }
-}
-
-private func signalTrampolinePointer(
-    _ instance: UnsafeMutableRawPointer,
-    _ value: OpaquePointer,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    nonisolated(unsafe) let captured = value
-    MainActor.assumeIsolated {
-        box.closure(captured)
-    }
-}
-
-private func signalTrampolineDoubleDouble(
-    _ instance: UnsafeMutableRawPointer,
-    _ value1: Double,
-    _ value2: Double,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (Double, Double) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    MainActor.assumeIsolated {
-        box.closure(value1, value2)
-    }
-}
-
-private func signalTrampolineUIntUInt(
-    _ instance: UnsafeMutableRawPointer,
-    _ value1: UInt32,
-    _ value2: UInt32,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (UInt32, UInt32) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    MainActor.assumeIsolated {
-        box.closure(value1, value2)
-    }
-}
-
-private func signalTrampolinePointerInt(
-    _ instance: UnsafeMutableRawPointer,
-    _ ptr: OpaquePointer,
-    _ value: Int32,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer, Int32) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    nonisolated(unsafe) let capturedPtr = ptr
-    MainActor.assumeIsolated {
-        box.closure(capturedPtr, value)
-    }
-}
-
-private func signalTrampolinePointerGValueBool(
-    _ instance: UnsafeMutableRawPointer,
-    _ ptr: OpaquePointer,
-    _ gvalue: UnsafePointer<GValue>,
-    _ userData: UnsafeMutableRawPointer
-) -> gboolean {
-    let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer, UnsafePointer<GValue>) -> Bool>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    nonisolated(unsafe) let capturedPtr = ptr
-    nonisolated(unsafe) let capturedGV = gvalue
-    return MainActor.assumeIsolated {
-        box.closure(capturedPtr, capturedGV) ? 1 : 0
-    }
-}
-
-private func signalTrampolinePointerGValueDragAction(
-    _ instance: UnsafeMutableRawPointer,
-    _ ptr: OpaquePointer,
-    _ gvalue: UnsafePointer<GValue>,
-    _ userData: UnsafeMutableRawPointer
-) -> GdkDragAction {
-    let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    nonisolated(unsafe) let capturedPtr = ptr
-    nonisolated(unsafe) let capturedGV = gvalue
-    return MainActor.assumeIsolated {
-        box.closure(capturedPtr, capturedGV)
-    }
-}
-
-private func signalTrampolineIntDoubleDouble(
-    _ instance: UnsafeMutableRawPointer,
-    _ value1: Int32,
-    _ value2: Double,
-    _ value3: Double,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (Int32, Double, Double) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    MainActor.assumeIsolated {
-        box.closure(value1, value2, value3)
-    }
-}
-
-private func signalTrampolineUIntUIntUIntBool(
-    _ instance: UnsafeMutableRawPointer,
-    _ value1: UInt32,
-    _ value2: UInt32,
-    _ value3: UInt32,
-    _ userData: UnsafeMutableRawPointer
-) -> gboolean {
-    let box = Unmanaged<ClosureBox<@MainActor (UInt32, UInt32, UInt32) -> Bool>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    return MainActor.assumeIsolated {
-        box.closure(value1, value2, value3) ? 1 : 0
-    }
-}
-
-private func signalTrampolineUIntUIntUInt(
-    _ instance: UnsafeMutableRawPointer,
-    _ value1: UInt32,
-    _ value2: UInt32,
-    _ value3: UInt32,
-    _ userData: UnsafeMutableRawPointer
-) {
-    let box = Unmanaged<ClosureBox<@MainActor (UInt32, UInt32, UInt32) -> Void>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    MainActor.assumeIsolated {
-        box.closure(value1, value2, value3)
-    }
-}
-
-private func signalTrampolineReturnBool(
-    _ instance: UnsafeMutableRawPointer,
-    _ userData: UnsafeMutableRawPointer
-) -> gboolean {
-    let box = Unmanaged<ClosureBox<@MainActor () -> Bool>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    return MainActor.assumeIsolated {
-        box.closure() ? 1 : 0
-    }
-}
-
-private func signalTrampolineDoubleDoubleBool(
-    _ instance: UnsafeMutableRawPointer,
-    _ value1: Double,
-    _ value2: Double,
-    _ userData: UnsafeMutableRawPointer
-) -> gboolean {
-    let box = Unmanaged<ClosureBox<@MainActor (Double, Double) -> Bool>>.fromOpaque(userData)
-        .takeUnretainedValue()
-    return MainActor.assumeIsolated {
-        box.closure(value1, value2) ? 1 : 0
     }
 }

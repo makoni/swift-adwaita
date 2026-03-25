@@ -1,7 +1,33 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// A widget for switching between different layouts.
+/// A container that switches between multiple layout arrangements of the same children.
+///
+/// Wraps `AdwMultiLayoutView`. Holds one or more ``Layout`` objects, each
+/// defining a different widget tree that references named ``LayoutSlot``
+/// placeholders. Assigning a layout (by object or by name) causes the
+/// view to rearrange its children accordingly -- useful for adapting
+/// between wide and narrow screen sizes.
+///
+/// ```swift
+/// let sidebarSlot = LayoutSlot(id: "sidebar")
+/// let contentSlot = LayoutSlot(id: "content")
+///
+/// let wideBox = Box()
+/// wideBox.orientation = GTK_ORIENTATION_HORIZONTAL
+/// wideBox.append(sidebarSlot)
+/// wideBox.append(contentSlot)
+///
+/// let wideLayout = Layout(content: wideBox)
+/// wideLayout.name = "wide"
+///
+/// let multiView = MultiLayoutView()
+/// multiView.addLayout(wideLayout)
+/// multiView.setChild("sidebar", child: sidebarWidget)
+/// multiView.setChild("content", child: contentWidget)
+/// multiView.layoutName = "wide"
+/// ```
+///
 /// - Since: libadwaita 1.6
 @MainActor
 public final class MultiLayoutView: Widget {
@@ -17,14 +43,16 @@ public final class MultiLayoutView: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    /// The `layout` property.
+    /// The currently active layout that determines how children are arranged.
     /// - Since: libadwaita 1.6
     public var layout: Layout? {
         get { (adw_multi_layout_view_get_layout(opaquePointer)).map { Layout(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_multi_layout_view_set_layout(opaquePointer, newValue?.opaquePointer) }
     }
 
-    /// The `layout-name` property.
+    /// The name of the currently active layout, or `nil` if none is set.
+    ///
+    /// Setting this switches to the layout with the matching name.
     /// - Since: libadwaita 1.6
     public var layoutName: String? {
         get { (adw_multi_layout_view_get_layout_name(opaquePointer)).map { String(cString: $0) } }
@@ -37,7 +65,10 @@ public final class MultiLayoutView: Widget {
         adw_multi_layout_view_add_layout(opaquePointer, layout.opaquePointer)
     }
 
-    /// Calls `adw_multi_layout_view_get_child`.
+    /// Returns the child widget assigned to the given slot identifier.
+    ///
+    /// - Parameter id: The identifier of the ``LayoutSlot`` to look up.
+    /// - Returns: The widget assigned to that slot, or `nil` if none is set.
     @discardableResult
     public func getChild(_ id: String) -> Widget? {
         return (adw_multi_layout_view_get_child(opaquePointer, id)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
@@ -54,7 +85,10 @@ public final class MultiLayoutView: Widget {
         adw_multi_layout_view_remove_layout(opaquePointer, layout.opaquePointer)
     }
 
-    /// Calls `adw_multi_layout_view_set_child`.
+    /// Assigns a widget to the layout slot with the given identifier.
+    ///
+    /// - Parameter id: The identifier of the ``LayoutSlot`` to populate.
+    /// - Parameter child: The widget to place in that slot.
     public func setChild(_ id: String, child: Widget) {
         adw_multi_layout_view_set_child(opaquePointer, id, child.widgetPointer)
     }

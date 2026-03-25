@@ -2,7 +2,27 @@
 import CAdwaita
 import GObjectSupport
 
-/// Minimal wrapper for GtkWindow.
+/// A wrapper around `GtkWindow` providing basic window management.
+///
+/// Wraps `GtkWindow`. This is the base class for all top-level windows.
+/// It exposes sizing, modality, fullscreen/maximize control, and the
+/// close-request signal. For Adwaita-styled windows use the ``Window``
+/// subclass instead, which adds breakpoint and dialog support.
+///
+/// ```swift
+/// let window = Window()       // prefer AdwWindow via the Window subclass
+/// window.title = "Example"
+/// window.defaultWidth = 640
+/// window.defaultHeight = 480
+/// window.resizable = true
+///
+/// window.onCloseRequest {
+///     print("Window closing")
+///     return false  // return true to prevent closing
+/// }
+///
+/// window.present()
+/// ```
 @MainActor
 public class GtkWindow: Widget {
 

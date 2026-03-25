@@ -1,9 +1,25 @@
 import CAdwaita
 import GObjectSupport
 
-/// A widget for displaying video.
+/// A widget for displaying and playing video files.
 ///
-/// Wraps `GtkVideo`. Can play video files with optional controls.
+/// Wraps `GtkVideo`. Supports autoplay, looping, and media stream
+/// controls for volume, seeking, and playback state.
+///
+/// ```swift
+/// let video = Video(filename: "/path/to/clip.mp4")
+/// video.autoplay = true
+/// video.loop = true
+///
+/// // Control playback
+/// video.play()
+/// video.volume = 0.8
+/// print("Duration: \(video.duration) microseconds")
+///
+/// // Or start with an empty video and set the file later
+/// let player = Video()
+/// player.setFilename("/path/to/another.webm")
+/// ```
 @MainActor
 public final class Video: Widget {
     /// Creates a new empty video widget.

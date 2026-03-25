@@ -3,7 +3,24 @@ import GObjectSupport
 
 /// A check button widget with an optional label.
 ///
-/// Wraps `GtkCheckButton`. Can also be used as a radio button by grouping.
+/// Wraps `GtkCheckButton`. Can also be used as a radio button by grouping
+/// multiple check buttons together with ``setGroup(_:)``.
+///
+/// ```swift
+/// // Simple checkbox
+/// let agree = CheckButton(label: "I agree to the terms")
+/// agree.onToggled {
+///     print("Checked: \(agree.active)")
+/// }
+///
+/// // Radio button group
+/// let small = CheckButton(label: "Small")
+/// let medium = CheckButton(label: "Medium")
+/// let large = CheckButton(label: "Large")
+/// medium.setGroup(small)
+/// large.setGroup(small)
+/// medium.active = true
+/// ```
 @MainActor
 public final class CheckButton: Widget {
     /// Creates a new check button.

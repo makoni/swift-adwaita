@@ -3,7 +3,16 @@ import GObjectSupport
 
 /// A decorative frame around a child widget with an optional label.
 ///
-/// Wraps `GtkFrame`.
+/// Wraps `GtkFrame`. Draws a visible border around the child and
+/// optionally displays a label in the frame's header.
+///
+/// ```swift
+/// let frame = Frame(label: "Settings")
+/// let content = Box(orientation: .vertical, spacing: 6)
+/// content.append(Label("Option A"))
+/// content.append(Label("Option B"))
+/// frame.child = content
+/// ```
 @MainActor
 public final class Frame: Widget {
     /// Creates a new frame with an optional label.

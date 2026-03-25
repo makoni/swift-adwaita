@@ -5,6 +5,16 @@ import GObjectSupport
 ///
 /// Wraps `GtkEmojiChooser`. A popover that lets users pick emoji.
 /// Typically attached to a `MenuButton`.
+///
+/// ```swift
+/// let chooser = EmojiChooser()
+/// chooser.onEmojiPicked { emoji in
+///     print("User picked: \(emoji)")
+/// }
+///
+/// let menuButton = MenuButton()
+/// menuButton.popover = chooser
+/// ```
 @MainActor
 public final class EmojiChooser: Widget {
     /// Creates a new emoji chooser.

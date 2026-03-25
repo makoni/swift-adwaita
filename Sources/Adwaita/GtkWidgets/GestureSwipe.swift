@@ -4,7 +4,19 @@ import GObjectSupport
 /// Recognizes swipe gestures on a widget.
 ///
 /// Wraps `GtkGestureSwipe`. Reports the velocity of the swipe
-/// when the gesture is recognized.
+/// when the gesture is recognized. Attach to a widget with `addController()`.
+///
+/// ```swift
+/// let swipe = GestureSwipe()
+/// swipe.onSwipe { velocityX, velocityY in
+///     if velocityX > 500 {
+///         print("Fast swipe to the right")
+///     } else if velocityX < -500 {
+///         print("Fast swipe to the left")
+///     }
+/// }
+/// myWidget.addController(swipe)
+/// ```
 @MainActor
 public final class GestureSwipe: GObjectRef {
     /// Creates a new swipe gesture recognizer.

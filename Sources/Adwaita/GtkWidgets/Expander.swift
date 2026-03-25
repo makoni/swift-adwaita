@@ -3,7 +3,19 @@ import GObjectSupport
 
 /// A container that can hide its child with a clickable expander arrow.
 ///
-/// Wraps `GtkExpander`.
+/// Wraps `GtkExpander`. Displays a label with a disclosure triangle that
+/// the user clicks to show or hide the child content.
+///
+/// ```swift
+/// let details = Label("Here are the extended details...")
+/// let expander = Expander(label: "Show Details")
+/// expander.child = details
+/// expander.expanded = false
+///
+/// expander.onExpanded {
+///     print("Expander is now \(expander.expanded ? "open" : "closed")")
+/// }
+/// ```
 @MainActor
 public final class Expander: Widget {
     /// Creates a new expander with the given label.

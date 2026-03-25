@@ -3,7 +3,23 @@ import GObjectSupport
 
 /// A button that retains its pressed/active state.
 ///
-/// Wraps `GtkToggleButton`.
+/// Wraps `GtkToggleButton`. Can be grouped with other toggle buttons using
+/// ``setGroup(_:)`` to create mutually exclusive button bars.
+///
+/// ```swift
+/// let bold = ToggleButton(label: "Bold")
+/// bold.onToggled {
+///     print("Bold is \(bold.active ? "on" : "off")")
+/// }
+///
+/// // Mutually exclusive group (toolbar-style)
+/// let alignLeft = ToggleButton(label: "Left")
+/// let alignCenter = ToggleButton(label: "Center")
+/// let alignRight = ToggleButton(label: "Right")
+/// alignCenter.setGroup(alignLeft)
+/// alignRight.setGroup(alignLeft)
+/// alignLeft.active = true
+/// ```
 @MainActor
 public final class ToggleButton: Widget {
     /// Creates a new toggle button.

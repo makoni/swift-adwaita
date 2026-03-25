@@ -1,7 +1,38 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// A combined button and dropdown widget.
+/// A button split into a main action and a dropdown menu.
+///
+/// Wraps `AdwSplitButton`. The primary area triggers the main action, while
+/// the arrow area opens a dropdown menu or popover with additional options.
+/// Common in toolbars for actions like "Save" with a "Save As..." dropdown.
+///
+/// ```swift
+/// let splitButton = SplitButton()
+/// splitButton.label = "Open"
+/// splitButton.iconName = "document-open-symbolic"
+///
+/// // Attach a menu model for the dropdown
+/// splitButton.setMenuModel(menuModel)
+///
+/// splitButton.onClicked {
+///     print("Primary action triggered")
+/// }
+///
+/// headerBar.packStart(splitButton)
+/// ```
+///
+/// - Key properties:
+///   - ``label``: The text label on the primary button.
+///   - ``iconName``: The icon displayed on the primary button.
+///   - ``direction``: The arrow direction for the dropdown indicator.
+///   - ``dropdownTooltip``: Tooltip text for the dropdown arrow (since libadwaita 1.2).
+///   - ``child``: A custom child widget replacing the default label/icon.
+/// - Key methods:
+///   - ``setMenuModel(_:)``: Sets the `GMenuModel` for the dropdown.
+///   - ``setPopover(_:)``: Sets a custom popover for the dropdown.
+///   - ``onClicked(_:)``: Connects a handler for the primary button click.
+///   - ``onActivate(_:)``: Connects a handler for keyboard activation.
 @MainActor
 public final class SplitButton: Widget {
 
@@ -16,45 +47,45 @@ public final class SplitButton: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    /// The `can-shrink` property.
+    /// Whether the button can be smaller than its natural size, ellipsizing its label if needed.
     /// - Since: libadwaita 1.4
     public var canShrink: Bool {
         get { adw_split_button_get_can_shrink(opaquePointer) != 0 }
         set { adw_split_button_set_can_shrink(opaquePointer, newValue ? 1 : 0) }
     }
 
-    /// The `child` property.
+    /// A custom child widget displayed in the primary button area, replacing the default label or icon.
     public var child: Widget? {
         get { (adw_split_button_get_child(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_split_button_set_child(opaquePointer, newValue?.widgetPointer) }
     }
 
-    /// The `direction` property.
+    /// The arrow direction of the dropdown indicator (e.g., down, up, left, right).
     public var direction: GtkArrowType {
         get { adw_split_button_get_direction(opaquePointer) }
         set { adw_split_button_set_direction(opaquePointer, newValue) }
     }
 
-    /// The `dropdown-tooltip` property.
+    /// The tooltip text displayed when hovering over the dropdown arrow area.
     /// - Since: libadwaita 1.2
     public var dropdownTooltip: String {
         get { String(cString: adw_split_button_get_dropdown_tooltip(opaquePointer)) }
         set { adw_split_button_set_dropdown_tooltip(opaquePointer, newValue) }
     }
 
-    /// The `icon-name` property.
+    /// The name of the icon displayed on the primary button area.
     public var iconName: String? {
         get { (adw_split_button_get_icon_name(opaquePointer)).map { String(cString: $0) } }
         set { adw_split_button_set_icon_name(opaquePointer, newValue) }
     }
 
-    /// The `label` property.
+    /// The text label displayed on the primary button area.
     public var label: String? {
         get { (adw_split_button_get_label(opaquePointer)).map { String(cString: $0) } }
         set { adw_split_button_set_label(opaquePointer, newValue) }
     }
 
-    /// The `use-underline` property.
+    /// Whether an underscore in the label indicates a mnemonic accelerator.
     public var useUnderline: Bool {
         get { adw_split_button_get_use_underline(opaquePointer) != 0 }
         set { adw_split_button_set_use_underline(opaquePointer, newValue ? 1 : 0) }
@@ -74,23 +105,29 @@ public final class SplitButton: Widget {
         }
     }
 
-    /// Calls `adw_split_button_popdown`.
+    /// Dismisses the dropdown menu or popover.
     public func popdown() {
         adw_split_button_popdown(opaquePointer)
     }
 
-    /// Calls `adw_split_button_popup`.
+    /// Opens the dropdown menu or popover programmatically.
     public func popup() {
         adw_split_button_popup(opaquePointer)
     }
 
-    /// Connects to the `activate` signal.
+    /// Emitted when the button is activated via keyboard (e.g., pressing Enter or Space).
+    ///
+    /// - Parameter handler: A closure invoked when the button is keyboard-activated.
+    /// - Returns: A signal connection that can be used to disconnect the handler.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .activate, handler: handler)
     }
 
-    /// Connects to the `clicked` signal.
+    /// Emitted when the primary button area is clicked.
+    ///
+    /// - Parameter handler: A closure invoked when the primary button is clicked.
+    /// - Returns: A signal connection that can be used to disconnect the handler.
     @discardableResult
     public func onClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .clicked, handler: handler)

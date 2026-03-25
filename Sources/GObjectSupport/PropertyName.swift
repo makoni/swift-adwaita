@@ -1,6 +1,21 @@
 /// Type-safe GObject property names for `bind()`, `addSetter()`, and `onNotify()`.
 ///
 /// Use `.custom(String)` for properties not covered by the predefined cases.
+///
+/// ```swift
+/// // Use predefined property names
+/// sourceObject.bind(.active, to: targetObject, property: .sensitive)
+///
+/// // Observe when a property changes
+/// SignalHelper.onNotify(label, property: .label) {
+///     print("Label text changed")
+/// }
+///
+/// // Use a custom property name
+/// SignalHelper.onNotify(widget, property: .custom("my-property")) {
+///     print("Custom property changed")
+/// }
+/// ```
 public enum PropertyName: Sendable, Equatable {
 
     // MARK: - Common widget properties

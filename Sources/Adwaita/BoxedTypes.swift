@@ -6,6 +6,16 @@ import CAdwaita
 ///
 /// `SpringParams` wraps the `AdwSpringParams` boxed type, which uses
 /// reference counting (`adw_spring_params_ref` / `adw_spring_params_unref`).
+///
+/// ```swift
+/// let params = SpringParams(dampingRatio: 0.8, mass: 1.0, stiffness: 500.0)
+/// let animation = SpringAnimation(
+///     widget: button,
+///     from: 0, to: 1,
+///     springParams: params
+/// )
+/// animation.play()
+/// ```
 @MainActor
 public final class SpringParams {
     /// The underlying pointer.
@@ -63,6 +73,21 @@ public final class SpringParams {
 ///
 /// `BreakpointCondition` wraps the `AdwBreakpointCondition` boxed type,
 /// which uses copy/free semantics.
+///
+/// ```swift
+/// // Trigger when window width is at most 500px
+/// let narrow = BreakpointCondition.length(
+///     type: ADW_BREAKPOINT_CONDITION_MAX_WIDTH,
+///     value: 500,
+///     unit: .px
+/// )
+///
+/// // Combine conditions with AND / OR
+/// let combined = BreakpointCondition.and(narrow, tallCondition)
+///
+/// // Or parse from a string
+/// let parsed = BreakpointCondition(parse: "max-width: 400sp")
+/// ```
 @MainActor
 public final class BreakpointCondition {
     /// The underlying pointer.

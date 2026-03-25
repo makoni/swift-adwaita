@@ -3,7 +3,24 @@ import GObjectSupport
 
 /// Handles scroll events.
 ///
-/// Wraps `GtkEventControllerScroll`.
+/// Wraps `GtkEventControllerScroll`. Reports scroll deltas on one or both
+/// axes. Use flags to select vertical, horizontal, or both axes, and whether
+/// to use discrete or kinetic scrolling. Attach with `addController()`.
+///
+/// ```swift
+/// let scroll = EventControllerScroll(flags: GTK_EVENT_CONTROLLER_SCROLL_VERTICAL)
+/// scroll.onScroll { dx, dy in
+///     print("Scrolled vertically by \(dy)")
+///     return true  // stop propagation
+/// }
+/// scroll.onScrollBegin {
+///     print("Scroll gesture started")
+/// }
+/// scroll.onScrollEnd {
+///     print("Scroll gesture ended")
+/// }
+/// myWidget.addController(scroll)
+/// ```
 @MainActor
 public final class EventControllerScroll: GObjectRef {
     /// Creates a scroll event controller with the given flags.

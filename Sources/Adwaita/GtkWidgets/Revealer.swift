@@ -1,9 +1,25 @@
 import CAdwaita
 import GObjectSupport
 
-/// A container that animates showing/hiding its child.
+/// A container that animates showing and hiding its child widget.
 ///
-/// Wraps `GtkRevealer`.
+/// Wraps `GtkRevealer`. The reveal animation type and duration are
+/// configurable. Use ``revealChild`` to trigger the transition.
+///
+/// ```swift
+/// let label = Label("Now you see me!")
+/// let revealer = Revealer()
+/// revealer.child = label
+/// revealer.transitionType = GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN
+/// revealer.transitionDuration = 300
+///
+/// // Toggle visibility with animation
+/// revealer.revealChild = true
+///
+/// revealer.onChildRevealed {
+///     print("Animation finished, visible: \(revealer.childRevealed)")
+/// }
+/// ```
 @MainActor
 public final class Revealer: Widget {
     /// Creates a new revealer.

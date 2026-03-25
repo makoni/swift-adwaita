@@ -4,6 +4,16 @@ import GObjectSupport
 /// A filter for selecting a subset of files.
 ///
 /// Wraps `GtkFileFilter`. Used with `FileDialog` to restrict which files are shown.
+///
+/// ```swift
+/// let imageFilter = FileFilter(name: "Images", mimeTypes: ["image/png", "image/jpeg"])
+/// let swiftFilter = FileFilter(name: "Swift files", suffixes: ["swift"])
+/// let allFilter   = FileFilter(name: "All files", patterns: ["*"])
+///
+/// // Use with a FileDialog
+/// let dialog = FileDialog()
+/// dialog.filters = [imageFilter, swiftFilter, allFilter]
+/// ```
 @MainActor
 public final class FileFilter: GObjectRef {
     /// Creates a new empty file filter.

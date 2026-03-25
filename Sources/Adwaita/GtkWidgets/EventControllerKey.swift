@@ -3,7 +3,24 @@ import GObjectSupport
 
 /// Handles keyboard input events.
 ///
-/// Wraps `GtkEventControllerKey`.
+/// Wraps `GtkEventControllerKey`. Provides key-press and key-release
+/// signals with key codes and modifier state. Attach to a widget with
+/// `addController()`.
+///
+/// ```swift
+/// let keyController = EventControllerKey()
+/// keyController.onKeyPressed { keyval, keycode, modifiers in
+///     if keyval == GDK_KEY_Return {
+///         print("Enter pressed")
+///         return true  // stop propagation
+///     }
+///     return false
+/// }
+/// keyController.onKeyReleased { keyval, keycode, modifiers in
+///     print("Key released: \(keyval)")
+/// }
+/// entry.addController(keyController)
+/// ```
 @MainActor
 public final class EventControllerKey: GObjectRef {
     /// Creates a new keyboard event controller.

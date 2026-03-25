@@ -1,10 +1,29 @@
 import CAdwaita
 import GObjectSupport
 
-/// An Adwaita application window.
+/// The main window for an Adwaita application.
 ///
 /// Wraps `AdwApplicationWindow`, which provides adaptive layout features
-/// on top of `GtkApplicationWindow`.
+/// (breakpoints, split views) on top of `GtkApplicationWindow`.
+///
+/// A typical window uses a ``ToolbarView`` with a ``HeaderBar`` as the
+/// top bar and your content below:
+///
+/// ```swift
+/// let window = ApplicationWindow(application: app)
+/// window.title = "My App"
+/// window.defaultWidth = 800
+/// window.defaultHeight = 600
+///
+/// let toolbar = ToolbarView()
+/// toolbar.addTopBar(HeaderBar())
+/// toolbar.setContent(myContentWidget)
+/// window.setContent(toolbar)
+/// window.present()
+/// ```
+///
+/// Supports fullscreen, maximize, minimize, close, modal mode,
+/// and the ``onCloseRequest(_:)`` signal to intercept window closing.
 @MainActor
 public final class ApplicationWindow: Widget {
     /// Creates a new application window.

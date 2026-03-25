@@ -3,7 +3,22 @@ import GObjectSupport
 
 /// Tracks pointer motion events.
 ///
-/// Wraps `GtkEventControllerMotion`.
+/// Wraps `GtkEventControllerMotion`. Reports cursor position as it moves
+/// over a widget, plus enter/leave signals. Attach with `addController()`.
+///
+/// ```swift
+/// let motion = EventControllerMotion()
+/// motion.onEnter { x, y in
+///     print("Pointer entered at (\(x), \(y))")
+/// }
+/// motion.onMotion { x, y in
+///     print("Pointer at (\(x), \(y))")
+/// }
+/// motion.onLeave {
+///     print("Pointer left the widget")
+/// }
+/// drawingArea.addController(motion)
+/// ```
 @MainActor
 public final class EventControllerMotion: GObjectRef {
     /// Creates a new motion event controller.

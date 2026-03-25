@@ -26,7 +26,7 @@ An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadw
 - **@Setting property wrapper** — type-safe GSettings binding
 - **Adaptive layout** — `Breakpoint.minWidth()`, `Breakpoint.maxWidth()` helpers
 - **Swift 6 concurrency** — full `@MainActor` isolation, `Sendable` types
-- **649 tests**, **76 demo examples**, **CI with GitHub Actions**
+- **670 tests**, **76 demo examples**, **CI with GitHub Actions**
 
 ## Requirements
 
@@ -349,7 +349,7 @@ Features sidebar navigation with search, source code viewer, and windowed demos 
 
 ```bash
 swift build       # Build library
-swift test        # Run 604 tests
+swift test        # Run 670 tests
 swift run DemoApp # Launch demo gallery
 ```
 

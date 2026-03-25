@@ -21,7 +21,7 @@ public final class Breakpoint: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    /// The `condition` property.
+    /// The size or layout condition that determines when this breakpoint is applied.
     /// - Since: libadwaita 1.4
     public var condition: BreakpointCondition? {
         // getter is transfer-none: we must copy

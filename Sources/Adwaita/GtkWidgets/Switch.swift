@@ -4,6 +4,13 @@ import GObjectSupport
 /// A toggle switch widget.
 ///
 /// Wraps `GtkSwitch`. For Adwaita-styled switches in lists, prefer `SwitchRow`.
+///
+/// ```swift
+/// let toggle = Switch(active: false)
+/// toggle.onActiveChanged {
+///     print("Switch is now: \(toggle.active ? "ON" : "OFF")")
+/// }
+/// ```
 @MainActor
 public final class Switch: Widget {
     /// Creates a new switch.

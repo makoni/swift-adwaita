@@ -1,7 +1,27 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// An object representing an individual shortcut in [class@ShortcutsSection].
+/// A single keyboard shortcut entry inside a ``ShortcutsSection``.
+///
+/// Wraps `AdwShortcutsItem`. Describes one shortcut with a human-readable
+/// title, an accelerator string, and optional subtitle and text direction.
+/// Can also be created from a named action instead of a raw accelerator.
+///
+/// ```swift
+/// let item = ShortcutsItem(title: "Save", accelerator: "<Control>s")
+/// item.subtitle = "Save the current document"
+///
+/// // Or create from a named action:
+/// let actionItem = ShortcutsItem.newFromAction(
+///     title: "Quit",
+///     actionName: "app.quit"
+/// )
+///
+/// let section = ShortcutsSection(title: "General")
+/// section.add(item)
+/// section.add(actionItem)
+/// ```
+///
 /// - Since: libadwaita 1.8
 @MainActor
 public final class ShortcutsItem: GObjectRef {
@@ -23,35 +43,35 @@ public final class ShortcutsItem: GObjectRef {
         return ShortcutsItem(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    /// The `accelerator` property.
+    /// The keyboard accelerator string for this shortcut (e.g. "<Control>s").
     /// - Since: libadwaita 1.8
     public var accelerator: String {
         get { String(cString: adw_shortcuts_item_get_accelerator(opaquePointer)) }
         set { adw_shortcuts_item_set_accelerator(opaquePointer, newValue) }
     }
 
-    /// The `action-name` property.
+    /// The name of the action this shortcut triggers (e.g. "app.quit").
     /// - Since: libadwaita 1.8
     public var actionName: String {
         get { String(cString: adw_shortcuts_item_get_action_name(opaquePointer)) }
         set { adw_shortcuts_item_set_action_name(opaquePointer, newValue) }
     }
 
-    /// The `direction` property.
+    /// The text direction used when displaying this shortcut.
     /// - Since: libadwaita 1.8
     public var direction: GtkTextDirection {
         get { adw_shortcuts_item_get_direction(opaquePointer) }
         set { adw_shortcuts_item_set_direction(opaquePointer, newValue) }
     }
 
-    /// The `subtitle` property.
+    /// A secondary description shown below the title.
     /// - Since: libadwaita 1.8
     public var subtitle: String {
         get { String(cString: adw_shortcuts_item_get_subtitle(opaquePointer)) }
         set { adw_shortcuts_item_set_subtitle(opaquePointer, newValue) }
     }
 
-    /// The `title` property.
+    /// The human-readable title describing this shortcut.
     /// - Since: libadwaita 1.8
     public var title: String {
         get { String(cString: adw_shortcuts_item_get_title(opaquePointer)) }

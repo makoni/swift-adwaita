@@ -3,7 +3,15 @@ import GObjectSupport
 
 /// A container that positions children at start, center, and end.
 ///
-/// Wraps `GtkCenterBox`.
+/// Wraps `GtkCenterBox`. The center widget is kept centered between the
+/// start and end widgets as space allows.
+///
+/// ```swift
+/// let centerBox = CenterBox()
+/// centerBox.startWidget = Button(iconName: "go-previous-symbolic")
+/// centerBox.centerWidget = Label("Page Title")
+/// centerBox.endWidget = Button(iconName: "open-menu-symbolic")
+/// ```
 @MainActor
 public final class CenterBox: Widget {
     /// Creates a new center box.

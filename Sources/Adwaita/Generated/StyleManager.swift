@@ -1,51 +1,83 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// a `GdkDisplay`
+/// Manages the application color scheme and high-contrast preferences.
+///
+/// Wraps `AdwStyleManager`. Provides access to the system's preferred color
+/// scheme, accent color, and high-contrast settings. Use the shared
+/// ``default`` instance to read or override these values at the application
+/// level.
+///
+/// ```swift
+/// let style = StyleManager.default
+///
+/// // Force dark mode
+/// style.forceDark()
+///
+/// // Or follow the system preference
+/// style.resetColorScheme()
+///
+/// // React to theme changes
+/// style.onDarkChanged {
+///     print("Dark mode is now: \(style.dark)")
+/// }
+/// ```
+///
+/// - Key properties:
+///   - ``colorScheme``: The requested color scheme (force dark, prefer light, etc.).
+///   - ``dark``: Whether the application is currently using a dark theme (read-only).
+///   - ``highContrast``: Whether high-contrast mode is active (read-only).
+///   - ``accentColor``: The system accent color (read-only, since libadwaita 1.6).
+///   - ``systemSupportsColorSchemes``: Whether the OS supports color scheme preferences (read-only).
+/// - Key methods:
+///   - ``forceDark()``, ``forceLight()``: Override the color scheme.
+///   - ``preferDark()``, ``preferLight()``: Prefer a scheme but follow the system when possible.
+///   - ``resetColorScheme()``: Follow the system color scheme.
+///   - ``onDarkChanged(_:)``: Observe dark/light theme transitions.
 @MainActor
 public final class StyleManager: GObjectRef {
 
-    /// The `accent-color` property (read-only).
+    /// The system accent color chosen by the user in desktop settings (read-only).
     /// - Since: libadwaita 1.6
     public var accentColor: AdwAccentColor {
         adw_style_manager_get_accent_color(opaquePointer)
     }
 
-    /// The `color-scheme` property.
+    /// The requested color scheme for the application (e.g. force dark, prefer light, or follow system).
     public var colorScheme: AdwColorScheme {
         get { adw_style_manager_get_color_scheme(opaquePointer) }
         set { adw_style_manager_set_color_scheme(opaquePointer, newValue) }
     }
 
-    /// The `dark` property (read-only).
+    /// Whether the application is currently using a dark theme (read-only).
     public var dark: Bool {
         adw_style_manager_get_dark(opaquePointer) != 0
     }
 
-    /// The `document-font-name` property (read-only).
+    /// The system default document font name, e.g. `"Sans 11"` (read-only).
     /// - Since: libadwaita 1.7
     public var documentFontName: String {
         String(cString: adw_style_manager_get_document_font_name(opaquePointer))
     }
 
-    /// The `high-contrast` property (read-only).
+    /// Whether the system high-contrast mode is active (read-only).
     public var highContrast: Bool {
         adw_style_manager_get_high_contrast(opaquePointer) != 0
     }
 
-    /// The `monospace-font-name` property (read-only).
+    /// The system default monospace font name, e.g. `"Monospace 11"` (read-only).
     /// - Since: libadwaita 1.7
     public var monospaceFontName: String {
         String(cString: adw_style_manager_get_monospace_font_name(opaquePointer))
     }
 
-    /// The `system-supports-accent-colors` property (read-only).
+    /// Whether the operating system supports user-configurable accent colors (read-only).
     /// - Since: libadwaita 1.6
     public var systemSupportsAccentColors: Bool {
         adw_style_manager_get_system_supports_accent_colors(opaquePointer) != 0
     }
 
-    /// The `system-supports-color-schemes` property (read-only).
+    /// Whether the operating system supports color scheme preferences such as dark mode (read-only).
     public var systemSupportsColorSchemes: Bool {
         adw_style_manager_get_system_supports_color_schemes(opaquePointer) != 0
     }

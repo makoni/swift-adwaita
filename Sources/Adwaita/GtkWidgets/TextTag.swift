@@ -1,9 +1,26 @@
 import CAdwaita
 import GObjectSupport
 
-/// A tag that can be applied to text in a `TextBuffer` for styling.
+/// A tag that can be applied to text in a ``TextBuffer`` for styling.
 ///
-/// Wraps `GtkTextTag`. Properties are set via GObject property system.
+/// Wraps `GtkTextTag`. Set properties such as ``foreground``, ``weight``,
+/// and ``family`` to define a reusable style, then apply it to ranges of
+/// text with ``TextBuffer/applyTag(_:startOffset:endOffset:)``.
+///
+/// ```swift
+/// let buffer = TextBuffer()
+/// buffer.text = "Important note"
+///
+/// // Create tags manually
+/// let heading = TextTag(name: "heading")
+/// heading.weight = 700
+/// heading.sizePoints = 18
+/// heading.foreground = "#3584e4"
+///
+/// // Or use convenience presets
+/// let mono = TextTag.monospace()
+/// let red = TextTag.colored("red")
+/// ```
 @MainActor
 public final class TextTag: GObjectRef {
     /// Creates a new text tag with an optional name.

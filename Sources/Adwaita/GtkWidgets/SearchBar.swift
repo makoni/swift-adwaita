@@ -5,6 +5,20 @@ import GObjectSupport
 ///
 /// Wraps `GtkSearchBar`. Provides a reveal animation and connects
 /// to a `SearchEntry` for keyboard-driven search activation.
+///
+/// ```swift
+/// let searchEntry = SearchEntry()
+/// let searchBar = SearchBar()
+/// searchBar.child = searchEntry
+/// searchBar.connectEntry(searchEntry)
+/// searchBar.showCloseButton = true
+///
+/// // Toggle search mode
+/// searchBar.searchModeEnabled = true
+///
+/// // Capture key events from the main window
+/// searchBar.setKeyCaptureWidget(window)
+/// ```
 @MainActor
 public final class SearchBar: Widget {
     /// Creates a new search bar.

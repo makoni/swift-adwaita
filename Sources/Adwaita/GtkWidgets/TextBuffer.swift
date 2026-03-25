@@ -4,7 +4,23 @@ import GObjectSupport
 /// A text buffer for use with `TextView`.
 ///
 /// Wraps `GtkTextBuffer`. Provides rich text editing capabilities
-/// including insertion, deletion, marks, and tags.
+/// including insertion, deletion, marks, and tags. Supports undo/redo
+/// and styled text via ``TextTag``.
+///
+/// ```swift
+/// let buffer = TextBuffer()
+/// buffer.text = "Hello, world!"
+/// buffer.enableUndo = true
+///
+/// // Apply styling with tags
+/// let boldTag = buffer.createTag(name: "bold")
+/// boldTag.weight = 700
+/// buffer.applyTag(boldTag, startOffset: 0, endOffset: 5)
+///
+/// buffer.onChanged {
+///     print("Buffer now has \(buffer.charCount) characters")
+/// }
+/// ```
 @MainActor
 public final class TextBuffer: GObjectRef {
     /// Creates a new empty text buffer.

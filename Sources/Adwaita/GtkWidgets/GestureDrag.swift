@@ -3,7 +3,22 @@ import GObjectSupport
 
 /// Recognizes drag gestures on a widget.
 ///
-/// Wraps `GtkGestureDrag`.
+/// Wraps `GtkGestureDrag`. Reports the start point and ongoing offset as
+/// the user drags the pointer. Attach to a widget with `addController()`.
+///
+/// ```swift
+/// let drag = GestureDrag()
+/// drag.onDragBegin { startX, startY in
+///     print("Drag started at (\(startX), \(startY))")
+/// }
+/// drag.onDragUpdate { offsetX, offsetY in
+///     print("Dragged by (\(offsetX), \(offsetY))")
+/// }
+/// drag.onDragEnd { offsetX, offsetY in
+///     print("Drag ended, total offset: (\(offsetX), \(offsetY))")
+/// }
+/// canvas.addController(drag)
+/// ```
 @MainActor
 public final class GestureDrag: GObjectRef {
     /// Creates a new drag gesture recognizer.

@@ -3,7 +3,25 @@ import GObjectSupport
 
 /// A representation of an adjustable bounded value.
 ///
-/// Wraps `GtkAdjustment`. Used for scrollbars, scales, spin buttons, etc.
+/// Wraps `GtkAdjustment`. Used for scrollbars, scales, spin buttons, and any
+/// widget that needs a numeric value within configurable bounds and increments.
+///
+/// ```swift
+/// let adjustment = Adjustment(
+///     value: 50,
+///     lower: 0,
+///     upper: 100,
+///     stepIncrement: 1,
+///     pageIncrement: 10,
+///     pageSize: 0
+/// )
+///
+/// adjustment.onValueChanged {
+///     print("Value changed to \(adjustment.value)")
+/// }
+///
+/// adjustment.value = 75
+/// ```
 @MainActor
 public final class Adjustment: GObjectRef {
     /// Creates a new adjustment.

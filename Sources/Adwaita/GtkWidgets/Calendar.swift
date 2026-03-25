@@ -3,7 +3,21 @@ import GObjectSupport
 
 /// A calendar widget for selecting dates.
 ///
-/// Wraps `GtkCalendar`.
+/// Wraps `GtkCalendar`. Displays a monthly calendar and lets the user
+/// select a day. Individual days can be marked for visual emphasis.
+///
+/// ```swift
+/// let calendar = Calendar()
+/// calendar.showWeekNumbers = true
+///
+/// // Mark important dates
+/// calendar.markDay(15)
+/// calendar.markDay(25)
+///
+/// calendar.onDaySelected {
+///     print("Selected: \(calendar.year)-\(calendar.month)-\(calendar.day)")
+/// }
+/// ```
 @MainActor
 public final class Calendar: Widget {
     /// Creates a new calendar widget showing today's date.

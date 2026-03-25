@@ -2,7 +2,32 @@
 import CAdwaita
 import GObjectSupport
 
-/// A row in a `ListBox`.
+/// A single row inside a `ListBox`.
+///
+/// Wraps `GtkListBoxRow`. The base row widget for `ListBox`. Each row holds
+/// a child widget and can be made activatable, selectable, or given a custom
+/// header. Subclassed by ``PreferencesRow`` and its descendants for richer
+/// list-based UIs.
+///
+/// ```swift
+/// let row = ListBoxRow()
+///
+/// let label = Label(str: "Item 1")
+/// row.child = label
+/// row.activatable = true
+/// row.selectable = true
+///
+/// listBox.append(row)
+/// ```
+///
+/// - Key properties:
+///   - ``child``: The child widget displayed inside the row.
+///   - ``activatable``: Whether the row can be activated by the user.
+///   - ``selectable``: Whether the row can be selected.
+///   - ``index``: The position of this row in its parent list box (read-only).
+///   - ``header``: A header widget displayed above the row.
+/// - Key methods:
+///   - ``changed()``: Marks the row as changed to trigger filter/sort re-evaluation.
 @MainActor
 public class ListBoxRow: Widget {
     /// Creates a new list box row.

@@ -1,7 +1,21 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// A [class@Gtk.ListBoxRow] used to represent two states.
+/// A list box row with a built-in switch for toggling boolean settings.
+///
+/// Wraps `AdwSwitchRow`. A convenience subclass of `ActionRow` that embeds a
+/// toggle switch, commonly used in GNOME preferences for on/off options.
+///
+/// ```swift
+/// let darkMode = SwitchRow(title: "Dark Mode", active: true)
+/// darkMode.subtitle = "Use dark color scheme"
+///
+/// darkMode.onNotify(property: .active) {
+///     print("Dark mode is now: \(darkMode.active)")
+/// }
+///
+/// group.add(darkMode)
+/// ```
 /// - Since: libadwaita 1.4
 @MainActor
 public final class SwitchRow: ActionRow {
@@ -11,7 +25,7 @@ public final class SwitchRow: ActionRow {
         super.init(raw: pointer)
     }
 
-    /// Creates a new `SwitchRow`.
+    /// Creates a new `SwitchRow` with the switch off.
     override public init() {
         let ptr = adw_switch_row_new()!
         super.init(raw: UnsafeMutableRawPointer(ptr))
@@ -30,7 +44,7 @@ public final class SwitchRow: ActionRow {
         self.active = active
     }
 
-    /// The `active` property.
+    /// Whether the switch is on (`true`) or off (`false`).
     /// - Since: libadwaita 1.4
     public var active: Bool {
         get { adw_switch_row_get_active(opaquePointer) != 0 }

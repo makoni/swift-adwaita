@@ -4,6 +4,17 @@ import GObjectSupport
 /// A horizontal bar for presenting contextual actions.
 ///
 /// Wraps `GtkActionBar`. Useful for bottom toolbars with start/end/center widgets.
+///
+/// ```swift
+/// let actionBar = ActionBar()
+/// actionBar.packStart(Button(label: "Undo"))
+/// actionBar.packEnd(Button(label: "Apply"))
+/// actionBar.centerWidget = Label("3 items selected")
+///
+/// let vbox = Box(orientation: .vertical)
+/// vbox.append(contentArea)
+/// vbox.append(actionBar)
+/// ```
 @MainActor
 public final class ActionBar: Widget {
     /// Creates a new action bar.

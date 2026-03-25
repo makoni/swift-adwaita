@@ -3,7 +3,17 @@ import GObjectSupport
 
 /// A widget showing playback controls for a media stream.
 ///
-/// Wraps `GtkMediaControls`.
+/// Wraps `GtkMediaControls`. Displays play/pause, seek bar, and
+/// timestamp for a ``MediaStream``.
+///
+/// ```swift
+/// let stream = MediaStream(filename: "video.mp4")
+/// let controls = MediaControls(stream: stream)
+///
+/// let vbox = Box(orientation: .vertical)
+/// vbox.append(videoPicture)
+/// vbox.append(controls)
+/// ```
 @MainActor
 public final class MediaControls: Widget {
     /// Creates new media controls, optionally for a media stream.

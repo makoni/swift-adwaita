@@ -3,7 +3,38 @@ import GObjectSupport
 
 /// A single-line text input widget.
 ///
-/// Wraps `GtkEntry`. For Adwaita-styled text entries, prefer `EntryRow`.
+/// `Entry` provides a text field where the user can type a single line
+/// of text. It supports placeholder text, password masking, icons, and
+/// input validation hints for on-screen keyboards.
+///
+/// For Adwaita-styled text entries inside lists, prefer ``EntryRow``.
+///
+/// Wraps [GtkEntry](https://docs.gtk.org/gtk4/class.Entry.html).
+///
+/// ## Examples
+///
+/// A text field with placeholder text:
+/// ```swift
+/// let nameField = Entry(placeholder: "Enter your name")
+/// nameField.onActivate {
+///     print("Submitted: \(nameField.text)")
+/// }
+/// ```
+///
+/// A password field:
+/// ```swift
+/// let passwordField = Entry(placeholder: "Password")
+/// passwordField.visibility = false
+/// passwordField.inputPurpose = GTK_INPUT_PURPOSE_PASSWORD
+/// ```
+///
+/// An entry with a search icon and change handler:
+/// ```swift
+/// let search = Entry(placeholder: "Search...") {
+///     print("Text changed")
+/// }
+/// search.setIcon(position: GTK_ENTRY_ICON_PRIMARY, iconName: "edit-find-symbolic")
+/// ```
 @MainActor
 public final class Entry: Widget {
     /// Creates a new entry.
@@ -23,7 +54,10 @@ public final class Entry: Widget {
         super.init(raw: pointer)
     }
 
-    /// The entry's text contents.
+    /// The text contents of the entry.
+    ///
+    /// Read this property to get the current user input. Set it to
+    /// programmatically change the displayed text.
     public var text: String {
         get {
             let buf = gtk_entry_get_buffer(castedPointer())
@@ -44,7 +78,9 @@ public final class Entry: Widget {
         set { gtk_entry_set_placeholder_text(castedPointer(), newValue) }
     }
 
-    /// Whether the entry text is visible (set to false for passwords).
+    /// Whether the entry text is visible.
+    ///
+    /// Set to `false` to mask the text with dots, suitable for password fields.
     public var visibility: Bool {
         get { gtk_entry_get_visibility(castedPointer()) != 0 }
         set { gtk_entry_set_visibility(castedPointer(), newValue ? 1 : 0) }
@@ -56,7 +92,12 @@ public final class Entry: Widget {
         set { gtk_entry_set_max_length(castedPointer(), Int32(newValue)) }
     }
 
-    /// Connects to the `activate` signal (user pressed Enter).
+    /// Connects to the `activate` signal, fired when the user presses Enter.
+    ///
+    /// Use this to submit a form or trigger an action when the user confirms input.
+    ///
+    /// - Parameter handler: The closure to run on activation.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .activate, handler: handler)
@@ -68,7 +109,10 @@ public final class Entry: Widget {
         set { gtk_entry_set_has_frame(castedPointer(), newValue ? 1 : 0) }
     }
 
-    /// The horizontal alignment of the entry text (0.0 left, 0.5 center, 1.0 right).
+    /// The horizontal alignment of the text within the entry.
+    ///
+    /// `0.0` is left-aligned, `0.5` is centered, `1.0` is right-aligned.
+    /// Useful for numeric fields where right-alignment is conventional.
     public var alignment: Float {
         get { gtk_entry_get_alignment(castedPointer()) }
         set { gtk_entry_set_alignment(castedPointer(), newValue) }

@@ -9,6 +9,23 @@ import GObjectSupport
 /// For simple one-off shortcuts, see `Widget.addKeyboardShortcut(_:handler:)`.
 /// Use `ShortcutController` when you need to manage a group of shortcuts together
 /// or set the scope.
+///
+/// ```swift
+/// let shortcuts = ShortcutController()
+/// shortcuts.scope = GTK_SHORTCUT_SCOPE_MANAGED
+///
+/// shortcuts.addShortcut("<Control>s") {
+///     print("Save triggered")
+///     return true
+/// }
+/// shortcuts.addShortcut(key: .z, modifiers: .control) {
+///     print("Undo triggered")
+///     return true
+/// }
+/// shortcuts.addShortcut("<Control>q", action: "app.quit")
+///
+/// window.addController(shortcuts)
+/// ```
 @MainActor
 public final class ShortcutController: GObjectRef {
     /// Creates a new shortcut controller.

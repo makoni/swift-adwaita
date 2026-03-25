@@ -7,10 +7,25 @@ private final class UriAsyncBox<T>: @unchecked Sendable {
     init(_ value: T) { self.value = value }
 }
 
-/// Launches URIs (URLs, files) using the system handler.
+/// Launches URIs (URLs, files) using the default system handler.
 ///
 /// Wraps `GtkUriLauncher`. Opens URLs in the default browser,
-/// files in their associated application, etc.
+/// files in their associated application, etc. Supports both
+/// fire-and-forget and async completion-based launching.
+///
+/// ```swift
+/// // Open a URL in the default browser
+/// let launcher = UriLauncher(uri: "https://gnome.org")
+/// launcher.launch()
+///
+/// // Open with async result
+/// let success = await launcher.launch()
+/// print("Launched: \(success)")
+///
+/// // Change URI and launch again
+/// launcher.uri = "https://gtk.org"
+/// launcher.launch()
+/// ```
 @MainActor
 public final class UriLauncher: GObjectRef {
     /// Creates a URI launcher for the given URI.

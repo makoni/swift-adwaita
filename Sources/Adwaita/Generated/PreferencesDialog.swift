@@ -1,7 +1,37 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// A dialog showing application's preferences.
+/// A dialog window for presenting application preferences organized by pages.
+///
+/// Wraps `AdwPreferencesDialog`. Displays one or more ``PreferencesPage``
+/// instances in a dialog with optional search and subpage navigation.
+/// Present it over a parent window using the inherited `present(_:)` method.
+///
+/// ```swift
+/// let dialog = PreferencesDialog()
+/// dialog.searchEnabled = true
+///
+/// let generalPage = PreferencesPage()
+/// generalPage.title = "General"
+/// generalPage.iconName = "preferences-system-symbolic"
+///
+/// let group = PreferencesGroup()
+/// group.title = "Appearance"
+/// generalPage.add(group)
+///
+/// dialog.add(generalPage)
+/// dialog.present(parentWindow)
+/// ```
+///
+/// - Key properties:
+///   - ``searchEnabled``: Whether the search bar is available.
+///   - ``visiblePageName``: The name of the currently visible page.
+/// - Key methods:
+///   - ``add(_:)``: Adds a ``PreferencesPage`` to the dialog.
+///   - ``remove(_:)``: Removes a ``PreferencesPage`` from the dialog.
+///   - ``pushSubpage(_:)``: Pushes a ``NavigationPage`` as a subpage.
+///   - ``popSubpage()``: Pops the current subpage from the navigation stack.
+///   - ``addToast(_:)``: Displays a ``Toast`` notification in the dialog.
 /// - Since: libadwaita 1.5
 @MainActor
 public class PreferencesDialog: Dialog {
@@ -17,14 +47,14 @@ public class PreferencesDialog: Dialog {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    /// The `search-enabled` property.
+    /// Whether the search bar is available for filtering preferences.
     /// - Since: libadwaita 1.5
     public var searchEnabled: Bool {
         get { adw_preferences_dialog_get_search_enabled(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>) != 0 }
         set { adw_preferences_dialog_set_search_enabled(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>, newValue ? 1 : 0) }
     }
 
-    /// The `visible-page-name` property.
+    /// The name of the currently visible preferences page, used for programmatic navigation.
     /// - Since: libadwaita 1.5
     public var visiblePageName: String? {
         get { (adw_preferences_dialog_get_visible_page_name(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>)).map { String(cString: $0) } }
@@ -52,7 +82,9 @@ public class PreferencesDialog: Dialog {
         adw_preferences_dialog_add_toast(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>, toast.opaquePointer)
     }
 
-    /// Calls `adw_preferences_dialog_pop_subpage`.
+    /// Pops the current subpage from the navigation stack, returning to the previous view.
+    ///
+    /// - Returns: `true` if a subpage was popped, `false` if there was no subpage to pop.
     public func popSubpage() -> Bool {
         return adw_preferences_dialog_pop_subpage(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>) != 0
     }

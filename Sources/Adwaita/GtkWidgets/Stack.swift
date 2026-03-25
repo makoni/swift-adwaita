@@ -1,9 +1,29 @@
 import CAdwaita
 import GObjectSupport
 
-/// A container that shows one of its children at a time.
+/// A container that shows one of its children at a time, with optional transitions.
 ///
-/// Wraps `GtkStack`. For Adwaita view switchers, use `ViewStack` instead.
+/// Wraps `GtkStack`. Useful for multi-page interfaces where only one page
+/// is visible at a time. For Adwaita view switchers, use `ViewStack` instead.
+///
+/// ```swift
+/// let stack = Stack()
+/// stack.transitionType = GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT
+/// stack.transitionDuration = 200
+///
+/// let page1 = Label("First Page")
+/// let page2 = Label("Second Page")
+/// stack.addNamed(page1, name: "page1")
+/// stack.addNamed(page2, name: "page2")
+///
+/// // Switch pages by name
+/// stack.visibleChildName = "page2"
+///
+/// // React to page changes
+/// stack.onVisibleChildChanged {
+///     print("Switched to: \(stack.visibleChildName ?? "unknown")")
+/// }
+/// ```
 @MainActor
 public final class Stack: Widget {
     /// Creates a new stack.
@@ -16,17 +36,17 @@ public final class Stack: Widget {
         super.init(raw: pointer)
     }
 
-    /// Adds a child.
+    /// Adds a child widget. The child can only be shown by setting it as `visibleChild` directly.
     public func addChild(_ child: Widget) {
         gtk_stack_add_child(opaquePointer, child.widgetPointer)
     }
 
-    /// Adds a named child.
+    /// Adds a child with a name, allowing it to be shown via `visibleChildName`.
     public func addNamed(_ child: Widget, name: String) {
         gtk_stack_add_named(opaquePointer, child.widgetPointer, name)
     }
 
-    /// Adds a titled child.
+    /// Adds a child with a name and a human-readable title (for use with `GtkStackSwitcher`).
     public func addTitled(_ child: Widget, name: String?, title: String) {
         gtk_stack_add_titled(opaquePointer, child.widgetPointer, name, title)
     }
@@ -54,7 +74,7 @@ public final class Stack: Widget {
         set { gtk_stack_set_visible_child_name(opaquePointer, newValue) }
     }
 
-    /// The transition type.
+    /// The animation type used when switching pages (e.g. slide, crossfade).
     public var transitionType: GtkStackTransitionType {
         get { gtk_stack_get_transition_type(opaquePointer) }
         set { gtk_stack_set_transition_type(opaquePointer, newValue) }

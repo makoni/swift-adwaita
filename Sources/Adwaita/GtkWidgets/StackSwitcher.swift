@@ -3,7 +3,21 @@ import GObjectSupport
 
 /// A widget that shows buttons for switching between pages of a `Stack`.
 ///
-/// Wraps `GtkStackSwitcher`.
+/// Wraps `GtkStackSwitcher`. Automatically creates a button for each
+/// page in the associated ``Stack``.
+///
+/// ```swift
+/// let stack = Stack()
+/// stack.addTitled(Label("Page 1"), name: "page1", title: "First")
+/// stack.addTitled(Label("Page 2"), name: "page2", title: "Second")
+///
+/// let switcher = StackSwitcher()
+/// switcher.stack = stack
+///
+/// let vbox = Box(orientation: .vertical)
+/// vbox.append(switcher)
+/// vbox.append(stack)
+/// ```
 @MainActor
 public final class StackSwitcher: Widget {
     /// Creates a new stack switcher.

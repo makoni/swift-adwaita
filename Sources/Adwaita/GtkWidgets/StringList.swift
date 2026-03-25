@@ -5,6 +5,16 @@ import GObjectSupport
 ///
 /// Wraps `GtkStringList`. Useful for populating `ComboRow` and other
 /// widgets that need a `GListModel` of strings.
+///
+/// ```swift
+/// let model = StringList(["Apple", "Banana", "Cherry"])
+/// model.append("Date")
+/// model.remove(1)  // removes "Banana"
+///
+/// print(model.count)            // 3
+/// print(model.getString(0)!)    // "Apple"
+/// print(model.allStrings)       // ["Apple", "Cherry", "Date"]
+/// ```
 @MainActor
 public final class StringList: GObjectRef, ListModelConvertible {
     /// Creates a new string list from the given strings.
@@ -51,4 +61,38 @@ public final class StringList: GObjectRef, ListModelConvertible {
         Int(g_list_model_get_n_items(OpaquePointer(pointer)))
     }
 
+    /// Removes all strings from the list.
+    public func removeAll() {
+        let n = UInt32(count)
+        if n > 0 {
+            gtk_string_list_splice(opaquePointer, 0, n, nil)
+        }
+    }
+
+    /// Whether the list contains the given string.
+    public func contains(_ string: String) -> Bool {
+        for i in 0..<count {
+            if getString(i) == string { return true }
+        }
+        return false
+    }
+
+    /// Returns the index of the first occurrence of the given string, or nil.
+    public func indexOf(_ string: String) -> Int? {
+        for i in 0..<count {
+            if getString(i) == string { return i }
+        }
+        return nil
+    }
+
+    /// Replaces all strings in the list.
+    public func replaceAll(_ strings: [String]) {
+        removeAll()
+        for s in strings { append(s) }
+    }
+
+    /// Returns all strings as an array.
+    public var allStrings: [String] {
+        (0..<count).compactMap { getString($0) }
+    }
 }

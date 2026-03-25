@@ -1,7 +1,22 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// An object representing a section in [class@ShortcutsDialog].
+/// A titled group of shortcut items displayed inside a ``ShortcutsDialog``.
+///
+/// Wraps `AdwShortcutsSection`. Each section has a title and contains
+/// one or more ``ShortcutsItem`` entries. Use multiple sections to
+/// organise shortcuts by category (e.g. "Editing", "Navigation").
+///
+/// ```swift
+/// let section = ShortcutsSection(title: "Editing")
+/// section.add(ShortcutsItem(title: "Cut", accelerator: "<Control>x"))
+/// section.add(ShortcutsItem(title: "Copy", accelerator: "<Control>c"))
+/// section.add(ShortcutsItem(title: "Paste", accelerator: "<Control>v"))
+///
+/// let dialog = ShortcutsDialog()
+/// dialog.add(section)
+/// ```
+///
 /// - Since: libadwaita 1.8
 @MainActor
 public final class ShortcutsSection: GObjectRef {
@@ -17,7 +32,7 @@ public final class ShortcutsSection: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    /// The `title` property.
+    /// The heading displayed above this section's shortcut items.
     /// - Since: libadwaita 1.8
     public var title: String? {
         get { (adw_shortcuts_section_get_title(opaquePointer)).map { String(cString: $0) } }

@@ -3,7 +3,21 @@ import GObjectSupport
 
 /// A widget with two adjustable panes separated by a draggable handle.
 ///
-/// Wraps `GtkPaned`.
+/// Wraps `GtkPaned`. The user can drag the divider to resize the two
+/// panes. Works in both horizontal and vertical orientations.
+///
+/// ```swift
+/// let sidebar = Label("Sidebar")
+/// let content = Label("Content")
+///
+/// let paned = Paned(orientation: .horizontal, start: sidebar, end: content)
+/// paned.position = 200
+/// paned.wideHandle = true
+///
+/// paned.onPositionChanged {
+///     print("Divider moved to \(paned.position)")
+/// }
+/// ```
 @MainActor
 public final class Paned: Widget {
     /// Creates a new paned widget.

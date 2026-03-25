@@ -4,7 +4,19 @@ import GObjectSupport
 /// A container that positions children at fixed coordinates.
 ///
 /// Wraps `GtkFixed`. Children are placed at absolute (x, y) positions.
-/// Use sparingly — prefer layout containers for most cases.
+/// Use sparingly -- prefer layout containers like ``Box`` for most cases.
+///
+/// ```swift
+/// let canvas = Fixed()
+/// let label1 = Label("Hello")
+/// let label2 = Label("World")
+///
+/// canvas.put(label1, x: 10, y: 20)
+/// canvas.put(label2, x: 100, y: 50)
+///
+/// // Move a child later
+/// canvas.move(label1, x: 50, y: 80)
+/// ```
 @MainActor
 public final class Fixed: Widget {
     /// Creates a new fixed container.

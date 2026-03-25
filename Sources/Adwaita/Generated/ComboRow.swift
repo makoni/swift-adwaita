@@ -22,21 +22,21 @@ public class ComboRow: ActionRow {
         self.title = title
     }
 
-    /// The `enable-search` property.
+    /// Whether to show a search entry in the popup for filtering items.
     /// - Since: libadwaita 1.4
     public var enableSearch: Bool {
         get { adw_combo_row_get_enable_search(castedPointer() as UnsafeMutablePointer<AdwComboRow>) != 0 }
         set { adw_combo_row_set_enable_search(castedPointer() as UnsafeMutablePointer<AdwComboRow>, newValue ? 1 : 0) }
     }
 
-    /// The `search-match-mode` property.
+    /// The match mode used for filtering items in the search entry.
     /// - Since: libadwaita 1.6
     public var searchMatchMode: GtkStringFilterMatchMode {
         get { adw_combo_row_get_search_match_mode(castedPointer() as UnsafeMutablePointer<AdwComboRow>) }
         set { adw_combo_row_set_search_match_mode(castedPointer() as UnsafeMutablePointer<AdwComboRow>, newValue) }
     }
 
-    /// The `selected` property.
+    /// The zero-based index of the currently selected item.
     public var selected: Int {
         get { Int(adw_combo_row_get_selected(castedPointer() as UnsafeMutablePointer<AdwComboRow>)) }
         set { adw_combo_row_set_selected(castedPointer() as UnsafeMutablePointer<AdwComboRow>, UInt32(newValue)) }
@@ -48,7 +48,7 @@ public class ComboRow: ActionRow {
         return GObjectRef(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
-    /// The `use-subtitle` property.
+    /// Whether to show the selected item's description as the row subtitle.
     public var useSubtitle: Bool {
         get { adw_combo_row_get_use_subtitle(castedPointer() as UnsafeMutablePointer<AdwComboRow>) != 0 }
         set { adw_combo_row_set_use_subtitle(castedPointer() as UnsafeMutablePointer<AdwComboRow>, newValue ? 1 : 0) }

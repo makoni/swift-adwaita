@@ -23,7 +23,14 @@ public class EntryRow: PreferencesRow {
         self.title = title
     }
 
-    /// The `activates-default` property.
+    /// Creates an `EntryRow` with a title and initial text.
+    public convenience init(title: String, text: String) {
+        self.init()
+        self.title = title
+        self.text = text
+    }
+
+    /// Whether pressing Enter activates the default widget of the window.
     /// - Since: libadwaita 1.2
     public var activatesDefault: Bool {
         get { adw_entry_row_get_activates_default(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) != 0 }
@@ -40,76 +47,105 @@ public class EntryRow: PreferencesRow {
         set { adw_entry_row_set_attributes(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue?.pointer) }
     }
 
-    /// The `enable-emoji-completion` property.
+    /// Whether the emoji completion popup is shown when typing emoji shortcodes.
     /// - Since: libadwaita 1.2
     public var enableEmojiCompletion: Bool {
         get { adw_entry_row_get_enable_emoji_completion(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) != 0 }
         set { adw_entry_row_set_enable_emoji_completion(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue ? 1 : 0) }
     }
 
-    /// The `input-hints` property.
+    /// Hints for the input method about expected content, such as auto-capitalization or no-spellcheck.
     /// - Since: libadwaita 1.2
     public var inputHints: GtkInputHints {
         get { adw_entry_row_get_input_hints(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) }
         set { adw_entry_row_set_input_hints(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue) }
     }
 
-    /// The `input-purpose` property.
+    /// The purpose of the entry (e.g., free-form text, number, email, password), which may affect the on-screen keyboard layout.
     /// - Since: libadwaita 1.2
     public var inputPurpose: GtkInputPurpose {
         get { adw_entry_row_get_input_purpose(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) }
         set { adw_entry_row_set_input_purpose(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue) }
     }
 
-    /// The `max-length` property.
+    /// The maximum number of characters allowed in the entry. Zero means no limit.
     /// - Since: libadwaita 1.6
     public var maxLength: Int {
         get { Int(adw_entry_row_get_max_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>)) }
         set { adw_entry_row_set_max_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, Int32(newValue)) }
     }
 
-    /// The `show-apply-button` property.
+    /// Whether to display an apply button that must be clicked to confirm changes.
     /// - Since: libadwaita 1.2
     public var showApplyButton: Bool {
         get { adw_entry_row_get_show_apply_button(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) != 0 }
         set { adw_entry_row_set_show_apply_button(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue ? 1 : 0) }
     }
 
-    /// The `text-length` property (read-only).
+    /// The number of characters currently in the entry (read-only).
     /// - Since: libadwaita 1.5
     public var textLength: Int {
         Int(adw_entry_row_get_text_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>))
     }
 
-    /// Calls `adw_entry_row_add_prefix`.
+    /// Adds a widget to the start (leading side) of the entry row.
+    ///
+    /// - Parameter widget: The widget to add as a prefix.
     public func addPrefix(_ widget: Widget) {
         adw_entry_row_add_prefix(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, widget.widgetPointer)
     }
 
-    /// Calls `adw_entry_row_add_suffix`.
+    /// Adds a widget to the end (trailing side) of the entry row.
+    ///
+    /// - Parameter widget: The widget to add as a suffix.
     public func addSuffix(_ widget: Widget) {
         adw_entry_row_add_suffix(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, widget.widgetPointer)
     }
 
-    /// Calls `adw_entry_row_grab_focus_without_selecting`.
+    /// Gives keyboard focus to the entry without selecting its text content.
+    ///
+    /// - Returns: `true` if focus was successfully transferred to the entry.
     public func grabFocusWithoutSelecting() -> Bool {
         return adw_entry_row_grab_focus_without_selecting(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) != 0
     }
 
-    /// Calls `adw_entry_row_remove`.
+    /// Removes a previously added prefix or suffix widget from the entry row.
+    ///
+    /// - Parameter widget: The widget to remove.
     public func remove(_ widget: Widget) {
         adw_entry_row_remove(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, widget.widgetPointer)
     }
 
-    /// Connects to the `apply` signal.
+    /// Emitted when the user clicks the apply button or presses Enter while ``showApplyButton`` is enabled.
+    ///
+    /// - Parameter handler: A closure invoked when the apply action is triggered.
+    /// - Returns: A signal connection that can be used to disconnect the handler.
     @discardableResult
     public func onApply(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .apply, handler: handler)
     }
 
-    /// Connects to the `entry-activated` signal.
+    /// Emitted when the user presses Enter in the entry row.
+    ///
+    /// - Parameter handler: A closure invoked when the entry is activated.
+    /// - Returns: A signal connection that can be used to disconnect the handler.
     @discardableResult
     public func onEntryActivated(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .entryActivated, handler: handler)
+    }
+
+    /// The text content of the entry.
+    public var text: String {
+        get { String(cString: gtk_editable_get_text(opaquePointer)) }
+        set { gtk_editable_set_text(opaquePointer, newValue) }
+    }
+
+    /// Emitted when the text content of the entry changes.
+    ///
+    /// - Parameter handler: A closure invoked whenever the text is modified.
+    /// - Returns: A signal connection that can be used to disconnect the handler.
+    @discardableResult
+    public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: .changed, handler: handler)
     }
 }

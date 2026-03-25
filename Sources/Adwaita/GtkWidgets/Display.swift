@@ -4,7 +4,20 @@ import GObjectSupport
 /// Provides access to the GDK display, which represents the connection
 /// to the windowing system.
 ///
-/// Wraps `GdkDisplay`.
+/// Wraps `GdkDisplay`. Use the ``default`` property to get the current display
+/// and query connected monitors or display properties.
+///
+/// ```swift
+/// if let display = Display.default {
+///     print("Display name: \(display.name)")
+///     print("Composited: \(display.isComposited)")
+///
+///     for monitor in display.monitors {
+///         let geo = monitor.geometry
+///         print("Monitor: \(geo.width)x\(geo.height)")
+///     }
+/// }
+/// ```
 @MainActor
 public final class Display: GObjectRef {
 

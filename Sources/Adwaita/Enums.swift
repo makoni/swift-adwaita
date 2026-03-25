@@ -2,6 +2,20 @@ import CAdwaita
 
 // MARK: - GTK Enums
 
+/// Swift-friendly extensions on GTK and Adwaita C enums.
+///
+/// These extensions add static properties so you can use dot-syntax instead
+/// of C-style constants.
+///
+/// ```swift
+/// let box = Box(orientation: .vertical, spacing: 6)
+/// box.halign = .center
+/// box.valign = .fill
+///
+/// let stack = Stack()
+/// stack.transitionType = .crossfade
+/// ```
+
 extension GtkOrientation {
     /// Vertical orientation.
     public static let vertical = GTK_ORIENTATION_VERTICAL

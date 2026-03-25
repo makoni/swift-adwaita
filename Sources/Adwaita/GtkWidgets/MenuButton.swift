@@ -3,7 +3,26 @@ import GObjectSupport
 
 /// A button that shows a popover or menu when clicked.
 ///
-/// Wraps `GtkMenuButton`.
+/// Wraps `GtkMenuButton`. Can display a `Popover`, `PopoverMenu`, or a
+/// `GMenuRef` model. Commonly used for hamburger menus and dropdown actions.
+///
+/// ```swift
+/// // Hamburger-style primary menu
+/// let menu = GMenuRef()
+/// menu.append(label: "About", action: "app.about")
+/// menu.append(label: "Quit", action: "app.quit")
+///
+/// let menuButton = MenuButton()
+/// menuButton.primary = true
+/// menuButton.iconName = "open-menu-symbolic"
+/// menuButton.setMenuModel(menu)
+///
+/// // Or with a custom popover
+/// let popover = Popover()
+/// popover.child = Label("Custom content")
+/// let button = MenuButton(label: "Options")
+/// button.setPopover(popover)
+/// ```
 @MainActor
 public final class MenuButton: Widget {
     /// Creates a new menu button.

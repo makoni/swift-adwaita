@@ -1,9 +1,23 @@
 import CAdwaita
 import GObjectSupport
 
-/// A separator widget — draws a line between content.
+/// A visual separator that draws a line between content areas.
 ///
-/// Wraps `GtkSeparator`.
+/// Wraps `GtkSeparator`. Use a horizontal separator to divide stacked content
+/// or a vertical separator to divide side-by-side content.
+///
+/// ```swift
+/// let vbox = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 6)
+/// vbox.append(Label("Section 1"))
+/// vbox.append(Separator())  // horizontal line
+/// vbox.append(Label("Section 2"))
+///
+/// // Vertical separator in a horizontal layout
+/// let hbox = Box(orientation: GTK_ORIENTATION_HORIZONTAL, spacing: 6)
+/// hbox.append(Label("Left"))
+/// hbox.append(Separator(orientation: GTK_ORIENTATION_VERTICAL))
+/// hbox.append(Label("Right"))
+/// ```
 @MainActor
 public final class Separator: Widget {
     /// Creates a new separator.

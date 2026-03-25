@@ -3,7 +3,20 @@ import GObjectSupport
 
 /// A popover that displays a menu from a `GMenuModel`.
 ///
-/// Wraps `GtkPopoverMenu`.
+/// Wraps `GtkPopoverMenu`. Creates a popup menu from a `GMenuRef` model
+/// and presents it as a popover anchored to its parent widget.
+///
+/// ```swift
+/// let menu = GMenuRef()
+/// menu.append(label: "Cut", action: "app.cut")
+/// menu.append(label: "Copy", action: "app.copy")
+/// menu.append(label: "Paste", action: "app.paste")
+///
+/// let popoverMenu = PopoverMenu(model: menu)
+///
+/// let button = MenuButton(label: "Edit")
+/// button.setPopover(popoverMenu)
+/// ```
 @MainActor
 public final class PopoverMenu: Widget {
     /// Creates a new popover menu from a menu model.

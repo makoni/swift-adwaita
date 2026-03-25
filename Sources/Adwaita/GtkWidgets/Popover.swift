@@ -3,7 +3,24 @@ import GObjectSupport
 
 /// A bubble-like popup attached to a widget.
 ///
-/// Wraps `GtkPopover`.
+/// Wraps `GtkPopover`. Displays arbitrary content in a floating bubble
+/// anchored to its parent widget. Set the popover as a child of a
+/// `MenuButton`, or call `popup()` / `popdown()` to show and hide it.
+///
+/// ```swift
+/// let popover = Popover()
+/// popover.hasArrow = true
+/// popover.position = GTK_POS_BOTTOM
+/// popover.autohide = true
+/// popover.child = Label("Hello from the popover!")
+///
+/// let button = MenuButton(label: "Show Info")
+/// button.setPopover(popover)
+///
+/// popover.onClosed {
+///     print("Popover was closed")
+/// }
+/// ```
 @MainActor
 public final class Popover: Widget {
     /// Creates a new popover.

@@ -5,6 +5,19 @@ import GObjectSupport
 ///
 /// Wraps `GtkCssProvider`. Load CSS from a string or file, then add it
 /// to the default display so all widgets pick up the styles.
+///
+/// ```swift
+/// // Apply global CSS from a string
+/// let css = CSSProvider.loadGlobal("""
+///     .accent-label { color: @accent_color; font-weight: bold; }
+///     .rounded-box  { border-radius: 12px; padding: 8px; }
+///     """)
+///
+/// // Or load CSS from a file
+/// let provider = CSSProvider()
+/// provider.loadFromPath("/usr/share/myapp/style.css")
+/// provider.addToDefaultDisplay()
+/// ```
 @MainActor
 public final class CSSProvider {
     private let provider: UnsafeMutablePointer<GtkCssProvider>

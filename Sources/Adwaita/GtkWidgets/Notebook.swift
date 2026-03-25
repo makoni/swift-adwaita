@@ -4,6 +4,20 @@ import GObjectSupport
 /// A tabbed container widget.
 ///
 /// Wraps `GtkNotebook`. For modern Adwaita apps, consider using `TabView` instead.
+///
+/// ```swift
+/// let notebook = Notebook()
+/// notebook.scrollable = true
+///
+/// notebook.appendPage(Label("Page 1 content"), label: "First")
+/// notebook.appendPage(Label("Page 2 content"), label: "Second")
+///
+/// notebook.onSwitchPage { pageIndex in
+///     print("Switched to page \(pageIndex)")
+/// }
+///
+/// notebook.currentPage = 0
+/// ```
 @MainActor
 public final class Notebook: Widget {
     /// Creates a new notebook.

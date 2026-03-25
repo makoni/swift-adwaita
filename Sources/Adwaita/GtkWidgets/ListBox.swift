@@ -5,6 +5,19 @@ import GObjectSupport
 ///
 /// Wraps `GtkListBox`. For Adwaita-styled lists, combine with
 /// `PreferencesGroup` or add the `"boxed-list"` CSS class.
+///
+/// ```swift
+/// let list = ListBox()
+/// list.selectionMode = GTK_SELECTION_SINGLE
+/// list.addCssClass("boxed-list")
+/// list.append(Label("First row"))
+/// list.append(Label("Second row"))
+/// list.append(Label("Third row"))
+///
+/// list.onRowSelected { row in
+///     print("Selected row index: \(row.index)")
+/// }
+/// ```
 @MainActor
 public final class ListBox: Widget, Container {
     /// Creates a new list box.
@@ -17,22 +30,32 @@ public final class ListBox: Widget, Container {
         super.init(raw: pointer)
     }
 
-    /// Appends a child widget as a row.
+    /// Appends a child widget as a new row at the end of the list.
+    ///
+    /// - Parameter child: The widget to add to the list.
     public func append(_ child: Widget) {
         gtk_list_box_append(opaquePointer, child.widgetPointer)
     }
 
-    /// Prepends a child widget as a row.
+    /// Prepends a child widget as a new row at the beginning of the list.
+    ///
+    /// - Parameter child: The widget to add to the list.
     public func prepend(_ child: Widget) {
         gtk_list_box_prepend(opaquePointer, child.widgetPointer)
     }
 
-    /// Removes a row.
+    /// Removes a row from the list.
+    ///
+    /// - Parameter child: The row widget to remove.
     public func remove(_ child: Widget) {
         gtk_list_box_remove(opaquePointer, child.widgetPointer)
     }
 
-    /// Inserts a child at the given position.
+    /// Inserts a child widget as a row at the given position.
+    ///
+    /// - Parameters:
+    ///   - child: The widget to insert.
+    ///   - position: The zero-based index at which to insert the row. Use `-1` to append.
     public func insert(_ child: Widget, position: Int) {
         gtk_list_box_insert(opaquePointer, child.widgetPointer, Int32(position))
     }
@@ -70,7 +93,11 @@ public final class ListBox: Widget, Container {
         gtk_list_box_select_all(opaquePointer)
     }
 
-    /// Connects to the `row-activated` signal.
+    /// Connects to the `row-activated` signal, fired when a row is double-clicked
+    /// or activated via keyboard.
+    ///
+    /// - Parameter handler: A closure that receives the activated ``ListBoxRow``.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onRowActivated(_ handler: @escaping @MainActor (ListBoxRow) -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .rowActivated) { (ptr: OpaquePointer) in
@@ -78,7 +105,10 @@ public final class ListBox: Widget, Container {
         }
     }
 
-    /// Connects to the `row-selected` signal.
+    /// Connects to the `row-selected` signal, fired when the selected row changes.
+    ///
+    /// - Parameter handler: A closure that receives the newly selected ``ListBoxRow``.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onRowSelected(_ handler: @escaping @MainActor (ListBoxRow) -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .rowSelected) { (ptr: OpaquePointer) in
@@ -87,6 +117,10 @@ public final class ListBox: Widget, Container {
     }
 
     /// Selects the row at the given index.
+    ///
+    /// Does nothing if the index is out of bounds.
+    ///
+    /// - Parameter index: The zero-based index of the row to select.
     public func selectRow(at index: Int) {
         guard let row = gtk_list_box_get_row_at_index(opaquePointer, Int32(index)) else { return }
         gtk_list_box_select_row(opaquePointer, row)
@@ -222,5 +256,12 @@ public final class ListBox: Widget, Container {
     /// Re-evaluates the header function for all rows.
     public func invalidateHeaders() {
         gtk_list_box_invalidate_headers(opaquePointer)
+    }
+
+    /// The index of the currently selected row, or nil if none is selected.
+    public var selectedIndex: Int? {
+        guard let row = gtk_list_box_get_selected_row(opaquePointer) else { return nil }
+        let idx = gtk_list_box_row_get_index(row)
+        return idx >= 0 ? Int(idx) : nil
     }
 }

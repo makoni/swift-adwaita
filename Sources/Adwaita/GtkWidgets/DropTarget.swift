@@ -3,7 +3,26 @@ import GObjectSupport
 
 /// A controller for accepting drop operations on a widget.
 ///
-/// Wraps `GtkDropTarget`. Attach to a widget with `addController()`.
+/// Wraps `GtkDropTarget`. Attach to a widget with `addController()` to make
+/// it a drop destination for drag-and-drop. Use the convenience factory
+/// ``forText(actions:)`` for simple text drops.
+///
+/// ```swift
+/// let dropTarget = DropTarget.forText()
+/// dropTarget.onDrop { text in
+///     if let text {
+///         print("Dropped text: \(text)")
+///     }
+///     return true  // accept the drop
+/// }
+/// dropTarget.onEnter { x, y in
+///     print("Drag entered at (\(x), \(y))")
+/// }
+/// dropTarget.onLeave {
+///     print("Drag left the widget")
+/// }
+/// label.addController(dropTarget)
+/// ```
 @MainActor
 public final class DropTarget: GObjectRef {
     /// Creates a new drop target that accepts the given GType with the given actions.

@@ -4,6 +4,22 @@ import CAdwaita
 ///
 /// `GValue` is GLib's generic value container. This helper provides
 /// ergonomic initializers and accessors for the most common types.
+///
+/// ```swift
+/// // Create typed values
+/// var strVal = GValueRef("Hello")
+/// var intVal = GValueRef(Int32(42))
+/// var boolVal = GValueRef(true)
+///
+/// // Read values back
+/// print(strVal.stringValue ?? "nil")  // "Hello"
+/// print(intVal.intValue)              // 42
+/// print(boolVal.boolValue)            // true
+///
+/// // Pass to GObject property APIs
+/// let propValue = widget.getProperty("label")
+/// print(propValue.stringValue ?? "")
+/// ```
 @MainActor
 public struct GValueRef {
     private var gvalue: GValue

@@ -3,7 +3,16 @@ import GObjectSupport
 
 /// A widget displaying window control buttons (close, minimize, maximize).
 ///
-/// Wraps `GtkWindowControls`.
+/// Wraps `GtkWindowControls`. Shows the platform's window buttons (close,
+/// minimize, maximize) for the specified side of the title bar.
+///
+/// ```swift
+/// // In a custom header bar layout
+/// let headerBar = CenterBox()
+/// headerBar.startWidget = WindowControls(side: .start)
+/// headerBar.centerWidget = Label("My App")
+/// headerBar.endWidget = WindowControls(side: .end)
+/// ```
 @MainActor
 public final class WindowControls: Widget {
     /// Creates new window controls.

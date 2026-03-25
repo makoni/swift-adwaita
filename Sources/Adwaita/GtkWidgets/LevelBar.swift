@@ -1,9 +1,27 @@
 import CAdwaita
 import GObjectSupport
 
-/// A bar that fills up to a certain level.
+/// A bar that fills up to a certain level, useful for displaying signal strength, capacity, or ratings.
 ///
-/// Wraps `GtkLevelBar`.
+/// Wraps `GtkLevelBar`. Supports both continuous and discrete modes, with
+/// customizable offset thresholds for color-coded feedback.
+///
+/// ```swift
+/// // Continuous level bar (e.g., battery level)
+/// let battery = LevelBar(min: 0, max: 100)
+/// battery.value = 75
+///
+/// // Discrete level bar (e.g., signal strength)
+/// let signal = LevelBar(min: 0, max: 5)
+/// signal.mode = GTK_LEVEL_BAR_MODE_DISCRETE
+/// signal.value = 3
+///
+/// // Custom thresholds for color feedback
+/// let disk = LevelBar(min: 0, max: 100)
+/// disk.addOffsetValue(name: "low", value: 25)
+/// disk.addOffsetValue(name: "high", value: 75)
+/// disk.addOffsetValue(name: "full", value: 95)
+/// ```
 @MainActor
 public final class LevelBar: Widget {
     /// Creates a new level bar.

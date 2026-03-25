@@ -1,10 +1,30 @@
 import CAdwaita
 import GObjectSupport
 
-/// An Adwaita toolbar view.
+/// A container with top and bottom toolbar areas around central content.
 ///
-/// Wraps `AdwToolbarView`, which provides a container with top and bottom
-/// toolbar areas around a central content widget.
+/// Wraps `AdwToolbarView`, which is the standard layout for Adwaita windows.
+/// Place a ``HeaderBar`` as the top bar and your main content in the center.
+///
+/// ```swift
+/// let toolbar = ToolbarView()
+///
+/// // Add header bar
+/// let header = HeaderBar(title: "My App")
+/// toolbar.addTopBar(header)
+///
+/// // Set main content
+/// let content = Label("Hello!").cssClass(.title1)
+/// toolbar.setContent(content)
+///
+/// // Optionally add a bottom bar
+/// let bottomBar = Box(orientation: .horizontal, spacing: 6)
+/// toolbar.addBottomBar(bottomBar)
+///
+/// window.setContent(toolbar)
+/// ```
+///
+/// Controls bar visibility with ``revealTopBars`` and ``revealBottomBars``.
 @MainActor
 public final class ToolbarView: Widget {
     /// Creates a new toolbar view.

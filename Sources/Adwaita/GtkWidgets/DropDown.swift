@@ -5,6 +5,16 @@ import GObjectSupport
 ///
 /// Wraps `GtkDropDown`. Can be used with a `StringList` model for simple
 /// string-based drop-downs.
+///
+/// ```swift
+/// let dropdown = DropDown(strings: ["Small", "Medium", "Large"])
+/// dropdown.selected = 1  // selects "Medium"
+/// dropdown.enableSearch = true
+///
+/// dropdown.onSelectedChanged {
+///     print("Selected index: \(dropdown.selected)")
+/// }
+/// ```
 @MainActor
 public final class DropDown: Widget {
     /// Creates a new drop-down from a string list.

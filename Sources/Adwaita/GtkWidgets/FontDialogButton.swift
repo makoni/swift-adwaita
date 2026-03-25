@@ -3,7 +3,21 @@ import GObjectSupport
 
 /// A button that opens a font dialog when clicked and displays the selected font.
 ///
-/// Wraps `GtkFontDialogButton` (GTK 4.10+).
+/// Wraps `GtkFontDialogButton` (GTK 4.10+). Shows the currently selected font
+/// and opens a system font chooser dialog when the user clicks it.
+///
+/// ```swift
+/// let fontButton = FontDialogButton()
+/// fontButton.fontDescription = "Sans 12"
+///
+/// fontButton.onFontChanged {
+///     if let font = fontButton.fontDescription {
+///         print("Selected font: \(font)")
+///     }
+/// }
+///
+/// box.append(fontButton)
+/// ```
 @MainActor
 public final class FontDialogButton: Widget {
     /// Creates a new font dialog button.

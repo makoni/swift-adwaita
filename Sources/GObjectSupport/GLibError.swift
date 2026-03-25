@@ -6,6 +6,15 @@ import CAdwaita
 /// ``init(consuming:)`` to bridge it into Swift's error handling. The
 /// initializer copies the domain, code, and message, then frees the
 /// underlying `GError`.
+///
+/// ```swift
+/// var gerror: UnsafeMutablePointer<GError>?
+/// let ok = some_glib_function(&gerror)
+/// if ok == 0, let gerror {
+///     let error = GLibError(consuming: gerror)
+///     print("GLib error \(error.code): \(error.message)")
+/// }
+/// ```
 public struct GLibError: Error, CustomStringConvertible {
     /// The GLib error domain (a GQuark).
     public let domain: UInt32

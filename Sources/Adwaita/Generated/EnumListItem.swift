@@ -1,7 +1,21 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// `EnumListItem` is the type of items in a [class@EnumListModel].
+/// An item representing a single value in an ``EnumListModel``.
+///
+/// Wraps `AdwEnumListItem`. Provides read-only access to the C enum
+/// value's numeric value, registered name, and human-readable nick.
+///
+/// ```swift
+/// let model = EnumListModel(enumType: adw_color_scheme_get_type())
+/// // Retrieve the item at position 0
+/// if let item = model.getItem(0) as? EnumListItem {
+///     print(item.name)   // e.g. "ADW_COLOR_SCHEME_DEFAULT"
+///     print(item.nick)   // e.g. "default"
+///     print(item.value)  // e.g. 0
+/// }
+/// ```
+///
 @MainActor
 public final class EnumListItem: GObjectRef {
 

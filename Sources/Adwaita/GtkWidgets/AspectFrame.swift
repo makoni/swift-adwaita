@@ -3,7 +3,18 @@ import GObjectSupport
 
 /// A frame that maintains a specific aspect ratio for its child.
 ///
-/// Wraps `GtkAspectFrame`.
+/// Wraps `GtkAspectFrame`. The child is letterboxed or pillarboxed to
+/// maintain the specified aspect ratio within the allocated space.
+///
+/// ```swift
+/// // Keep a 16:9 aspect ratio for a video area
+/// let frame = AspectFrame(ratio: 16.0 / 9.0)
+/// frame.child = videoWidget
+///
+/// // Or let the child determine the ratio
+/// let frame2 = AspectFrame(obeyChild: true)
+/// frame2.child = picture
+/// ```
 @MainActor
 public final class AspectFrame: Widget {
     /// Creates a new aspect frame.

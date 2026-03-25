@@ -1,7 +1,26 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// An [class@AnimationTarget] that calls a given callback during the animation.
+/// An animation target that calls a Swift closure with each animated value.
+///
+/// Wraps `AdwCallbackAnimationTarget`. The most common way to consume
+/// animated values: provide a closure that receives a `Double` on each
+/// frame and use it to update widget properties imperatively.
+///
+/// ```swift
+/// let target = CallbackAnimationTarget { value in
+///     // `value` ranges from 0.0 to 1.0 (for timed) or follows spring dynamics
+///     myWidget.opacity = value
+/// }
+///
+/// let animation = TimedAnimation(
+///     widget: myWidget, from: 0.0, to: 1.0, duration: 300, target: target
+/// )
+/// animation.play()
+/// ```
+///
+/// The closure is called on the main actor and receives the current
+/// interpolated value from the owning ``Animation``.
 @MainActor
 public final class CallbackAnimationTarget: AnimationTarget {
 

@@ -4,7 +4,24 @@ import GObjectSupport
 /// A menu bar built from a `GMenuModel`.
 ///
 /// Wraps `GtkPopoverMenuBar`. Creates a traditional desktop menu bar
-/// from a `GMenuRef` model.
+/// from a `GMenuRef` model. Each top-level item becomes a menu bar entry
+/// that opens a popover with the submenu contents.
+///
+/// ```swift
+/// let fileMenu = GMenuRef()
+/// fileMenu.append(label: "New", action: "app.new")
+/// fileMenu.append(label: "Quit", action: "app.quit")
+///
+/// let editMenu = GMenuRef()
+/// editMenu.append(label: "Undo", action: "app.undo")
+///
+/// let menuBar = GMenuRef()
+/// menuBar.appendSubmenu(label: "File", submenu: fileMenu)
+/// menuBar.appendSubmenu(label: "Edit", submenu: editMenu)
+///
+/// let bar = PopoverMenuBar(model: menuBar)
+/// vbox.prepend(bar)
+/// ```
 @MainActor
 public final class PopoverMenuBar: Widget {
     /// Creates a new menu bar from a menu model.

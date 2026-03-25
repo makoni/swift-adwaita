@@ -4,6 +4,22 @@ import GObjectSupport
 /// A container that arranges child widgets in a single row or column.
 ///
 /// Wraps `GtkBox`. The most common container for linear layouts.
+/// Use a vertical box for stacking widgets top-to-bottom, or a horizontal
+/// box for arranging them side-by-side.
+///
+/// ```swift
+/// // Vertical layout with spacing between children
+/// let vbox = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 12)
+/// vbox.append(Label("Title"))
+/// vbox.append(Label("Subtitle"))
+/// vbox.append(Button("Click Me"))
+///
+/// // Horizontal button bar with equal-width buttons
+/// let hbox = Box(orientation: GTK_ORIENTATION_HORIZONTAL, spacing: 6)
+///     .homogeneous(true)
+/// hbox.append(Button("Cancel"))
+/// hbox.append(Button("OK"))
+/// ```
 @MainActor
 public final class Box: Widget, Container {
     /// Creates a new box.
@@ -55,5 +71,24 @@ public final class Box: Widget, Container {
     public var homogeneous: Bool {
         get { gtk_box_get_homogeneous(castedPointer()) != 0 }
         set { gtk_box_set_homogeneous(castedPointer(), newValue ? 1 : 0) }
+    }
+
+    /// Appends multiple child widgets.
+    public func appendAll(_ children: [Widget]) {
+        for child in children { append(child) }
+    }
+
+    /// Sets spacing and returns self for chaining.
+    @discardableResult
+    public func spacing(_ spacing: Int) -> Self {
+        self.spacing = spacing
+        return self
+    }
+
+    /// Sets homogeneous and returns self for chaining.
+    @discardableResult
+    public func homogeneous(_ homogeneous: Bool = true) -> Self {
+        self.homogeneous = homogeneous
+        return self
     }
 }

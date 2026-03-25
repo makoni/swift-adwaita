@@ -3,7 +3,20 @@ import GObjectSupport
 
 /// A button that opens a color dialog when clicked and displays the selected color.
 ///
-/// Wraps `GtkColorDialogButton` (GTK 4.10+).
+/// Wraps `GtkColorDialogButton` (GTK 4.10+). Displays a color swatch and
+/// opens a system color chooser dialog when the user clicks it.
+///
+/// ```swift
+/// let colorButton = ColorDialogButton()
+/// colorButton.rgba = RGBA(red: 0.2, green: 0.6, blue: 1.0, alpha: 1.0)
+///
+/// colorButton.onColorChanged {
+///     let color = colorButton.rgba
+///     print("Selected color: R=\(color.red) G=\(color.green) B=\(color.blue)")
+/// }
+///
+/// box.append(colorButton)
+/// ```
 @MainActor
 public final class ColorDialogButton: Widget {
     /// Creates a new color dialog button.

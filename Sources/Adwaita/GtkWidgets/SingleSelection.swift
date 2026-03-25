@@ -71,4 +71,27 @@ public final class SingleSelection: GObjectRef, SelectionModelConvertible {
         SignalHelper.onNotify(self, property: .selected, handler: handler)
     }
 
+    // MARK: - Fluent Setters
+
+    /// Sets the selected index and returns self for chaining.
+    @discardableResult
+    public func selected(_ position: Int) -> Self {
+        self.selected = position
+        return self
+    }
+
+    /// Sets whether the user can unselect and returns self for chaining.
+    @discardableResult
+    public func canUnselect(_ canUnselect: Bool) -> Self {
+        self.canUnselect = canUnselect
+        return self
+    }
+
+    /// Sets whether to automatically select and returns self for chaining.
+    @discardableResult
+    public func autoselect(_ autoselect: Bool) -> Self {
+        self.autoselect = autoselect
+        return self
+    }
+
 }

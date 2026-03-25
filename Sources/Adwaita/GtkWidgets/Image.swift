@@ -1,9 +1,22 @@
 import CAdwaita
 import GObjectSupport
 
-/// A widget displaying an image.
+/// A widget displaying an image from an icon name, file path, or resource.
 ///
-/// Wraps `GtkImage`. Displays icons by name, file, or resource.
+/// Wraps `GtkImage`. Most commonly used to display symbolic icons from the
+/// system icon theme. Use ``pixelSize`` to control the rendered size.
+///
+/// ```swift
+/// // Display a symbolic icon
+/// let icon = Image(iconName: "document-open-symbolic")
+/// icon.pixelSize = 48
+///
+/// // Display from a file on disk
+/// let photo = Image(filename: "/path/to/photo.png")
+///
+/// // Change icon at runtime
+/// icon.iconName = "document-save-symbolic"
+/// ```
 @MainActor
 public final class Image: Widget {
     /// Creates an empty image.

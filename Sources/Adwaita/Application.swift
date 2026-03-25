@@ -1,10 +1,30 @@
 import CAdwaita
 import GObjectSupport
 
-/// An Adwaita application.
+/// The entry point for an Adwaita application.
 ///
 /// Wraps `AdwApplication`, which extends `GtkApplication` with Adwaita
-/// style management and automatic initialization.
+/// style management and automatic initialization. Every Adwaita app
+/// starts by creating an `Application`, connecting the ``onActivate(_:)``
+/// signal, and calling ``run()``.
+///
+/// ```swift
+/// let app = Application(id: "com.example.MyApp")
+///
+/// app.onActivate {
+///     let window = ApplicationWindow(application: app)
+///     window.title = "Hello"
+///     window.defaultWidth = 600
+///     window.defaultHeight = 400
+///
+///     let label = Label("Hello from swift-adwaita!")
+///         .cssClass(.title1)
+///     window.setContent(label)
+///     window.present()
+/// }
+///
+/// app.run()
+/// ```
 @MainActor
 public final class Application: GObjectRef {
     /// Creates a new Adwaita application.

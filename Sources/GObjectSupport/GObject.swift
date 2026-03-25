@@ -6,6 +6,18 @@ import CAdwaita
 /// is created it sinks any floating reference (for `GInitiallyUnowned`
 /// subclasses such as all GTK widgets) and takes ownership. When the Swift
 /// object is deallocated the GObject reference is released.
+///
+/// ```swift
+/// // All widget classes inherit from GObjectRef.
+/// // Typically you use concrete subclasses like Button, Label, etc.
+/// let button = Button(label: "OK")
+///
+/// // Bind a source property to a target property
+/// sourceObject.bind(.active, to: targetObject, property: .sensitive)
+///
+/// // Access the underlying pointer for C interop
+/// let raw: UnsafeMutablePointer<GtkButton> = button.castedPointer()
+/// ```
 @MainActor
 open class GObjectRef {
     /// Raw pointer to the underlying GObject.

@@ -1,11 +1,25 @@
 import CAdwaita
 import GObjectSupport
 
-/// An Adwaita status page.
+/// A centered page with an icon, title, description, and optional child.
 ///
-/// Wraps `AdwStatusPage`, which displays an icon, title, description,
-/// and optional child widget in a centered layout. Commonly used for
-/// empty states, error pages, or welcome screens.
+/// Wraps `AdwStatusPage`. Commonly used for empty states, error pages,
+/// welcome screens, or loading states.
+///
+/// ```swift
+/// let page = StatusPage(
+///     title: "No Results",
+///     description: "Try a different search term",
+///     iconName: "system-search-symbolic"
+/// )
+///
+/// // Optionally add an action button
+/// let retryButton = Button(label: "Search Again")
+///     .cssClass(.suggestedAction)
+///     .cssClass(.pill)
+///     .halign(.center)
+/// page.child = retryButton
+/// ```
 @MainActor
 public final class StatusPage: Widget {
     /// Creates a new status page.

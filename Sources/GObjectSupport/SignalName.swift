@@ -2,6 +2,23 @@
 ///
 /// Eliminates raw string literals from signal connection calls.
 /// Use `.custom(String)` for signals not covered by the predefined cases.
+///
+/// ```swift
+/// // Use predefined signal names
+/// SignalHelper.connect(button, signal: .clicked) {
+///     print("Clicked")
+/// }
+///
+/// // Observe property changes via notify
+/// SignalHelper.connect(entry, signal: .notify("text")) {
+///     print("Text property changed")
+/// }
+///
+/// // Use a custom signal name for signals not in the enum
+/// SignalHelper.connect(widget, signal: .custom("my-signal")) {
+///     print("Custom signal fired")
+/// }
+/// ```
 public enum SignalName: Sendable, Equatable {
 
     // MARK: - Application & Window lifecycle

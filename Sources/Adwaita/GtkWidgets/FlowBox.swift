@@ -6,6 +6,23 @@ import GObjectSupport
 /// Wraps `GtkFlowBox`. Children are arranged in rows, wrapping to
 /// the next row when space runs out. For Adwaita apps, consider
 /// `WrapBox` as an alternative.
+///
+/// ```swift
+/// let flow = FlowBox()
+/// flow.selectionMode = GTK_SELECTION_NONE
+/// flow.minChildrenPerLine = 2
+/// flow.maxChildrenPerLine = 4
+/// flow.rowSpacing = 6
+/// flow.columnSpacing = 6
+///
+/// for i in 0..<10 {
+///     flow.append(Button("Item \(i)"))
+/// }
+///
+/// flow.onChildActivated {
+///     print("A child was activated")
+/// }
+/// ```
 @MainActor
 public final class FlowBox: Widget, Container {
     /// Creates a new flow box.
@@ -100,5 +117,10 @@ public final class FlowBox: Widget, Container {
     @discardableResult
     public func onSelectedChildrenChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .selectedChildrenChanged, handler: handler)
+    }
+
+    /// Appends multiple child widgets.
+    public func appendAll(_ children: [Widget]) {
+        for child in children { append(child) }
     }
 }

@@ -1,9 +1,24 @@
 import CAdwaita
 import GObjectSupport
 
-/// A widget that shows progress.
+/// A widget that shows progress as a horizontal filling bar.
 ///
-/// Wraps `GtkProgressBar`.
+/// Wraps `GtkProgressBar`. Set ``fraction`` to a value between 0.0 and 1.0
+/// for determinate progress, or call ``pulse()`` repeatedly for indeterminate
+/// activity indication.
+///
+/// ```swift
+/// // Determinate progress
+/// let bar = ProgressBar()
+/// bar.fraction = 0.65
+/// bar.showText = true
+/// bar.text = "65%"
+///
+/// // Indeterminate (pulsing) progress
+/// let spinner = ProgressBar()
+/// spinner.pulseStep = 0.1
+/// spinner.pulse()  // call repeatedly on a timer
+/// ```
 @MainActor
 public final class ProgressBar: Widget {
     /// Creates a new progress bar.

@@ -3,7 +3,22 @@ import GObjectSupport
 
 /// Recognizes single and multiple clicks on a widget.
 ///
-/// Wraps `GtkGestureClick`.
+/// Wraps `GtkGestureClick`. Attach to any widget with `addController()` to
+/// detect press and release events, including double- and triple-clicks.
+///
+/// ```swift
+/// let click = GestureClick()
+/// click.button = 1  // primary button only
+/// click.onPressed { nPress, x, y in
+///     if nPress == 2 {
+///         print("Double-click at (\(x), \(y))")
+///     }
+/// }
+/// click.onReleased { nPress, x, y in
+///     print("Released at (\(x), \(y))")
+/// }
+/// myWidget.addController(click)
+/// ```
 @MainActor
 public final class GestureClick: GObjectRef {
     /// Creates a new click gesture recognizer.

@@ -1,10 +1,24 @@
 import CAdwaita
 import GObjectSupport
 
-/// A scrollable container.
+/// A scrollable container that adds scrollbars around a child widget.
 ///
 /// Wraps `GtkScrolledWindow`. Provides scrollbars and kinetic scrolling
-/// for a child widget that is larger than the allocated space.
+/// for a child widget that is larger than the allocated space. Commonly
+/// used to wrap ``ListView``, ``ListBox``, or any tall/wide content.
+///
+/// ```swift
+/// // Wrap a ListView in a scrolled window
+/// let listView = ListView(model: selection, factory: factory)
+/// let scrolled = ScrolledWindow(child: listView)
+/// scrolled.minContentHeight = 300
+/// scrolled.setPolicy(horizontal: GTK_POLICY_NEVER, vertical: GTK_POLICY_AUTOMATIC)
+///
+/// // Scrollable text area
+/// let textView = TextView()
+/// let scrolled = ScrolledWindow(child: textView)
+/// scrolled.vexpand = true
+/// ```
 @MainActor
 public final class ScrolledWindow: Widget {
     /// Creates a new scrolled window.
@@ -23,7 +37,7 @@ public final class ScrolledWindow: Widget {
         super.init(raw: pointer)
     }
 
-    /// The child widget.
+    /// The child widget displayed inside the scrollable area.
     public var child: Widget? {
         get {
             guard let ptr = gtk_scrolled_window_get_child(opaquePointer) else { return nil }
@@ -32,19 +46,22 @@ public final class ScrolledWindow: Widget {
         set { gtk_scrolled_window_set_child(opaquePointer, newValue?.widgetPointer) }
     }
 
-    /// The minimum content width.
+    /// The minimum content width in pixels. The scrolled window will not shrink below this width.
     public var minContentWidth: Int {
         get { Int(gtk_scrolled_window_get_min_content_width(opaquePointer)) }
         set { gtk_scrolled_window_set_min_content_width(opaquePointer, Int32(newValue)) }
     }
 
-    /// The minimum content height.
+    /// The minimum content height in pixels. The scrolled window will not shrink below this height.
     public var minContentHeight: Int {
         get { Int(gtk_scrolled_window_get_min_content_height(opaquePointer)) }
         set { gtk_scrolled_window_set_min_content_height(opaquePointer, Int32(newValue)) }
     }
 
     /// Sets the scrollbar policy for both axes.
+    ///
+    /// Common policies: `GTK_POLICY_AUTOMATIC` (show when needed),
+    /// `GTK_POLICY_NEVER` (never show), `GTK_POLICY_ALWAYS` (always show).
     public func setPolicy(horizontal: GtkPolicyType, vertical: GtkPolicyType) {
         gtk_scrolled_window_set_policy(opaquePointer, horizontal, vertical)
     }

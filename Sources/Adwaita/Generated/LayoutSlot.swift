@@ -1,7 +1,23 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// A child slot within [class@Layout].
+/// A named placeholder in a ``Layout`` that receives a child widget at runtime.
+///
+/// Wraps `AdwLayoutSlot`. Each slot has a string identifier. When a
+/// ``MultiLayoutView`` switches layouts, it maps previously assigned
+/// children to the matching slot IDs in the new layout.
+///
+/// ```swift
+/// let slot = LayoutSlot(id: "sidebar")
+///
+/// let layout = Layout(content: slot)
+/// layout.name = "wide"
+///
+/// let multiView = MultiLayoutView()
+/// multiView.addLayout(layout)
+/// multiView.setChild("sidebar", child: sidebarWidget)
+/// ```
+///
 /// - Since: libadwaita 1.6
 @MainActor
 public final class LayoutSlot: Widget {

@@ -3,7 +3,24 @@ import GObjectSupport
 
 /// Tracks keyboard focus events.
 ///
-/// Wraps `GtkEventControllerFocus`.
+/// Wraps `GtkEventControllerFocus`. Notifies when a widget gains or loses
+/// keyboard focus. Attach to a widget with `addController()`.
+///
+/// ```swift
+/// let focusController = EventControllerFocus()
+/// focusController.onEnter {
+///     print("Widget gained focus")
+/// }
+/// focusController.onLeave {
+///     print("Widget lost focus")
+/// }
+/// entry.addController(focusController)
+///
+/// // Query focus state at any time
+/// if focusController.isFocus {
+///     print("Currently focused")
+/// }
+/// ```
 @MainActor
 public final class EventControllerFocus: GObjectRef {
     /// Creates a new focus event controller.

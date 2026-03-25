@@ -3,7 +3,23 @@ import GObjectSupport
 
 /// A search entry widget with a search icon and clear button.
 ///
-/// Wraps `GtkSearchEntry`.
+/// Wraps `GtkSearchEntry`. Includes a built-in search icon, a clear button,
+/// and a debounced ``onSearchChanged(_:)`` signal that fires after the user
+/// stops typing.
+///
+/// ```swift
+/// let search = SearchEntry()
+/// search.placeholderText = "Search items..."
+/// search.searchDelay = 300  // milliseconds
+///
+/// search.onSearchChanged {
+///     print("Searching for: \(search.text)")
+/// }
+///
+/// search.onActivate {
+///     print("User pressed Enter with: \(search.text)")
+/// }
+/// ```
 @MainActor
 public final class SearchEntry: Widget {
     /// Creates a new search entry.

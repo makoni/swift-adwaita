@@ -1,7 +1,31 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
-/// A widget showing toasts above its content.
+
+/// A container widget that displays ``Toast`` notifications above its content.
+///
+/// Wraps `AdwToastOverlay`. Place this as a wrapper around your main
+/// content so that toasts slide in from the bottom edge. Multiple
+/// toasts are queued and shown one at a time.
+///
+/// ```swift
+/// let overlay = ToastOverlay()
+/// overlay.child = myContentWidget
+///
+/// // Show a simple text toast
+/// overlay.showToast("Download complete")
+///
+/// // Show a toast with an action button
+/// overlay.showToast("Item deleted", button: "Undo") {
+///     // restore the item
+/// }
+///
+/// // Or build a Toast manually for full control
+/// let toast = Toast(title: "Custom toast")
+/// toast.timeout = 5
+/// toast.priority = ADW_TOAST_PRIORITY_HIGH
+/// overlay.addToast(toast)
+/// ```
 @MainActor
 public final class ToastOverlay: Widget {
 
@@ -16,7 +40,7 @@ public final class ToastOverlay: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    /// The `child` property.
+    /// The main content widget displayed beneath the toast area.
     public var child: Widget? {
         get { (adw_toast_overlay_get_child(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_toast_overlay_set_child(opaquePointer, newValue?.widgetPointer) }
@@ -32,7 +56,7 @@ public final class ToastOverlay: Widget {
         adw_toast_overlay_add_toast(opaquePointer, toast.opaquePointer)
     }
 
-    /// Calls `adw_toast_overlay_dismiss_all`.
+    /// Dismisses all currently displayed and queued toasts immediately.
     public func dismissAll() {
         adw_toast_overlay_dismiss_all(opaquePointer)
     }

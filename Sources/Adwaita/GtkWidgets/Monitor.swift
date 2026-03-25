@@ -3,7 +3,22 @@ import GObjectSupport
 
 /// Represents a physical monitor connected to the system.
 ///
-/// Wraps `GdkMonitor`. Obtain instances via ``Display/monitors``.
+/// Wraps `GdkMonitor`. Obtain instances via ``Display/monitors``. Provides
+/// geometry, physical dimensions, refresh rate, scale factor, and hardware
+/// identification.
+///
+/// ```swift
+/// if let display = Display.default {
+///     for monitor in display.monitors {
+///         let geo = monitor.geometry
+///         print("Resolution: \(geo.width)x\(geo.height) at scale \(monitor.scaleFactor)x")
+///         print("Refresh rate: \(monitor.refreshRate / 1000) Hz")
+///         if let name = monitor.connector {
+///             print("Connector: \(name)")
+///         }
+///     }
+/// }
+/// ```
 @MainActor
 public final class Monitor: GObjectRef {
 

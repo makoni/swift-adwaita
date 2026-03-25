@@ -1,10 +1,26 @@
 import CAdwaita
 import GObjectSupport
 
-/// A wrapper for GSettings — persistent application settings backed by a schema.
+/// A wrapper for GSettings -- persistent application settings backed by a schema.
 ///
-/// Requires a compiled GSettings schema installed on the system.
-/// Create a `.gschema.xml` file and compile with `glib-compile-schemas`.
+/// Wraps `GSettings`. Requires a compiled GSettings schema installed on the
+/// system. Create a `.gschema.xml` file and compile with `glib-compile-schemas`.
+///
+/// ```swift
+/// let settings = Settings(schemaId: "com.example.MyApp")
+///
+/// // Read and write typed values
+/// let name = settings.getString("username")
+/// settings.setString("username", value: "Alice")
+/// settings.setBool("dark-mode", value: true)
+/// settings.setInt("window-width", value: 800)
+///
+/// // React to changes on a specific key
+/// settings.onChanged(key: "dark-mode") {
+///     let dark = settings.getBool("dark-mode")
+///     print("Dark mode is now \(dark)")
+/// }
+/// ```
 @MainActor
 public final class Settings: GObjectRef {
     /// Creates a settings object for the given schema ID.

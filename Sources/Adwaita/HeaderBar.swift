@@ -1,10 +1,25 @@
 import CAdwaita
 import GObjectSupport
 
-/// An Adwaita header bar.
+/// A title bar with window controls and custom widgets.
 ///
-/// Wraps `AdwHeaderBar`, which provides a title bar area with window
-/// controls and optional custom widgets.
+/// Wraps `AdwHeaderBar`, which provides a title bar with window controls
+/// (close, minimize, maximize) and areas for packing custom widgets at
+/// the start and end.
+///
+/// ```swift
+/// let header = HeaderBar(title: "Settings", subtitle: "General")
+///
+/// // Add a menu button to the end
+/// let menuBtn = MenuButton(icon: .openMenu)
+/// header.packEnd(menuBtn)
+///
+/// // Add a back button to the start
+/// let backBtn = Button(icon: .goBack)
+/// header.packStart(backBtn)
+/// ```
+///
+/// Use with ``ToolbarView`` as the top bar of your window.
 @MainActor
 public final class HeaderBar: Widget {
     /// Creates a new header bar.

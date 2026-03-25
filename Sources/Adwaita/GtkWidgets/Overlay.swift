@@ -1,10 +1,25 @@
 import CAdwaita
 import GObjectSupport
 
-/// A container that stacks children on top of each other.
+/// A container that places overlay widgets on top of a main child widget.
 ///
 /// Wraps `GtkOverlay`. One child is the main content; additional
-/// children are overlaid on top using alignment properties.
+/// children are overlaid on top using alignment properties. Useful for
+/// floating buttons, badges, or status indicators over content.
+///
+/// ```swift
+/// // Floating action button over a list
+/// let overlay = Overlay()
+/// overlay.child = scrolledWindow  // main content underneath
+///
+/// let fab = Button.newFromIconName("list-add-symbolic")
+/// fab.addCssClass("circular")
+/// fab.halign = GTK_ALIGN_END
+/// fab.valign = GTK_ALIGN_END
+/// fab.marginEnd = 18
+/// fab.marginBottom = 18
+/// overlay.addOverlay(fab)
+/// ```
 @MainActor
 public final class Overlay: Widget {
     /// Creates a new overlay.
