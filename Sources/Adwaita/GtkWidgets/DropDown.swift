@@ -59,7 +59,10 @@ public final class DropDown: Widget {
         set { gtk_drop_down_set_show_arrow(opaquePointer, newValue ? 1 : 0) }
     }
 
-    /// Connects to the `notify::selected` signal to observe selection changes.
+    /// Emitted when the selection changes.
+    ///
+    /// - Parameter handler: Called when the selected item changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onSelectedChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.onNotify(self, property: .selected, handler: handler)

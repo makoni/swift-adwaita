@@ -86,7 +86,10 @@ public final class Settings: GObjectRef {
         g_settings_reset(castedPointer(), key)
     }
 
-    /// Connects to the `changed` signal for a specific key.
+    /// Emitted when a setting changes.
+    ///
+    /// - Parameter handler: Called when the specified key changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onChanged(key: String, handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connectString(self, signal: .changed) { changedKey in

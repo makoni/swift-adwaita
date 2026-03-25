@@ -95,31 +95,46 @@ public final class Calendar: Widget {
         gtk_calendar_clear_marks(opaquePointer)
     }
 
-    /// Connects to the `day-selected` signal.
+    /// Emitted when a day is selected.
+    ///
+    /// - Parameter handler: Called when the selected day changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onDaySelected(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .daySelected, handler: handler)
     }
 
-    /// Connects to the `prev-month` signal.
+    /// Emitted when the user navigates to the previous month.
+    ///
+    /// - Parameter handler: Called when the previous month is shown.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onPrevMonth(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .prevMonth, handler: handler)
     }
 
-    /// Connects to the `next-month` signal.
+    /// Emitted when the user navigates to the next month.
+    ///
+    /// - Parameter handler: Called when the next month is shown.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onNextMonth(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .nextMonth, handler: handler)
     }
 
-    /// Connects to the `prev-year` signal.
+    /// Emitted when the user navigates to the previous year.
+    ///
+    /// - Parameter handler: Called when the previous year is shown.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onPrevYear(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .prevYear, handler: handler)
     }
 
-    /// Connects to the `next-year` signal.
+    /// Emitted when the user navigates to the next year.
+    ///
+    /// - Parameter handler: Called when the next year is shown.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onNextYear(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .nextYear, handler: handler)

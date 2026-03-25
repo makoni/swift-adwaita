@@ -92,11 +92,11 @@ public final class Entry: Widget {
         set { gtk_entry_set_max_length(castedPointer(), Int32(newValue)) }
     }
 
-    /// Connects to the `activate` signal, fired when the user presses Enter.
+    /// Emitted when the user presses Enter.
     ///
     /// Use this to submit a form or trigger an action when the user confirms input.
     ///
-    /// - Parameter handler: The closure to run on activation.
+    /// - Parameter handler: Called when the entry is activated.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
@@ -173,7 +173,10 @@ public final class Entry: Widget {
         gtk_entry_set_icon_activatable(castedPointer(), position, activatable ? 1 : 0)
     }
 
-    /// Connects to the `icon-press` signal.
+    /// Emitted when an icon in the entry is clicked.
+    ///
+    /// - Parameter handler: Called when an icon is pressed. Receives the icon position.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onIconPress(_ handler: @escaping @MainActor (GtkEntryIconPosition) -> Void) -> SignalConnection {
         SignalHelper.connectInt(self, signal: .iconPress) { pos in
@@ -181,7 +184,10 @@ public final class Entry: Widget {
         }
     }
 
-    /// Connects to the `changed` signal on the entry buffer.
+    /// Emitted when the text changes.
+    ///
+    /// - Parameter handler: Called when the entry text changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.onNotify(self, property: .text, handler: handler)

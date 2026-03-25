@@ -31,21 +31,28 @@ public final class EventControllerMotion: GObjectRef {
         super.init(raw: pointer)
     }
 
-    /// Connects to the `motion` signal.
-    /// Handler receives: x coordinate, y coordinate.
+    /// Emitted when the pointer moves over the widget.
+    ///
+    /// - Parameter handler: Called when the pointer moves. Receives the x and y coordinates.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onMotion(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectDoubleDouble(self, signal: .motion, handler: handler)
     }
 
-    /// Connects to the `enter` signal.
-    /// Handler receives: x coordinate, y coordinate.
+    /// Emitted when the pointer enters the widget.
+    ///
+    /// - Parameter handler: Called when the pointer enters. Receives the x and y coordinates.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onEnter(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectDoubleDouble(self, signal: .enter, handler: handler)
     }
 
-    /// Connects to the `leave` signal.
+    /// Emitted when the pointer leaves the widget.
+    ///
+    /// - Parameter handler: Called when the pointer leaves.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onLeave(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .leave, handler: handler)

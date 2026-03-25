@@ -81,25 +81,37 @@ public class NavigationPage: Widget {
         set { adw_navigation_page_set_title(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>, newValue) }
     }
 
-    /// Connects to the `hidden` signal.
+    /// Emitted when the page is fully hidden.
+    ///
+    /// - Parameter handler: A closure invoked when the page is no longer visible.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onHidden(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .hidden, handler: handler)
     }
 
-    /// Connects to the `hiding` signal.
+    /// Emitted when the page is starting to hide.
+    ///
+    /// - Parameter handler: A closure invoked when the hiding transition begins.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onHiding(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .hiding, handler: handler)
     }
 
-    /// Connects to the `showing` signal.
+    /// Emitted when the page is starting to show.
+    ///
+    /// - Parameter handler: A closure invoked when the showing transition begins.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onShowing(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .showing, handler: handler)
     }
 
-    /// Connects to the `shown` signal.
+    /// Emitted when the page is fully shown.
+    ///
+    /// - Parameter handler: A closure invoked when the page is fully visible.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onShown(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .shown, handler: handler)

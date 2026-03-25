@@ -93,8 +93,7 @@ public final class ListBox: Widget, Container {
         gtk_list_box_select_all(opaquePointer)
     }
 
-    /// Connects to the `row-activated` signal, fired when a row is double-clicked
-    /// or activated via keyboard.
+    /// Emitted when a row is activated by double-click or keyboard.
     ///
     /// - Parameter handler: A closure that receives the activated ``ListBoxRow``.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
@@ -105,7 +104,7 @@ public final class ListBox: Widget, Container {
         }
     }
 
-    /// Connects to the `row-selected` signal, fired when the selected row changes.
+    /// Emitted when the selected row changes.
     ///
     /// - Parameter handler: A closure that receives the newly selected ``ListBoxRow``.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.

@@ -107,13 +107,19 @@ public final class FlowBox: Widget, Container {
         gtk_flow_box_unselect_all(opaquePointer)
     }
 
-    /// Connects to the `child-activated` signal.
+    /// Emitted when a child is activated by click or keyboard.
+    ///
+    /// - Parameter handler: Called when a child widget is activated.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onChildActivated(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .childActivated, handler: handler)
     }
 
-    /// Connects to the `selected-children-changed` signal.
+    /// Emitted when the selection changes.
+    ///
+    /// - Parameter handler: Called when the set of selected children changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onSelectedChildrenChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .selectedChildrenChanged, handler: handler)

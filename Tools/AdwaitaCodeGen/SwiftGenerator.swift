@@ -633,7 +633,10 @@ class SwiftGenerator {
                 : "@escaping @MainActor (\(typeList)) -> Void"
         }
 
-        var out = "\n    /// Connects to the `\(signal.name)` signal.\n"
+        var out = "\n    /// Emitted when the `\(signal.name)` signal is fired.\n"
+        out += "    ///\n"
+        out += "    /// - Parameter handler: Called when the signal is emitted.\n"
+        out += "    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.\n"
         out += "    @discardableResult\n"
         out += "    public func \(swiftName)(_ handler: \(closureType)) -> SignalConnection {\n"
         out += "        SignalHelper.\(connectMethod)(self, signal: \"\(signal.name)\", handler: handler)\n"
@@ -659,7 +662,10 @@ class SwiftGenerator {
             return "\n    // TODO: Signal `\(signal.name)` — unsupported return type `\(returnTypeName)` for pointer+GValue signal\n\n"
         }
 
-        var out = "\n    /// Connects to the `\(signal.name)` signal.\n"
+        var out = "\n    /// Emitted when the `\(signal.name)` signal is fired.\n"
+        out += "    ///\n"
+        out += "    /// - Parameter handler: Called when the signal is emitted.\n"
+        out += "    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.\n"
         out += "    @discardableResult\n"
         out += "    public func \(swiftName)(_ handler: @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> \(swiftReturnType)) -> SignalConnection {\n"
         out += "        SignalHelper.\(helperMethod)(self, signal: \"\(signal.name)\", handler: handler)\n"

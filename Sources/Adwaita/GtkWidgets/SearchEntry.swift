@@ -53,13 +53,19 @@ public final class SearchEntry: Widget {
         set { gtk_search_entry_set_search_delay(opaquePointer, UInt32(newValue)) }
     }
 
-    /// Connects to the `search-changed` signal (fired after typing stops).
+    /// Emitted when the search text changes (fired after typing stops).
+    ///
+    /// - Parameter handler: Called when the search text changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onSearchChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .searchChanged, handler: handler)
     }
 
-    /// Connects to the `activate` signal (user pressed Enter).
+    /// Emitted when the user presses Enter.
+    ///
+    /// - Parameter handler: Called when the search entry is activated.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .activate, handler: handler)

@@ -47,22 +47,28 @@ public final class GestureDrag: GObjectRef {
         return (x, y)
     }
 
-    /// Connects to the `drag-begin` signal.
-    /// Handler receives: start x, start y.
+    /// Emitted when a drag is started.
+    ///
+    /// - Parameter handler: Called when the drag begins. Receives the start x and start y coordinates.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onDragBegin(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectDoubleDouble(self, signal: .dragBegin, handler: handler)
     }
 
-    /// Connects to the `drag-update` signal.
-    /// Handler receives: offset x, offset y from start.
+    /// Emitted when the drag moves.
+    ///
+    /// - Parameter handler: Called as the drag moves. Receives the offset x and offset y from the start point.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onDragUpdate(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectDoubleDouble(self, signal: .dragUpdate, handler: handler)
     }
 
-    /// Connects to the `drag-end` signal.
-    /// Handler receives: offset x, offset y from start.
+    /// Emitted when the drag finishes.
+    ///
+    /// - Parameter handler: Called when the drag ends. Receives the offset x and offset y from the start point.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onDragEnd(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectDoubleDouble(self, signal: .dragEnd, handler: handler)

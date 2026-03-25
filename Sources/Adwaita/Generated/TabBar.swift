@@ -108,7 +108,11 @@ public final class TabBar: Widget {
         set { adw_tab_bar_set_view(opaquePointer, newValue?.opaquePointer) }
     }
 
-    /// Connects to the `extra-drag-drop` signal.
+    /// Emitted when external data is dropped on a tab.
+    ///
+    /// - Parameter handler: A closure receiving the target ``TabPage`` and the dropped `GValue`.
+    ///   Return `true` to accept the drop.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onExtraDragDrop(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> Bool) -> SignalConnection {
         SignalHelper.connectPointerGValueReturnBool(self, signal: .extraDragDrop) { (ptr: OpaquePointer, val: UnsafePointer<GValue>) in
@@ -116,7 +120,11 @@ public final class TabBar: Widget {
         }
     }
 
-    /// Connects to the `extra-drag-value` signal.
+    /// Emitted when an external drag data value is received over a tab.
+    ///
+    /// - Parameter handler: A closure receiving the target ``TabPage`` and the drag `GValue`.
+    ///   Return the preferred ``GdkDragAction``.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onExtraDragValue(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> GdkDragAction) -> SignalConnection {
         SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: .extraDragValue) { (ptr: OpaquePointer, val: UnsafePointer<GValue>) in

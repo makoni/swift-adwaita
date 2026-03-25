@@ -114,19 +114,28 @@ public final class StyleManager: GObjectRef {
         colorScheme = .default
     }
 
-    /// Connects to the `notify::dark` signal to be notified of theme changes.
+    /// Emitted when the dark mode setting has changed.
+    ///
+    /// - Parameter handler: A closure invoked when the dark/light theme changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onDarkChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .notify("dark"), handler: handler)
     }
 
-    /// Connects to the `notify::accent-color` signal.
+    /// Emitted when the system accent color has changed.
+    ///
+    /// - Parameter handler: A closure invoked when the accent color changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onAccentColorChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .notify("accent-color"), handler: handler)
     }
 
-    /// Connects to the `notify::high-contrast` signal.
+    /// Emitted when the high contrast setting has changed.
+    ///
+    /// - Parameter handler: A closure invoked when high contrast mode changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onHighContrastChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .notify("high-contrast"), handler: handler)

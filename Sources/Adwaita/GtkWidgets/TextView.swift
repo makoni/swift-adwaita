@@ -120,7 +120,10 @@ public final class TextView: Widget {
         set { gtk_text_view_set_overwrite(castedPointer(), newValue ? 1 : 0) }
     }
 
-    /// Connects to the buffer's `changed` signal (text was modified).
+    /// Emitted when the buffer text is modified.
+    ///
+    /// - Parameter handler: Called when the text view content changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         let buf = gtk_text_view_get_buffer(castedPointer())!

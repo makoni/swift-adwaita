@@ -86,7 +86,10 @@ public final class CheckButton: Widget {
         gtk_check_button_set_group(castedPointer(), other.map { $0.castedPointer() })
     }
 
-    /// Connects to the `toggled` signal.
+    /// Emitted when the toggle state changes.
+    ///
+    /// - Parameter handler: Called when the check button is toggled.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onToggled(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .toggled, handler: handler)

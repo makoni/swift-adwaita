@@ -63,7 +63,10 @@ public final class SpinButton: Widget {
         gtk_spin_button_set_increments(spinPointer, step, page)
     }
 
-    /// Connects to the `value-changed` signal.
+    /// Emitted when the value changes.
+    ///
+    /// - Parameter handler: Called when the spin button value changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onValueChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .valueChanged, handler: handler)

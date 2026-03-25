@@ -52,13 +52,19 @@ public final class TabButton: Widget {
         set { adw_tab_button_set_view(opaquePointer, newValue?.opaquePointer) }
     }
 
-    /// Connects to the `activate` signal.
+    /// Emitted when the button is activated (e.g. via keyboard).
+    ///
+    /// - Parameter handler: A closure invoked when the button is activated.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .activate, handler: handler)
     }
 
-    /// Connects to the `clicked` signal.
+    /// Emitted when the button is clicked.
+    ///
+    /// - Parameter handler: A closure invoked when the button is clicked.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .clicked, handler: handler)

@@ -63,19 +63,28 @@ public final class DragSource: GObjectRef {
         gtk_drag_source_get_drag(opaquePointer) != nil
     }
 
-    /// Connects to the `drag-begin` signal.
+    /// Emitted when a drag is started.
+    ///
+    /// - Parameter handler: Called when the drag begins.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onDragBegin(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .dragBegin) { _ in handler() }
     }
 
-    /// Connects to the `drag-end` signal.
+    /// Emitted when a drag ends.
+    ///
+    /// - Parameter handler: Called when the drag ends.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onDragEnd(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .dragEnd) { _ in handler() }
     }
 
-    /// Connects to the `drag-cancel` signal.
+    /// Emitted when a drag is cancelled.
+    ///
+    /// - Parameter handler: Called when the drag is cancelled.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onDragCancelled(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .dragCancel) { _ in handler() }

@@ -149,7 +149,10 @@ public final class BottomSheet: Widget {
         set { adw_bottom_sheet_set_show_drag_handle(opaquePointer, newValue ? 1 : 0) }
     }
 
-    /// Connects to the `close-attempt` signal.
+    /// Emitted when the user attempts to close the sheet while ``canClose`` is `false`.
+    ///
+    /// - Parameter handler: A closure invoked when a close attempt is blocked.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onCloseAttempt(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .closeAttempt, handler: handler)

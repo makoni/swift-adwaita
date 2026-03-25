@@ -73,8 +73,10 @@ public final class Monitor: GObjectRef {
         gdk_monitor_is_valid(opaquePointer) != 0
     }
 
-    /// Connects to the `invalidate` signal — emitted when the monitor
-    /// is disconnected or its properties change.
+    /// Emitted when the monitor is invalidated (disconnected or its properties change).
+    ///
+    /// - Parameter handler: Called when the monitor is invalidated.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onInvalidate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .invalidate, handler: handler)

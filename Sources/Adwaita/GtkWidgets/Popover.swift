@@ -78,7 +78,10 @@ public final class Popover: Widget {
         set { gtk_popover_set_mnemonics_visible(castedPointer(), newValue ? 1 : 0) }
     }
 
-    /// Connects to the `closed` signal.
+    /// Emitted when the popover is closed.
+    ///
+    /// - Parameter handler: Called when the popover is closed.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onClosed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .closed, handler: handler)

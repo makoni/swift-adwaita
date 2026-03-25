@@ -43,13 +43,19 @@ public final class EventControllerFocus: GObjectRef {
         gtk_event_controller_focus_contains_focus(opaquePointer) != 0
     }
 
-    /// Connects to the `enter` signal — widget gains focus.
+    /// Emitted when the widget gains focus.
+    ///
+    /// - Parameter handler: Called when focus enters the widget.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onEnter(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .enter, handler: handler)
     }
 
-    /// Connects to the `leave` signal — widget loses focus.
+    /// Emitted when the widget loses focus.
+    ///
+    /// - Parameter handler: Called when focus leaves the widget.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onLeave(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .leave, handler: handler)

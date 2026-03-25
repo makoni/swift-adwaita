@@ -177,8 +177,12 @@ public final class ApplicationWindow: Widget {
         set { gtk_window_set_destroy_with_parent(castedPointer(), newValue ? 1 : 0) }
     }
 
-    /// Connects to the `close-request` signal.
+    /// Emitted when the user requests the window to close.
+    ///
     /// Return `true` from the handler to prevent the window from closing.
+    ///
+    /// - Parameter handler: A closure invoked when the close request occurs.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onCloseRequest(_ handler: @escaping @MainActor () -> Bool) -> SignalConnection {
         SignalHelper.connectReturnBool(self, signal: .closeRequest, handler: handler)

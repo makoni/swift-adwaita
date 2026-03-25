@@ -31,8 +31,10 @@ public final class GestureClick: GObjectRef {
         super.init(raw: pointer)
     }
 
-    /// Connects to the `pressed` signal.
-    /// Handler receives: number of presses, x coordinate, y coordinate.
+    /// Emitted when a button is pressed.
+    ///
+    /// - Parameter handler: Called when a button press is detected. Receives the number of presses, x coordinate, and y coordinate.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onPressed(_ handler: @escaping @MainActor (Int, Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectIntDoubleDouble(self, signal: .pressed) { nPress, x, y in
@@ -40,8 +42,10 @@ public final class GestureClick: GObjectRef {
         }
     }
 
-    /// Connects to the `released` signal.
-    /// Handler receives: number of presses, x coordinate, y coordinate.
+    /// Emitted when a button is released.
+    ///
+    /// - Parameter handler: Called when a button release is detected. Receives the number of presses, x coordinate, and y coordinate.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onReleased(_ handler: @escaping @MainActor (Int, Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectIntDoubleDouble(self, signal: .released) { nPress, x, y in

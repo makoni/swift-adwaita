@@ -133,13 +133,19 @@ public final class TextBuffer: GObjectRef {
         gtk_text_buffer_end_user_action(bufferPointer)
     }
 
-    /// Connects to the `changed` signal.
+    /// Emitted when the buffer content changes.
+    ///
+    /// - Parameter handler: Called when the buffer text changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .changed, handler: handler)
     }
 
-    /// Connects to the `modified-changed` signal.
+    /// Emitted when the modified flag changes.
+    ///
+    /// - Parameter handler: Called when the buffer's modified state changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onModifiedChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .modifiedChanged, handler: handler)
