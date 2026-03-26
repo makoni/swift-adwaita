@@ -31,7 +31,12 @@ public class GtkWindow: Widget {
     }
 
     /// Presents the window to the user.
+    ///
+    /// Automatically retains the underlying GObject so the window stays
+    /// alive even if the Swift variable goes out of scope. The extra
+    /// reference is released when the window is closed.
     public func present() {
+        retainUntilClose()
         gtk_window_present(windowPointer)
     }
 

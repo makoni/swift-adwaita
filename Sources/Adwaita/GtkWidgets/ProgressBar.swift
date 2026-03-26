@@ -74,4 +74,13 @@ public final class ProgressBar: Widget {
         get { gtk_progress_bar_get_ellipsize(opaquePointer) }
         set { gtk_progress_bar_set_ellipsize(opaquePointer, newValue) }
     }
+
+    /// Emitted when the fraction changes.
+    ///
+    /// - Parameter handler: Called when the progress fraction changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    @discardableResult
+    public func onFractionChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.onNotify(self, property: .custom("fraction"), handler: handler)
+    }
 }

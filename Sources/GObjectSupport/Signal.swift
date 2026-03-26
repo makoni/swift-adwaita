@@ -61,6 +61,15 @@ public enum SignalHelper {
     // MARK: - Internal connect helper
 
     /// Core helper that connects a signal with a given trampoline and boxed closure.
+    ///
+    /// The closure box is released via `g_idle_add` rather than directly in the
+    /// destroy notify. This prevents crashes when a signal handler's closure
+    /// captures the source widget (creating a retain cycle): during
+    /// `gtk_widget_dispose`, GTK disconnects signals and fires destroy notifies.
+    /// If the closure's release triggers the Swift wrapper's `deinit` → `g_object_unref`
+    /// on the same object that is mid-dispose, it can cause re-entrant finalization
+    /// and a SIGSEGV. Deferring the release to the next main-loop iteration ensures
+    /// all dispose processing completes before any captured references are freed.
     @discardableResult
     static func connectRaw(
         _ instance: GObjectRef,
@@ -77,7 +86,13 @@ public enum SignalHelper {
             boxPtr,
             { userData, _ in
                 guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                // Defer release to the next main-loop iteration so that
+                // captured widget references are freed after dispose completes.
+                g_idle_add({ ptr in
+                    guard let ptr else { return 0 }
+                    Unmanaged<AnyObject>.fromOpaque(ptr).release()
+                    return 0  // G_SOURCE_REMOVE
+                }, userData)
             },
             GConnectFlags(rawValue: 0)
         )

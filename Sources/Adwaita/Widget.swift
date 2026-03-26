@@ -235,6 +235,11 @@ open class Widget: GObjectRef {
     /// secondary.retainUntilClose()
     /// ```
     public func retainUntilClose() {
+        // Guard against double-calling — idempotent.
+        let key = "swift-retained"
+        guard g_object_get_data(gobjectPointer, key) == nil else { return }
+        g_object_set_data(gobjectPointer, key, UnsafeMutableRawPointer(bitPattern: 1))
+
         // Add an extra GObject ref so the object survives after the Swift
         // wrapper is deallocated. When the "destroy" signal fires during
         // gtk_widget_dispose(), we schedule an idle callback that releases
@@ -396,6 +401,29 @@ open class Widget: GObjectRef {
     /// ```
     public func insertActionGroup(_ prefix: String, _ group: SimpleActionGroup) {
         gtk_widget_insert_action_group(widgetPointer, prefix, OpaquePointer(group.pointer))
+    }
+
+    // MARK: - Property Observation
+
+    /// Observes changes to any GObject property by name.
+    ///
+    /// This is the generic way to react to property changes. Many widgets
+    /// provide dedicated convenience methods (e.g. ``Switch/onActiveChanged(_:)``),
+    /// but you can use this for any property.
+    ///
+    /// ```swift
+    /// entry.onNotify(.text) {
+    ///     print("Text changed to: \(entry.text)")
+    /// }
+    /// ```
+    ///
+    /// - Parameters:
+    ///   - property: The property to observe.
+    ///   - handler: Called when the property value changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    @discardableResult
+    public func onNotify(_ property: PropertyName, handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.onNotify(self, property: property, handler: handler)
     }
 
     // MARK: - Focus

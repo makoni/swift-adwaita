@@ -38,10 +38,9 @@ func buildApp() {
                     demoWindow.defaultWidth = 700
                     demoWindow.defaultHeight = 500
                     demoWindow.content = example.buildWidget()
-                    demoWindow.transientFor = window.cast(GtkWindow.self)
+                    demoWindow.transientFor = window
                     demoWindow.destroyWithParent = true
                     demoWindow.present()
-                    demoWindow.retainUntilClose()
                 }
                 preview.child = tryBtn
                 contentStack.addNamed(preview, name: example.id)

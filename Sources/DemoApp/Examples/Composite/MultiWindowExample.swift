@@ -18,7 +18,7 @@ struct MultiWindowExample: DemoExample {
     secondary.defaultHeight = 300
 
     // Make it transient to the main window
-    secondary.transientFor = mainWindow.cast(GtkWindow.self)
+    secondary.transientFor = mainWindow
 
     let content = StatusPage()
     content.title = "I'm a secondary window!"
@@ -90,7 +90,6 @@ struct MultiWindowExample: DemoExample {
             secondary.setContent(toolbar)
             secondary.destroyWithParent = true
             secondary.present()
-            secondary.retainUntilClose()
 
             counterLabel.text = "Windows opened: \(windowCount)"
         }
@@ -144,7 +143,6 @@ struct MultiWindowExample: DemoExample {
             modal.setContent(toolbar)
             modal.destroyWithParent = true
             modal.present()
-            modal.retainUntilClose()
 
             counterLabel.text = "Windows opened: \(windowCount)"
         }

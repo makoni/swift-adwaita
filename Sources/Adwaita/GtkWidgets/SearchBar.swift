@@ -63,4 +63,13 @@ public final class SearchBar: Widget {
     public func setKeyCaptureWidget(_ widget: Widget?) {
         gtk_search_bar_set_key_capture_widget(opaquePointer, widget?.widgetPointer)
     }
+
+    /// Emitted when the search mode is toggled on or off.
+    ///
+    /// - Parameter handler: Called when the search mode changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    @discardableResult
+    public func onSearchModeChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.onNotify(self, property: .custom("search-mode-enabled"), handler: handler)
+    }
 }

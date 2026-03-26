@@ -81,4 +81,13 @@ public final class LevelBar: Widget {
     public func removeOffsetValue(name: String) {
         gtk_level_bar_remove_offset_value(opaquePointer, name)
     }
+
+    /// Emitted when the value changes.
+    ///
+    /// - Parameter handler: Called when the level bar value changes.
+    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    @discardableResult
+    public func onValueChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.onNotify(self, property: .value, handler: handler)
+    }
 }
