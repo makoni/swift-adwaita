@@ -7,17 +7,18 @@ struct VideoExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Video from file
-    let video = Video(filename: "/path/to/video.mp4")
+    let video = Video()
     video.autoplay = true
     video.loop = true
 
-    // Or set file later
-    let video2 = Video()
-    video2.setFilename("/path/to/video.mp4")
-
-    // Media controls for a stream
-    let controls = MediaControls()
+    // Load via FileDialog
+    let dialog = FileDialog()
+    dialog.setFilters([
+        FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi"]),
+    ])
+    dialog.open(parent: window) { path in
+        if let path { video.setFilename(path) }
+    }
     """
 
     func buildWidget() -> Widget {
@@ -35,26 +36,25 @@ struct VideoExample: DemoExample {
 
         group1.add(video)
 
-        let pathEntry = Entry()
-        pathEntry.text = ""
-        pathEntry.placeholderText = "Enter video file path..."
-        pathEntry.hexpand = true
-        pathEntry.setMargins(8)
-
-        let loadBtn = Button(label: "Load")
-        loadBtn.addCSSClass("suggested-action")
-        loadBtn.onClicked { [pathEntry, video] in
-            let path = pathEntry.text
-            if !path.isEmpty {
-                video.setFilename(path)
+        let openBtn = Button(label: "Open Video...")
+        openBtn.addCSSClass("suggested-action")
+        openBtn.addCSSClass("pill")
+        openBtn.halign = .center
+        openBtn.setMargins(12)
+        openBtn.onClicked { [video, box] in
+            let dialog = FileDialog()
+            dialog.title = "Open Video"
+            dialog.setFilters([
+                FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi", "mov", "ogv"]),
+                FileFilter(name: "All files", patterns: ["*"]),
+            ])
+            dialog.open(parent: box.root) { path in
+                if let path {
+                    video.setFilename(path)
+                }
             }
         }
-
-        let loadRow = Box(orientation: .horizontal, spacing: 8)
-        loadRow.setMargins(8)
-        loadRow.append(pathEntry)
-        loadRow.append(loadBtn)
-        group1.add(loadRow)
+        group1.add(openBtn)
 
         box.append(group1)
 

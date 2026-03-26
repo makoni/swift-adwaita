@@ -215,8 +215,87 @@ window.addKeyboardShortcut(key: .q, modifiers: .control) {
 }
 ```
 
+### Putting it all together
+
+Here is a complete application that combines toolbar, preferences rows,
+signals, property observation, CSS styling, and keyboard shortcuts:
+
+```swift
+import Adwaita
+
+let app = Application(id: "com.example.Notes")
+
+app.onActivate {
+    let window = ApplicationWindow(application: app)
+    window.title = "Quick Notes"
+    window.defaultWidth = 500
+    window.defaultHeight = 400
+
+    // Header bar with a save button
+    let headerBar = HeaderBar()
+    let saveBtn = Button(label: "Save")
+        .cssClass(.suggestedAction)
+    headerBar.packEnd(saveBtn)
+
+    // Text editor
+    let textView = TextView()
+    textView.setMargins(12)
+    textView.wrapMode = .wordChar
+
+    let scrolled = ScrolledWindow()
+    scrolled.child = textView
+
+    // Status bar with character count
+    let statusLabel = Label("0 characters")
+        .cssClass(.dimLabel)
+        .margins(6)
+
+    let statusBox = Box(orientation: .horizontal, spacing: 0)
+    statusBox.halign = .end
+    statusBox.append(statusLabel)
+
+    // Update character count on text changes
+    textView.buffer.onChanged {
+        let count = textView.buffer.charCount
+        statusLabel.text = "\(count) characters"
+    }
+
+    // Save action
+    saveBtn.onClicked {
+        let text = textView.buffer.text
+        print("Saving \(text.count) characters...")
+    }
+
+    // Ctrl+S keyboard shortcut
+    window.addKeyboardShortcut(key: .s, modifiers: .control) {
+        let text = textView.buffer.text
+        print("Quick save: \(text.count) characters")
+        return true
+    }
+
+    // Layout
+    let toolbar = ToolbarView()
+    toolbar.addTopBar(headerBar)
+    toolbar.content = scrolled
+    toolbar.addBottomBar(statusBox)
+
+    window.setContent(toolbar)
+    window.present()
+}
+
+app.run()
+```
+
 ### Next steps
 
+- <doc:NavigationPatterns> — build multi-page apps with push/pop and split views
+- <doc:WorkingWithDialogs> — present alerts, file pickers, and preference sheets
+- <doc:ListsAndData> — display collections with list boxes and data models
+- <doc:ResponsiveLayouts> — adapt your UI to different window sizes
+- <doc:StylingAndTheming> — CSS classes, dark mode, custom stylesheets
+- <doc:MenusAndActions> — menu bars, popover menus, and GAction framework
+- <doc:FeedbackWidgets> — toasts, banners, progress bars, and status pages
+- <doc:AnimationsAndGestures> — animate properties and handle touch input
+
 Explore the widget catalog in the sidebar — every class has inline code
-examples in its documentation. The `DemoApp` target in the repository
-is a runnable showcase of all widgets.
+examples. Run the `DemoApp` target in the repository for a live showcase.

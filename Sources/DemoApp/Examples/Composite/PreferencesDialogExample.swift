@@ -5,7 +5,7 @@ struct PreferencesDialogExample: DemoExample {
     let name = "Preferences Dialog"
     let id = "prefsdialog"
     let category: ExampleCategory = .composite
-    let opensInWindow = true
+    let opensInWindow = false
 
     let sourceCode = """
     let dialog = PreferencesDialog()
@@ -27,80 +27,94 @@ struct PreferencesDialogExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let dialog = PreferencesDialog()
-        dialog.searchEnabled = true
+        let statusPage = StatusPage()
+        statusPage.iconName = "preferences-other-symbolic"
+        statusPage.title = "Preferences Dialog"
+        statusPage.description = "A multi-page preferences dialog with search."
 
-        // General page
-        let general = PreferencesPage()
-        general.title = "General"
-        general.iconName = "preferences-other-symbolic"
+        let openBtn = Button(label: "Open Preferences")
+        openBtn.addCSSClass("suggested-action")
+        openBtn.addCSSClass("pill")
+        openBtn.halign = .center
+        openBtn.onClicked {
+            let dialog = PreferencesDialog()
+            dialog.searchEnabled = true
 
-        let appearanceGroup = PreferencesGroup()
-        appearanceGroup.title = "Appearance"
-        appearanceGroup.description = "Customize the look and feel"
+            // General page
+            let general = PreferencesPage()
+            general.title = "General"
+            general.iconName = "preferences-other-symbolic"
 
-        let darkRow = SwitchRow()
-        darkRow.title = "Dark Mode"
-        darkRow.subtitle = "Use dark color scheme"
-        appearanceGroup.add(darkRow)
+            let appearanceGroup = PreferencesGroup()
+            appearanceGroup.title = "Appearance"
+            appearanceGroup.description = "Customize the look and feel"
 
-        let animationsRow = SwitchRow()
-        animationsRow.title = "Enable Animations"
-        animationsRow.subtitle = "Show transition animations"
-        animationsRow.active = true
-        appearanceGroup.add(animationsRow)
+            let darkRow = SwitchRow()
+            darkRow.title = "Dark Mode"
+            darkRow.subtitle = "Use dark color scheme"
+            appearanceGroup.add(darkRow)
 
-        let fontRow = SpinRow.newWithRange(min: 8, max: 32, step: 1)
-        fontRow.title = "Font Size"
-        fontRow.subtitle = "Base font size in points"
-        fontRow.value = 14
-        appearanceGroup.add(fontRow)
+            let animationsRow = SwitchRow()
+            animationsRow.title = "Enable Animations"
+            animationsRow.subtitle = "Show transition animations"
+            animationsRow.active = true
+            appearanceGroup.add(animationsRow)
 
-        general.add(appearanceGroup)
+            let fontRow = SpinRow.newWithRange(min: 8, max: 32, step: 1)
+            fontRow.title = "Font Size"
+            fontRow.subtitle = "Base font size in points"
+            fontRow.value = 14
+            appearanceGroup.add(fontRow)
 
-        // Notifications group
-        let notifGroup = PreferencesGroup()
-        notifGroup.title = "Notifications"
+            general.add(appearanceGroup)
 
-        let soundRow = SwitchRow()
-        soundRow.title = "Sound"
-        soundRow.subtitle = "Play notification sounds"
-        soundRow.active = true
-        notifGroup.add(soundRow)
+            // Notifications group
+            let notifGroup = PreferencesGroup()
+            notifGroup.title = "Notifications"
 
-        let badgeRow = SwitchRow()
-        badgeRow.title = "Badge Count"
-        badgeRow.subtitle = "Show unread count on app icon"
-        badgeRow.active = true
-        notifGroup.add(badgeRow)
+            let soundRow = SwitchRow()
+            soundRow.title = "Sound"
+            soundRow.subtitle = "Play notification sounds"
+            soundRow.active = true
+            notifGroup.add(soundRow)
 
-        general.add(notifGroup)
-        dialog.add(general)
+            let badgeRow = SwitchRow()
+            badgeRow.title = "Badge Count"
+            badgeRow.subtitle = "Show unread count on app icon"
+            badgeRow.active = true
+            notifGroup.add(badgeRow)
 
-        // Account page
-        let account = PreferencesPage()
-        account.title = "Account"
-        account.iconName = "avatar-default-symbolic"
+            general.add(notifGroup)
+            dialog.add(general)
 
-        let profileGroup = PreferencesGroup()
-        profileGroup.title = "Profile"
+            // Account page
+            let account = PreferencesPage()
+            account.title = "Account"
+            account.iconName = "avatar-default-symbolic"
 
-        let nameRow = ActionRow()
-        nameRow.title = "Display Name"
-        nameRow.subtitle = "John Doe"
-        let editIcon = Image(iconName: "document-edit-symbolic")
-        editIcon.valign = .center
-        nameRow.addSuffix(editIcon)
-        profileGroup.add(nameRow)
+            let profileGroup = PreferencesGroup()
+            profileGroup.title = "Profile"
 
-        let emailRow = ActionRow()
-        emailRow.title = "Email"
-        emailRow.subtitle = "john@example.com"
-        profileGroup.add(emailRow)
+            let nameRow = ActionRow()
+            nameRow.title = "Display Name"
+            nameRow.subtitle = "John Doe"
+            let editIcon = Image(iconName: "document-edit-symbolic")
+            editIcon.valign = .center
+            nameRow.addSuffix(editIcon)
+            profileGroup.add(nameRow)
 
-        account.add(profileGroup)
-        dialog.add(account)
+            let emailRow = ActionRow()
+            emailRow.title = "Email"
+            emailRow.subtitle = "john@example.com"
+            profileGroup.add(emailRow)
 
-        return dialog
+            account.add(profileGroup)
+            dialog.add(account)
+
+            dialog.present(openBtn)
+        }
+
+        statusPage.child = openBtn
+        return statusPage
     }
 }

@@ -1,7 +1,26 @@
 import CAdwaita
 import GObjectSupport
 
-/// Base class for GTK widget wrappers.
+/// Base class for all GTK and libadwaita widget wrappers.
+///
+/// Every visual element — buttons, labels, containers, dialogs — inherits from
+/// `Widget`. It provides common properties and methods shared by all widgets:
+/// visibility, sensitivity, CSS styling, layout alignment, margins, size
+/// requests, event controllers, keyboard shortcuts, and signal handling.
+///
+/// You typically don't create `Widget` instances directly. Instead, use concrete
+/// subclasses like ``Button``, ``Label``, ``Box``, or ``HeaderBar``.
+///
+/// ```swift
+/// let button = Button(label: "OK")
+/// button.halign = .center
+/// button.addCSSClass(.suggestedAction)
+/// button.setMargins(12)
+///
+/// button.onClicked {
+///     print("Clicked!")
+/// }
+/// ```
 @MainActor
 open class Widget: GObjectRef {
     /// Returns the raw pointer as a `GtkWidget` pointer.
@@ -169,6 +188,65 @@ open class Widget: GObjectRef {
     public var root: Widget? {
         guard let ptr = gtk_widget_get_root(widgetPointer) else { return nil }
         return Widget(borrowing: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The containing ``GtkWindow``, if this widget is inside a window.
+    ///
+    /// This walks up the widget tree to find the toplevel window. Use this
+    /// instead of capturing a window reference in signal closures to avoid
+    /// preventing deallocation during GTK dispose.
+    ///
+    /// ```swift
+    /// let closeBtn = Button(label: "Close")
+    /// closeBtn.onClicked {
+    ///     closeBtn.window?.close()
+    /// }
+    /// ```
+    public var window: GtkWindow? {
+        guard let ptr = gtk_widget_get_root(widgetPointer) else { return nil }
+        return GtkWindow(borrowing: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// Closes the containing window.
+    ///
+    /// Convenience for `self.window?.close()`. Safe to call from signal
+    /// handlers without capturing the window reference.
+    ///
+    /// ```swift
+    /// closeBtn.onClicked {
+    ///     closeBtn.closeWindow()
+    /// }
+    /// ```
+    public func closeWindow() {
+        window?.close()
+    }
+
+    /// Keeps the underlying GObject alive until this widget is destroyed.
+    ///
+    /// Call this on windows or widgets that are created locally and would
+    /// otherwise be deallocated when the variable goes out of scope. An
+    /// extra GObject reference is added and released after the widget's
+    /// `destroy` signal fires during dispose.
+    ///
+    /// ```swift
+    /// let secondary = ApplicationWindow(application: app)
+    /// secondary.title = "Popup"
+    /// secondary.present()
+    /// secondary.retainUntilClose()
+    /// ```
+    public func retainUntilClose() {
+        // Add an extra GObject ref so the object survives after the Swift
+        // wrapper is deallocated. When the "destroy" signal fires during
+        // gtk_widget_dispose(), we schedule an idle callback that releases
+        // the extra ref on the next main-loop iteration — safely after
+        // dispose has fully completed.
+        g_object_ref(pointer)
+        cadw_signal_connect(
+            pointer,
+            "destroy",
+            unsafeBitCast(retainDestroyTrampoline, to: GCallback.self),
+            pointer
+        )
     }
 
     /// The parent widget.
@@ -562,3 +640,17 @@ open class Widget: GObjectRef {
     }
 
 }
+
+/// C trampoline for the "destroy" signal in ``Widget/retainUntilClose()``.
+///
+/// Schedules `g_object_unref` on the next main-loop iteration so the extra
+/// ref is released safely after `gtk_widget_dispose()` has completed.
+private let retainDestroyTrampoline:
+    @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void = { _, userData in
+        guard let userData else { return }
+        g_idle_add({ userData in
+            guard let userData else { return 0 }
+            g_object_unref(userData)
+            return 0  // G_SOURCE_REMOVE
+        }, userData)
+    }

@@ -7,13 +7,22 @@ struct SplitButtonExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let menu = GMenuRef()
-    menu.append("Copy", action: "app.copy")
-    menu.append("Paste", action: "app.paste")
-
     let splitBtn = SplitButton()
-    splitBtn.label = "Open"
-    splitBtn.setMenuModel(menu)
+    splitBtn.label = "Action"
+
+    // Use a popover with custom content
+    let popover = Popover()
+    let popBox = Box(orientation: .vertical, spacing: 4)
+    let optBtn = Button(label: "Option A")
+    optBtn.addCSSClass("flat")
+    optBtn.onClicked {
+        print("Option A selected")
+        popover.popdown()
+    }
+    popBox.append(optBtn)
+    popover.child = popBox
+    splitBtn.setPopover(popover)
+
     splitBtn.onClicked {
         print("Main button clicked")
     }
@@ -23,22 +32,31 @@ struct SplitButtonExample: DemoExample {
         let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
-        // SplitButton with menu
+        // SplitButton with popover
         let group1 = PreferencesGroup()
-        group1.title = "Split Button with Menu"
-        group1.description = "A button with a dropdown menu for additional actions"
+        group1.title = "Split Button with Popover"
+        group1.description = "A button with a dropdown for additional actions"
 
         let statusLabel = Label("Click the button or dropdown")
         statusLabel.addCSSClass("dim-label")
 
-        let menu = GMenuRef()
-        menu.append("Option A", action: "win.optionA")
-        menu.append("Option B", action: "win.optionB")
-        menu.append("Option C", action: "win.optionC")
+        let popover1 = Popover()
+        let popBox1 = Box(orientation: .vertical, spacing: 2)
+        popBox1.setMargins(4)
+        for option in ["Option A", "Option B", "Option C"] {
+            let btn = Button(label: option)
+            btn.addCSSClass("flat")
+            btn.onClicked { [statusLabel, popover1] in
+                statusLabel.text = "\(option) selected"
+                popover1.popdown()
+            }
+            popBox1.append(btn)
+        }
+        popover1.child = popBox1
 
         let splitBtn = SplitButton()
         splitBtn.label = "Action"
-        splitBtn.setMenuModel(menu)
+        splitBtn.setPopover(popover1)
         splitBtn.halign = .center
         splitBtn.setMargins(12)
         splitBtn.onClicked { [statusLabel] in
@@ -54,13 +72,26 @@ struct SplitButtonExample: DemoExample {
         group2.title = "Icon Split Button"
         group2.description = "A split button with an icon instead of text"
 
-        let menu2 = GMenuRef()
-        menu2.append("New Window", action: "app.newWindow")
-        menu2.append("New Tab", action: "app.newTab")
+        let popover2 = Popover()
+        let popBox2 = Box(orientation: .vertical, spacing: 2)
+        popBox2.setMargins(4)
+        for (label, icon) in [("New Window", "window-new-symbolic"), ("New Tab", "tab-new-symbolic")] {
+            let btn = Button()
+            let content = ButtonContent()
+            content.label = label
+            content.iconName = icon
+            btn.child = content
+            btn.addCSSClass("flat")
+            btn.onClicked { [popover2] in
+                popover2.popdown()
+            }
+            popBox2.append(btn)
+        }
+        popover2.child = popBox2
 
         let iconSplit = SplitButton()
         iconSplit.iconName = "document-new-symbolic"
-        iconSplit.setMenuModel(menu2)
+        iconSplit.setPopover(popover2)
         iconSplit.halign = .center
         iconSplit.setMargins(12)
         group2.add(iconSplit)
@@ -71,21 +102,33 @@ struct SplitButtonExample: DemoExample {
         let group3 = PreferencesGroup()
         group3.title = "Styles"
 
-        let menu3 = GMenuRef()
-        menu3.append("Item 1", action: "app.item1")
+        let pop3 = Popover()
+        let pop3Box = Box(orientation: .vertical, spacing: 2)
+        pop3Box.setMargins(4)
+        let pop3Btn = Button(label: "Save As...")
+        pop3Btn.addCSSClass("flat")
+        pop3Btn.onClicked { [pop3] in pop3.popdown() }
+        pop3Box.append(pop3Btn)
+        pop3.child = pop3Box
 
         let suggestedSplit = SplitButton()
-        suggestedSplit.label = "Suggested"
-        suggestedSplit.setMenuModel(menu3)
+        suggestedSplit.label = "Save"
+        suggestedSplit.setPopover(pop3)
         suggestedSplit.addCSSClass("suggested-action")
         suggestedSplit.halign = .center
 
-        let menu4 = GMenuRef()
-        menu4.append("Item 1", action: "app.item1")
+        let pop4 = Popover()
+        let pop4Box = Box(orientation: .vertical, spacing: 2)
+        pop4Box.setMargins(4)
+        let pop4Btn = Button(label: "Delete All")
+        pop4Btn.addCSSClass("flat")
+        pop4Btn.onClicked { [pop4] in pop4.popdown() }
+        pop4Box.append(pop4Btn)
+        pop4.child = pop4Box
 
         let destructiveSplit = SplitButton()
-        destructiveSplit.label = "Destructive"
-        destructiveSplit.setMenuModel(menu4)
+        destructiveSplit.label = "Delete"
+        destructiveSplit.setPopover(pop4)
         destructiveSplit.addCSSClass("destructive-action")
         destructiveSplit.halign = .center
 

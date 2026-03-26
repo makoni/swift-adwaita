@@ -95,6 +95,11 @@ struct BottomSheetExample: DemoExample {
         bottomBar.append(barLabel)
         bottomSheet.bottomBar = bottomBar
 
-        return bottomSheet
+        let headerBar = HeaderBar()
+        let toolbarView = ToolbarView()
+        toolbarView.addTopBar(headerBar)
+        toolbarView.content = bottomSheet
+
+        return toolbarView
     }
 }

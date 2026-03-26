@@ -27,8 +27,6 @@ struct MenuBarExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let box = Box(orientation: .vertical, spacing: 0)
-
         // Build the menu model
         let fileMenu = GMenuRef()
         fileMenu.append("New", action: "bar.new")
@@ -66,8 +64,11 @@ struct MenuBarExample: DemoExample {
         statusLabel.valign = .center
         statusLabel.halign = .center
 
-        box.append(menuBar)
-        box.append(statusLabel)
+        let headerBar = HeaderBar()
+        let toolbarView = ToolbarView()
+        toolbarView.addTopBar(headerBar)
+        toolbarView.addTopBar(menuBar)
+        toolbarView.content = statusLabel
 
         // Create actions
         let actionGroup = SimpleActionGroup()
@@ -85,8 +86,8 @@ struct MenuBarExample: DemoExample {
             }
             actionGroup.addAction(action)
         }
-        box.insertActionGroup("bar", actionGroup)
+        toolbarView.insertActionGroup("bar", actionGroup)
 
-        return box
+        return toolbarView
     }
 }

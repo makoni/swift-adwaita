@@ -4,7 +4,10 @@ An imperative Swift wrapper for GTK4 and libadwaita, providing native GNOME desk
 
 ## Overview
 
-**swift-adwaita** gives you direct, imperative access to the full GTK4 and libadwaita widget toolkit from Swift. Every widget is a class with mutable properties and methods — no result builders, no declarative DSL, just straightforward object-oriented code.
+**swift-adwaita** gives you direct, imperative access to the full GTK4 and
+libadwaita widget toolkit from Swift. Every widget is a class with mutable
+properties and methods — no result builders, no declarative DSL, just
+straightforward object-oriented code.
 
 ```swift
 import Adwaita
@@ -35,6 +38,16 @@ app.onActivate {
 app.run()
 ```
 
+### Key features
+
+- **74 Adw widgets + 17 GTK widgets** wrapped as Swift classes
+- **Signals** — connect handlers with `onClicked`, `onActivate`, and 47 more
+- **Fluent setters** — chain `.halign(.center).vexpand().cssClass(.pill)`
+- **Type-safe CSS classes** — `CSSClass.destructiveAction`, `.title1`, `.pill`
+- **GObject property observation** — `widget.onNotify(.text) { ... }`
+- **Data binding** — `source.bind(.active, to: target, property: .sensitive)`
+- **Keyboard shortcuts** — `window.addKeyboardShortcut(key: .q, modifiers: .control) { ... }`
+
 ### Requirements
 
 - **Linux** with GTK4 and libadwaita installed
@@ -59,7 +72,8 @@ targets: [
 ]
 ```
 
-Then `import Adwaita` — the library re-exports `GObjectSupport` and `CAdwaita` automatically.
+Then `import Adwaita` — the library re-exports `GObjectSupport` and `CAdwaita`
+automatically.
 
 ## Topics
 
@@ -69,6 +83,17 @@ Then `import Adwaita` — the library re-exports `GObjectSupport` and `CAdwaita`
 - ``Application``
 - ``ApplicationWindow``
 - ``Widget``
+
+### Guides
+
+- <doc:NavigationPatterns>
+- <doc:WorkingWithDialogs>
+- <doc:ListsAndData>
+- <doc:ResponsiveLayouts>
+- <doc:StylingAndTheming>
+- <doc:MenusAndActions>
+- <doc:FeedbackWidgets>
+- <doc:AnimationsAndGestures>
 
 ### Layout Containers
 

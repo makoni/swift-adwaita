@@ -2,7 +2,7 @@ import Adwaita
 
 @MainActor
 struct DragDropExample: DemoExample {
-    let name = "Drag &amp; Drop"
+    let name = "Drag & Drop"
     let id = "dragdrop"
     let category: ExampleCategory = .widgets
 
@@ -33,7 +33,7 @@ struct DragDropExample: DemoExample {
         box.setMargins(24)
 
         let group = PreferencesGroup()
-        group.title = "Drag &amp; Drop"
+        group.title = "Drag & Drop"
         group.description = "Drag items from the source area to the target area"
 
         // Source items
@@ -48,15 +48,17 @@ struct DragDropExample: DemoExample {
             let card = Box(orientation: .vertical, spacing: 4)
             card.addCSSClass("card")
             card.setMargins(8)
-            card.setSizeRequest(width: 80, height: 60)
+            card.setSizeRequest(width: 80, height: 70)
 
             let icon = Image(iconName: "emoji-food-symbolic")
             icon.halign = .center
+            icon.marginTop = 12
             card.append(icon)
 
             let label = Label(item)
             label.addCSSClass(colors[i])
             label.halign = .center
+            label.marginBottom = 8
             card.append(label)
 
             let drag = DragSource()

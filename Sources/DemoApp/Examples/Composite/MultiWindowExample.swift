@@ -81,8 +81,8 @@ struct MultiWindowExample: DemoExample {
             let closeBtn = Button(label: "Close This Window")
             closeBtn.addCSSClass("pill")
             closeBtn.halign = .center
-            closeBtn.onClicked { [secondary] in
-                secondary.close()
+            closeBtn.onClicked { [weak closeBtn] in
+                closeBtn?.closeWindow()
             }
             page.child = closeBtn
             toolbar.content = page
@@ -90,6 +90,7 @@ struct MultiWindowExample: DemoExample {
             secondary.setContent(toolbar)
             secondary.destroyWithParent = true
             secondary.present()
+            secondary.retainUntilClose()
 
             counterLabel.text = "Windows opened: \(windowCount)"
         }
@@ -134,8 +135,8 @@ struct MultiWindowExample: DemoExample {
             dismissBtn.addCSSClass("suggested-action")
             dismissBtn.addCSSClass("pill")
             dismissBtn.halign = .center
-            dismissBtn.onClicked { [modal] in
-                modal.close()
+            dismissBtn.onClicked { [weak dismissBtn] in
+                dismissBtn?.closeWindow()
             }
             page.child = dismissBtn
             toolbar.content = page
@@ -143,6 +144,7 @@ struct MultiWindowExample: DemoExample {
             modal.setContent(toolbar)
             modal.destroyWithParent = true
             modal.present()
+            modal.retainUntilClose()
 
             counterLabel.text = "Windows opened: \(windowCount)"
         }
@@ -181,6 +183,11 @@ struct MultiWindowExample: DemoExample {
 
         box.append(group2)
 
-        return box.scrollableClamped()
+        let headerBar = HeaderBar()
+        let toolbarView = ToolbarView()
+        toolbarView.addTopBar(headerBar)
+        toolbarView.content = box.scrollableClamped()
+
+        return toolbarView
     }
 }

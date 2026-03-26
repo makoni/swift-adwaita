@@ -33,6 +33,7 @@ struct NavigationViewExample: DemoExample {
     func buildWidget() -> Widget {
         let navView = NavigationView()
 
+        // -- Root page (Home) --
         let mainStatus = StatusPage()
         mainStatus.title = "Home"
         mainStatus.iconName = "go-home-symbolic"
@@ -53,7 +54,11 @@ struct NavigationViewExample: DemoExample {
         btnBox.append(settingsBtn)
         mainStatus.child = btnBox
 
-        let mainPage = NavigationPage(child: mainStatus, title: "Home")
+        let mainToolbar = ToolbarView()
+        mainToolbar.addTopBar(HeaderBar())
+        mainToolbar.content = mainStatus
+
+        let mainPage = NavigationPage(child: mainToolbar, title: "Home")
         navView.add(mainPage)
 
         detailBtn.onClicked { [navView] in
@@ -61,7 +66,12 @@ struct NavigationViewExample: DemoExample {
             detailStatus.title = "Detail Page"
             detailStatus.iconName = "emblem-documents-symbolic"
             detailStatus.description = "Press Back to return to the Home page."
-            let page = NavigationPage(child: detailStatus, title: "Detail")
+
+            let toolbar = ToolbarView()
+            toolbar.addTopBar(HeaderBar())
+            toolbar.content = detailStatus
+
+            let page = NavigationPage(child: toolbar, title: "Detail")
             navView.push(page)
         }
 
@@ -70,7 +80,12 @@ struct NavigationViewExample: DemoExample {
             settingsStatus.title = "Settings"
             settingsStatus.iconName = "preferences-system-symbolic"
             settingsStatus.description = "Configure your application here."
-            let page = NavigationPage(child: settingsStatus, title: "Settings")
+
+            let toolbar = ToolbarView()
+            toolbar.addTopBar(HeaderBar())
+            toolbar.content = settingsStatus
+
+            let page = NavigationPage(child: toolbar, title: "Settings")
             navView.push(page)
         }
 

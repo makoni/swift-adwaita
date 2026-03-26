@@ -12,10 +12,15 @@ struct PictureExample: DemoExample {
     picture.canShrink = true
     picture.alternativeText = "A photo"
 
-    // Change content fit mode
-    picture.contentFit = .cover
-    picture.contentFit = .scaleDown
-    picture.contentFit = .fill
+    // Or create from a Texture
+    let texture = Texture(rgbaData: pixels, width: 200, height: 150)
+    picture.setPaintable(texture)
+
+    // Load via FileDialog
+    let dialog = FileDialog()
+    dialog.open(parent: window) { path in
+        if let path { picture.setFilename(path) }
+    }
     """
 
     func buildWidget() -> Widget {
@@ -26,7 +31,6 @@ struct PictureExample: DemoExample {
         group1.title = "Content Fit Modes"
         group1.description = "GtkPicture scales images using different fit modes"
 
-        // Create a placeholder image using a DrawingArea
         let picture = Picture()
         picture.canShrink = true
         picture.contentFit = .contain
@@ -34,7 +38,46 @@ struct PictureExample: DemoExample {
         picture.hexpand = true
         picture.setSizeRequest(width: -1, height: 200)
         picture.setMargins(12)
+
+        // Generate a gradient texture as default content
+        let width = 400
+        let height = 300
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        for y in 0..<height {
+            for x in 0..<width {
+                let i = (y * width + x) * 4
+                let fx = Double(x) / Double(width)
+                let fy = Double(y) / Double(height)
+                pixels[i] = UInt8(min(255, fx * 140 + 80))
+                pixels[i + 1] = UInt8(min(255, (1 - fy) * 120 + 100))
+                pixels[i + 2] = UInt8(min(255, (1 - fx) * 180 + 60))
+                pixels[i + 3] = 255
+            }
+        }
+        let texture = Texture(rgbaData: pixels, width: width, height: height)
+        picture.setPaintable(texture)
+
         group1.add(picture)
+
+        // Load image button
+        let loadBtn = Button(label: "Load Image...")
+        loadBtn.addCSSClass("pill")
+        loadBtn.halign = .center
+        loadBtn.setMargins(8)
+        loadBtn.onClicked { [picture, box] in
+            let dialog = FileDialog()
+            dialog.title = "Open Image"
+            dialog.setFilters([
+                FileFilter(name: "Images", suffixes: ["png", "jpg", "jpeg", "webp", "svg", "bmp", "gif"]),
+                FileFilter(name: "All files", patterns: ["*"]),
+            ])
+            dialog.open(parent: box.root) { path in
+                if let path {
+                    picture.setFilename(path)
+                }
+            }
+        }
+        group1.add(loadBtn)
 
         let fitRow = ActionRow()
         fitRow.title = "Content Fit"

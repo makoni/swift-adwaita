@@ -85,7 +85,9 @@ struct TabViewExample: DemoExample {
         tabBar.endActionWidget = addBtn
 
         // Layout with ToolbarView
+        let headerBar = HeaderBar()
         let toolbarView = ToolbarView()
+        toolbarView.addTopBar(headerBar)
         toolbarView.addTopBar(tabBar)
         toolbarView.content = tabView
 

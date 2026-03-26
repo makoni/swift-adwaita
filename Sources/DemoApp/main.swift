@@ -1,8 +1,4 @@
 import Adwaita
-import CAdwaita
-
-/// Keeps strong references to demo windows so they aren't deallocated after present().
-nonisolated(unsafe) var openDemoWindows: [Window] = []
 
 @MainActor
 func buildApp() {
@@ -44,11 +40,8 @@ func buildApp() {
                     demoWindow.content = example.buildWidget()
                     demoWindow.transientFor = window.cast(GtkWindow.self)
                     demoWindow.destroyWithParent = true
-                    openDemoWindows.append(demoWindow)
-                    demoWindow.onDestroy {
-                        openDemoWindows.removeAll { $0 === demoWindow }
-                    }
                     demoWindow.present()
+                    demoWindow.retainUntilClose()
                 }
                 preview.child = tryBtn
                 contentStack.addNamed(preview, name: example.id)
