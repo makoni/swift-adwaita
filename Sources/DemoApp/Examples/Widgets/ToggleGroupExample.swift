@@ -21,6 +21,12 @@ struct ToggleGroupExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
+        guard let toggleGroup1 = ToggleGroup(),
+              let toggleGroup2 = ToggleGroup(),
+              let toggleGroup3 = ToggleGroup() else {
+            return Label("ToggleGroup requires libadwaita 1.7+")
+        }
+
         let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
@@ -29,20 +35,11 @@ struct ToggleGroupExample: DemoExample {
         group1.description = "AdwToggleGroup provides mutually exclusive toggles"
 
         // Text toggles
-        let toggleGroup1 = ToggleGroup()
         toggleGroup1.setMargins(12)
-        let d = Toggle()
-        d.label = "Day"
-        let w = Toggle()
-        w.label = "Week"
-        let m = Toggle()
-        m.label = "Month"
-        let y = Toggle()
-        y.label = "Year"
-        toggleGroup1.add(d)
-        toggleGroup1.add(w)
-        toggleGroup1.add(m)
-        toggleGroup1.add(y)
+        if let d = Toggle() { d.label = "Day"; toggleGroup1.add(d) }
+        if let w = Toggle() { w.label = "Week"; toggleGroup1.add(w) }
+        if let m = Toggle() { m.label = "Month"; toggleGroup1.add(m) }
+        if let y = Toggle() { y.label = "Year"; toggleGroup1.add(y) }
         toggleGroup1.active = 0
         group1.add(toggleGroup1)
 
@@ -52,16 +49,17 @@ struct ToggleGroupExample: DemoExample {
         let group2 = PreferencesGroup()
         group2.title = "Icon Toggles"
 
-        let toggleGroup2 = ToggleGroup()
         toggleGroup2.setMargins(12)
-        let grid = Toggle()
-        grid.iconName = "view-grid-symbolic"
-        grid.tooltip = "Grid View"
-        let list = Toggle()
-        list.iconName = "view-list-symbolic"
-        list.tooltip = "List View"
-        toggleGroup2.add(grid)
-        toggleGroup2.add(list)
+        if let grid = Toggle() {
+            grid.iconName = "view-grid-symbolic"
+            grid.tooltip = "Grid View"
+            toggleGroup2.add(grid)
+        }
+        if let list = Toggle() {
+            list.iconName = "view-list-symbolic"
+            list.tooltip = "List View"
+            toggleGroup2.add(list)
+        }
         toggleGroup2.active = 0
         group2.add(toggleGroup2)
 
@@ -71,21 +69,12 @@ struct ToggleGroupExample: DemoExample {
         let group3 = PreferencesGroup()
         group3.title = "Homogeneous"
 
-        let toggleGroup3 = ToggleGroup()
         toggleGroup3.setMargins(12)
         toggleGroup3.homogeneous = true
-        let s = Toggle()
-        s.label = "S"
-        let med = Toggle()
-        med.label = "M"
-        let l = Toggle()
-        l.label = "L"
-        let xl = Toggle()
-        xl.label = "XL"
-        toggleGroup3.add(s)
-        toggleGroup3.add(med)
-        toggleGroup3.add(l)
-        toggleGroup3.add(xl)
+        if let s = Toggle() { s.label = "S"; toggleGroup3.add(s) }
+        if let med = Toggle() { med.label = "M"; toggleGroup3.add(med) }
+        if let l = Toggle() { l.label = "L"; toggleGroup3.add(l) }
+        if let xl = Toggle() { xl.label = "XL"; toggleGroup3.add(xl) }
         toggleGroup3.active = 1
         group3.add(toggleGroup3)
 

@@ -19,14 +19,16 @@ struct WrapBoxExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
+        guard let wrap1 = WrapBox(), let wrap2 = WrapBox() else {
+            return Label("WrapBox requires libadwaita 1.7+")
+        }
+
         let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
         let group1 = PreferencesGroup()
         group1.title = "Wrap Box"
         group1.description = "AdwWrapBox flows children into multiple lines"
-
-        let wrap1 = WrapBox()
         wrap1.childSpacing = 8
         wrap1.lineSpacing = 8
         wrap1.setMargins(12)
@@ -46,7 +48,6 @@ struct WrapBoxExample: DemoExample {
         let group2 = PreferencesGroup()
         group2.title = "Homogeneous Lines"
 
-        let wrap2 = WrapBox()
         wrap2.childSpacing = 6
         wrap2.lineSpacing = 6
         wrap2.lineHomogeneous = true

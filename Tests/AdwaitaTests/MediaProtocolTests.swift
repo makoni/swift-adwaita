@@ -233,7 +233,7 @@ import CAdwaita
 
     @Test @MainActor func wrapBoxConformsToContainer() {
         ensureAdwInit()
-        let wrap = WrapBox()
+        guard let wrap = WrapBox() else { return }
         let _: any Container = wrap
         let child = Label("hi")
         wrap.append(child)

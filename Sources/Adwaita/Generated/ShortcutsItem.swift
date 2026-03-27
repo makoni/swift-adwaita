@@ -32,13 +32,19 @@ public final class ShortcutsItem: GObjectRef {
     }
 
     /// Creates a new `ShortcutsItem`.
-    public init(title: String, accelerator: String) {
+    ///
+    /// - Note: Requires libadwaita 1.8+. Returns `nil` on older versions.
+    public init?(title: String, accelerator: String) {
+        guard AdwaitaVersion.isAtLeast(1, 8) else { return nil }
         let ptr = adw_shortcuts_item_new(title, accelerator)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
     /// Creates a new `ShortcutsItem`.
-    public static func newFromAction(title: String, actionName: String) -> ShortcutsItem {
+    ///
+    /// - Note: Requires libadwaita 1.8+. Returns `nil` on older versions.
+    public static func newFromAction(title: String, actionName: String) -> ShortcutsItem? {
+        guard AdwaitaVersion.isAtLeast(1, 8) else { return nil }
         let ptr = adw_shortcuts_item_new_from_action(title, actionName)!
         return ShortcutsItem(raw: UnsafeMutableRawPointer(ptr))
     }

@@ -34,10 +34,15 @@ public final class ButtonRow: PreferencesRow {
     }
 
     /// Creates a new `ButtonRow`.
+    ///
+    /// - Note: Requires libadwaita 1.6+. Use ``isAvailable`` to check at runtime.
     override public init() {
-        let ptr = adw_button_row_new()!
-        super.init(raw: UnsafeMutableRawPointer(ptr))
+        let ptr = adw_button_row_new() ?? adw_preferences_row_new()
+        super.init(raw: UnsafeMutableRawPointer(ptr!))
     }
+
+    /// Whether `ButtonRow` is available on the running libadwaita version (1.6+).
+    public static var isAvailable: Bool { AdwaitaVersion.isAtLeast(1, 6) }
 
     /// The icon name displayed at the trailing edge of the row.
     /// - Since: libadwaita 1.6

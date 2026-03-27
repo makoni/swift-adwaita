@@ -35,7 +35,10 @@ public final class Toggle: GObjectRef {
     }
 
     /// Creates a new `Toggle`.
-    public init() {
+    ///
+    /// - Note: Requires libadwaita 1.7+. Returns `nil` on older versions.
+    public init?() {
+        guard AdwaitaVersion.isAtLeast(1, 7) else { return nil }
         let ptr = adw_toggle_new()!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }

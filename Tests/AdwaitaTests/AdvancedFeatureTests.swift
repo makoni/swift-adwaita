@@ -94,10 +94,8 @@ import CAdwaita
 
     @Test @MainActor func toggleGroupCreation() {
         ensureAdwInit()
-        let group = ToggleGroup()
-        let t1 = Toggle()
+        guard let group = ToggleGroup(), let t1 = Toggle(), let t2 = Toggle() else { return }
         t1.label = "A"
-        let t2 = Toggle()
         t2.label = "B"
         group.add(t1)
         group.add(t2)
@@ -106,10 +104,8 @@ import CAdwaita
 
     @Test @MainActor func toggleGroupActive() {
         ensureAdwInit()
-        let group = ToggleGroup()
-        let t1 = Toggle()
+        guard let group = ToggleGroup(), let t1 = Toggle(), let t2 = Toggle() else { return }
         t1.label = "X"
-        let t2 = Toggle()
         t2.label = "Y"
         group.add(t1)
         group.add(t2)
@@ -119,8 +115,7 @@ import CAdwaita
 
     @Test @MainActor func toggleGroupByName() {
         ensureAdwInit()
-        let group = ToggleGroup()
-        let t = Toggle()
+        guard let group = ToggleGroup(), let t = Toggle() else { return }
         t.label = "Named"
         t.name = "my-toggle"
         group.add(t)
@@ -132,7 +127,7 @@ import CAdwaita
 
     @Test @MainActor func wrapBoxCreation() {
         ensureAdwInit()
-        let wrap = WrapBox()
+        guard let wrap = WrapBox() else { return }
         wrap.childSpacing = 8
         wrap.lineSpacing = 12
         #expect(wrap.childSpacing == 8)
@@ -141,7 +136,7 @@ import CAdwaita
 
     @Test @MainActor func wrapBoxAppendRemove() {
         ensureAdwInit()
-        let wrap = WrapBox()
+        guard let wrap = WrapBox() else { return }
         let label = Label("test")
         wrap.append(label)
         wrap.remove(label)
@@ -152,6 +147,7 @@ import CAdwaita
 
     @Test @MainActor func buttonRowCreation() {
         ensureAdwInit()
+        guard ButtonRow.isAvailable else { return }
         let row = ButtonRow()
         row.title = "Action"
         row.startIconName = "edit-symbolic"

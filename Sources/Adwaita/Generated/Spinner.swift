@@ -30,7 +30,10 @@ public final class Spinner: Widget {
     }
 
     /// Creates a new `Spinner`.
-    public init() {
+    ///
+    /// - Note: Requires libadwaita 1.6+. Returns `nil` on older versions.
+    public init?() {
+        guard AdwaitaVersion.isAtLeast(1, 6) else { return nil }
         let ptr = adw_spinner_new()!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }

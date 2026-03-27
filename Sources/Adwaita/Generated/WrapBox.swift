@@ -12,7 +12,10 @@ public final class WrapBox: Widget, Container {
     }
 
     /// Creates a new `WrapBox`.
-    public init() {
+    ///
+    /// - Note: Requires libadwaita 1.7+. Returns `nil` on older versions.
+    public init?() {
+        guard AdwaitaVersion.isAtLeast(1, 7) else { return nil }
         let ptr = adw_wrap_box_new()!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }

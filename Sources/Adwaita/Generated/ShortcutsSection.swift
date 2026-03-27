@@ -27,7 +27,10 @@ public final class ShortcutsSection: GObjectRef {
     }
 
     /// Creates a new `ShortcutsSection`.
-    public init(title: String?) {
+    ///
+    /// - Note: Requires libadwaita 1.8+. Returns `nil` on older versions.
+    public init?(title: String?) {
+        guard AdwaitaVersion.isAtLeast(1, 8) else { return nil }
         let ptr = adw_shortcuts_section_new(title)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }

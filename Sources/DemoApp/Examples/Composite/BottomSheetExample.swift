@@ -40,7 +40,9 @@ struct BottomSheetExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
-        let bottomSheet = BottomSheet()
+        guard let bottomSheet = BottomSheet() else {
+            return Label("BottomSheet requires libadwaita 1.6+")
+        }
         bottomSheet.showDragHandle = true
         bottomSheet.modal = true
 

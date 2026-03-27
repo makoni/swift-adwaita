@@ -29,10 +29,15 @@ public final class ShortcutsDialog: Dialog {
     }
 
     /// Creates a new `ShortcutsDialog`.
+    ///
+    /// - Note: Requires libadwaita 1.8+. Use ``isAvailable`` to check at runtime.
     override public init() {
-        let ptr = adw_shortcuts_dialog_new()!
-        super.init(raw: UnsafeMutableRawPointer(ptr))
+        let ptr = adw_shortcuts_dialog_new() ?? adw_dialog_new()
+        super.init(raw: UnsafeMutableRawPointer(ptr!))
     }
+
+    /// Whether `ShortcutsDialog` is available on the running libadwaita version (1.8+).
+    public static var isAvailable: Bool { AdwaitaVersion.isAtLeast(1, 8) }
 
     /// Adds a section (transfer-full: adds a ref before passing).
     public func add(_ section: ShortcutsSection) {

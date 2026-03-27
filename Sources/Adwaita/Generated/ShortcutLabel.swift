@@ -24,7 +24,10 @@ public final class ShortcutLabel: Widget {
     }
 
     /// Creates a new `ShortcutLabel`.
-    public init(accelerator: String) {
+    ///
+    /// - Note: Requires libadwaita 1.8+. Returns `nil` on older versions.
+    public init?(accelerator: String) {
+        guard AdwaitaVersion.isAtLeast(1, 8) else { return nil }
         let ptr = adw_shortcut_label_new(accelerator)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }

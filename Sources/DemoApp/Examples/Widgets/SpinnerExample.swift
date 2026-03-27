@@ -20,6 +20,10 @@ struct SpinnerExample: DemoExample {
     """
 
     func buildWidget() -> Widget {
+        guard let spinner1 = Spinner(), let spinner2 = Spinner(), let spinner3 = Spinner() else {
+            return Label("Spinner requires libadwaita 1.6+")
+        }
+
         let box = Box(orientation: .vertical, spacing: 24)
         box.setMargins(24)
 
@@ -31,14 +35,11 @@ struct SpinnerExample: DemoExample {
         spinnerBox.halign = .center
         spinnerBox.setMargins(24)
 
-        let spinner1 = Spinner()
         spinnerBox.append(spinner1)
 
-        let spinner2 = Spinner()
         spinner2.setSizeRequest(width: 48, height: 48)
         spinnerBox.append(spinner2)
 
-        let spinner3 = Spinner()
         spinner3.setSizeRequest(width: 64, height: 64)
         spinnerBox.append(spinner3)
 

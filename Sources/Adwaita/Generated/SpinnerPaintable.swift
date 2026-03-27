@@ -26,7 +26,10 @@ public final class SpinnerPaintable: GObjectRef {
     }
 
     /// Creates a new `SpinnerPaintable`.
-    public init(widget: Widget?) {
+    ///
+    /// - Note: Requires libadwaita 1.6+. Returns `nil` on older versions.
+    public init?(widget: Widget?) {
+        guard AdwaitaVersion.isAtLeast(1, 6) else { return nil }
         let ptr = adw_spinner_paintable_new(widget?.widgetPointer)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }

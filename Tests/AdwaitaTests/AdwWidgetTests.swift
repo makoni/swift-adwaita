@@ -110,7 +110,7 @@ import CAdwaita
 
     @Test @MainActor func spinnerCreation() {
         ensureAdwInit()
-        let spinner = Spinner()
+        guard let spinner = Spinner() else { return }
         // Spinner should be instantiable
         #expect(spinner.pointer != nil)
     }
@@ -289,7 +289,7 @@ import CAdwaita
 
     @Test @MainActor func bottomSheetProperties() {
         ensureAdwInit()
-        let bs = BottomSheet()
+        guard let bs = BottomSheet() else { return }
         let content = Label("Main")
         let sheet = Label("Sheet")
         bs.content = content

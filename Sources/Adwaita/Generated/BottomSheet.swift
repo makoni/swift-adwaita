@@ -55,7 +55,10 @@ public final class BottomSheet: Widget {
     }
 
     /// Creates a new `BottomSheet`.
-    public init() {
+    ///
+    /// - Note: Requires libadwaita 1.6+. Returns `nil` on older versions.
+    public init?() {
+        guard AdwaitaVersion.isAtLeast(1, 6) else { return nil }
         let ptr = adw_bottom_sheet_new()!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
