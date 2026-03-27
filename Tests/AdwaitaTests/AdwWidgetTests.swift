@@ -178,6 +178,7 @@ import CAdwaita
 
     @Test @MainActor func alertDialogPreferWideLayout() {
         ensureAdwInit()
+        guard AdwaitaVersion.isAtLeast(1, 6) else { return }
         let dialog = AlertDialog(heading: "Test", body: "Body")
         dialog.preferWideLayout = true
         #expect(dialog.preferWideLayout == true)
