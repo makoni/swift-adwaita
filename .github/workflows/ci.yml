@@ -13,14 +13,21 @@ jobs:
       image: fedora:41
     steps:
       - name: Install system dependencies
-        run: dnf install -y libadwaita-devel xorg-x11-server-Xvfb git
+        run: dnf install -y libadwaita-devel xorg-x11-server-Xvfb git curl tar
 
       - uses: actions/checkout@v4
 
       - name: Install Swift
-        uses: swift-actions/setup-swift@v2
-        with:
-          swift-version: "6.1"
+        run: |
+          curl -O "https://download.swift.org/swiftly/linux/swiftly-$(uname -m).tar.gz"
+          tar zxf "swiftly-$(uname -m).tar.gz"
+          ./swiftly init --quiet-shell-followup
+          . "${SWIFTLY_HOME_DIR:-$HOME/.local/share/swiftly}/env.sh"
+          hash -r
+          swiftly install 6.1
+          swift --version
+          echo "$(dirname $(which swift))" >> "$GITHUB_PATH"
+          echo "${SWIFTLY_HOME_DIR:-$HOME/.local/share/swiftly}/bin" >> "$GITHUB_PATH"
 
       - name: Build
         run: swift build
