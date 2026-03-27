@@ -8,26 +8,24 @@ on:
 
 jobs:
   build-and-test:
+    name: Build & Test with Swift ${{ matrix.swift }}
+    strategy:
+      matrix:
+        swift: ["6.1", "6.2", "6.3"]
     runs-on: ubuntu-latest
     container:
-      image: fedora:41
+      image: swift:${{ matrix.swift }}
     steps:
       - name: Install system dependencies
-        run: dnf install -y libadwaita-devel xorg-x11-server-Xvfb git curl tar
-
-      - uses: actions/checkout@v4
-
-      - name: Install Swift
         run: |
-          curl -O "https://download.swift.org/swiftly/linux/swiftly-$(uname -m).tar.gz"
-          tar zxf "swiftly-$(uname -m).tar.gz"
-          ./swiftly init --quiet-shell-followup
-          . "${SWIFTLY_HOME_DIR:-$HOME/.local/share/swiftly}/env.sh"
-          hash -r
-          swiftly install 6.1
-          swift --version
-          echo "$(dirname $(which swift))" >> "$GITHUB_PATH"
-          echo "${SWIFTLY_HOME_DIR:-$HOME/.local/share/swiftly}/bin" >> "$GITHUB_PATH"
+          apt-get update
+          apt-get install -y libadwaita-1-dev xvfb
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Swift version
+        run: swift --version
 
       - name: Build
         run: swift build
