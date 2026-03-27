@@ -224,6 +224,12 @@ static inline void adw_preferences_page_set_banner(AdwPreferencesPage *s, AdwBan
 static inline gboolean adw_window_get_adaptive_preview(AdwWindow *s) { (void)s; return 0; }
 static inline void adw_window_set_adaptive_preview(AdwWindow *s, gboolean v) { (void)s; (void)v; }
 
+// AboutDialog.addOtherApp (1.7+)
+static inline void adw_about_dialog_add_other_app(AdwAboutDialog *s, const char *id, const char *name, const char *summary) { (void)s; (void)id; (void)name; (void)summary; }
+
+// ToastOverlay.dismissAll (1.7+)
+static inline void adw_toast_overlay_dismiss_all(AdwToastOverlay *s) { (void)s; }
+
 #endif /* !ADW_CHECK_VERSION(1, 7, 0) */
 
 #if !ADW_CHECK_VERSION(1, 8, 0)
