@@ -32,8 +32,13 @@ public final class ShortcutsDialog: Dialog {
     ///
     /// - Note: Requires libadwaita 1.8+. Use ``isAvailable`` to check at runtime.
     override public init() {
-        let ptr = adw_shortcuts_dialog_new() ?? adw_dialog_new()
-        super.init(raw: UnsafeMutableRawPointer(ptr!))
+        let ptr: UnsafeMutableRawPointer
+        if let p = adw_shortcuts_dialog_new() {
+            ptr = UnsafeMutableRawPointer(p)
+        } else {
+            ptr = UnsafeMutableRawPointer(adw_dialog_new()!)
+        }
+        super.init(raw: ptr)
     }
 
     /// Whether `ShortcutsDialog` is available on the running libadwaita version (1.8+).
