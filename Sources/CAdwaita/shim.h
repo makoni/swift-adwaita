@@ -73,7 +73,6 @@ static inline GtkWidget *adw_preferences_group_get_row(AdwPreferencesGroup *s, g
 static inline gboolean adw_preferences_page_get_description_centered(AdwPreferencesPage *s) { (void)s; return 0; }
 static inline void adw_preferences_page_set_description_centered(AdwPreferencesPage *s, gboolean v) { (void)s; (void)v; }
 static inline AdwPreferencesGroup *adw_preferences_page_get_group(AdwPreferencesPage *s, guint i) { (void)s; (void)i; return NULL; }
-static inline void adw_preferences_page_scroll_to_top(AdwPreferencesPage *s) { (void)s; }
 
 // StyleManager (1.6+)
 static inline AdwAccentColor adw_style_manager_get_accent_color(AdwStyleManager *s) { (void)s; return (AdwAccentColor)0; }
