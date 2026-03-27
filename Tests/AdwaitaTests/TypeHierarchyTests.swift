@@ -104,7 +104,7 @@ import CAdwaita
             Dialog.self, AboutDialog.self, AlertDialog.self,
             // Layout
             Clamp.self, ClampLayout.self, ClampScrollable.self,
-            MultiLayoutView.self, Layout.self, LayoutSlot.self,
+            // MultiLayoutView, Layout, LayoutSlot require libadwaita 1.6+
             WrapBox.self, WrapLayout.self,
             // Animations
             Animation.self, SpringAnimation.self, TimedAnimation.self,
@@ -113,7 +113,7 @@ import CAdwaita
             // View stack / switching
             ViewStack.self, ViewStackPage.self, ViewStackPages.self,
             ViewSwitcher.self, ViewSwitcherBar.self,
-            InlineViewSwitcher.self,
+            // InlineViewSwitcher requires libadwaita 1.7+
             // Misc widgets
             Banner.self, Avatar.self, Spinner.self, SpinnerPaintable.self,
             SplitButton.self, OverlaySplitView.self,

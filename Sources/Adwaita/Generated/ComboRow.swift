@@ -30,10 +30,18 @@ public class ComboRow: ActionRow {
     }
 
     /// The match mode used for filtering items in the search entry.
+    ///
+    /// - Note: Requires libadwaita 1.6+. Returns `nil` / does nothing on older versions.
     /// - Since: libadwaita 1.6
-    public var searchMatchMode: GtkStringFilterMatchMode {
-        get { adw_combo_row_get_search_match_mode(castedPointer() as UnsafeMutablePointer<AdwComboRow>) }
-        set { adw_combo_row_set_search_match_mode(castedPointer() as UnsafeMutablePointer<AdwComboRow>, newValue) }
+    public var searchMatchMode: GtkStringFilterMatchMode? {
+        get {
+            guard AdwaitaVersion.isAtLeast(1, 6) else { return nil }
+            return cadw_combo_row_get_search_match_mode(pointer)
+        }
+        set {
+            guard AdwaitaVersion.isAtLeast(1, 6), let newValue else { return }
+            cadw_combo_row_set_search_match_mode(pointer, newValue)
+        }
     }
 
     /// The zero-based index of the currently selected item.

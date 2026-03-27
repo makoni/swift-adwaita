@@ -69,10 +69,18 @@ public class EntryRow: PreferencesRow {
     }
 
     /// The maximum number of characters allowed in the entry. Zero means no limit.
+    ///
+    /// - Note: Requires libadwaita 1.6+. Returns `nil` / does nothing on older versions.
     /// - Since: libadwaita 1.6
-    public var maxLength: Int {
-        get { Int(adw_entry_row_get_max_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>)) }
-        set { adw_entry_row_set_max_length(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, Int32(newValue)) }
+    public var maxLength: Int? {
+        get {
+            guard AdwaitaVersion.isAtLeast(1, 6) else { return nil }
+            return Int(cadw_entry_row_get_max_length(pointer))
+        }
+        set {
+            guard AdwaitaVersion.isAtLeast(1, 6), let newValue else { return }
+            cadw_entry_row_set_max_length(pointer, Int32(newValue))
+        }
     }
 
     /// Whether to display an apply button that must be clicked to confirm changes.

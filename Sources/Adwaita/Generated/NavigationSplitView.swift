@@ -80,10 +80,18 @@ public final class NavigationSplitView: Widget {
     }
 
     /// Whether the sidebar is at the start or end of the layout.
+    ///
+    /// - Note: Requires libadwaita 1.7+. Returns `nil` / does nothing on older versions.
     /// - Since: libadwaita 1.7
-    public var sidebarPosition: GtkPackType {
-        get { adw_navigation_split_view_get_sidebar_position(opaquePointer) }
-        set { adw_navigation_split_view_set_sidebar_position(opaquePointer, newValue) }
+    public var sidebarPosition: GtkPackType? {
+        get {
+            guard AdwaitaVersion.isAtLeast(1, 7) else { return nil }
+            return cadw_navigation_split_view_get_sidebar_position(pointer)
+        }
+        set {
+            guard AdwaitaVersion.isAtLeast(1, 7), let newValue else { return }
+            cadw_navigation_split_view_set_sidebar_position(pointer, newValue)
+        }
     }
 
     /// The fraction of total width allocated to the sidebar (0.0 to 1.0).
