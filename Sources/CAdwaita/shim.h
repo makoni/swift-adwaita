@@ -66,13 +66,9 @@ static inline void adw_alert_dialog_set_prefer_wide_layout(AdwAlertDialog *s, gb
 static inline gboolean adw_preferences_group_get_separate_rows(AdwPreferencesGroup *s) { (void)s; return 0; }
 static inline void adw_preferences_group_set_separate_rows(AdwPreferencesGroup *s, gboolean v) { (void)s; (void)v; }
 
-// PreferencesGroup.getRow (1.6+)
-static inline GtkWidget *adw_preferences_group_get_row(AdwPreferencesGroup *s, guint i) { (void)s; (void)i; return NULL; }
-
 // PreferencesPage (1.6+)
 static inline gboolean adw_preferences_page_get_description_centered(AdwPreferencesPage *s) { (void)s; return 0; }
 static inline void adw_preferences_page_set_description_centered(AdwPreferencesPage *s, gboolean v) { (void)s; (void)v; }
-static inline AdwPreferencesGroup *adw_preferences_page_get_group(AdwPreferencesPage *s, guint i) { (void)s; (void)i; return NULL; }
 
 // StyleManager (1.6+)
 static inline AdwAccentColor adw_style_manager_get_accent_color(AdwStyleManager *s) { (void)s; return (AdwAccentColor)0; }
@@ -158,7 +154,6 @@ static inline void adw_wrap_box_append(AdwWrapBox *s, GtkWidget *c) { (void)s; (
 static inline void adw_wrap_box_insert_child_after(AdwWrapBox *s, GtkWidget *c, GtkWidget *b) { (void)s; (void)c; (void)b; }
 static inline void adw_wrap_box_prepend(AdwWrapBox *s, GtkWidget *c) { (void)s; (void)c; }
 static inline void adw_wrap_box_remove(AdwWrapBox *s, GtkWidget *c) { (void)s; (void)c; }
-static inline void adw_wrap_box_remove_all(AdwWrapBox *s) { (void)s; }
 static inline void adw_wrap_box_reorder_child_after(AdwWrapBox *s, GtkWidget *c, GtkWidget *b) { (void)s; (void)c; (void)b; }
 
 // WrapLayout (1.7+)
@@ -238,6 +233,15 @@ typedef struct _AdwShortcutLabel AdwShortcutLabel;
 typedef struct _AdwShortcutsDialog AdwShortcutsDialog;
 typedef struct _AdwShortcutsSection AdwShortcutsSection;
 typedef struct _AdwShortcutsItem AdwShortcutsItem;
+
+// PreferencesGroup.getRow (1.8+)
+static inline GtkWidget *adw_preferences_group_get_row(AdwPreferencesGroup *s, guint i) { (void)s; (void)i; return NULL; }
+
+// PreferencesPage.getGroup (1.8+)
+static inline AdwPreferencesGroup *adw_preferences_page_get_group(AdwPreferencesPage *s, guint i) { (void)s; (void)i; return NULL; }
+
+// WrapBox.removeAll (1.8+)
+static inline void adw_wrap_box_remove_all(AdwWrapBox *s) { (void)s; }
 
 // ShortcutLabel (1.8+)
 static inline GtkWidget *adw_shortcut_label_new(const char *a) { (void)a; return NULL; }

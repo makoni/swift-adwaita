@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Swift Adwaita Demo
+Comment=Interactive demo gallery for the swift-adwaita library
+Exec=DemoApp
+Icon=io.github.makoni.SwiftAdwaitaDemo
+Terminal=false
+Type=Application
+Categories=Development;GTK;
+Keywords=Swift;GTK;Adwaita;GNOME;Demo;Widgets;

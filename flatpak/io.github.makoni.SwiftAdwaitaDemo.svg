@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#62a0ea"/>
+      <stop offset="100%" stop-color="#1a5fb4"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="16" fill="url(#bg)"/>
+  <!-- Swift bird silhouette simplified -->
+  <g transform="translate(20, 24) scale(0.68)" fill="white">
+    <path d="M83.5 17.5c3.5 10.5 1.5 22-3.5 31-1.5 2.5-3 5-5 7 12-3 24.5-10 33-20.5 1.5-2 3-4 4-6.5-1 4-3 8-5.5 11.5-7 10-17.5 18-29 22.5 10.5 1 22-1.5 31.5-8-7.5 10-19 17-31 19.5C65.5 82 53 88 40 90c-8.5 1.5-17.5 1-26-1.5 9 4.5 19.5 7 30 7 14 0 27.5-4.5 38.5-13C72 92 58.5 96 45 93c-7-1.5-13.5-5-19-9.5 6.5 3 14 4.5 21 4 9.5-.5 18.5-4 26-9.5C57.5 72.5 44 61 34 47c-3-4-5.5-8.5-7.5-13.5 8 11 19 20.5 31.5 26.5C47 47.5 40 32 40 16c7 11 17 20 28.5 25.5C63 33 58.5 24.5 57 15.5c8 7.5 14 17 17 27.5 2.5-5.5 5.5-10.5 9.5-15-2 5.5-3 11.5-3 17.5 1-9.5 3-18.5 3-28z"/>
+  </g>
+  <!-- "Ad" text -->
+  <text x="64" y="112" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="24" fill="white" opacity="0.9">Adwaita</text>
+</svg>

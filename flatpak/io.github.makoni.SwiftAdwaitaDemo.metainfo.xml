@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.makoni.SwiftAdwaitaDemo</id>
+
+  <name>Swift Adwaita Demo</name>
+  <summary>Interactive demo gallery for the swift-adwaita library</summary>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+
+  <developer id="io.github.makoni">
+    <name>makoni</name>
+  </developer>
+
+  <description>
+    <p>
+      An interactive gallery showcasing 70+ widgets and layouts available in
+      the swift-adwaita library — an imperative Swift wrapper for GTK4 and
+      libadwaita.
+    </p>
+    <p>
+      Browse examples organized by category, view source code for each demo,
+      and see how to build native GNOME desktop applications with Swift.
+    </p>
+  </description>
+
+  <url type="homepage">https://github.com/makoni/swift-adwaita</url>
+  <url type="bugtracker">https://github.com/makoni/swift-adwaita/issues</url>
+  <url type="vcs-browser">https://github.com/makoni/swift-adwaita</url>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#99c1f1</color>
+    <color type="primary" scheme_preference="dark">#1a5fb4</color>
+  </branding>
+
+  <content_rating type="oars-1.1" />
+
+  <launchable type="desktop-id">io.github.makoni.SwiftAdwaitaDemo.desktop</launchable>
+
+  <provides>
+    <binary>DemoApp</binary>
+  </provides>
+
+  <releases>
+    <release version="0.1.0" date="2026-03-28">
+      <description>
+        <p>Initial release with 70+ interactive widget demos.</p>
+      </description>
+    </release>
+  </releases>
+</component>

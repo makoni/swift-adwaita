@@ -2,7 +2,7 @@ import Adwaita
 
 @MainActor
 func buildApp() {
-    let app = Application(id: "com.example.SwiftAdwaitaDemo")
+    let app = Application(id: "io.github.makoni.SwiftAdwaitaDemo")
 
     app.onActivate {
         let window = ApplicationWindow(application: app)
