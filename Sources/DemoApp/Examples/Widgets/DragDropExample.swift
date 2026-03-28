@@ -2,7 +2,7 @@ import Adwaita
 
 @MainActor
 struct DragDropExample: DemoExample {
-    let name = "Drag & Drop"
+    let name = "Drag and Drop"
     let id = "dragdrop"
     let category: ExampleCategory = .widgets
 
@@ -33,7 +33,7 @@ struct DragDropExample: DemoExample {
         box.setMargins(24)
 
         let group = PreferencesGroup()
-        group.title = "Drag & Drop"
+        group.title = "Drag and Drop"
         group.description = "Drag items from the source area to the target area"
 
         // Source items
