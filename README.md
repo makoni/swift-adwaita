@@ -353,6 +353,86 @@ swift test        # Run 670 tests
 swift run DemoApp # Launch demo gallery
 ```
 
+## Distribution with Flatpak
+
+Flatpak is the recommended way to distribute GTK4/libadwaita apps on Linux. The GNOME runtime provides GTK4 and libadwaita, and the Swift SDK extension provides the compiler — your app only ships its own binary.
+
+### Prerequisites
+
+Install Flatpak tools and runtimes:
+
+```bash
+# Install flatpak-builder
+sudo apt install flatpak-builder   # Ubuntu/Debian
+sudo dnf install flatpak-builder   # Fedora
+
+# Install GNOME SDK and Swift extension
+flatpak install flathub org.gnome.Sdk//48 org.freedesktop.Sdk.Extension.swift6//24.08
+```
+
+### Flatpak Manifest
+
+Create a manifest file (e.g., `com.example.MyApp.yml`):
+
+```yaml
+app-id: com.example.MyApp
+runtime: org.gnome.Platform
+runtime-version: "48"
+sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.swift6
+command: MyApp
+
+finish-args:
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --device=dri
+
+build-options:
+  append-path: /usr/lib/sdk/swift6/bin
+  prepend-ld-library-path: /usr/lib/sdk/swift6/lib
+
+modules:
+  - name: MyApp
+    buildsystem: simple
+    sources:
+      - type: dir
+        path: .
+    build-commands:
+      - swift build -c release --product MyApp --static-swift-stdlib
+      - install -Dm755 .build/release/MyApp /app/bin/MyApp
+      - install -Dm644 com.example.MyApp.desktop /app/share/applications/com.example.MyApp.desktop
+      - install -Dm644 com.example.MyApp.metainfo.xml /app/share/metainfo/com.example.MyApp.metainfo.xml
+      - install -Dm644 com.example.MyApp.svg /app/share/icons/hicolor/scalable/apps/com.example.MyApp.svg
+```
+
+Key points:
+- `--static-swift-stdlib` links the Swift runtime statically — the SDK extension is only needed at build time
+- The GNOME runtime provides GTK4 and libadwaita at runtime
+- You also need a `.desktop` file, `metainfo.xml`, and an app icon
+
+### Build and Run
+
+```bash
+# Build and install locally
+flatpak-builder --force-clean --user --install build-dir com.example.MyApp.yml
+
+# Run
+flatpak run com.example.MyApp
+```
+
+### Demo App Flatpak
+
+The included DemoApp has a complete Flatpak setup in the `flatpak/` directory:
+
+```bash
+flatpak-builder --force-clean --user --install build-dir flatpak/io.github.makoni.SwiftAdwaitaDemo.yml
+flatpak run io.github.makoni.SwiftAdwaitaDemo
+```
+
+For more details, see the <doc:FlatpakDistribution> guide.
+
 ## License
 
 MIT License. See [LICENSE.txt](LICENSE.txt).
