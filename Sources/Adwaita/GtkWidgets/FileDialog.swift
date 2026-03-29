@@ -4,7 +4,9 @@ import GObjectSupport
 /// A helper for the async callback pattern.
 private final class AsyncBox<T>: @unchecked Sendable {
     let closure: T
-    init(_ closure: T) { self.closure = closure }
+    init(_ closure: T) {
+        self.closure = closure
+    }
 }
 
 /// A file chooser dialog for opening and saving files.
@@ -19,7 +21,7 @@ public final class FileDialog: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -161,7 +163,7 @@ public final class FileDialog: GObjectRef {
                 } else if let error {
                     // Check if it's a cancellation (GTK_DIALOG_ERROR_DISMISSED)
                     let dismissed = g_quark_try_string("gtk-dialog-error-quark")
-                    if error.pointee.domain == dismissed && error.pointee.code == 2 {
+                    if error.pointee.domain == dismissed, error.pointee.code == 2 {
                         g_error_free(error)
                         callResult = .success(nil)
                     } else {
@@ -255,7 +257,7 @@ public final class FileDialog: GObjectRef {
                     callResult = .success(path)
                 } else if let error {
                     let dismissed = g_quark_try_string("gtk-dialog-error-quark")
-                    if error.pointee.domain == dismissed && error.pointee.code == 2 {
+                    if error.pointee.domain == dismissed, error.pointee.code == 2 {
                         g_error_free(error)
                         callResult = .success(nil)
                     } else {
@@ -349,7 +351,7 @@ public final class FileDialog: GObjectRef {
                     callResult = .success(path)
                 } else if let error {
                     let dismissed = g_quark_try_string("gtk-dialog-error-quark")
-                    if error.pointee.domain == dismissed && error.pointee.code == 2 {
+                    if error.pointee.domain == dismissed, error.pointee.code == 2 {
                         g_error_free(error)
                         callResult = .success(nil)
                     } else {

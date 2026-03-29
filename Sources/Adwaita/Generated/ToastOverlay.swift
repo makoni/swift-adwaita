@@ -30,7 +30,7 @@ import GObjectSupport
 public final class ToastOverlay: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -42,7 +42,7 @@ public final class ToastOverlay: Widget {
 
     /// The main content widget displayed beneath the toast area.
     public var child: Widget? {
-        get { (adw_toast_overlay_get_child(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_toast_overlay_get_child(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_toast_overlay_set_child(opaquePointer, newValue?.widgetPointer) }
     }
 

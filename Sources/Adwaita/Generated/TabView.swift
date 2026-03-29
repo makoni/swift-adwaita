@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A dynamic tabbed container that manages multiple child widgets as tabs.
 ///
 /// Wraps `AdwTabView`. Provides a complete tabbed interface with support for
@@ -44,7 +45,7 @@ import GObjectSupport
 public final class TabView: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -197,7 +198,7 @@ public final class TabView: Widget {
     /// - Returns: The zero-based index of the page.
     @discardableResult
     public func getPagePosition(_ page: TabPage) -> Int {
-        return Int(adw_tab_view_get_page_position(opaquePointer, page.opaquePointer))
+        Int(adw_tab_view_get_page_position(opaquePointer, page.opaquePointer))
     }
 
     /// Inserts a new page at the given position.
@@ -262,7 +263,7 @@ public final class TabView: Widget {
     /// - Parameter page: The page to move.
     /// - Returns: `true` if the page was moved, `false` if it was already first.
     public func reorderBackward(_ page: TabPage) -> Bool {
-        return adw_tab_view_reorder_backward(opaquePointer, page.opaquePointer) != 0
+        adw_tab_view_reorder_backward(opaquePointer, page.opaquePointer) != 0
     }
 
     /// Moves the page to the first position.
@@ -270,7 +271,7 @@ public final class TabView: Widget {
     /// - Parameter page: The page to move.
     /// - Returns: `true` if the page was moved, `false` if it was already first.
     public func reorderFirst(_ page: TabPage) -> Bool {
-        return adw_tab_view_reorder_first(opaquePointer, page.opaquePointer) != 0
+        adw_tab_view_reorder_first(opaquePointer, page.opaquePointer) != 0
     }
 
     /// Moves the page one position forward (toward the end).
@@ -278,7 +279,7 @@ public final class TabView: Widget {
     /// - Parameter page: The page to move.
     /// - Returns: `true` if the page was moved, `false` if it was already last.
     public func reorderForward(_ page: TabPage) -> Bool {
-        return adw_tab_view_reorder_forward(opaquePointer, page.opaquePointer) != 0
+        adw_tab_view_reorder_forward(opaquePointer, page.opaquePointer) != 0
     }
 
     /// Moves the page to the last position.
@@ -286,7 +287,7 @@ public final class TabView: Widget {
     /// - Parameter page: The page to move.
     /// - Returns: `true` if the page was moved, `false` if it was already last.
     public func reorderLast(_ page: TabPage) -> Bool {
-        return adw_tab_view_reorder_last(opaquePointer, page.opaquePointer) != 0
+        adw_tab_view_reorder_last(opaquePointer, page.opaquePointer) != 0
     }
 
     /// Moves the page to the given position.
@@ -295,21 +296,21 @@ public final class TabView: Widget {
     /// - Parameter position: The zero-based target position.
     /// - Returns: `true` if the page was moved.
     public func reorderPage(_ page: TabPage, position: Int) -> Bool {
-        return adw_tab_view_reorder_page(opaquePointer, page.opaquePointer, Int32(position)) != 0
+        adw_tab_view_reorder_page(opaquePointer, page.opaquePointer, Int32(position)) != 0
     }
 
     /// Selects the page after the currently selected one.
     ///
     /// - Returns: `true` if a next page existed and was selected.
     public func selectNextPage() -> Bool {
-        return adw_tab_view_select_next_page(opaquePointer) != 0
+        adw_tab_view_select_next_page(opaquePointer) != 0
     }
 
     /// Selects the page before the currently selected one.
     ///
     /// - Returns: `true` if a previous page existed and was selected.
     public func selectPreviousPage() -> Bool {
-        return adw_tab_view_select_previous_page(opaquePointer) != 0
+        adw_tab_view_select_previous_page(opaquePointer) != 0
     }
 
     /// Pins or unpins a page.

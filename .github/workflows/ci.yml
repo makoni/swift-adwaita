@@ -45,6 +45,24 @@ jobs:
             "$TEST_BIN" \
             -ignore-filename-regex=".build|Tests|DemoApp"
 
+  lint:
+    name: SwiftFormat Lint
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install SwiftFormat
+        run: |
+          git clone --depth 1 --branch 0.60.1 https://github.com/nicklockwood/SwiftFormat.git /tmp/SwiftFormat
+          cd /tmp/SwiftFormat && swift build -c release
+          cp /tmp/SwiftFormat/.build/release/swiftformat /usr/local/bin/
+
+      - name: Check formatting
+        run: swiftformat --lint Sources/ Tests/
+
   docs:
     name: Build Documentation
     runs-on: ubuntu-latest

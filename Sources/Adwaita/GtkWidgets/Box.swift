@@ -32,7 +32,7 @@ public final class Box: Widget, Container {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -75,7 +75,9 @@ public final class Box: Widget, Container {
 
     /// Appends multiple child widgets.
     public func appendAll(_ children: [Widget]) {
-        for child in children { append(child) }
+        for child in children {
+            append(child)
+        }
     }
 
     /// Sets spacing and returns self for chaining.

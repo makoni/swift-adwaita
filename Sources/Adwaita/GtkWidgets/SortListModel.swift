@@ -50,10 +50,10 @@ public final class CustomSorter: GObjectRef {
         )!
 
         super.init(raw: UnsafeMutableRawPointer(ptr))
-        self.closureBox = box
+        closureBox = box
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -117,7 +117,7 @@ public final class SortListModel: GObjectRef, ListModelConvertible {
         gtk_sort_list_model_set_sorter(opaquePointer, UnsafeMutablePointer(OpaquePointer(sorter.pointer)))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

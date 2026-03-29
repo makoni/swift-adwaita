@@ -66,7 +66,7 @@ public final class GridView: Widget {
         gtk_grid_view_set_factory(OpaquePointer(pointer), OpaquePointer(factory.pointer))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

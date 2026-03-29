@@ -12,11 +12,13 @@ public final class SpinButton: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
-    private var spinPointer: OpaquePointer { opaquePointer }
+    private var spinPointer: OpaquePointer {
+        opaquePointer
+    }
 
     /// The current value.
     public var value: Double {

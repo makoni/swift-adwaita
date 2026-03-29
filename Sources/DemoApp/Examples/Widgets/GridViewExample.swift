@@ -38,11 +38,13 @@ struct GridViewExample: DemoExample {
             ("Pink", "#e66100"), ("Teal", "#2ec27e"), ("Indigo", "#1c71d8"),
             ("Brown", "#986a44"), ("Gray", "#77767b"), ("Slate", "#5e5c64"),
             ("Lime", "#8ff0a4"), ("Cyan", "#99c1f1"), ("Magenta", "#dc8add"),
-            ("Gold", "#e5a50a"), ("Coral", "#ed333b"), ("Mint", "#57e389"),
+            ("Gold", "#e5a50a"), ("Coral", "#ed333b"), ("Mint", "#57e389")
         ]
 
         let store = ListStore()
-        for _ in colors { store.appendPlaceholder() }
+        for _ in colors {
+            store.appendPlaceholder()
+        }
 
         let factory = SignalListItemFactory()
         factory.onSetup { listItem in

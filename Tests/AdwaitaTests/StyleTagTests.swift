@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct StyleTagTests {
+@Suite(.serialized)
+struct StyleTagTests {
 
     // MARK: - SearchEntry searchDelay
 
@@ -239,7 +240,7 @@ import CAdwaita
             .easeInQuad, .easeOutQuad, .easeInOutQuad,
             .easeInQuart, .easeOutQuart, .easeInOutQuart,
             .easeInQuint, .easeOutQuint, .easeInOutQuint,
-            .easeInBounce, .easeOutBounce, .easeInOutBounce,
+            .easeInBounce, .easeOutBounce, .easeInOutBounce
         ]
         // All should be distinct
         let unique = Set(easings.map { $0.rawValue })
@@ -271,6 +272,5 @@ import CAdwaita
         let unique = Set(states.map { $0.rawValue })
         #expect(unique.count == 4)
     }
-
 
 }

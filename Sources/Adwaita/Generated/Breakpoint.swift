@@ -1,13 +1,14 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// Describes a breakpoint for [class@Window] or [class@Dialog].
 /// - Since: libadwaita 1.4
 @MainActor
 public final class Breakpoint: GObjectRef {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -35,7 +36,12 @@ public final class Breakpoint: GObjectRef {
         var gval = GValue()
         g_value_init(&gval, cadw_type_boolean())
         g_value_set_boolean(&gval, value ? 1 : 0)
-        adw_breakpoint_add_setter(opaquePointer, object.pointer.assumingMemoryBound(to: GObject.self), property.name, &gval)
+        adw_breakpoint_add_setter(
+            opaquePointer,
+            object.pointer.assumingMemoryBound(to: GObject.self),
+            property.name,
+            &gval
+        )
         g_value_unset(&gval)
     }
 
@@ -44,7 +50,12 @@ public final class Breakpoint: GObjectRef {
         var gval = GValue()
         g_value_init(&gval, cadw_type_int())
         g_value_set_int(&gval, Int32(value))
-        adw_breakpoint_add_setter(opaquePointer, object.pointer.assumingMemoryBound(to: GObject.self), property.name, &gval)
+        adw_breakpoint_add_setter(
+            opaquePointer,
+            object.pointer.assumingMemoryBound(to: GObject.self),
+            property.name,
+            &gval
+        )
         g_value_unset(&gval)
     }
 
@@ -53,7 +64,12 @@ public final class Breakpoint: GObjectRef {
         var gval = GValue()
         g_value_init(&gval, cadw_type_string())
         g_value_set_string(&gval, value)
-        adw_breakpoint_add_setter(opaquePointer, object.pointer.assumingMemoryBound(to: GObject.self), property.name, &gval)
+        adw_breakpoint_add_setter(
+            opaquePointer,
+            object.pointer.assumingMemoryBound(to: GObject.self),
+            property.name,
+            &gval
+        )
         g_value_unset(&gval)
     }
 
@@ -62,7 +78,12 @@ public final class Breakpoint: GObjectRef {
         var gval = GValue()
         g_value_init(&gval, cadw_type_double())
         g_value_set_double(&gval, value)
-        adw_breakpoint_add_setter(opaquePointer, object.pointer.assumingMemoryBound(to: GObject.self), property.name, &gval)
+        adw_breakpoint_add_setter(
+            opaquePointer,
+            object.pointer.assumingMemoryBound(to: GObject.self),
+            property.name,
+            &gval
+        )
         g_value_unset(&gval)
     }
 

@@ -48,7 +48,7 @@ struct ListViewExample: DemoExample {
             ("Bob", "I'll use ListView for my chat app then."),
             ("Alice", "Good choice! The factory pattern takes some getting used to."),
             ("Bob", "onSetup creates the widget, onBind fills in data?"),
-            ("Alice", "Exactly! And widgets get recycled automatically."),
+            ("Alice", "Exactly! And widgets get recycled automatically.")
         ]
 
         let store = ListStore()

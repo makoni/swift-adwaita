@@ -13,7 +13,7 @@ public final class GMenuRef: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -22,7 +22,9 @@ public final class GMenuRef: GObjectRef {
         pointer.assumingMemoryBound(to: GMenuModel.self)
     }
 
-    private var menuPointer: OpaquePointer { OpaquePointer(pointer) }
+    private var menuPointer: OpaquePointer {
+        OpaquePointer(pointer)
+    }
 
     /// Appends a labeled item that triggers the given action.
     public func append(_ label: String, action: String) {
@@ -76,11 +78,13 @@ public final class GMenuItemRef: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
-    internal var itemPointer: OpaquePointer { OpaquePointer(pointer) }
+    var itemPointer: OpaquePointer {
+        OpaquePointer(pointer)
+    }
 
     /// Sets the label of the menu item.
     public func setLabel(_ label: String) {
@@ -145,7 +149,7 @@ public final class SimpleAction: GObjectRef {
     /// Creates an action with a name and activation handler (no parameter).
     public convenience init(name: String, handler: @escaping @MainActor () -> Void) {
         self.init(name: name)
-        self.onActivate(handler)
+        onActivate(handler)
     }
 
     /// Creates an action that receives a typed parameter on activation.
@@ -168,7 +172,7 @@ public final class SimpleAction: GObjectRef {
         let ptr = g_simple_action_new(name, variantType)!
         if let variantType { g_variant_type_free(variantType) }
         super.init(raw: UnsafeMutableRawPointer(ptr))
-        self.onActivateWithParameter(handler)
+        onActivateWithParameter(handler)
     }
 
     /// Creates a stateful action with an initial state.
@@ -186,7 +190,7 @@ public final class SimpleAction: GObjectRef {
     public init(name: String, state: Variant, handler: @escaping @MainActor () -> Void) {
         let ptr = g_simple_action_new_stateful(name, nil, state.pointer)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
-        self.onActivate(handler)
+        onActivate(handler)
     }
 
     /// Creates a stateful action with a parameter type and initial state.
@@ -200,10 +204,10 @@ public final class SimpleAction: GObjectRef {
         let ptr = g_simple_action_new_stateful(name, variantType, state.pointer)!
         if let variantType { g_variant_type_free(variantType) }
         super.init(raw: UnsafeMutableRawPointer(ptr))
-        self.onActivateWithParameter(handler)
+        onActivateWithParameter(handler)
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -285,7 +289,7 @@ public final class SimpleActionGroup: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -297,16 +301,16 @@ public final class SimpleActionGroup: GObjectRef {
 
 // MARK: - Integration with Application and Window
 
-extension Application {
+public extension Application {
     /// Adds an action to the application's action map.
-    public func addAction(_ action: SimpleAction) {
+    func addAction(_ action: SimpleAction) {
         g_action_map_add_action(OpaquePointer(pointer), OpaquePointer(action.pointer))
     }
 }
 
-extension ApplicationWindow {
+public extension ApplicationWindow {
     /// Adds an action to the window's action map.
-    public func addAction(_ action: SimpleAction) {
+    func addAction(_ action: SimpleAction) {
         g_action_map_add_action(OpaquePointer(pointer), OpaquePointer(action.pointer))
     }
 }

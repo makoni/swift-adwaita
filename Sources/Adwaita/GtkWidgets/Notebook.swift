@@ -26,7 +26,7 @@ public final class Notebook: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -54,7 +54,12 @@ public final class Notebook: Widget {
     @discardableResult
     public func insertPage(_ child: Widget, label: String, position: Int) -> Int {
         let tabLabel = Label(label)
-        return Int(gtk_notebook_insert_page(opaquePointer, child.widgetPointer, tabLabel.widgetPointer, Int32(position)))
+        return Int(gtk_notebook_insert_page(
+            opaquePointer,
+            child.widgetPointer,
+            tabLabel.widgetPointer,
+            Int32(position)
+        ))
     }
 
     /// Removes the page at the given index.
@@ -152,14 +157,14 @@ public final class Notebook: Widget {
     /// Sets scrollable and returns self for chaining.
     @discardableResult
     public func scrollable(_ enabled: Bool = true) -> Self {
-        self.scrollable = enabled
+        scrollable = enabled
         return self
     }
 
     /// Sets the tab position and returns self for chaining.
     @discardableResult
     public func tabPos(_ position: GtkPositionType) -> Self {
-        self.tabPos = position
+        tabPos = position
         return self
     }
 }

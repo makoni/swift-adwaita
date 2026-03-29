@@ -58,7 +58,8 @@ public final class CSSProvider {
 
     /// Convenience: loads CSS from a string and adds to the default display in one call.
     @discardableResult
-    public static func loadGlobal(_ css: String, priority: Int = Int(GTK_STYLE_PROVIDER_PRIORITY_APPLICATION)) -> CSSProvider {
+    public static func loadGlobal(_ css: String,
+                                  priority: Int = Int(GTK_STYLE_PROVIDER_PRIORITY_APPLICATION)) -> CSSProvider {
         let provider = CSSProvider()
         provider.loadFromString(css)
         provider.addToDefaultDisplay(priority: priority)

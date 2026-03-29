@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct ConvenienceTests {
+@Suite(.serialized)
+struct ConvenienceTests {
 
     // MARK: - PropertyName Tests
 
@@ -117,13 +118,15 @@ import CAdwaita
     @Test @MainActor func fontDialogThrowingMethodExists() {
         ensureAdwInit()
         let dialog = FontDialog()
-        let _: (Widget?, String?, @escaping @MainActor (Result<String?, GLibError>) -> Void) -> Void = dialog.chooseFontThrowing
+        let _: (Widget?, String?, @escaping @MainActor (Result<String?, GLibError>) -> Void) -> Void = dialog
+            .chooseFontThrowing
     }
 
     @Test @MainActor func colorDialogThrowingMethodExists() {
         ensureAdwInit()
         let dialog = ColorDialog()
-        let _: (Widget?, RGBA?, @escaping @MainActor (Result<RGBA?, GLibError>) -> Void) -> Void = dialog.chooseRGBAThrowing
+        let _: (Widget?, RGBA?, @escaping @MainActor (Result<RGBA?, GLibError>) -> Void) -> Void = dialog
+            .chooseRGBAThrowing
     }
 
     // MARK: - Localization
@@ -284,6 +287,5 @@ import CAdwaita
         let iconName = IconName.dialogInformation
         #expect(iconName.name == "dialog-information-symbolic")
     }
-
 
 }

@@ -62,7 +62,7 @@ struct AvatarExample: DemoExample {
         let users: [(String, String, String)] = [
             ("Alice Wonderland", "AW", "@alice.wonderland"),
             ("Bob Builder", "BB", "@bob.builder"),
-            ("Charlie Chaplin", "CC", "@charlie.chaplin"),
+            ("Charlie Chaplin", "CC", "@charlie.chaplin")
         ]
         for (fullName, initials, handle) in users {
             let row = ActionRow()

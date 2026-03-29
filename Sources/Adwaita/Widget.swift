@@ -531,7 +531,7 @@ open class Widget: GObjectRef {
     public func onSizeAllocate(_ handler: @escaping @MainActor (Int, Int) -> Void) -> SignalConnection {
         SignalHelper.onNotify(self, property: .width) { [weak self] in
             guard let self else { return }
-            handler(self.width, self.height)
+            handler(width, height)
         }
     }
 
@@ -560,7 +560,7 @@ open class Widget: GObjectRef {
         let box = Unmanaged.passRetained(PublicClosureBox(callback)).toOpaque()
         let id = gtk_widget_add_tick_callback(
             widgetPointer,
-            { widget, _, userData in
+            { _, _, userData in
                 guard let userData else { return 0 }
                 let box = Unmanaged<PublicClosureBox<@MainActor () -> Bool>>
                     .fromOpaque(userData).takeUnretainedValue()
@@ -586,7 +586,7 @@ open class Widget: GObjectRef {
 
     /// The accessible role of the widget.
     public var accessibleRole: GtkAccessibleRole {
-        get { gtk_accessible_get_accessible_role(OpaquePointer(pointer)) }
+        gtk_accessible_get_accessible_role(OpaquePointer(pointer))
     }
 
     /// Sets the accessible label for the widget.
@@ -679,6 +679,6 @@ private let retainDestroyTrampoline:
         g_idle_add({ userData in
             guard let userData else { return 0 }
             g_object_unref(userData)
-            return 0  // G_SOURCE_REMOVE
+            return 0 // G_SOURCE_REMOVE
         }, userData)
     }

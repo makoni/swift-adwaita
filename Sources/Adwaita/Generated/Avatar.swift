@@ -23,7 +23,7 @@ import GObjectSupport
 public final class Avatar: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -35,7 +35,7 @@ public final class Avatar: Widget {
 
     /// The fallback icon name shown when ``showInitials`` is `false`.
     public var iconName: String? {
-        get { (adw_avatar_get_icon_name(opaquePointer)).map { String(cString: $0) } }
+        get { adw_avatar_get_icon_name(opaquePointer).map { String(cString: $0) } }
         set { adw_avatar_set_icon_name(opaquePointer, newValue) }
     }
 
@@ -53,7 +53,7 @@ public final class Avatar: Widget {
 
     /// The text used to generate initials and the background color.
     public var text: String? {
-        get { (adw_avatar_get_text(opaquePointer)).map { String(cString: $0) } }
+        get { adw_avatar_get_text(opaquePointer).map { String(cString: $0) } }
         set { adw_avatar_set_text(opaquePointer, newValue) }
     }
 }

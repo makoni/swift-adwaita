@@ -1,7 +1,7 @@
 import CAdwaita
 
 /// The app's gettext domain, set via ``setTextDomain(_:)``.
-nonisolated(unsafe) private var _textDomain: String?
+private nonisolated(unsafe) var _textDomain: String?
 
 /// Looks up a translated string in the app's gettext domain.
 ///
@@ -56,13 +56,13 @@ public func setTextDomain(_ domain: String) {
     _textDomain = domain
 }
 
-extension String {
+public extension String {
     /// Returns the translated version of this string via gettext.
     ///
     /// ```swift
     /// let label = Label("Hello".localized)
     /// ```
-    public var localized: String {
+    var localized: String {
         guard let result = g_dgettext(_textDomain, self) else { return self }
         return String(cString: result)
     }

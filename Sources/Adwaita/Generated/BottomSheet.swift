@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A bottom sheet container that slides up from the bottom edge.
 ///
 /// Wraps `AdwBottomSheet`. Provides a sheet that overlays the main content,
@@ -50,7 +51,7 @@ import GObjectSupport
 public final class BottomSheet: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -73,7 +74,7 @@ public final class BottomSheet: Widget {
     /// The widget displayed as a bottom bar when the sheet is closed.
     /// - Since: libadwaita 1.6
     public var bottomBar: Widget? {
-        get { (adw_bottom_sheet_get_bottom_bar(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_bottom_sheet_get_bottom_bar(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_bottom_sheet_set_bottom_bar(opaquePointer, newValue?.widgetPointer) }
     }
 
@@ -100,7 +101,7 @@ public final class BottomSheet: Widget {
     /// The main content widget displayed behind the sheet.
     /// - Since: libadwaita 1.6
     public var content: Widget? {
-        get { (adw_bottom_sheet_get_content(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_bottom_sheet_get_content(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_bottom_sheet_set_content(opaquePointer, newValue?.widgetPointer) }
     }
 
@@ -135,7 +136,7 @@ public final class BottomSheet: Widget {
     /// The widget displayed inside the sliding sheet.
     /// - Since: libadwaita 1.6
     public var sheet: Widget? {
-        get { (adw_bottom_sheet_get_sheet(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_bottom_sheet_get_sheet(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_bottom_sheet_set_sheet(opaquePointer, newValue?.widgetPointer) }
     }
 

@@ -21,7 +21,7 @@ import GObjectSupport
 public final class SpinnerPaintable: GObjectRef {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -37,7 +37,7 @@ public final class SpinnerPaintable: GObjectRef {
     /// The widget whose frame clock drives the spinner animation.
     /// - Since: libadwaita 1.6
     public var widget: Widget? {
-        get { (adw_spinner_paintable_get_widget(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_spinner_paintable_get_widget(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_spinner_paintable_set_widget(opaquePointer, newValue?.widgetPointer) }
     }
 }

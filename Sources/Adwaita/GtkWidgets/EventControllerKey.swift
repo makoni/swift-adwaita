@@ -29,16 +29,18 @@ public final class EventControllerKey: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
     /// Emitted when a key is pressed.
     ///
-    /// - Parameter handler: Called on key press. Receives keyval (GDK key code), keycode, and modifier state. Return `true` to stop propagation.
+    /// - Parameter handler: Called on key press. Receives keyval (GDK key code), keycode, and modifier state. Return
+    /// `true` to stop propagation.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
-    public func onKeyPressed(_ handler: @escaping @MainActor (UInt32, UInt32, GdkModifierType) -> Bool) -> SignalConnection {
+    public func onKeyPressed(_ handler: @escaping @MainActor (UInt32, UInt32, GdkModifierType) -> Bool)
+        -> SignalConnection {
         SignalHelper.connectUIntUIntUIntReturnBool(self, signal: .keyPressed) { keyval, keycode, state in
             handler(keyval, keycode, GdkModifierType(rawValue: state))
         }
@@ -49,7 +51,8 @@ public final class EventControllerKey: GObjectRef {
     /// - Parameter handler: Called on key release. Receives keyval (GDK key code), keycode, and modifier state.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
-    public func onKeyReleased(_ handler: @escaping @MainActor (UInt32, UInt32, GdkModifierType) -> Void) -> SignalConnection {
+    public func onKeyReleased(_ handler: @escaping @MainActor (UInt32, UInt32, GdkModifierType) -> Void)
+        -> SignalConnection {
         SignalHelper.connectUIntUIntUInt(self, signal: .keyReleased) { keyval, keycode, state in
             handler(keyval, keycode, GdkModifierType(rawValue: state))
         }

@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct LatestFeatureTests {
+@Suite(.serialized)
+struct LatestFeatureTests {
 
     // MARK: - Individual Margin Fluent Setters
 
@@ -75,7 +76,7 @@ import CAdwaita
         ensureAdwInit()
         let revealer = Revealer()
         // Just verify it connects without crashing
-        let conn = revealer.onChildRevealed { }
+        let conn = revealer.onChildRevealed {}
         #expect(conn is SignalConnection)
     }
 
@@ -84,7 +85,7 @@ import CAdwaita
     @Test @MainActor func expanderOnExpanded() {
         ensureAdwInit()
         let expander = Expander(label: "Details")
-        let conn = expander.onExpanded { }
+        let conn = expander.onExpanded {}
         #expect(conn is SignalConnection)
     }
 
@@ -93,7 +94,7 @@ import CAdwaita
     @Test @MainActor func popoverOnVisibilityChanged() {
         ensureAdwInit()
         let popover = Popover()
-        let conn = popover.onVisibilityChanged { }
+        let conn = popover.onVisibilityChanged {}
         #expect(conn is SignalConnection)
     }
 
@@ -199,8 +200,8 @@ import CAdwaita
         ensureAdwInit()
         let buf = TextBuffer()
         buf.text = "Hello World"
-        #expect(buf.text(in: 0..<5) == "Hello")
-        #expect(buf.text(in: 6..<11) == "World")
+        #expect(buf.text(in: 0 ..< 5) == "Hello")
+        #expect(buf.text(in: 6 ..< 11) == "World")
     }
 
     @Test @MainActor func textBufferInsertAtOffset() {
@@ -217,9 +218,9 @@ import CAdwaita
         buf.text = "Hello World"
         let tag = buf.createTag(name: "test-tag")
         tag.weight = 700
-        buf.applyTag(tag, in: 0..<5)
+        buf.applyTag(tag, in: 0 ..< 5)
         // Should not crash
-        buf.removeTag(tag, in: 0..<5)
+        buf.removeTag(tag, in: 0 ..< 5)
     }
 
     // MARK: - TextTag Preset Tests
@@ -254,7 +255,7 @@ import CAdwaita
     @Test @MainActor func stackOnVisibleChildChanged() {
         ensureAdwInit()
         let stack = Stack()
-        let conn = stack.onVisibleChildChanged { }
+        let conn = stack.onVisibleChildChanged {}
         #expect(conn is SignalConnection)
     }
 
@@ -290,7 +291,7 @@ import CAdwaita
     @Test @MainActor func panedOnPositionChanged() {
         ensureAdwInit()
         let paned = Paned()
-        let conn = paned.onPositionChanged { }
+        let conn = paned.onPositionChanged {}
         #expect(conn is SignalConnection)
     }
 
@@ -340,7 +341,7 @@ import CAdwaita
     @Test @MainActor func spinButtonOnValueChanged() {
         ensureAdwInit()
         let spin = SpinButton(min: 0, max: 100, step: 1)
-        let conn = spin.onValueChanged { }
+        let conn = spin.onValueChanged {}
         #expect(conn is SignalConnection)
     }
 
@@ -358,7 +359,7 @@ import CAdwaita
     @Test @MainActor func widgetOnDoubleClick() {
         ensureAdwInit()
         let label = Label("Test")
-        let conn = label.onDoubleClick { }
+        let conn = label.onDoubleClick {}
         #expect(conn is SignalConnection)
     }
 
@@ -372,7 +373,7 @@ import CAdwaita
     @Test @MainActor func widgetOnRightClickSimple() {
         ensureAdwInit()
         let label = Label("Test")
-        let conn = label.onRightClick { }
+        let conn = label.onRightClick {}
         #expect(conn is SignalConnection)
     }
 
@@ -511,7 +512,7 @@ import CAdwaita
     @Test @MainActor func entryRowOnChanged() {
         ensureAdwInit()
         let row = EntryRow(title: "Test")
-        let conn = row.onChanged { }
+        let conn = row.onChanged {}
         conn.disconnect()
     }
 

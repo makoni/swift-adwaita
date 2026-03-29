@@ -41,10 +41,9 @@ public final class MultiSelection: GObjectRef, SelectionModelConvertible {
         gtk_multi_selection_set_model(OpaquePointer(pointer), listModel)
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
-
 
     // MARK: - Selection Operations
 

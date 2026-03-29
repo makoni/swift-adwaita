@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// Metadata and state for a single page within a ``TabView``.
 ///
 /// Wraps `AdwTabPage`. You do not create `TabPage` instances directly; they
@@ -59,7 +60,7 @@ public final class TabPage: GObjectRef {
     /// An optional search keyword associated with this tab, used for filtering in tab overview.
     /// - Since: libadwaita 1.3
     public var keyword: String? {
-        get { (adw_tab_page_get_keyword(opaquePointer)).map { String(cString: $0) } }
+        get { adw_tab_page_get_keyword(opaquePointer).map { String(cString: $0) } }
         set { adw_tab_page_set_keyword(opaquePointer, newValue) }
     }
 
@@ -84,7 +85,7 @@ public final class TabPage: GObjectRef {
 
     /// The parent tab page, or `nil` if this is a top-level page.
     public var parent: TabPage? {
-        (adw_tab_page_get_parent(opaquePointer)).map { TabPage(borrowing: UnsafeMutableRawPointer($0)) }
+        adw_tab_page_get_parent(opaquePointer).map { TabPage(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Whether this tab is pinned to the beginning of the tab bar.
@@ -119,7 +120,7 @@ public final class TabPage: GObjectRef {
 
     /// The tooltip text shown when hovering over the tab.
     public var tooltip: String? {
-        get { (adw_tab_page_get_tooltip(opaquePointer)).map { String(cString: $0) } }
+        get { adw_tab_page_get_tooltip(opaquePointer).map { String(cString: $0) } }
         set { adw_tab_page_set_tooltip(opaquePointer, newValue) }
     }
 

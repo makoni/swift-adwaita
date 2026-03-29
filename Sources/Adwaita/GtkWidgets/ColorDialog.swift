@@ -4,7 +4,9 @@ import GObjectSupport
 /// A helper for the async callback pattern.
 private final class ColorAsyncBox<T>: @unchecked Sendable {
     let closure: T
-    init(_ closure: T) { self.closure = closure }
+    init(_ closure: T) {
+        self.closure = closure
+    }
 }
 
 /// A simple RGBA color representation.
@@ -33,7 +35,7 @@ public final class ColorDialog: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -77,7 +79,11 @@ public final class ColorDialog: GObjectRef {
     ///   - parent: The parent window, or nil.
     ///   - initialColor: The initial color, or nil.
     ///   - completion: Called with the selected color, or nil if cancelled.
-    public func chooseRGBA(parent: Widget?, initialColor: RGBA? = nil, completion: @escaping @MainActor (RGBA?) -> Void) {
+    public func chooseRGBA(
+        parent: Widget?,
+        initialColor: RGBA? = nil,
+        completion: @escaping @MainActor (RGBA?) -> Void
+    ) {
         let box = Unmanaged.passRetained(ColorAsyncBox(completion)).toOpaque()
         let parentPtr = parent.flatMap { cadw_cast_window($0.pointer) }
         let callback: GAsyncReadyCallback = { source, result, userData in
@@ -101,7 +107,12 @@ public final class ColorDialog: GObjectRef {
             MainActor.assumeIsolated { box.closure(color) }
         }
         if let initialColor {
-            var gdkColor = GdkRGBA(red: Float(initialColor.red), green: Float(initialColor.green), blue: Float(initialColor.blue), alpha: Float(initialColor.alpha))
+            var gdkColor = GdkRGBA(
+                red: Float(initialColor.red),
+                green: Float(initialColor.green),
+                blue: Float(initialColor.blue),
+                alpha: Float(initialColor.alpha)
+            )
             gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, &gdkColor, nil, callback, box)
         } else {
             gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, nil, nil, callback, box)
@@ -147,7 +158,7 @@ public final class ColorDialog: GObjectRef {
                 callResult = .success(color)
             } else if let error {
                 let dismissed = g_quark_try_string("gtk-dialog-error-quark")
-                if error.pointee.domain == dismissed && error.pointee.code == 2 {
+                if error.pointee.domain == dismissed, error.pointee.code == 2 {
                     g_error_free(error)
                     callResult = .success(nil)
                 } else {
@@ -161,7 +172,12 @@ public final class ColorDialog: GObjectRef {
             MainActor.assumeIsolated { box.closure(callResult) }
         }
         if let initialColor {
-            var gdkColor = GdkRGBA(red: Float(initialColor.red), green: Float(initialColor.green), blue: Float(initialColor.blue), alpha: Float(initialColor.alpha))
+            var gdkColor = GdkRGBA(
+                red: Float(initialColor.red),
+                green: Float(initialColor.green),
+                blue: Float(initialColor.blue),
+                alpha: Float(initialColor.alpha)
+            )
             gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, &gdkColor, nil, callback, box)
         } else {
             gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, nil, nil, callback, box)

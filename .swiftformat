@@ -1,0 +1,53 @@
+# SwiftFormat configuration for swift-adwaita
+
+# Swift version
+--swiftversion 6.0
+
+# Indentation
+--indent 4
+--indentcase false
+--ifdef no-indent
+
+# Line wrapping
+--maxwidth 120
+--wraparguments preserve
+--wrapparameters preserve
+--wrapcollections preserve
+--wrapreturntype preserve
+--wrapconditions preserve
+--wrapternary default
+--wraptypealiases preserve
+
+# Spacing
+--ranges spaced
+--operatorfunc spaced
+--nospaceoperators
+--typeattributes prev-line
+
+# Braces & control flow
+--allman false
+--elseposition same-line
+--guardelse same-line
+
+# Other
+--linebreaks lf
+--commas inline
+--decimalgrouping ignore
+--stripunusedargs closure-only
+--self remove
+--importgrouping alpha
+--semicolons never
+--trimwhitespace always
+--voidtype void
+
+# Disabled rules
+--disable blankLinesAtStartOfScope
+--disable blankLinesAtEndOfScope
+--disable sortImports
+--disable fileHeader
+--disable wrapMultilineStatementBraces
+--disable redundantRawValues
+--disable preferKeyPath
+
+# Excluded paths
+--exclude .build,DerivedData

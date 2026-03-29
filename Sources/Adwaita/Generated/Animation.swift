@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// The abstract base class for all Adwaita animations.
 ///
 /// Wraps `AdwAnimation`. Subclasses such as ``TimedAnimation`` and
@@ -43,7 +44,13 @@ public class Animation: GObjectRef {
 
     /// The animation target that receives interpolated values during playback.
     public var target: AnimationTarget {
-        get { AnimationTarget(borrowing: UnsafeMutableRawPointer(adw_animation_get_target(castedPointer() as UnsafeMutablePointer<AdwAnimation>))) }
+        get {
+            AnimationTarget(
+                borrowing: UnsafeMutableRawPointer(
+                    adw_animation_get_target(castedPointer() as UnsafeMutablePointer<AdwAnimation>)
+                )
+            )
+        }
         set { adw_animation_set_target(castedPointer() as UnsafeMutablePointer<AdwAnimation>, newValue.opaquePointer) }
     }
 
@@ -54,7 +61,11 @@ public class Animation: GObjectRef {
 
     /// The widget that this animation is associated with and uses for frame timing.
     public var widget: Widget {
-        Widget(borrowing: UnsafeMutableRawPointer(adw_animation_get_widget(castedPointer() as UnsafeMutablePointer<AdwAnimation>)))
+        Widget(
+            borrowing: UnsafeMutableRawPointer(
+                adw_animation_get_widget(castedPointer() as UnsafeMutablePointer<AdwAnimation>)
+            )
+        )
     }
 
     /// Pauses a playing animation, freezing it at the current value.

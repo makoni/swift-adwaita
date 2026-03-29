@@ -34,7 +34,7 @@ public final class StringList: GObjectRef, ListModelConvertible {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -71,7 +71,7 @@ public final class StringList: GObjectRef, ListModelConvertible {
 
     /// Whether the list contains the given string.
     public func contains(_ string: String) -> Bool {
-        for i in 0..<count {
+        for i in 0 ..< count {
             if getString(i) == string { return true }
         }
         return false
@@ -79,7 +79,7 @@ public final class StringList: GObjectRef, ListModelConvertible {
 
     /// Returns the index of the first occurrence of the given string, or nil.
     public func indexOf(_ string: String) -> Int? {
-        for i in 0..<count {
+        for i in 0 ..< count {
             if getString(i) == string { return i }
         }
         return nil
@@ -88,11 +88,13 @@ public final class StringList: GObjectRef, ListModelConvertible {
     /// Replaces all strings in the list.
     public func replaceAll(_ strings: [String]) {
         removeAll()
-        for s in strings { append(s) }
+        for s in strings {
+            append(s)
+        }
     }
 
     /// Returns all strings as an array.
     public var allStrings: [String] {
-        (0..<count).compactMap { getString($0) }
+        (0 ..< count).compactMap { getString($0) }
     }
 }

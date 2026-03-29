@@ -89,11 +89,10 @@ struct GestureExample: DemoExample {
         let swipe = GestureSwipe()
         swipe.onSwipe { [swipeResult, directionLabel] vx, vy in
             swipeResult.text = "Velocity: (\(Int(vx)), \(Int(vy))) px/s"
-            let direction: String
-            if abs(vx) > abs(vy) {
-                direction = vx > 0 ? "Right" : "Left"
+            let direction: String = if abs(vx) > abs(vy) {
+                vx > 0 ? "Right" : "Left"
             } else {
-                direction = vy > 0 ? "Down" : "Up"
+                vy > 0 ? "Down" : "Up"
             }
             directionLabel.text = direction
         }

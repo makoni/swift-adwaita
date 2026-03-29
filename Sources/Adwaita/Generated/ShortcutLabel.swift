@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A widget that renders a keyboard shortcut as styled key caps.
 ///
 /// Wraps `AdwShortcutLabel`. Parses an accelerator string such as
@@ -19,7 +20,7 @@ import GObjectSupport
 public final class ShortcutLabel: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

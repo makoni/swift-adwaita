@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct TypeHierarchyTests {
+@Suite(.serialized)
+struct TypeHierarchyTests {
 
     @Test @MainActor func _00_initAdwaita() {
         ensureAdwInit()
@@ -125,7 +126,7 @@ import CAdwaita
             ShortcutsDialog.self, ShortcutsSection.self, ShortcutsItem.self,
             Window.self,
             // Non-widget
-            StyleManager.self, SwipeTracker.self, EnumListModel.self,
+            StyleManager.self, SwipeTracker.self, EnumListModel.self
         ]
         #expect(types.count >= 64, "Expected at least 64 generated types")
     }
@@ -206,6 +207,5 @@ import CAdwaita
         #expect(cadw_type_int() != cadw_type_uint())
         #expect(cadw_type_int64() != cadw_type_uint64())
     }
-
 
 }

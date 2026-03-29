@@ -1,15 +1,16 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A widget presenting sidebar and content side by side or as an overlay.
 /// - Since: libadwaita 1.4
 @MainActor
 public final class OverlaySplitView: Widget, Swipeable {
 
-    /// The underlying `AdwSwipeable` pointer.
+    // The underlying `AdwSwipeable` pointer.
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -36,7 +37,7 @@ public final class OverlaySplitView: Widget, Swipeable {
     /// The content widget displayed alongside the sidebar.
     /// - Since: libadwaita 1.4
     public var content: Widget? {
-        get { (adw_overlay_split_view_get_content(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_overlay_split_view_get_content(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_overlay_split_view_set_content(opaquePointer, newValue?.widgetPointer) }
     }
 
@@ -85,7 +86,7 @@ public final class OverlaySplitView: Widget, Swipeable {
     /// The sidebar widget displayed beside or overlaid on the content.
     /// - Since: libadwaita 1.4
     public var sidebar: Widget? {
-        get { (adw_overlay_split_view_get_sidebar(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_overlay_split_view_get_sidebar(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_overlay_split_view_set_sidebar(opaquePointer, newValue?.widgetPointer) }
     }
 

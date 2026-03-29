@@ -139,7 +139,6 @@ public enum IconName: Sendable, Equatable {
         case .goUp: "go-up-symbolic"
         case .goDown: "go-down-symbolic"
         case .goHome: "go-home-symbolic"
-
         case .editCopy: "edit-copy-symbolic"
         case .editCut: "edit-cut-symbolic"
         case .editPaste: "edit-paste-symbolic"
@@ -155,30 +154,25 @@ public enum IconName: Sendable, Equatable {
         case .documentEdit: "document-edit-symbolic"
         case .documentPrint: "document-print-symbolic"
         case .documentProperties: "document-properties-symbolic"
-
         case .mediaPlaybackStart: "media-playback-start-symbolic"
         case .mediaPlaybackPause: "media-playback-pause-symbolic"
         case .mediaPlaybackStop: "media-playback-stop-symbolic"
         case .mediaSkipForward: "media-skip-forward-symbolic"
         case .mediaSkipBackward: "media-skip-backward-symbolic"
         case .mediaRecord: "media-record-symbolic"
-
         case .viewRefresh: "view-refresh-symbolic"
         case .viewReveal: "view-reveal-symbolic"
         case .viewFullscreen: "view-fullscreen-symbolic"
         case .viewGrid: "view-grid-symbolic"
         case .viewList: "view-list-symbolic"
-
         case .windowNew: "window-new-symbolic"
         case .windowClose: "window-close-symbolic"
-
         case .applicationExit: "application-exit-symbolic"
         case .applicationsScience: "applications-science-symbolic"
         case .applicationXExecutable: "application-x-executable-symbolic"
         case .systemSearch: "system-search-symbolic"
         case .systemRun: "system-run-symbolic"
         case .helpAbout: "help-about-symbolic"
-
         case .dialogInformation: "dialog-information-symbolic"
         case .dialogWarning: "dialog-warning-symbolic"
         case .dialogError: "dialog-error-symbolic"
@@ -189,7 +183,6 @@ public enum IconName: Sendable, Equatable {
         case .emblemFavorite: "emblem-favorite-symbolic"
         case .emblemSystem: "emblem-system-symbolic"
         case .emblemDefault: "emblem-default-symbolic"
-
         case .networkWireless: "network-wireless-symbolic"
         case .networkWired: "network-wired-symbolic"
         case .bluetooth: "bluetooth-symbolic"
@@ -201,16 +194,13 @@ public enum IconName: Sendable, Equatable {
         case .displayBrightness: "display-brightness-symbolic"
         case .batteryFull: "battery-full-symbolic"
         case .printer: "printer-symbolic"
-
         case .folderOpen: "folder-open-symbolic"
         case .folder: "folder-symbolic"
         case .userHome: "user-home-symbolic"
         case .userTrash: "user-trash-symbolic"
-
         case .weatherClear: "weather-clear-symbolic"
         case .weatherOvercast: "weather-overcast-symbolic"
         case .weatherFewClouds: "weather-few-clouds-symbolic"
-
         case .listAdd: "list-add-symbolic"
         case .listRemove: "list-remove-symbolic"
         case .sendTo: "send-to-symbolic"
@@ -227,12 +217,10 @@ public enum IconName: Sendable, Equatable {
         case .securityHigh: "security-high-symbolic"
         case .avatarDefault: "avatar-default-symbolic"
         case .startHere: "start-here-symbolic"
-
         case .sidebarShow: "sidebar-show-symbolic"
         case .openMenu: "open-menu-symbolic"
         case .viewMore: "view-more-symbolic"
-
-        case .custom(let name): name
+        case let .custom(name): name
         }
     }
 }

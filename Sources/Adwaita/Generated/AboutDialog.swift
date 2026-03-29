@@ -33,7 +33,7 @@ import GObjectSupport
 public final class AboutDialog: Dialog {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -55,10 +55,10 @@ public final class AboutDialog: Dialog {
         licenseType: GtkLicense? = nil
     ) {
         self.init()
-        self.applicationName = appName
+        applicationName = appName
         self.version = version
-        self.developerName = developer
-        if let appIcon { self.applicationIcon = appIcon }
+        developerName = developer
+        if let appIcon { applicationIcon = appIcon }
         if let website { self.website = website }
         if let issueUrl { self.issueUrl = issueUrl }
         if let copyright { self.copyright = copyright }

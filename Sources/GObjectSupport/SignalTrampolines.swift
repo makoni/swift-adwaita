@@ -8,20 +8,20 @@ struct UncheckedGValuePointer: @unchecked Sendable { let value: UnsafePointer<GV
 
 // MARK: - C-compatible trampoline functions
 
-/// C-compatible trampoline functions that bridge GObject signal callbacks to Swift closures.
-///
-/// These are internal implementation details used by ``SignalHelper``.
-/// Each trampoline matches a specific C callback signature
-/// (`(instance, [params...], userData)`) and unpacks the boxed Swift closure
-/// from the `userData` pointer.
-///
-/// ```swift
-/// // You do not call trampolines directly. They are used internally by
-/// // SignalHelper.connect and friends, for example:
-/// SignalHelper.connect(button, signal: .clicked) {
-///     print("Clicked!")  // signalTrampoline0 is used under the hood
-/// }
-/// ```
+// C-compatible trampoline functions that bridge GObject signal callbacks to Swift closures.
+//
+// These are internal implementation details used by ``SignalHelper``.
+// Each trampoline matches a specific C callback signature
+// (`(instance, [params...], userData)`) and unpacks the boxed Swift closure
+// from the `userData` pointer.
+//
+// ```swift
+// // You do not call trampolines directly. They are used internally by
+// // SignalHelper.connect and friends, for example:
+// SignalHelper.connect(button, signal: .clicked) {
+//     print("Clicked!")  // signalTrampoline0 is used under the hood
+// }
+// ```
 
 /// Trampoline for `notify::property` signals: (GObject*, GParamSpec*, gpointer).
 /// Ignores the GParamSpec parameter and calls a void handler.
@@ -183,7 +183,8 @@ func signalTrampolinePointerGValueDragAction(
     _ gvalue: UnsafePointer<GValue>,
     _ userData: UnsafeMutableRawPointer
 ) -> GdkDragAction {
-    let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction>>.fromOpaque(userData)
+    let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction>>
+        .fromOpaque(userData)
         .takeUnretainedValue()
     let wrappedPtr = UncheckedOpaquePointer(value: ptr)
     let wrappedGV = UncheckedGValuePointer(value: gvalue)

@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A dialog that displays the application's keyboard shortcuts grouped by section.
 ///
 /// Wraps `AdwShortcutsDialog`. Present this dialog to show users a
@@ -24,7 +25,7 @@ import GObjectSupport
 public final class ShortcutsDialog: Dialog {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -32,17 +33,18 @@ public final class ShortcutsDialog: Dialog {
     ///
     /// - Note: Requires libadwaita 1.8+. Use ``isAvailable`` to check at runtime.
     override public init() {
-        let ptr: UnsafeMutableRawPointer
-        if let p = adw_shortcuts_dialog_new() {
-            ptr = UnsafeMutableRawPointer(p)
+        let ptr = if let p = adw_shortcuts_dialog_new() {
+            UnsafeMutableRawPointer(p)
         } else {
-            ptr = UnsafeMutableRawPointer(adw_dialog_new()!)
+            UnsafeMutableRawPointer(adw_dialog_new()!)
         }
         super.init(raw: ptr)
     }
 
     /// Whether `ShortcutsDialog` is available on the running libadwaita version (1.8+).
-    public static var isAvailable: Bool { AdwaitaVersion.isAtLeast(1, 8) }
+    public static var isAvailable: Bool {
+        AdwaitaVersion.isAtLeast(1, 8)
+    }
 
     /// Adds a section (transfer-full: adds a ref before passing).
     public func add(_ section: ShortcutsSection) {

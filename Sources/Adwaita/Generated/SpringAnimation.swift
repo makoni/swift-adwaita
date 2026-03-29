@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// An animation driven by spring physics for natural-feeling motion.
 ///
 /// Wraps `AdwSpringAnimation`. Animates a value using a damped spring model,
@@ -36,7 +37,7 @@ import GObjectSupport
 public final class SpringAnimation: Animation {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -117,7 +118,7 @@ public final class SpringAnimation: Animation {
     /// - Returns: The spring value at that point in time.
     @discardableResult
     public func calculateValue(_ time: Int) -> Double {
-        return adw_spring_animation_calculate_value(opaquePointer, UInt32(time))
+        adw_spring_animation_calculate_value(opaquePointer, UInt32(time))
     }
 
     /// Computes the spring's velocity at the given time.
@@ -126,6 +127,6 @@ public final class SpringAnimation: Animation {
     /// - Returns: The spring velocity at that point in time.
     @discardableResult
     public func calculateVelocity(_ time: Int) -> Double {
-        return adw_spring_animation_calculate_velocity(opaquePointer, UInt32(time))
+        adw_spring_animation_calculate_velocity(opaquePointer, UInt32(time))
     }
 }

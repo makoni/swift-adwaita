@@ -76,7 +76,7 @@ struct MenuBarExample: DemoExample {
             "new", "open", "save", "quit",
             "cut", "copy", "paste", "selectall",
             "zoomin", "zoomout", "resetzoom",
-            "docs", "about",
+            "docs", "about"
         ]
         for name in actionNames {
             let action = SimpleAction(name: name)

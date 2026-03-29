@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A single keyboard shortcut entry inside a ``ShortcutsSection``.
 ///
 /// Wraps `AdwShortcutsItem`. Describes one shortcut with a human-readable
@@ -27,7 +28,7 @@ import GObjectSupport
 public final class ShortcutsItem: GObjectRef {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

@@ -61,7 +61,7 @@ struct DataBindingExample: DemoExample {
         let levelBar = LevelBar(min: 0, max: Double(maxValue))
         levelBar.value = 0
 
-        // -- Update function: single source of truth -> all views --
+        /// -- Update function: single source of truth -> all views --
         func updateAll() {
             countLabel.text = "\(counter)"
             fractionLabel.text = "\(counter) / \(maxValue)"

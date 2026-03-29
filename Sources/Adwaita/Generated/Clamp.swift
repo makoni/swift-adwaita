@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A size-constraining container that limits its child to a maximum width.
 ///
 /// Wraps `AdwClamp`. Use this widget to constrain wide content (such as a
@@ -27,7 +28,7 @@ import GObjectSupport
 public final class Clamp: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -39,7 +40,7 @@ public final class Clamp: Widget {
 
     /// The widget whose width is constrained by the clamp.
     public var child: Widget? {
-        get { (adw_clamp_get_child(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_clamp_get_child(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_clamp_set_child(opaquePointer, newValue?.widgetPointer) }
     }
 

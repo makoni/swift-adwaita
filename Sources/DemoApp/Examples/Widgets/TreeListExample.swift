@@ -73,21 +73,21 @@ struct TreeListExample: DemoExample {
                     TreeNode(label: "Views", icon: "folder-symbolic", children: [
                         TreeNode(label: "ContentView.swift", icon: "text-x-generic-symbolic", children: []),
                         TreeNode(label: "SidebarView.swift", icon: "text-x-generic-symbolic", children: []),
-                        TreeNode(label: "DetailView.swift", icon: "text-x-generic-symbolic", children: []),
-                    ]),
+                        TreeNode(label: "DetailView.swift", icon: "text-x-generic-symbolic", children: [])
+                    ])
                 ]),
                 TreeNode(label: "Library", icon: "folder-symbolic", children: [
                     TreeNode(label: "Networking.swift", icon: "text-x-generic-symbolic", children: []),
-                    TreeNode(label: "Database.swift", icon: "text-x-generic-symbolic", children: []),
-                ]),
+                    TreeNode(label: "Database.swift", icon: "text-x-generic-symbolic", children: [])
+                ])
             ]),
             TreeNode(label: "Tests", icon: "folder-symbolic", children: [
                 TreeNode(label: "AppTests.swift", icon: "text-x-generic-symbolic", children: []),
-                TreeNode(label: "LibraryTests.swift", icon: "text-x-generic-symbolic", children: []),
+                TreeNode(label: "LibraryTests.swift", icon: "text-x-generic-symbolic", children: [])
             ]),
             TreeNode(label: "Package.swift", icon: "text-x-generic-symbolic", children: []),
             TreeNode(label: "README.md", icon: "text-x-generic-symbolic", children: []),
-            TreeNode(label: ".gitignore", icon: "text-x-generic-symbolic", children: []),
+            TreeNode(label: ".gitignore", icon: "text-x-generic-symbolic", children: [])
         ]
 
         // Flatten tree nodes into a lookup table keyed by index.
@@ -117,7 +117,9 @@ struct TreeListExample: DemoExample {
 
         // Root store — one placeholder per root item
         let rootStore = ListStore()
-        for _ in rootIndices { rootStore.appendPlaceholder() }
+        for _ in rootIndices {
+            rootStore.appendPlaceholder()
+        }
 
         // Map from ListStore placeholder object pointer -> node index.
         // We populate this as stores are created.
@@ -126,9 +128,9 @@ struct TreeListExample: DemoExample {
         }
         let ptrMap = PointerMap()
 
-        // Helper to populate a pointer map for a store's items
+        /// Helper to populate a pointer map for a store's items
         func mapStoreItems(_ store: ListStore, to indices: [Int]) {
-            for i in 0..<indices.count {
+            for i in 0 ..< indices.count {
                 guard let item = store.item(at: i) else { continue }
                 ptrMap.map[item.pointer] = indices[i]
             }
@@ -139,8 +141,8 @@ struct TreeListExample: DemoExample {
         // TreeListModel — creates child stores lazily
         let treeModel = TreeListModel(
             root: rootStore,
-            passthrough: false,     // items wrapped in GtkTreeListRow
-            autoexpand: false       // user expands manually
+            passthrough: false, // items wrapped in GtkTreeListRow
+            autoexpand: false // user expands manually
         ) { [data, ptrMap] item in
             // Look up which node this item corresponds to
             guard let nodeIndex = ptrMap.map[item.pointer],
@@ -152,7 +154,9 @@ struct TreeListExample: DemoExample {
             // Register children and create a child store
             let childIndices = data.register(node.children)
             let childStore = ListStore()
-            for _ in childIndices { childStore.appendPlaceholder() }
+            for _ in childIndices {
+                childStore.appendPlaceholder()
+            }
             mapStoreItems(childStore, to: childIndices)
             return childStore
         }

@@ -1,12 +1,13 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A paginated scrolling widget.
 @MainActor
 public final class Carousel: Widget, Swipeable, Container {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -83,7 +84,7 @@ public final class Carousel: Widget, Swipeable, Container {
     /// - Returns: The widget at position `n`.
     @discardableResult
     public func getNthPage(_ n: Int) -> Widget {
-        return Widget(borrowing: UnsafeMutableRawPointer(adw_carousel_get_nth_page(opaquePointer, UInt32(n))))
+        Widget(borrowing: UnsafeMutableRawPointer(adw_carousel_get_nth_page(opaquePointer, UInt32(n))))
     }
 
     /// Inserts a child widget at the given position in the carousel.
@@ -137,7 +138,9 @@ public final class Carousel: Widget, Swipeable, Container {
 
     /// Appends multiple child widgets.
     public func appendAll(_ children: [Widget]) {
-        for child in children { append(child) }
+        for child in children {
+            append(child)
+        }
     }
 
     /// Sets spacing and returns self for chaining.

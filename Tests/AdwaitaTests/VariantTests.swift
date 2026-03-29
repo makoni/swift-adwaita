@@ -2,15 +2,16 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct VariantTests {
+@Suite(.serialized)
+struct VariantTests {
 
     // MARK: - GLibError Tests
 
-    @Test @MainActor func glibErrorCreation() {
+    @Test @MainActor func glibErrorCreation() throws {
         ensureAdwInit()
         // Create a GError manually using g_error_new_literal
         let quark = g_quark_from_string("test-error-domain")
-        let gerror = g_error_new_literal(quark, 42, "Something went wrong")!
+        let gerror = try #require(g_error_new_literal(quark, 42, "Something went wrong"))
         let error = GLibError(consuming: gerror)
         // The GError has been freed by the initializer
 
@@ -20,13 +21,13 @@ import CAdwaita
         #expect(error.description == "Something went wrong")
     }
 
-    @Test @MainActor func glibErrorConformsToSwiftError() {
+    @Test @MainActor func glibErrorConformsToSwiftError() throws {
         ensureAdwInit()
         let quark = g_quark_from_string("test-domain")
-        let gerror = g_error_new_literal(quark, 1, "test error")!
+        let gerror = try #require(g_error_new_literal(quark, 1, "test error"))
         let error: any Error = GLibError(consuming: gerror)
         #expect(error is GLibError)
-        let glibError = error as! GLibError
+        let glibError = try #require(error as? GLibError)
         #expect(glibError.code == 1)
         #expect(glibError.message == "test error")
     }
@@ -157,6 +158,5 @@ import CAdwaita
         item.setAttribute("custom-attr", variant: .string("value"))
         item.setTargetValue(.string("target-value"))
     }
-
 
 }

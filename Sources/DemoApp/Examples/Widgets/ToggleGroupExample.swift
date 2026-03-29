@@ -36,10 +36,18 @@ struct ToggleGroupExample: DemoExample {
 
         // Text toggles
         toggleGroup1.setMargins(12)
-        if let d = Toggle() { d.label = "Day"; toggleGroup1.add(d) }
-        if let w = Toggle() { w.label = "Week"; toggleGroup1.add(w) }
-        if let m = Toggle() { m.label = "Month"; toggleGroup1.add(m) }
-        if let y = Toggle() { y.label = "Year"; toggleGroup1.add(y) }
+        if let d = Toggle() { d.label = "Day"
+            toggleGroup1.add(d)
+        }
+        if let w = Toggle() { w.label = "Week"
+            toggleGroup1.add(w)
+        }
+        if let m = Toggle() { m.label = "Month"
+            toggleGroup1.add(m)
+        }
+        if let y = Toggle() { y.label = "Year"
+            toggleGroup1.add(y)
+        }
         toggleGroup1.active = 0
         group1.add(toggleGroup1)
 
@@ -71,10 +79,18 @@ struct ToggleGroupExample: DemoExample {
 
         toggleGroup3.setMargins(12)
         toggleGroup3.homogeneous = true
-        if let s = Toggle() { s.label = "S"; toggleGroup3.add(s) }
-        if let med = Toggle() { med.label = "M"; toggleGroup3.add(med) }
-        if let l = Toggle() { l.label = "L"; toggleGroup3.add(l) }
-        if let xl = Toggle() { xl.label = "XL"; toggleGroup3.add(xl) }
+        if let s = Toggle() { s.label = "S"
+            toggleGroup3.add(s)
+        }
+        if let med = Toggle() { med.label = "M"
+            toggleGroup3.add(med)
+        }
+        if let l = Toggle() { l.label = "L"
+            toggleGroup3.add(l)
+        }
+        if let xl = Toggle() { xl.label = "XL"
+            toggleGroup3.add(xl)
+        }
         toggleGroup3.active = 1
         group3.add(toggleGroup3)
 

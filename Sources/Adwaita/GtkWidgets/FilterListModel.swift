@@ -47,10 +47,10 @@ public final class CustomFilter: GObjectRef {
         )!
 
         super.init(raw: UnsafeMutableRawPointer(ptr))
-        self.closureBox = box
+        closureBox = box
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -114,7 +114,7 @@ public final class FilterListModel: GObjectRef, ListModelConvertible {
         gtk_filter_list_model_set_filter(opaquePointer, UnsafeMutablePointer(OpaquePointer(filter.pointer)))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

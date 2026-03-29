@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A group of mutually exclusive toggle buttons.
 ///
 /// Wraps `AdwToggleGroup`. Displays a set of ``Toggle`` items where exactly
@@ -42,7 +43,7 @@ import GObjectSupport
 public final class ToggleGroup: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -65,7 +66,7 @@ public final class ToggleGroup: Widget {
     /// The name of the currently active toggle, or `nil` if no toggle is active.
     /// - Since: libadwaita 1.7
     public var activeName: String? {
-        get { (adw_toggle_group_get_active_name(opaquePointer)).map { String(cString: $0) } }
+        get { adw_toggle_group_get_active_name(opaquePointer).map { String(cString: $0) } }
         set { adw_toggle_group_set_active_name(opaquePointer, newValue) }
     }
 
@@ -100,13 +101,13 @@ public final class ToggleGroup: Widget {
     /// Returns the toggle at the given index.
     @discardableResult
     public func getToggle(_ index: Int) -> Toggle? {
-        return (adw_toggle_group_get_toggle(opaquePointer, UInt32(index))).map { Toggle(borrowing: UnsafeMutableRawPointer($0)) }
+        adw_toggle_group_get_toggle(opaquePointer, UInt32(index)).map { Toggle(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Returns the toggle with the given name.
     @discardableResult
     public func getToggleByName(_ name: String) -> Toggle? {
-        return (adw_toggle_group_get_toggle_by_name(opaquePointer, name)).map { Toggle(borrowing: UnsafeMutableRawPointer($0)) }
+        adw_toggle_group_get_toggle_by_name(opaquePointer, name).map { Toggle(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Removes a toggle from the group.

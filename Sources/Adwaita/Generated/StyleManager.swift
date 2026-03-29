@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// Manages the application color scheme and high-contrast preferences.
 ///
 /// Wraps `AdwStyleManager`. Provides access to the system's preferred color

@@ -27,11 +27,13 @@ public final class DropDown: Widget {
         let ptr = terminated.withUnsafeBufferPointer { buf in
             gtk_drop_down_new_from_strings(buf.baseAddress)!
         }
-        for s in cArray { free(UnsafeMutablePointer(mutating: s)) }
+        for s in cArray {
+            free(UnsafeMutablePointer(mutating: s))
+        }
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

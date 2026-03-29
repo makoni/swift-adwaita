@@ -1,13 +1,14 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A swipe tracker used in [class@Carousel], [class@NavigationView] and
 /// [class@OverlaySplitView].
 @MainActor
 public final class SwipeTracker: GObjectRef {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -106,7 +107,8 @@ public final class SwipeTracker: GObjectRef {
 
     /// Emitted on each frame while the swipe gesture is in progress.
     ///
-    /// - Parameter handler: A closure receiving the current swipe progress as a fractional position between snap points.
+    /// - Parameter handler: A closure receiving the current swipe progress as a fractional position between snap
+    /// points.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onUpdateSwipe(_ handler: @escaping @MainActor (Double) -> Void) -> SignalConnection {

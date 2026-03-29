@@ -46,7 +46,7 @@ struct VideoExample: DemoExample {
             dialog.title = "Open Video"
             dialog.setFilters([
                 FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi", "mov", "ogv"]),
-                FileFilter(name: "All files", patterns: ["*"]),
+                FileFilter(name: "All files", patterns: ["*"])
             ])
             dialog.open(parent: box.root) { path in
                 if let path {

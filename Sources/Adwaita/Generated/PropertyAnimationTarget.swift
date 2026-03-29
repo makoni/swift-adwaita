@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// An animation target that directly updates a GObject property.
 ///
 /// Wraps `AdwPropertyAnimationTarget`. Instead of using a callback, this
@@ -15,5 +16,4 @@ import GObjectSupport
 ///
 /// - Since: libadwaita 1.2
 @MainActor
-public final class PropertyAnimationTarget: AnimationTarget {
-}
+public final class PropertyAnimationTarget: AnimationTarget {}

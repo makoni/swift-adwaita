@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A button split into a main action and a dropdown menu.
 ///
 /// Wraps `AdwSplitButton`. The primary area triggers the main action, while
@@ -37,7 +38,7 @@ import GObjectSupport
 public final class SplitButton: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -56,7 +57,7 @@ public final class SplitButton: Widget {
 
     /// A custom child widget displayed in the primary button area, replacing the default label or icon.
     public var child: Widget? {
-        get { (adw_split_button_get_child(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_split_button_get_child(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_split_button_set_child(opaquePointer, newValue?.widgetPointer) }
     }
 
@@ -75,13 +76,13 @@ public final class SplitButton: Widget {
 
     /// The name of the icon displayed on the primary button area.
     public var iconName: String? {
-        get { (adw_split_button_get_icon_name(opaquePointer)).map { String(cString: $0) } }
+        get { adw_split_button_get_icon_name(opaquePointer).map { String(cString: $0) } }
         set { adw_split_button_set_icon_name(opaquePointer, newValue) }
     }
 
     /// The text label displayed on the primary button area.
     public var label: String? {
-        get { (adw_split_button_get_label(opaquePointer)).map { String(cString: $0) } }
+        get { adw_split_button_get_label(opaquePointer).map { String(cString: $0) } }
         set { adw_split_button_set_label(opaquePointer, newValue) }
     }
 

@@ -28,7 +28,7 @@ public final class InlineViewSwitcher: Widget {
     }
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -63,7 +63,7 @@ public final class InlineViewSwitcher: Widget {
     /// The ``ViewStack`` whose pages are shown as toggle buttons.
     /// - Since: libadwaita 1.7
     public var stack: ViewStack? {
-        get { (cadw_inline_view_switcher_get_stack(pointer)).map { ViewStack(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { cadw_inline_view_switcher_get_stack(pointer).map { ViewStack(borrowing: UnsafeMutableRawPointer($0)) } }
         set { cadw_inline_view_switcher_set_stack(pointer, newValue?.pointer) }
     }
 }

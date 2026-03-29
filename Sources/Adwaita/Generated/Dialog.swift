@@ -34,7 +34,7 @@ import GObjectSupport
 public class Dialog: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -56,7 +56,10 @@ public class Dialog: Widget {
     /// The content widget displayed inside the dialog.
     /// - Since: libadwaita 1.5
     public var child: Widget? {
-        get { (adw_dialog_get_child(castedPointer() as UnsafeMutablePointer<AdwDialog>)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get {
+            adw_dialog_get_child(castedPointer() as UnsafeMutablePointer<AdwDialog>)
+                .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        }
         set { adw_dialog_set_child(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue?.widgetPointer) }
     }
 
@@ -77,20 +80,29 @@ public class Dialog: Widget {
     /// The currently active breakpoint, or `nil` if none apply (read-only).
     /// - Since: libadwaita 1.5
     public var currentBreakpoint: Breakpoint? {
-        (adw_dialog_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwDialog>)).map { Breakpoint(borrowing: UnsafeMutableRawPointer($0)) }
+        adw_dialog_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwDialog>)
+            .map { Breakpoint(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// The widget activated when the user presses Enter.
     /// - Since: libadwaita 1.5
     public var defaultWidget: Widget? {
-        get { (adw_dialog_get_default_widget(castedPointer() as UnsafeMutablePointer<AdwDialog>)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
-        set { adw_dialog_set_default_widget(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue?.widgetPointer) }
+        get {
+            adw_dialog_get_default_widget(castedPointer() as UnsafeMutablePointer<AdwDialog>)
+                .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        }
+        set {
+            adw_dialog_set_default_widget(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue?.widgetPointer)
+        }
     }
 
     /// The widget that currently has keyboard focus within the dialog.
     /// - Since: libadwaita 1.5
     public var focusWidget: Widget? {
-        get { (adw_dialog_get_focus(castedPointer() as UnsafeMutablePointer<AdwDialog>)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get {
+            adw_dialog_get_focus(castedPointer() as UnsafeMutablePointer<AdwDialog>)
+                .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        }
         set { adw_dialog_set_focus(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue?.widgetPointer) }
     }
 
@@ -98,7 +110,8 @@ public class Dialog: Widget {
     /// - Since: libadwaita 1.5
     public var followsContentSize: Bool {
         get { adw_dialog_get_follows_content_size(castedPointer() as UnsafeMutablePointer<AdwDialog>) != 0 }
-        set { adw_dialog_set_follows_content_size(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue ? 1 : 0) }
+        set { adw_dialog_set_follows_content_size(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue ? 1 : 0)
+        }
     }
 
     /// How the dialog is presented (auto, floating, or bottom sheet).
@@ -132,7 +145,7 @@ public class Dialog: Widget {
     ///
     /// - Returns: `true` if the dialog was closed, `false` if prevented.
     public func close() -> Bool {
-        return adw_dialog_close(castedPointer() as UnsafeMutablePointer<AdwDialog>) != 0
+        adw_dialog_close(castedPointer() as UnsafeMutablePointer<AdwDialog>) != 0
     }
 
     /// Closes the dialog unconditionally, ignoring ``canClose``.

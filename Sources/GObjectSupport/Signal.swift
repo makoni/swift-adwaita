@@ -29,7 +29,9 @@ public final class SignalConnection: @unchecked Sendable {
 /// Internal box to capture a Swift closure and pass it through C callback user data.
 final class ClosureBox<T>: @unchecked Sendable {
     let closure: T
-    init(_ closure: T) { self.closure = closure }
+    init(_ closure: T) {
+        self.closure = closure
+    }
 }
 
 /// Helpers for connecting GObject signals to Swift closures.
@@ -91,7 +93,7 @@ public enum SignalHelper {
                 g_idle_add({ ptr in
                     guard let ptr else { return 0 }
                     Unmanaged<AnyObject>.fromOpaque(ptr).release()
-                    return 0  // G_SOURCE_REMOVE
+                    return 0 // G_SOURCE_REMOVE
                 }, userData)
             },
             GConnectFlags(rawValue: 0)
@@ -112,15 +114,18 @@ public enum SignalHelper {
         signal: SignalName,
         handler: @escaping @MainActor () -> Void
     ) -> SignalConnection {
-        let trampoline: GCallback
-        if signal.isNotify {
+        let trampoline: GCallback = if signal.isNotify {
             // notify signals pass (instance, GParamSpec*, userData)
-            trampoline = unsafeBitCast(
-                signalTrampolineNotify as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, UnsafeMutableRawPointer) -> Void,
+            unsafeBitCast(
+                signalTrampolineNotify as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    OpaquePointer,
+                    UnsafeMutableRawPointer
+                ) -> Void,
                 to: GCallback.self
             )
         } else {
-            trampoline = unsafeBitCast(
+            unsafeBitCast(
                 signalTrampoline0 as @convention(c) (UnsafeMutableRawPointer, UnsafeMutableRawPointer) -> Void,
                 to: GCallback.self
             )
@@ -144,7 +149,11 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineString as @convention(c) (UnsafeMutableRawPointer, UnsafePointer<CChar>, UnsafeMutableRawPointer) -> Void,
+                signalTrampolineString as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UnsafePointer<CChar>,
+                    UnsafeMutableRawPointer
+                ) -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -161,7 +170,8 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineUInt as @convention(c) (UnsafeMutableRawPointer, UInt32, UnsafeMutableRawPointer) -> Void,
+                signalTrampolineUInt as @convention(c) (UnsafeMutableRawPointer, UInt32, UnsafeMutableRawPointer)
+                    -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -195,7 +205,8 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineDouble as @convention(c) (UnsafeMutableRawPointer, Double, UnsafeMutableRawPointer) -> Void,
+                signalTrampolineDouble as @convention(c) (UnsafeMutableRawPointer, Double, UnsafeMutableRawPointer)
+                    -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -212,7 +223,8 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineBool as @convention(c) (UnsafeMutableRawPointer, gboolean, UnsafeMutableRawPointer) -> Void,
+                signalTrampolineBool as @convention(c) (UnsafeMutableRawPointer, gboolean, UnsafeMutableRawPointer)
+                    -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -229,7 +241,8 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineUInt as @convention(c) (UnsafeMutableRawPointer, UInt32, UnsafeMutableRawPointer) -> Void,
+                signalTrampolineUInt as @convention(c) (UnsafeMutableRawPointer, UInt32, UnsafeMutableRawPointer)
+                    -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox<@MainActor (UInt32) -> Void>({ raw in
@@ -271,7 +284,11 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolinePointer as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, UnsafeMutableRawPointer) -> Void,
+                signalTrampolinePointer as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    OpaquePointer,
+                    UnsafeMutableRawPointer
+                ) -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -290,7 +307,12 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineDoubleDouble as @convention(c) (UnsafeMutableRawPointer, Double, Double, UnsafeMutableRawPointer) -> Void,
+                signalTrampolineDoubleDouble as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    Double,
+                    Double,
+                    UnsafeMutableRawPointer
+                ) -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -307,7 +329,12 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineUIntUInt as @convention(c) (UnsafeMutableRawPointer, UInt32, UInt32, UnsafeMutableRawPointer) -> Void,
+                signalTrampolineUIntUInt as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UInt32,
+                    UInt32,
+                    UnsafeMutableRawPointer
+                ) -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -324,7 +351,12 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolinePointerInt as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, Int32, UnsafeMutableRawPointer) -> Void,
+                signalTrampolinePointerInt as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    OpaquePointer,
+                    Int32,
+                    UnsafeMutableRawPointer
+                ) -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -344,7 +376,13 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineIntDoubleDouble as @convention(c) (UnsafeMutableRawPointer, Int32, Double, Double, UnsafeMutableRawPointer) -> Void,
+                signalTrampolineIntDoubleDouble as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    Int32,
+                    Double,
+                    Double,
+                    UnsafeMutableRawPointer
+                ) -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -362,7 +400,13 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineUIntUIntUIntBool as @convention(c) (UnsafeMutableRawPointer, UInt32, UInt32, UInt32, UnsafeMutableRawPointer) -> gboolean,
+                signalTrampolineUIntUIntUIntBool as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UInt32,
+                    UInt32,
+                    UInt32,
+                    UnsafeMutableRawPointer
+                ) -> gboolean,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -380,7 +424,13 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineUIntUIntUInt as @convention(c) (UnsafeMutableRawPointer, UInt32, UInt32, UInt32, UnsafeMutableRawPointer) -> Void,
+                signalTrampolineUIntUIntUInt as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UInt32,
+                    UInt32,
+                    UInt32,
+                    UnsafeMutableRawPointer
+                ) -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -400,7 +450,8 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineReturnBool as @convention(c) (UnsafeMutableRawPointer, UnsafeMutableRawPointer) -> gboolean,
+                signalTrampolineReturnBool as @convention(c) (UnsafeMutableRawPointer, UnsafeMutableRawPointer)
+                    -> gboolean,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -420,7 +471,12 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolineDoubleDoubleBool as @convention(c) (UnsafeMutableRawPointer, Double, Double, UnsafeMutableRawPointer) -> gboolean,
+                signalTrampolineDoubleDoubleBool as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    Double,
+                    Double,
+                    UnsafeMutableRawPointer
+                ) -> gboolean,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -440,7 +496,12 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolinePointerGValueBool as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, UnsafePointer<GValue>, UnsafeMutableRawPointer) -> gboolean,
+                signalTrampolinePointerGValueBool as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    OpaquePointer,
+                    UnsafePointer<GValue>,
+                    UnsafeMutableRawPointer
+                ) -> gboolean,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -458,7 +519,12 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
-                signalTrampolinePointerGValueDragAction as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, UnsafePointer<GValue>, UnsafeMutableRawPointer) -> GdkDragAction,
+                signalTrampolinePointerGValueDragAction as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    OpaquePointer,
+                    UnsafePointer<GValue>,
+                    UnsafeMutableRawPointer
+                ) -> GdkDragAction,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)
@@ -480,7 +546,11 @@ public enum SignalHelper {
         connectRaw(
             instance, signal: .notify(property.name),
             trampoline: unsafeBitCast(
-                signalTrampolineNotify as @convention(c) (UnsafeMutableRawPointer, OpaquePointer, UnsafeMutableRawPointer) -> Void,
+                signalTrampolineNotify as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    OpaquePointer,
+                    UnsafeMutableRawPointer
+                ) -> Void,
                 to: GCallback.self
             ),
             box: ClosureBox(handler)

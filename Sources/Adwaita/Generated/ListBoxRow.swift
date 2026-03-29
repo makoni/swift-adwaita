@@ -36,7 +36,7 @@ public class ListBoxRow: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -77,13 +77,16 @@ public class ListBoxRow: Widget {
     /// Whether this row is activatable by the user.
     public var activatable: Bool {
         get { gtk_list_box_row_get_activatable(castedPointer() as UnsafeMutablePointer<GtkListBoxRow>) != 0 }
-        set { gtk_list_box_row_set_activatable(castedPointer() as UnsafeMutablePointer<GtkListBoxRow>, newValue ? 1 : 0) }
+        set {
+            gtk_list_box_row_set_activatable(castedPointer() as UnsafeMutablePointer<GtkListBoxRow>, newValue ? 1 : 0)
+        }
     }
 
     /// Whether this row can be selected.
     public var selectable: Bool {
         get { gtk_list_box_row_get_selectable(castedPointer() as UnsafeMutablePointer<GtkListBoxRow>) != 0 }
-        set { gtk_list_box_row_set_selectable(castedPointer() as UnsafeMutablePointer<GtkListBoxRow>, newValue ? 1 : 0) }
+        set { gtk_list_box_row_set_selectable(castedPointer() as UnsafeMutablePointer<GtkListBoxRow>, newValue ? 1 : 0)
+        }
     }
 
     /// Marks this row as changed, triggering filter/sort/header re-evaluation.

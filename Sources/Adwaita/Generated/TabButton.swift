@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A button that displays the current tab count for a ``TabView``.
 ///
 /// Wraps `AdwTabButton`. Typically used in a header bar to show how many tabs
@@ -35,7 +36,7 @@ import GObjectSupport
 public final class TabButton: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -48,7 +49,7 @@ public final class TabButton: Widget {
     /// The ``TabView`` whose open tab count is displayed on this button.
     /// - Since: libadwaita 1.3
     public var view: TabView? {
-        get { (adw_tab_button_get_view(opaquePointer)).map { TabView(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_tab_button_get_view(opaquePointer).map { TabView(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_tab_button_set_view(opaquePointer, newValue?.opaquePointer) }
     }
 

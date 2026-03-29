@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct PropertyBindingTests {
+@Suite(.serialized)
+struct PropertyBindingTests {
 
     // MARK: - Property Binding
 
@@ -175,9 +176,9 @@ import CAdwaita
         let scale = Scale(orientation: .horizontal, min: 0, max: 100, step: 1)
         scale.value = 50
         #expect(abs(scale.value - 50) < 0.01)
-        scale.value = -10  // Below min
+        scale.value = -10 // Below min
         #expect(scale.value >= 0, "Scale should clamp to minimum")
-        scale.value = 200  // Above max
+        scale.value = 200 // Above max
         #expect(scale.value <= 100, "Scale should clamp to maximum")
     }
 

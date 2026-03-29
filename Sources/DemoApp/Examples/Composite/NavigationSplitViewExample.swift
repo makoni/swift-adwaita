@@ -36,7 +36,7 @@ struct NavigationSplitViewExample: DemoExample {
         let categories = ["Inbox", "Starred", "Sent", "Drafts", "Trash"]
         let icons = [
             "mail-inbox-symbolic", "starred-symbolic", "mail-send-symbolic",
-            "document-edit-symbolic", "user-trash-symbolic",
+            "document-edit-symbolic", "user-trash-symbolic"
         ]
 
         for category in categories {

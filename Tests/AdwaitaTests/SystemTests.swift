@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct SystemTests {
+@Suite(.serialized)
+struct SystemTests {
 
     // MARK: - SelectionFilterModel Tests
 
@@ -74,7 +75,7 @@ import CAdwaita
 
     @Test @MainActor func gtkWindowIconName() {
         ensureAdwInit()
-        let app = Application(id: "com.test.windowicon\(UInt32.random(in: 0..<UInt32.max))")
+        let app = Application(id: "com.test.windowicon\(UInt32.random(in: 0 ..< UInt32.max))")
         let win = ApplicationWindow(application: app)
         win.iconName = "dialog-information-symbolic"
         #expect(win.iconName == "dialog-information-symbolic")
@@ -192,7 +193,7 @@ import CAdwaita
         // requires a running event loop so we just check availability
         let box = Box(orientation: .vertical, spacing: 0)
         let clipboard = box.clipboard
-        _ = clipboard  // async methods available: readText(), readTexture()
+        _ = clipboard // async methods available: readText(), readTexture()
     }
 
     // MARK: - Widget.removeController Test
@@ -210,12 +211,12 @@ import CAdwaita
 
     @Test @MainActor func applicationWindowOnCloseRequest() {
         ensureAdwInit()
-        let app = Application(id: "com.test.closereq\(UInt32.random(in: 0..<UInt32.max))")
+        let app = Application(id: "com.test.closereq\(UInt32.random(in: 0 ..< UInt32.max))")
         let win = ApplicationWindow(application: app)
         var called = false
         win.onCloseRequest {
             called = true
-            return true  // prevent closing
+            return true // prevent closing
         }
         // Signal handler connected successfully
         #expect(!called)
@@ -408,6 +409,5 @@ import CAdwaita
         row.changed()
         // No crash = success
     }
-
 
 }

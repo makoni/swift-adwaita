@@ -23,10 +23,10 @@ public final class Switch: Widget {
     public convenience init(active: Bool, onActiveChanged handler: (@MainActor () -> Void)? = nil) {
         self.init()
         self.active = active
-        if let handler { self.onActiveChanged(handler) }
+        if let handler { onActiveChanged(handler) }
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

@@ -18,7 +18,7 @@ import GObjectSupport
 public final class MultiLayoutView: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -32,7 +32,7 @@ public final class MultiLayoutView: Widget {
     /// The currently active layout that determines how children are arranged.
     /// - Since: libadwaita 1.6
     public var layout: Layout? {
-        get { (cadw_multi_layout_view_get_layout(pointer)).map { Layout(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { cadw_multi_layout_view_get_layout(pointer).map { Layout(borrowing: UnsafeMutableRawPointer($0)) } }
         set { cadw_multi_layout_view_set_layout(pointer, newValue?.pointer) }
     }
 
@@ -41,7 +41,7 @@ public final class MultiLayoutView: Widget {
     /// Setting this switches to the layout with the matching name.
     /// - Since: libadwaita 1.6
     public var layoutName: String? {
-        get { (cadw_multi_layout_view_get_layout_name(pointer)).map { String(cString: $0) } }
+        get { cadw_multi_layout_view_get_layout_name(pointer).map { String(cString: $0) } }
         set { cadw_multi_layout_view_set_layout_name(pointer, newValue) }
     }
 
@@ -57,13 +57,13 @@ public final class MultiLayoutView: Widget {
     /// - Returns: The widget assigned to that slot, or `nil` if none is set.
     @discardableResult
     public func getChild(_ id: String) -> Widget? {
-        return (cadw_multi_layout_view_get_child(pointer, id)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        cadw_multi_layout_view_get_child(pointer, id).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Returns the layout with the given name.
     @discardableResult
     public func getLayoutByName(_ name: String) -> Layout? {
-        return (cadw_multi_layout_view_get_layout_by_name(pointer, name)).map { Layout(borrowing: UnsafeMutableRawPointer($0)) }
+        cadw_multi_layout_view_get_layout_by_name(pointer, name).map { Layout(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Removes a layout.

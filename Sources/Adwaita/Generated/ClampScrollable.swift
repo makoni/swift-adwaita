@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A scrollable variant of `Clamp` that constrains its child to a maximum size.
 ///
 /// Wraps `AdwClampScrollable`. Works like a clamp but also implements
@@ -17,7 +18,7 @@ import GObjectSupport
 public final class ClampScrollable: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -29,7 +30,7 @@ public final class ClampScrollable: Widget {
 
     /// The child widget whose size is constrained by the clamp.
     public var child: Widget? {
-        get { (adw_clamp_scrollable_get_child(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_clamp_scrollable_get_child(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_clamp_scrollable_set_child(opaquePointer, newValue?.widgetPointer) }
     }
 

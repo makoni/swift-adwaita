@@ -89,7 +89,7 @@ struct KeyboardShortcutsExample: DemoExample {
             (.z, .control, "Ctrl+Z"),
             (.z, [.control, .shift], "Ctrl+Shift+Z"),
             (.n, .control, "Ctrl+N"),
-            (.w, .control, "Ctrl+W"),
+            (.w, .control, "Ctrl+W")
         ]
 
         let managedController = ShortcutController()
@@ -124,7 +124,7 @@ struct KeyboardShortcutsExample: DemoExample {
         let localShortcuts: [(Key, KeyModifiers, String)] = [
             (.f1, [], "F1"),
             (.f2, [], "F2"),
-            (.space, .control, "Ctrl+Space"),
+            (.space, .control, "Ctrl+Space")
         ]
 
         for (key, modifiers, desc) in localShortcuts {

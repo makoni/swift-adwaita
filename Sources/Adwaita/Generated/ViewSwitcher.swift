@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// An adaptive view switcher widget for navigating a ``ViewStack``.
 ///
 /// Wraps `AdwViewSwitcher`. Displays toggle buttons for each page in a
@@ -30,7 +31,7 @@ import GObjectSupport
 public final class ViewSwitcher: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -48,7 +49,7 @@ public final class ViewSwitcher: Widget {
 
     /// The ``ViewStack`` whose pages are displayed as toggle buttons.
     public var stack: ViewStack? {
-        get { (adw_view_switcher_get_stack(opaquePointer)).map { ViewStack(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_view_switcher_get_stack(opaquePointer).map { ViewStack(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_view_switcher_set_stack(opaquePointer, newValue?.opaquePointer) }
     }
 }

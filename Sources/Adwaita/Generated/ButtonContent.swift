@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A helper widget that displays an icon and a label inside a button.
 ///
 /// Wraps `AdwButtonContent`. Provides a standard layout for buttons that
@@ -28,7 +29,7 @@ import GObjectSupport
 public final class ButtonContent: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

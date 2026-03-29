@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A list box row with a built-in switch for toggling boolean settings.
 ///
 /// Wraps `AdwSwitchRow`. A convenience subclass of `ActionRow` that embeds a
@@ -21,7 +22,7 @@ import GObjectSupport
 public final class SwitchRow: ActionRow {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

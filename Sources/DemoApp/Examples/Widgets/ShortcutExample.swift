@@ -56,7 +56,7 @@ struct ShortcutExample: DemoExample {
             (.digit2, .control, "Ctrl+2"),
             (.digit3, .control, "Ctrl+3"),
             (.s, .control, "Ctrl+S — Save"),
-            (.z, [.control, .shift], "Ctrl+Shift+Z — Redo"),
+            (.z, [.control, .shift], "Ctrl+Shift+Z — Redo")
         ]
 
         let infoGroup = PreferencesGroup()

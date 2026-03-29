@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A stack of named views, typically driven by a ``ViewSwitcher``.
 ///
 /// Wraps `AdwViewStack`. Holds multiple child widgets as named pages and
@@ -41,7 +42,7 @@ import GObjectSupport
 public final class ViewStack: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -85,13 +86,13 @@ public final class ViewStack: Widget {
 
     /// The currently visible child widget.
     public var visibleChild: Widget? {
-        get { (adw_view_stack_get_visible_child(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_view_stack_get_visible_child(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_view_stack_set_visible_child(opaquePointer, newValue?.widgetPointer) }
     }
 
     /// The name of the currently visible child.
     public var visibleChildName: String? {
-        get { (adw_view_stack_get_visible_child_name(opaquePointer)).map { String(cString: $0) } }
+        get { adw_view_stack_get_visible_child_name(opaquePointer).map { String(cString: $0) } }
         set { adw_view_stack_set_visible_child_name(opaquePointer, newValue) }
     }
 
@@ -147,7 +148,7 @@ public final class ViewStack: Widget {
     /// - Returns: The child widget, or `nil` if no page has that name.
     @discardableResult
     public func getChildByName(_ name: String) -> Widget? {
-        return (adw_view_stack_get_child_by_name(opaquePointer, name)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        adw_view_stack_get_child_by_name(opaquePointer, name).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Returns the ``ViewStackPage`` metadata for the given child widget.

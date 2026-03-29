@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A layout manager that constrains children to a maximum size.
 ///
 /// Wraps `AdwClampLayout`. Limits the natural size of its children
@@ -18,7 +19,7 @@ import GObjectSupport
 public final class ClampLayout: LayoutManager {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

@@ -40,7 +40,7 @@ public enum MainContext {
                 MainActor.assumeIsolated {
                     box.closure()
                 }
-                return 0  // G_SOURCE_REMOVE — run once
+                return 0 // G_SOURCE_REMOVE — run once
             },
             box,
             { userData in
@@ -56,7 +56,9 @@ public enum MainContext {
     ///   - ms: The delay in milliseconds.
     ///   - closure: The work to perform after the delay.
     public static func delay(ms: UInt32, _ closure: @escaping @MainActor () -> Void) {
-        timeout(intervalMs: ms) { closure(); return false }
+        timeout(intervalMs: ms) { closure()
+            return false
+        }
     }
 
     /// Schedules a repeating timeout on the GLib main loop.

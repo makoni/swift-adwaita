@@ -33,7 +33,7 @@ public final class ScrolledWindow: Widget {
         self.child = child
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

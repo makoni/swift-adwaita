@@ -4,7 +4,9 @@ import GObjectSupport
 /// A helper for the async callback pattern.
 private final class ClipboardAsyncBox<T>: @unchecked Sendable {
     let closure: T
-    init(_ closure: T) { self.closure = closure }
+    init(_ closure: T) {
+        self.closure = closure
+    }
 }
 
 /// Provides access to the system clipboard for copy/paste.
@@ -38,7 +40,8 @@ public final class Clipboard: GObjectRef {
                     text = nil
                 }
                 if let error { g_error_free(error) }
-                let box = Unmanaged<ClipboardAsyncBox<@MainActor (String?) -> Void>>.fromOpaque(userData).takeRetainedValue()
+                let box = Unmanaged<ClipboardAsyncBox<@MainActor (String?) -> Void>>.fromOpaque(userData)
+                    .takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(text) }
             },
             box
@@ -68,15 +71,15 @@ public final class Clipboard: GObjectRef {
                 guard let userData, let source, let result else { return }
                 var error: UnsafeMutablePointer<GError>?
                 let texture = gdk_clipboard_read_texture_finish(OpaquePointer(source), result, &error)
-                let value: Texture?
-                if let texture {
+                let value: Texture? = if let texture {
                     // Transfer full — we own the reference
-                    value = Texture(raw: UnsafeMutableRawPointer(texture))
+                    Texture(raw: UnsafeMutableRawPointer(texture))
                 } else {
-                    value = nil
+                    nil
                 }
                 if let error { g_error_free(error) }
-                let box = Unmanaged<ClipboardAsyncBox<@MainActor (Texture?) -> Void>>.fromOpaque(userData).takeRetainedValue()
+                let box = Unmanaged<ClipboardAsyncBox<@MainActor (Texture?) -> Void>>.fromOpaque(userData)
+                    .takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(value) }
             },
             box
@@ -122,9 +125,9 @@ public final class Clipboard: GObjectRef {
 
 // MARK: - Widget extension
 
-extension Widget {
+public extension Widget {
     /// The clipboard for this widget's display.
-    public var clipboard: Clipboard {
+    var clipboard: Clipboard {
         let ptr = gtk_widget_get_clipboard(widgetPointer)!
         return Clipboard(borrowing: UnsafeMutableRawPointer(ptr))
     }

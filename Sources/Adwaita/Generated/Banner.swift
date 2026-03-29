@@ -29,7 +29,7 @@ import GObjectSupport
 public final class Banner: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -46,7 +46,7 @@ public final class Banner: Widget {
     /// Set to a non-`nil` string to show the button, or `nil` to hide it.
     /// - Since: libadwaita 1.3
     public var buttonLabel: String? {
-        get { (adw_banner_get_button_label(opaquePointer)).map { String(cString: $0) } }
+        get { adw_banner_get_button_label(opaquePointer).map { String(cString: $0) } }
         set { adw_banner_set_button_label(opaquePointer, newValue) }
     }
 

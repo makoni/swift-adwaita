@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A full-screen grid overview of all tabs in a ``TabView``.
 ///
 /// Wraps `AdwTabOverview`. Displays thumbnail previews of every open tab in a
@@ -46,7 +47,7 @@ import GObjectSupport
 public final class TabOverview: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -59,7 +60,7 @@ public final class TabOverview: Widget {
     /// The main content widget displayed behind the tab overview grid.
     /// - Since: libadwaita 1.3
     public var child: Widget? {
-        get { (adw_tab_overview_get_child(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_tab_overview_get_child(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_tab_overview_set_child(opaquePointer, newValue?.widgetPointer) }
     }
 
@@ -127,7 +128,7 @@ public final class TabOverview: Widget {
     /// The ``TabView`` whose tabs are displayed in this overview.
     /// - Since: libadwaita 1.3
     public var view: TabView? {
-        get { (adw_tab_overview_get_view(opaquePointer)).map { TabView(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_tab_overview_get_view(opaquePointer).map { TabView(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_tab_overview_set_view(opaquePointer, newValue?.opaquePointer) }
     }
 
@@ -146,8 +147,12 @@ public final class TabOverview: Widget {
     ///   Return `true` to accept the drop.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
-    public func onExtraDragDrop(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> Bool) -> SignalConnection {
-        SignalHelper.connectPointerGValueReturnBool(self, signal: .extraDragDrop) { (ptr: OpaquePointer, val: UnsafePointer<GValue>) in
+    public func onExtraDragDrop(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> Bool)
+        -> SignalConnection {
+        SignalHelper.connectPointerGValueReturnBool(self, signal: .extraDragDrop) { (
+            ptr: OpaquePointer,
+            val: UnsafePointer<GValue>
+        ) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), val)
         }
     }
@@ -158,8 +163,12 @@ public final class TabOverview: Widget {
     ///   Return the preferred ``GdkDragAction``.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
-    public func onExtraDragValue(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> GdkDragAction) -> SignalConnection {
-        SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: .extraDragValue) { (ptr: OpaquePointer, val: UnsafePointer<GValue>) in
+    public func onExtraDragValue(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> GdkDragAction)
+        -> SignalConnection {
+        SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: .extraDragValue) { (
+            ptr: OpaquePointer,
+            val: UnsafePointer<GValue>
+        ) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), val)
         }
     }

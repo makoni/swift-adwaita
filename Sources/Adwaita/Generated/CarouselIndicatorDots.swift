@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A dot-style page indicator for a ``Carousel``.
 ///
 /// Wraps `AdwCarouselIndicatorDots`. Renders a row of dots where the
@@ -22,7 +23,7 @@ import GObjectSupport
 public final class CarouselIndicatorDots: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -34,7 +35,10 @@ public final class CarouselIndicatorDots: Widget {
 
     /// The ``Carousel`` whose current page position is tracked by these indicator dots.
     public var carousel: Carousel? {
-        get { (adw_carousel_indicator_dots_get_carousel(opaquePointer)).map { Carousel(borrowing: UnsafeMutableRawPointer($0)) } }
+        get {
+            adw_carousel_indicator_dots_get_carousel(opaquePointer)
+                .map { Carousel(borrowing: UnsafeMutableRawPointer($0)) }
+        }
         set { adw_carousel_indicator_dots_set_carousel(opaquePointer, newValue?.opaquePointer) }
     }
 }

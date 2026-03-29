@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct AdwWidgetTests {
+@Suite(.serialized)
+struct AdwWidgetTests {
 
     // MARK: - Adw Widget Instantiation Tests
 
@@ -314,8 +315,8 @@ import CAdwaita
     @Test @MainActor func multipleSignalConnectionsReturnDistinctObjects() {
         ensureAdwInit()
         let btn = Button(label: "Multi")
-        let c1 = btn.onClicked { }
-        let c2 = btn.onClicked { }
+        let c1 = btn.onClicked {}
+        let c2 = btn.onClicked {}
         // Both connections should be independently disconnectable
         c1.disconnect()
         c2.disconnect()
@@ -324,14 +325,14 @@ import CAdwaita
     @Test @MainActor func signalConnectionOnGeneratedWidget() {
         ensureAdwInit()
         let toast = Toast(title: "test")
-        let conn = toast.onDismissed { }
+        let conn = toast.onDismissed {}
         conn.disconnect()
     }
 
     @Test @MainActor func notifySignalConnects() {
         ensureAdwInit()
         let label = Label("before")
-        let conn = SignalHelper.onNotify(label, property: .label) { }
+        let conn = SignalHelper.onNotify(label, property: .label) {}
         conn.disconnect()
     }
 
@@ -346,7 +347,7 @@ import CAdwaita
     @Test @MainActor func signalConnectionOnNavigationView() {
         ensureAdwInit()
         let nav = NavigationView()
-        let conn = nav.onPushed { }
+        let conn = nav.onPushed {}
         conn.disconnect()
     }
 
@@ -451,6 +452,5 @@ import CAdwaita
         let _: AdwBreakpointConditionLengthType.Type = AdwBreakpointConditionLengthType.self
         #expect(Bool(true), "All key Adw enum types are accessible")
     }
-
 
 }

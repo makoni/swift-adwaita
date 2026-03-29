@@ -67,7 +67,7 @@ struct FileDialogExample: DemoExample {
             dialog.setFilters([
                 FileFilter(name: "Swift files", suffixes: ["swift"]),
                 FileFilter(name: "Text files", suffixes: ["txt", "md"]),
-                FileFilter(name: "All files", patterns: ["*"]),
+                FileFilter(name: "All files", patterns: ["*"])
             ])
             dialog.open(parent: box.root) { path in
                 resultLabel.text = path ?? "Cancelled"

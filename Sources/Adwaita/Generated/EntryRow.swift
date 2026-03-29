@@ -1,13 +1,14 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A [class@Gtk.ListBoxRow] with an embedded text entry.
 /// - Since: libadwaita 1.2
 @MainActor
 public class EntryRow: PreferencesRow {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -34,7 +35,9 @@ public class EntryRow: PreferencesRow {
     /// - Since: libadwaita 1.2
     public var activatesDefault: Bool {
         get { adw_entry_row_get_activates_default(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) != 0 }
-        set { adw_entry_row_set_activates_default(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue ? 1 : 0) }
+        set {
+            adw_entry_row_set_activates_default(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue ? 1 : 0)
+        }
     }
 
     /// Text attributes for styling the entry text (bold, italic, color, etc.).
@@ -51,7 +54,10 @@ public class EntryRow: PreferencesRow {
     /// - Since: libadwaita 1.2
     public var enableEmojiCompletion: Bool {
         get { adw_entry_row_get_enable_emoji_completion(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) != 0 }
-        set { adw_entry_row_set_enable_emoji_completion(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue ? 1 : 0) }
+        set { adw_entry_row_set_enable_emoji_completion(
+            castedPointer() as UnsafeMutablePointer<AdwEntryRow>,
+            newValue ? 1 : 0
+        ) }
     }
 
     /// Hints for the input method about expected content, such as auto-capitalization or no-spellcheck.
@@ -61,7 +67,8 @@ public class EntryRow: PreferencesRow {
         set { adw_entry_row_set_input_hints(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue) }
     }
 
-    /// The purpose of the entry (e.g., free-form text, number, email, password), which may affect the on-screen keyboard layout.
+    /// The purpose of the entry (e.g., free-form text, number, email, password), which may affect the on-screen
+    /// keyboard layout.
     /// - Since: libadwaita 1.2
     public var inputPurpose: GtkInputPurpose {
         get { adw_entry_row_get_input_purpose(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) }
@@ -87,7 +94,9 @@ public class EntryRow: PreferencesRow {
     /// - Since: libadwaita 1.2
     public var showApplyButton: Bool {
         get { adw_entry_row_get_show_apply_button(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) != 0 }
-        set { adw_entry_row_set_show_apply_button(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue ? 1 : 0) }
+        set {
+            adw_entry_row_set_show_apply_button(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue ? 1 : 0)
+        }
     }
 
     /// The number of characters currently in the entry (read-only).
@@ -114,7 +123,7 @@ public class EntryRow: PreferencesRow {
     ///
     /// - Returns: `true` if focus was successfully transferred to the entry.
     public func grabFocusWithoutSelecting() -> Bool {
-        return adw_entry_row_grab_focus_without_selecting(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) != 0
+        adw_entry_row_grab_focus_without_selecting(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) != 0
     }
 
     /// Removes a previously added prefix or suffix widget from the entry row.

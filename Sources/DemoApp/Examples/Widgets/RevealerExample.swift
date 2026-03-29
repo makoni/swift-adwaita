@@ -35,7 +35,8 @@ struct RevealerExample: DemoExample {
         revealerDown.transitionDuration = 300
         revealerDown.revealChild = true
 
-        let contentDown = Label("This content slides down to appear and up to disappear. Try toggling it with the button below!")
+        let contentDown =
+            Label("This content slides down to appear and up to disappear. Try toggling it with the button below!")
         contentDown.wrap = true
         contentDown.xalign = 0
         contentDown.setMargins(12)

@@ -33,7 +33,7 @@ public final class DropTarget: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -68,7 +68,8 @@ public final class DropTarget: GObjectRef {
 
     /// Emitted when data is dropped on the widget.
     ///
-    /// - Parameter handler: Called when a drop occurs. Receives the dropped text (or nil). Return `true` to accept the drop.
+    /// - Parameter handler: Called when a drop occurs. Receives the dropped text (or nil). Return `true` to accept the
+    /// drop.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onDrop(_ handler: @escaping @MainActor (String?) -> Bool) -> SignalConnection {
@@ -77,7 +78,13 @@ public final class DropTarget: GObjectRef {
             self,
             signal: .drop,
             trampoline: unsafeBitCast(
-                dropTrampoline as @convention(c) (UnsafeMutableRawPointer, UnsafePointer<GValue>, Double, Double, UnsafeMutableRawPointer) -> gboolean,
+                dropTrampoline as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UnsafePointer<GValue>,
+                    Double,
+                    Double,
+                    UnsafeMutableRawPointer
+                ) -> gboolean,
                 to: GCallback.self
             ),
             box: PublicClosureBox(handler)
@@ -126,11 +133,10 @@ private func dropTrampoline(
     struct WrappedGValue: @unchecked Sendable { let ptr: UnsafePointer<GValue> }
     let wrapped = WrappedGValue(ptr: value)
     return MainActor.assumeIsolated {
-        let text: String?
-        if cadw_value_holds_string(wrapped.ptr) != 0 {
-            text = g_value_get_string(wrapped.ptr).map { String(cString: $0) }
+        let text: String? = if cadw_value_holds_string(wrapped.ptr) != 0 {
+            g_value_get_string(wrapped.ptr).map { String(cString: $0) }
         } else {
-            text = nil
+            nil
         }
         return box.closure(text) ? 1 : 0
     }

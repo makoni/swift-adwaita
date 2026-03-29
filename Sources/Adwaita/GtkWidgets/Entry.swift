@@ -46,11 +46,11 @@ public final class Entry: Widget {
     /// Creates an entry with placeholder text and an optional change handler.
     public convenience init(placeholder: String, onChanged handler: (@MainActor () -> Void)? = nil) {
         self.init()
-        self.placeholderText = placeholder
-        if let handler { self.onChanged(handler) }
+        placeholderText = placeholder
+        if let handler { onChanged(handler) }
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

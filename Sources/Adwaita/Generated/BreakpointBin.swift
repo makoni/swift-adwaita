@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A container that applies layout changes based on size breakpoint conditions.
 ///
 /// Wraps `AdwBreakpointBin`. Acts as a container for a single child widget and
@@ -43,7 +44,7 @@ import GObjectSupport
 public class BreakpointBin: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -56,24 +57,37 @@ public class BreakpointBin: Widget {
     /// The content widget inside the breakpoint bin.
     /// - Since: libadwaita 1.4
     public var child: Widget? {
-        get { (adw_breakpoint_bin_get_child(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
-        set { adw_breakpoint_bin_set_child(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>, newValue?.widgetPointer) }
+        get {
+            adw_breakpoint_bin_get_child(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>)
+                .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        }
+        set { adw_breakpoint_bin_set_child(
+            castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>,
+            newValue?.widgetPointer
+        ) }
     }
 
     /// The `current-breakpoint` property (read-only).
     /// - Since: libadwaita 1.4
     public var currentBreakpoint: Breakpoint? {
-        (adw_breakpoint_bin_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>)).map { Breakpoint(borrowing: UnsafeMutableRawPointer($0)) }
+        adw_breakpoint_bin_get_current_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>)
+            .map { Breakpoint(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Adds a breakpoint (transfer-full: adds a ref before passing).
     public func addBreakpoint(_ breakpoint: Breakpoint) {
         g_object_ref(breakpoint.pointer)
-        adw_breakpoint_bin_add_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>, breakpoint.opaquePointer)
+        adw_breakpoint_bin_add_breakpoint(
+            castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>,
+            breakpoint.opaquePointer
+        )
     }
 
     /// Removes a breakpoint.
     public func removeBreakpoint(_ breakpoint: Breakpoint) {
-        adw_breakpoint_bin_remove_breakpoint(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>, breakpoint.opaquePointer)
+        adw_breakpoint_bin_remove_breakpoint(
+            castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>,
+            breakpoint.opaquePointer
+        )
     }
 }

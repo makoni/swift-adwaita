@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// Metadata and state for a single page within a ``ViewStack``.
 ///
 /// Wraps `AdwViewStackPage`. You do not create `ViewStackPage` instances
@@ -51,13 +52,13 @@ public final class ViewStackPage: GObjectRef {
 
     /// The icon name shown alongside the title in the view switcher.
     public var iconName: String? {
-        get { (adw_view_stack_page_get_icon_name(opaquePointer)).map { String(cString: $0) } }
+        get { adw_view_stack_page_get_icon_name(opaquePointer).map { String(cString: $0) } }
         set { adw_view_stack_page_set_icon_name(opaquePointer, newValue) }
     }
 
     /// The programmatic identifier used to look up this page in the stack.
     public var name: String? {
-        get { (adw_view_stack_page_get_name(opaquePointer)).map { String(cString: $0) } }
+        get { adw_view_stack_page_get_name(opaquePointer).map { String(cString: $0) } }
         set { adw_view_stack_page_set_name(opaquePointer, newValue) }
     }
 
@@ -69,7 +70,7 @@ public final class ViewStackPage: GObjectRef {
 
     /// The label shown for this page in the view switcher.
     public var title: String? {
-        get { (adw_view_stack_page_get_title(opaquePointer)).map { String(cString: $0) } }
+        get { adw_view_stack_page_get_title(opaquePointer).map { String(cString: $0) } }
         set { adw_view_stack_page_set_title(opaquePointer, newValue) }
     }
 

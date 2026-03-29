@@ -67,7 +67,7 @@ public final class ColumnView: Widget {
         gtk_column_view_set_model(opaquePointer, model.selectionModelPointer)
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

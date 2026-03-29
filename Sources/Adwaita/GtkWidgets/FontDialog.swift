@@ -4,7 +4,9 @@ import GObjectSupport
 /// A helper for the async callback pattern.
 private final class FontAsyncBox<T>: @unchecked Sendable {
     let closure: T
-    init(_ closure: T) { self.closure = closure }
+    init(_ closure: T) {
+        self.closure = closure
+    }
 }
 
 /// A font chooser dialog.
@@ -18,7 +20,7 @@ public final class FontDialog: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -56,13 +58,16 @@ public final class FontDialog: GObjectRef {
     ///   - parent: The parent window, or nil.
     ///   - initialFont: A Pango font description string (e.g. "Sans 12"), or nil.
     ///   - completion: Called with the selected font description string, or nil if cancelled.
-    public func chooseFont(parent: Widget?, initialFont: String? = nil, completion: @escaping @MainActor (String?) -> Void) {
+    public func chooseFont(
+        parent: Widget?,
+        initialFont: String? = nil,
+        completion: @escaping @MainActor (String?) -> Void
+    ) {
         let box = Unmanaged.passRetained(FontAsyncBox(completion)).toOpaque()
-        let initialDesc: OpaquePointer?
-        if let initialFont {
-            initialDesc = pango_font_description_from_string(initialFont)
+        let initialDesc: OpaquePointer? = if let initialFont {
+            pango_font_description_from_string(initialFont)
         } else {
-            initialDesc = nil
+            nil
         }
         gtk_font_dialog_choose_font(
             opaquePointer,
@@ -113,11 +118,10 @@ public final class FontDialog: GObjectRef {
         completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
     ) {
         let box = Unmanaged.passRetained(FontAsyncBox(completion)).toOpaque()
-        let initialDesc: OpaquePointer?
-        if let initialFont {
-            initialDesc = pango_font_description_from_string(initialFont)
+        let initialDesc: OpaquePointer? = if let initialFont {
+            pango_font_description_from_string(initialFont)
         } else {
-            initialDesc = nil
+            nil
         }
         gtk_font_dialog_choose_font(
             opaquePointer,
@@ -137,7 +141,7 @@ public final class FontDialog: GObjectRef {
                     callResult = .success(font)
                 } else if let error {
                     let dismissed = g_quark_try_string("gtk-dialog-error-quark")
-                    if error.pointee.domain == dismissed && error.pointee.code == 2 {
+                    if error.pointee.domain == dismissed, error.pointee.code == 2 {
                         g_error_free(error)
                         callResult = .success(nil)
                     } else {

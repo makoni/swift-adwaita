@@ -23,21 +23,21 @@ public final class SpringParams {
 
     /// Creates spring parameters with the given damping ratio, mass, and stiffness.
     public init(dampingRatio: Double, mass: Double, stiffness: Double) {
-        self.pointer = adw_spring_params_new(dampingRatio, mass, stiffness)
+        pointer = adw_spring_params_new(dampingRatio, mass, stiffness)
     }
 
     /// Creates spring parameters with full control over damping, mass, and stiffness.
     public init(damping: Double, mass: Double, stiffness: Double) {
-        self.pointer = adw_spring_params_new_full(damping, mass, stiffness)
+        pointer = adw_spring_params_new_full(damping, mass, stiffness)
     }
 
     /// Takes ownership of a raw pointer (caller transfers its ref to us).
-    internal init(raw pointer: OpaquePointer) {
+    init(raw pointer: OpaquePointer) {
         self.pointer = pointer
     }
 
     /// Wraps an existing pointer by adding a reference.
-    internal init(borrowing pointer: OpaquePointer) {
+    init(borrowing pointer: OpaquePointer) {
         self.pointer = pointer
         adw_spring_params_ref(pointer)
     }
@@ -139,16 +139,16 @@ public final class BreakpointCondition {
 
     /// Creates a condition by parsing a string description.
     public init(parse string: String) {
-        self.pointer = adw_breakpoint_condition_parse(string)!
+        pointer = adw_breakpoint_condition_parse(string)!
     }
 
     /// Takes ownership of a raw pointer (caller transfers ownership to us).
-    internal init(raw pointer: OpaquePointer) {
+    init(raw pointer: OpaquePointer) {
         self.pointer = pointer
     }
 
     /// Wraps an existing pointer by copying it.
-    internal init(borrowing pointer: OpaquePointer) {
+    init(borrowing pointer: OpaquePointer) {
         self.pointer = adw_breakpoint_condition_copy(pointer)!
     }
 

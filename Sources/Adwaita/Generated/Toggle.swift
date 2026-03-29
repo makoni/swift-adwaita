@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A single toggle item used within a ``ToggleGroup``.
 ///
 /// Wraps `AdwToggle`. Represents one selectable option inside a
@@ -30,7 +31,7 @@ import GObjectSupport
 public final class Toggle: GObjectRef {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -46,7 +47,7 @@ public final class Toggle: GObjectRef {
     /// A custom child widget displayed inside the toggle, replacing the default label and icon.
     /// - Since: libadwaita 1.7
     public var child: Widget? {
-        get { (adw_toggle_get_child(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_toggle_get_child(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_toggle_set_child(opaquePointer, newValue?.widgetPointer) }
     }
 
@@ -60,14 +61,14 @@ public final class Toggle: GObjectRef {
     /// The name of a symbolic icon to display on the toggle (e.g. `"view-list-symbolic"`).
     /// - Since: libadwaita 1.7
     public var iconName: String? {
-        get { (adw_toggle_get_icon_name(opaquePointer)).map { String(cString: $0) } }
+        get { adw_toggle_get_icon_name(opaquePointer).map { String(cString: $0) } }
         set { adw_toggle_set_icon_name(opaquePointer, newValue) }
     }
 
     /// The text label displayed on the toggle button.
     /// - Since: libadwaita 1.7
     public var label: String? {
-        get { (adw_toggle_get_label(opaquePointer)).map { String(cString: $0) } }
+        get { adw_toggle_get_label(opaquePointer).map { String(cString: $0) } }
         set { adw_toggle_set_label(opaquePointer, newValue) }
     }
 
@@ -97,6 +98,6 @@ public final class Toggle: GObjectRef {
     /// - Returns: The zero-based index, or `-1` if the toggle is not in a group.
     @discardableResult
     public func getIndex() -> Int {
-        return Int(adw_toggle_get_index(opaquePointer))
+        Int(adw_toggle_get_index(opaquePointer))
     }
 }

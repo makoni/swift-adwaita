@@ -144,7 +144,7 @@ struct CustomCSSExample: DemoExample {
             ("Button", Button(label: "sample")),
             ("Box", Box(orientation: .horizontal, spacing: 0)),
             ("ProgressBar", ProgressBar()),
-            ("LevelBar", LevelBar()),
+            ("LevelBar", LevelBar())
         ]
 
         for (displayName, widget) in sampleWidgets {

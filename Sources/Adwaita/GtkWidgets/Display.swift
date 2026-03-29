@@ -27,7 +27,7 @@ public final class Display: GObjectRef {
         return Display(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -46,7 +46,7 @@ public final class Display: GObjectRef {
         guard let listModel = gdk_display_get_monitors(opaquePointer) else { return [] }
         let count = Int(g_list_model_get_n_items(listModel))
         var result: [Monitor] = []
-        for i in 0..<count {
+        for i in 0 ..< count {
             guard let item = g_list_model_get_item(listModel, UInt32(i)) else { continue }
             result.append(Monitor(raw: UnsafeMutableRawPointer(item)))
         }
@@ -56,9 +56,9 @@ public final class Display: GObjectRef {
 
 // MARK: - Widget extension
 
-extension Widget {
+public extension Widget {
     /// The display this widget belongs to.
-    public var display: Display {
+    var display: Display {
         let ptr = gtk_widget_get_display(widgetPointer)!
         return Display(borrowing: UnsafeMutableRawPointer(ptr))
     }

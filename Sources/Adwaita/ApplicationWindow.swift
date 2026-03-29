@@ -38,11 +38,11 @@ public final class ApplicationWindow: GtkWindow {
     public convenience init(application: Application, title: String, width: Int = 800, height: Int = 600) {
         self.init(application: application)
         self.title = title
-        self.defaultWidth = width
-        self.defaultHeight = height
+        defaultWidth = width
+        defaultHeight = height
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

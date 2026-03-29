@@ -13,9 +13,9 @@ import GObjectSupport
 @MainActor
 public protocol ListModelConvertible: AnyObject {}
 
-extension ListModelConvertible {
+public extension ListModelConvertible {
     /// The underlying `GListModel` pointer.
-    public var listModelPointer: OpaquePointer {
+    var listModelPointer: OpaquePointer {
         (self as! GObjectRef).opaquePointer
     }
 }
@@ -31,9 +31,9 @@ extension ListModelConvertible {
 @MainActor
 public protocol SelectionModelConvertible: AnyObject {}
 
-extension SelectionModelConvertible {
+public extension SelectionModelConvertible {
     /// The underlying `GtkSelectionModel` pointer.
-    public var selectionModelPointer: OpaquePointer {
+    var selectionModelPointer: OpaquePointer {
         (self as! GObjectRef).opaquePointer
     }
 }
@@ -60,9 +60,9 @@ public protocol Container: AnyObject {
 @MainActor
 public protocol Swipeable: AnyObject {}
 
-extension Swipeable {
+public extension Swipeable {
     /// The underlying `AdwSwipeable` pointer.
-    public var swipeablePointer: OpaquePointer {
+    var swipeablePointer: OpaquePointer {
         (self as! GObjectRef).opaquePointer
     }
 }

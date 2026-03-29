@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// An animation target that calls a Swift closure with each animated value.
 ///
 /// Wraps `AdwCallbackAnimationTarget`. The most common way to consume
@@ -25,12 +26,12 @@ import GObjectSupport
 public final class CallbackAnimationTarget: AnimationTarget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
     /// Creates a new `CallbackAnimationTarget` from raw C callback components.
-    internal init(callback: AdwAnimationTargetFunc, userData: gpointer, destroy: GDestroyNotify) {
+    init(callback: AdwAnimationTargetFunc, userData: gpointer, destroy: GDestroyNotify) {
         let ptr = adw_callback_animation_target_new(callback, userData, destroy)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }

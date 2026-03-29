@@ -97,7 +97,7 @@ public enum PropertyName: Sendable, Equatable {
         case .width: "width"
         case .widthRequest: "width-request"
         case .wrap: "wrap"
-        case .custom(let name): name
+        case let .custom(name): name
         }
     }
 }

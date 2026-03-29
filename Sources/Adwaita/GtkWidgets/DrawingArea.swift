@@ -12,11 +12,13 @@ public final class DrawingArea: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
-    private var drawingAreaPointer: UnsafeMutablePointer<GtkDrawingArea> { castedPointer() }
+    private var drawingAreaPointer: UnsafeMutablePointer<GtkDrawingArea> {
+        castedPointer()
+    }
 
     /// The content width the drawing area requests.
     public var contentWidth: Int {

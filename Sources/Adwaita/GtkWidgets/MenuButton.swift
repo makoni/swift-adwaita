@@ -40,10 +40,10 @@ public final class MenuButton: Widget {
     /// Creates a menu button with an icon.
     public convenience init(icon: IconName) {
         self.init()
-        self.iconName = icon.name
+        iconName = icon.name
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

@@ -121,9 +121,9 @@ public struct GValueRef {
 
 // MARK: - GObject property access
 
-extension GObjectRef {
+public extension GObjectRef {
     /// Gets a GObject property by name.
-    public func getProperty(_ name: String) -> GValueRef {
+    func getProperty(_ name: String) -> GValueRef {
         var gvalue = GValueRef(Int32(0))
         gvalue.withUnsafeMutablePointer { ptr in
             g_object_get_property(gobjectPointer, name, ptr)
@@ -132,7 +132,7 @@ extension GObjectRef {
     }
 
     /// Sets a GObject property by name.
-    public func setProperty(_ name: String, value: inout GValueRef) {
+    func setProperty(_ name: String, value: inout GValueRef) {
         value.withUnsafePointer { ptr in
             g_object_set_property(gobjectPointer, name, ptr)
         }

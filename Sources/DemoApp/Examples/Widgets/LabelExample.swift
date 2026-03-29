@@ -97,7 +97,10 @@ struct LabelExample: DemoExample {
         let featBox = Box(orientation: .vertical, spacing: 12)
         featBox.setMargins(12)
 
-        let wrapping = Label("This is a long paragraph of text that demonstrates word wrapping. When the text exceeds the available width, it wraps to the next line automatically, which is useful for displaying descriptions and multi-line content.")
+        let wrapping =
+            Label(
+                "This is a long paragraph of text that demonstrates word wrapping. When the text exceeds the available width, it wraps to the next line automatically, which is useful for displaying descriptions and multi-line content."
+            )
         wrapping.wrap = true
         wrapping.xalign = 0
         featBox.append(wrapping)

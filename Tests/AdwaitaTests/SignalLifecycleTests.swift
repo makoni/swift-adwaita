@@ -2,9 +2,11 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct SignalLifecycleTests {
+@Suite(.serialized)
+struct SignalLifecycleTests {
 
     // MARK: - Signal Triggering via Property Changes
+
     // Note: gtk_widget_activate() requires widgets to be realized (in a window).
     // In headless tests, we verify signals via property changes which trigger
     // GObject notify signals even without a visible window.
@@ -94,7 +96,7 @@ import CAdwaita
     @Test @MainActor func signalDoubleDisconnectIsSafe() {
         ensureAdwInit()
         let button = Button(label: "Test")
-        let conn = button.onClicked { }
+        let conn = button.onClicked {}
         conn.disconnect()
         conn.disconnect() // Should not crash
     }
@@ -161,7 +163,7 @@ import CAdwaita
     @Test @MainActor func boxRemoveAllChildren() {
         ensureAdwInit()
         let box = Box(orientation: .vertical, spacing: 0)
-        for i in 0..<10 {
+        for i in 0 ..< 10 {
             box.append(Label("\(i)"))
         }
         while let child = box.firstChild {

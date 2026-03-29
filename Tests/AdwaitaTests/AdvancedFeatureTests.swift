@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct AdvancedFeatureTests {
+@Suite(.serialized)
+struct AdvancedFeatureTests {
 
     // MARK: - Batch 10: ActionBar
 
@@ -269,10 +270,10 @@ import CAdwaita
         ensureAdwInit()
         let controller = ShortcutController()
         // String-based API
-        controller.addShortcut("<Control>s") { return true }
+        controller.addShortcut("<Control>s") { true }
         // Enum-based API
-        controller.addShortcut(key: .z, modifiers: [.control, .shift]) { return true }
-        controller.addShortcut(key: .escape) { return true }
+        controller.addShortcut(key: .z, modifiers: [.control, .shift]) { true }
+        controller.addShortcut(key: .escape) { true }
         // No crash = success
     }
 
@@ -280,7 +281,7 @@ import CAdwaita
         ensureAdwInit()
         let box = Box(orientation: GTK_ORIENTATION_VERTICAL, spacing: 0)
         let controller = ShortcutController()
-        controller.addShortcut(key: .a, modifiers: .control) { return true }
+        controller.addShortcut(key: .a, modifiers: .control) { true }
         box.addController(controller)
         // No crash = success
     }
@@ -289,7 +290,7 @@ import CAdwaita
         ensureAdwInit()
         let btn = Button(label: "Test")
         // Enum-based API on Widget
-        btn.addKeyboardShortcut(key: .t, modifiers: .control) { return true }
+        btn.addKeyboardShortcut(key: .t, modifiers: .control) { true }
         // No crash = success
     }
 
@@ -340,7 +341,7 @@ import CAdwaita
         let label1 = Label("Hello")
         let label2 = Label("World")
         label1.bind(.label, to: label2, property: .label,
-                     flags: GBindingFlags(rawValue: G_BINDING_BIDIRECTIONAL.rawValue | G_BINDING_SYNC_CREATE.rawValue))
+                    flags: GBindingFlags(rawValue: G_BINDING_BIDIRECTIONAL.rawValue | G_BINDING_SYNC_CREATE.rawValue))
         #expect(label2.text == "Hello")
     }
 
@@ -454,7 +455,7 @@ import CAdwaita
         let dialog = FileDialog()
         dialog.setFilters([
             FileFilter(name: "Swift", suffixes: ["swift"]),
-            FileFilter(name: "All", patterns: ["*"]),
+            FileFilter(name: "All", patterns: ["*"])
         ])
         dialog.acceptLabel = "Choose"
         #expect(dialog.acceptLabel == "Choose")
@@ -465,6 +466,5 @@ import CAdwaita
         let filter = FileFilter(name: "Images", patterns: ["*.png", "*.jpg"])
         #expect(filter.name == "Images")
     }
-
 
 }

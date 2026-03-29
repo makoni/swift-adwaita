@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct GtkWidgetTests {
+@Suite(.serialized)
+struct GtkWidgetTests {
 
     // MARK: - GMenu and Actions Tests
 
@@ -48,7 +49,7 @@ import CAdwaita
     @Test @MainActor func simpleActionSignal() {
         ensureAdwInit()
         let action = SimpleAction(name: "click")
-        let conn = action.onActivate { }
+        let conn = action.onActivate {}
         conn.disconnect()
     }
 
@@ -166,15 +167,15 @@ import CAdwaita
     }
 
     @Test @MainActor func gtkEnumsAreAccessible() {
-        let _ = GTK_ORIENTATION_HORIZONTAL
-        let _ = GTK_ORIENTATION_VERTICAL
-        let _ = GTK_ALIGN_START
-        let _ = GTK_ALIGN_CENTER
-        let _ = GTK_ALIGN_END
-        let _ = GTK_ALIGN_FILL
-        let _ = GTK_SELECTION_NONE
-        let _ = GTK_SELECTION_SINGLE
-        let _ = GTK_SELECTION_MULTIPLE
+        _ = GTK_ORIENTATION_HORIZONTAL
+        _ = GTK_ORIENTATION_VERTICAL
+        _ = GTK_ALIGN_START
+        _ = GTK_ALIGN_CENTER
+        _ = GTK_ALIGN_END
+        _ = GTK_ALIGN_FILL
+        _ = GTK_SELECTION_NONE
+        _ = GTK_SELECTION_SINGLE
+        _ = GTK_SELECTION_MULTIPLE
         #expect(Bool(true), "All key GTK enums are accessible")
     }
 
@@ -214,7 +215,7 @@ import CAdwaita
     @Test @MainActor func eventControllerKeySignalConnection() {
         ensureAdwInit()
         let controller = EventControllerKey()
-        let conn1 = controller.onKeyPressed { _, _, _ in return false }
+        let conn1 = controller.onKeyPressed { _, _, _ in false }
         let conn2 = controller.onKeyReleased { _, _, _ in }
         conn1.disconnect()
         conn2.disconnect()
@@ -239,7 +240,7 @@ import CAdwaita
         let controller = EventControllerMotion()
         let conn1 = controller.onMotion { _, _ in }
         let conn2 = controller.onEnter { _, _ in }
-        let conn3 = controller.onLeave { }
+        let conn3 = controller.onLeave {}
         conn1.disconnect()
         conn2.disconnect()
         conn3.disconnect()
@@ -268,9 +269,9 @@ import CAdwaita
     @Test @MainActor func eventControllerScrollSignalConnection() {
         ensureAdwInit()
         let controller = EventControllerScroll()
-        let conn1 = controller.onScroll { _, _ in return false }
-        let conn2 = controller.onScrollBegin { }
-        let conn3 = controller.onScrollEnd { }
+        let conn1 = controller.onScroll { _, _ in false }
+        let conn2 = controller.onScrollBegin {}
+        let conn3 = controller.onScrollEnd {}
         conn1.disconnect()
         conn2.disconnect()
         conn3.disconnect()
@@ -310,7 +311,7 @@ import CAdwaita
     @Test @MainActor func windowOnCloseRequestSignalConnection() {
         ensureAdwInit()
         let window = Window()
-        let conn = window.onCloseRequest { return true }
+        let conn = window.onCloseRequest { true }
         conn.disconnect()
     }
 
@@ -319,11 +320,11 @@ import CAdwaita
     @Test @MainActor func widgetLifecycleSignalConnections() {
         ensureAdwInit()
         let label = Label("lifecycle")
-        let c1 = label.onRealize { }
-        let c2 = label.onUnrealize { }
-        let c3 = label.onMap { }
-        let c4 = label.onUnmap { }
-        let c5 = label.onDestroy { }
+        let c1 = label.onRealize {}
+        let c2 = label.onUnrealize {}
+        let c3 = label.onMap {}
+        let c4 = label.onUnmap {}
+        let c5 = label.onDestroy {}
         c1.disconnect()
         c2.disconnect()
         c3.disconnect()
@@ -344,7 +345,7 @@ import CAdwaita
 
     @Test @MainActor func buttonConvenienceInitWithIcon() {
         ensureAdwInit()
-        let btn = Button(iconName: "edit-copy-symbolic", onClicked: { })
+        let btn = Button(iconName: "edit-copy-symbolic", onClicked: {})
         #expect(btn.iconName == "edit-copy-symbolic")
     }
 
@@ -437,8 +438,8 @@ import CAdwaita
     // MARK: - SignalHelper connectReturnBool
 
     @Test @MainActor func signalHelperConnectReturnBoolExists() {
-        let _: (GObjectRef, SignalName, @escaping @MainActor () -> Bool) -> SignalConnection = SignalHelper.connectReturnBool
+        let _: (GObjectRef, SignalName, @escaping @MainActor () -> Bool) -> SignalConnection = SignalHelper
+            .connectReturnBool
     }
-
 
 }

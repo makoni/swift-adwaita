@@ -52,24 +52,26 @@ struct ColumnViewExample: DemoExample {
             "Documents", "Photos", "Music", "Videos",
             "report.pdf", "vacation.jpg", "song.mp3", "notes.txt",
             "backup.tar.gz", "presentation.pptx", "database.sqlite",
-            "README.md", "config.json", "app.swift",
+            "README.md", "config.json", "app.swift"
         ]
         let sizes = [
             "4 KB", "2.1 MB", "860 KB", "1.5 GB",
             "120 KB", "3.4 MB", "5.2 MB", "1 KB",
             "42 MB", "780 KB", "12 MB",
-            "2 KB", "512 B", "8 KB",
+            "2 KB", "512 B", "8 KB"
         ]
         let types = [
             "Folder", "Folder", "Folder", "Folder",
             "PDF", "Image", "Audio", "Text",
             "Archive", "Presentation", "Database",
-            "Markdown", "JSON", "Swift",
+            "Markdown", "JSON", "Swift"
         ]
 
         // One placeholder per row
         let store = ListStore()
-        for _ in names { store.appendPlaceholder() }
+        for _ in names {
+            store.appendPlaceholder()
+        }
 
         // --- Name column: icon + label ---
         let nameFactory = SignalListItemFactory()
@@ -92,13 +94,12 @@ struct ColumnViewExample: DemoExample {
             let label = child.lastChild!.cast(Label.self)
 
             label.text = names[pos]
-            let iconName: String
-            switch types[pos] {
-            case "Folder":       iconName = "folder-symbolic"
-            case "Image":        iconName = "image-x-generic-symbolic"
-            case "Audio":        iconName = "audio-x-generic-symbolic"
-            case "Archive":      iconName = "package-x-generic-symbolic"
-            default:             iconName = "text-x-generic-symbolic"
+            let iconName = switch types[pos] {
+            case "Folder": "folder-symbolic"
+            case "Image": "image-x-generic-symbolic"
+            case "Audio": "audio-x-generic-symbolic"
+            case "Archive": "package-x-generic-symbolic"
+            default: "text-x-generic-symbolic"
             }
             icon.iconName = iconName
         }
@@ -135,8 +136,8 @@ struct ColumnViewExample: DemoExample {
 
         // Create columns with display properties
         let nameCol = ColumnViewColumn(title: "Name", factory: nameFactory)
-        nameCol.expand = true       // fills available horizontal space
-        nameCol.resizable = true    // user can drag to resize
+        nameCol.expand = true // fills available horizontal space
+        nameCol.resizable = true // user can drag to resize
 
         let sizeCol = ColumnViewColumn(title: "Size", factory: sizeFactory)
         sizeCol.fixedWidth = 120
@@ -154,7 +155,7 @@ struct ColumnViewExample: DemoExample {
         columnView.appendColumn(typeCol)
         columnView.showRowSeparators = true
         columnView.showColumnSeparators = true
-        columnView.reorderable = true   // user can drag column headers to reorder
+        columnView.reorderable = true // user can drag column headers to reorder
 
         // Outer layout
         let outerBox = Box(orientation: .vertical, spacing: 12)

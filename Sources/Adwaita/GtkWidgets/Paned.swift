@@ -29,11 +29,11 @@ public final class Paned: Widget {
     /// Creates a paned widget with start and end children.
     public convenience init(orientation: GtkOrientation = GTK_ORIENTATION_HORIZONTAL, start: Widget, end: Widget) {
         self.init(orientation: orientation)
-        self.startChild = start
-        self.endChild = end
+        startChild = start
+        endChild = end
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

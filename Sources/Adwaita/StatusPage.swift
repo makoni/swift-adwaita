@@ -43,7 +43,7 @@ public final class StatusPage: Widget {
         self.iconName = iconName
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

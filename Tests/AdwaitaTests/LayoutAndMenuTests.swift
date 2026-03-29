@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct LayoutAndMenuTests {
+@Suite(.serialized)
+struct LayoutAndMenuTests {
 
     // MARK: - GMenuRef
 

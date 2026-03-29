@@ -56,7 +56,7 @@ struct OverlayExample: DemoExample {
         let icons = [
             ("folder-symbolic", "emblem-ok-symbolic", "success"),
             ("mail-unread-symbolic", "starred-symbolic", "warning"),
-            ("drive-harddisk-symbolic", "process-stop-symbolic", "error"),
+            ("drive-harddisk-symbolic", "process-stop-symbolic", "error")
         ]
         for (base, overlay, style) in icons {
             let ov = Overlay()

@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A collection object representing all pages in a ``ViewStack``.
 ///
 /// Wraps `AdwViewStackPages`. Provides access to the selected page within a
@@ -26,7 +27,10 @@ public final class ViewStackPages: GObjectRef {
     /// The currently selected page in the view stack.
     /// - Since: libadwaita 1.4
     public var selectedPage: ViewStackPage? {
-        get { (adw_view_stack_pages_get_selected_page(opaquePointer)).map { ViewStackPage(borrowing: UnsafeMutableRawPointer($0)) } }
+        get {
+            adw_view_stack_pages_get_selected_page(opaquePointer)
+                .map { ViewStackPage(borrowing: UnsafeMutableRawPointer($0)) }
+        }
         set { adw_view_stack_pages_set_selected_page(opaquePointer, newValue?.opaquePointer) }
     }
 }

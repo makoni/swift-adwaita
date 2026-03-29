@@ -44,7 +44,7 @@ public final class SelectionFilterModel: GObjectRef, ListModelConvertible {
         gtk_selection_filter_model_set_model(opaquePointer, selectionModel)
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

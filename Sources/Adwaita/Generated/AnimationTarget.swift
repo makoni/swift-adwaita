@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// The abstract base class for objects that receive animated values.
 ///
 /// Wraps `AdwAnimationTarget`. An animation target defines what happens
@@ -21,5 +22,4 @@ import GObjectSupport
 /// animation.play()
 /// ```
 @MainActor
-public class AnimationTarget: GObjectRef {
-}
+public class AnimationTarget: GObjectRef {}

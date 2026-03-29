@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct MediaProtocolTests {
+@Suite(.serialized)
+struct MediaProtocolTests {
 
     // MARK: - MediaStream
 
@@ -101,7 +102,7 @@ import CAdwaita
     @Test @MainActor func callbackAnimationTargetSwiftInit() {
         ensureAdwInit()
         var called = false
-        let target = CallbackAnimationTarget { value in
+        let target = CallbackAnimationTarget { _ in
             called = true
         }
         // The target is created with a Swift closure, not raw C pointers
@@ -345,6 +346,5 @@ import CAdwaita
         #expect(row.title == "Wi-Fi")
         #expect(row.subtitle == "Connected")
     }
-
 
 }

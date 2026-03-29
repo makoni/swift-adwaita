@@ -41,13 +41,12 @@ struct StyleManagerExample: DemoExample {
         statusLabel.addCSSClass("dim-label")
 
         let updateStatus = { [styleManager, statusLabel] in
-            let scheme: String
-            switch styleManager.colorScheme {
-            case .forceDark: scheme = "Force Dark"
-            case .forceLight: scheme = "Force Light"
-            case .preferDark: scheme = "Prefer Dark"
-            case .preferLight: scheme = "Prefer Light"
-            default: scheme = "Default (System)"
+            let scheme = switch styleManager.colorScheme {
+            case .forceDark: "Force Dark"
+            case .forceLight: "Force Light"
+            case .preferDark: "Prefer Dark"
+            case .preferLight: "Prefer Light"
+            default: "Default (System)"
             }
             let dark = styleManager.dark ? "Yes" : "No"
             let hc = styleManager.highContrast ? "Yes" : "No"

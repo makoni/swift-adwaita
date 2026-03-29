@@ -19,12 +19,12 @@ public final class TextAttributes {
 
     /// Creates an empty attribute list.
     public init() {
-        self.pointer = pango_attr_list_new()
+        pointer = pango_attr_list_new()
     }
 
     /// Borrows a reference to an existing PangoAttrList.
     public init(borrowing ptr: OpaquePointer) {
-        self.pointer = pango_attr_list_ref(ptr)
+        pointer = pango_attr_list_ref(ptr)
     }
 
     deinit {
@@ -124,49 +124,49 @@ public final class TextAttributes {
 
 // MARK: - Pango Enum Extensions
 
-extension PangoWeight {
+public extension PangoWeight {
     /// Thin weight (100).
-    public static let thin = PANGO_WEIGHT_THIN
+    static let thin = PANGO_WEIGHT_THIN
     /// Ultra-light weight (200).
-    public static let ultralight = PANGO_WEIGHT_ULTRALIGHT
+    static let ultralight = PANGO_WEIGHT_ULTRALIGHT
     /// Light weight (300).
-    public static let light = PANGO_WEIGHT_LIGHT
+    static let light = PANGO_WEIGHT_LIGHT
     /// Semi-light weight (350).
-    public static let semilight = PANGO_WEIGHT_SEMILIGHT
+    static let semilight = PANGO_WEIGHT_SEMILIGHT
     /// Book weight (380).
-    public static let book = PANGO_WEIGHT_BOOK
+    static let book = PANGO_WEIGHT_BOOK
     /// Normal weight (400).
-    public static let normal = PANGO_WEIGHT_NORMAL
+    static let normal = PANGO_WEIGHT_NORMAL
     /// Medium weight (500).
-    public static let medium = PANGO_WEIGHT_MEDIUM
+    static let medium = PANGO_WEIGHT_MEDIUM
     /// Semi-bold weight (600).
-    public static let semibold = PANGO_WEIGHT_SEMIBOLD
+    static let semibold = PANGO_WEIGHT_SEMIBOLD
     /// Bold weight (700).
-    public static let bold = PANGO_WEIGHT_BOLD
+    static let bold = PANGO_WEIGHT_BOLD
     /// Ultra-bold weight (800).
-    public static let ultrabold = PANGO_WEIGHT_ULTRABOLD
+    static let ultrabold = PANGO_WEIGHT_ULTRABOLD
     /// Heavy weight (900).
-    public static let heavy = PANGO_WEIGHT_HEAVY
+    static let heavy = PANGO_WEIGHT_HEAVY
 }
 
-extension PangoStyle {
+public extension PangoStyle {
     /// Normal (upright) style.
-    public static let normal = PANGO_STYLE_NORMAL
+    static let normal = PANGO_STYLE_NORMAL
     /// Oblique style.
-    public static let oblique = PANGO_STYLE_OBLIQUE
+    static let oblique = PANGO_STYLE_OBLIQUE
     /// Italic style.
-    public static let italic = PANGO_STYLE_ITALIC
+    static let italic = PANGO_STYLE_ITALIC
 }
 
-extension PangoUnderline {
+public extension PangoUnderline {
     /// No underline.
-    public static let none = PANGO_UNDERLINE_NONE
+    static let none = PANGO_UNDERLINE_NONE
     /// Single underline.
-    public static let single = PANGO_UNDERLINE_SINGLE
+    static let single = PANGO_UNDERLINE_SINGLE
     /// Double underline.
-    public static let double = PANGO_UNDERLINE_DOUBLE
+    static let double = PANGO_UNDERLINE_DOUBLE
     /// Low underline.
-    public static let low = PANGO_UNDERLINE_LOW
+    static let low = PANGO_UNDERLINE_LOW
     /// Error-style underline (wavy).
-    public static let error = PANGO_UNDERLINE_ERROR
+    static let error = PANGO_UNDERLINE_ERROR
 }

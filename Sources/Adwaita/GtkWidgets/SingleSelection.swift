@@ -41,7 +41,7 @@ public final class SingleSelection: GObjectRef, SelectionModelConvertible {
         gtk_single_selection_set_model(OpaquePointer(pointer), listModel)
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -76,7 +76,7 @@ public final class SingleSelection: GObjectRef, SelectionModelConvertible {
     /// Sets the selected index and returns self for chaining.
     @discardableResult
     public func selected(_ position: Int) -> Self {
-        self.selected = position
+        selected = position
         return self
     }
 

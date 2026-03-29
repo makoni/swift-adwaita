@@ -31,10 +31,10 @@ public final class HeaderBar: Widget {
     /// Creates a header bar with a title.
     public convenience init(title: String, subtitle: String = "") {
         self.init()
-        self.titleWidget = WindowTitle(title: title, subtitle: subtitle)
+        titleWidget = WindowTitle(title: title, subtitle: subtitle)
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

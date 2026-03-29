@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A titled group of shortcut items displayed inside a ``ShortcutsDialog``.
 ///
 /// Wraps `AdwShortcutsSection`. Each section has a title and contains
@@ -22,7 +23,7 @@ import GObjectSupport
 public final class ShortcutsSection: GObjectRef {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -38,7 +39,7 @@ public final class ShortcutsSection: GObjectRef {
     /// The heading displayed above this section's shortcut items.
     /// - Since: libadwaita 1.8
     public var title: String? {
-        get { (adw_shortcuts_section_get_title(opaquePointer)).map { String(cString: $0) } }
+        get { adw_shortcuts_section_get_title(opaquePointer).map { String(cString: $0) } }
         set { adw_shortcuts_section_set_title(opaquePointer, newValue) }
     }
 

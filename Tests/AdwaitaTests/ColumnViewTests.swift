@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct ColumnViewTests {
+@Suite(.serialized)
+struct ColumnViewTests {
 
     // MARK: - ColumnView Tests
 
@@ -194,6 +195,5 @@ import CAdwaita
         columnView.insertColumn(col3, at: 1)
         #expect(columnView.pointer != nil)
     }
-
 
 }

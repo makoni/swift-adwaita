@@ -40,7 +40,7 @@ public final class ToolbarView: Widget {
         addTopBar(topBar)
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

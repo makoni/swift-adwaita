@@ -41,7 +41,7 @@ public final class NoSelection: GObjectRef, SelectionModelConvertible {
         gtk_no_selection_set_model(OpaquePointer(pointer), listModel)
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

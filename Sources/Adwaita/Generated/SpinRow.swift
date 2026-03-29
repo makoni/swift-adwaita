@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A list box row with an embedded spin button for numeric input.
 ///
 /// Wraps `AdwSpinRow`. Provides a titled row with +/- buttons for adjusting a
@@ -22,7 +23,7 @@ import GObjectSupport
 public final class SpinRow: ActionRow {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

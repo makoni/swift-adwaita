@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct TextAndMediaTests {
+@Suite(.serialized)
+struct TextAndMediaTests {
 
     // MARK: - Entry
 
@@ -206,7 +207,7 @@ import CAdwaita
         let scale = Scale(min: 0, max: 100, step: 1)
         scale.setRange(min: -50, max: 50)
         scale.value = -25
-        #expect(abs(scale.value - (-25.0)) < 0.01)
+        #expect(abs(scale.value - -25.0) < 0.01)
     }
 
     @Test @MainActor func scaleAddAndClearMarks() {
@@ -305,7 +306,7 @@ import CAdwaita
         ensureAdwInit()
         let buffer = TextBuffer()
         buffer.text = "Hello World"
-        let sub = buffer.text(in: 0..<5)
+        let sub = buffer.text(in: 0 ..< 5)
         #expect(sub == "Hello")
     }
 
@@ -462,7 +463,7 @@ import CAdwaita
         let tag = TextTag()
         tag.sizePoints = 14.0
         #expect(abs(tag.sizePoints - 14.0) < 0.01)
-        tag.size = 12288  // 12 * 1024
+        tag.size = 12288 // 12 * 1024
         #expect(tag.size == 12288)
     }
 

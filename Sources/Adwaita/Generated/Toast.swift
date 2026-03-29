@@ -32,7 +32,7 @@ import GObjectSupport
 public final class Toast: GObjectRef {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -44,7 +44,7 @@ public final class Toast: GObjectRef {
 
     /// The GAction name activated when the toast's button is clicked.
     public var actionName: String? {
-        get { (adw_toast_get_action_name(opaquePointer)).map { String(cString: $0) } }
+        get { adw_toast_get_action_name(opaquePointer).map { String(cString: $0) } }
         set { adw_toast_set_action_name(opaquePointer, newValue) }
     }
 
@@ -59,14 +59,14 @@ public final class Toast: GObjectRef {
 
     /// The label displayed on the toast's action button, or `nil` for no button.
     public var buttonLabel: String? {
-        get { (adw_toast_get_button_label(opaquePointer)).map { String(cString: $0) } }
+        get { adw_toast_get_button_label(opaquePointer).map { String(cString: $0) } }
         set { adw_toast_set_button_label(opaquePointer, newValue) }
     }
 
     /// A custom widget to use as the toast's title instead of a text label.
     /// - Since: libadwaita 1.2
     public var customTitle: Widget? {
-        get { (adw_toast_get_custom_title(opaquePointer)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_toast_get_custom_title(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_toast_set_custom_title(opaquePointer, newValue?.widgetPointer) }
     }
 
@@ -84,7 +84,7 @@ public final class Toast: GObjectRef {
 
     /// The text message displayed in the toast.
     public var title: String? {
-        get { (adw_toast_get_title(opaquePointer)).map { String(cString: $0) } }
+        get { adw_toast_get_title(opaquePointer).map { String(cString: $0) } }
         set { adw_toast_set_title(opaquePointer, newValue) }
     }
 

@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A layout manager that arranges children in rows, wrapping to the next line as needed.
 ///
 /// Wraps `AdwWrapLayout`. Behaves like a horizontal box that automatically
@@ -21,7 +22,7 @@ import GObjectSupport
 public final class WrapLayout: LayoutManager {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

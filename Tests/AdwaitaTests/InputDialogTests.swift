@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct InputDialogTests {
+@Suite(.serialized)
+struct InputDialogTests {
 
     // MARK: - Clipboard
 
@@ -116,7 +117,7 @@ import CAdwaita
         let label = Label("Content")
         frame.child = label
         #expect(frame.child != nil)
-        #expect(frame.child!.pointer == label.pointer)
+        #expect(frame.child?.pointer == label.pointer)
     }
 
     @Test @MainActor func frameLabelAlign() {
@@ -143,9 +144,9 @@ import CAdwaita
         cb.startWidget = start
         cb.centerWidget = center
         cb.endWidget = end
-        #expect(cb.startWidget!.pointer == start.pointer)
-        #expect(cb.centerWidget!.pointer == center.pointer)
-        #expect(cb.endWidget!.pointer == end.pointer)
+        #expect(cb.startWidget?.pointer == start.pointer)
+        #expect(cb.centerWidget?.pointer == center.pointer)
+        #expect(cb.endWidget?.pointer == end.pointer)
     }
 
     // MARK: - ColorDialogButton
@@ -440,6 +441,5 @@ import CAdwaita
         sm.resetColorScheme()
         #expect(sm.colorScheme == .default)
     }
-
 
 }

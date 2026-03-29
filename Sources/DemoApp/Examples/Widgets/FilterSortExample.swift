@@ -31,18 +31,20 @@ struct FilterSortExample: DemoExample {
             "Apple", "Banana", "Cherry", "Date", "Elderberry",
             "Fig", "Grape", "Honeydew", "Kiwi", "Lemon",
             "Mango", "Nectarine", "Orange", "Papaya", "Quince",
-            "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon",
+            "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon"
         ]
 
         let store = ListStore()
-        for _ in fruits { store.appendPlaceholder() }
+        for _ in fruits {
+            store.appendPlaceholder()
+        }
 
         // Filter state
         var searchText = ""
         var sortAscending = true
 
         // Custom filter
-        let filter = CustomFilter { item in
+        let filter = CustomFilter { _ in
             if searchText.isEmpty { return true }
             // Find item position in the original store
             // For simplicity, we accept all when filtering by item
@@ -52,18 +54,18 @@ struct FilterSortExample: DemoExample {
 
         // We use a position-aware approach: rebuild filter on each change
         // by storing accepted positions
-        var acceptedPositions = Set<Int>(0..<fruits.count)
+        var acceptedPositions = Set<Int>(0 ..< fruits.count)
 
-        let positionFilter = CustomFilter { item in
+        let positionFilter = CustomFilter { _ in
             // Since items are placeholder GObjects, we check by pointer identity
             // This is a simplified approach — in real apps you'd use typed items
-            return true
+            true
         }
 
         let filtered = FilterListModel(model: store, filter: positionFilter)
 
-        let sorter = CustomSorter { a, b in
-            return 0  // No sort by default
+        let sorter = CustomSorter { _, _ in
+            0 // No sort by default
         }
         let sorted = SortListModel(model: filtered, sorter: sorter)
 
@@ -105,14 +107,16 @@ struct FilterSortExample: DemoExample {
             let query = searchText.lowercased()
 
             // Remove all and re-add matching items
-            while store.count > 0 { store.remove(at: 0) }
+            while store.count > 0 {
+                store.remove(at: 0)
+            }
             fruits.removeAll()
 
             let allFruits = [
                 "Apple", "Banana", "Cherry", "Date", "Elderberry",
                 "Fig", "Grape", "Honeydew", "Kiwi", "Lemon",
                 "Mango", "Nectarine", "Orange", "Papaya", "Quince",
-                "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon",
+                "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon"
             ]
 
             for fruit in allFruits {
@@ -132,16 +136,24 @@ struct FilterSortExample: DemoExample {
         sortAscBtn.valign = .center
         sortAscBtn.onClicked {
             fruits.sort()
-            while store.count > 0 { store.remove(at: 0) }
-            for _ in fruits { store.appendPlaceholder() }
+            while store.count > 0 {
+                store.remove(at: 0)
+            }
+            for _ in fruits {
+                store.appendPlaceholder()
+            }
         }
 
         let sortDescBtn = Button(label: "Z→A")
         sortDescBtn.valign = .center
         sortDescBtn.onClicked {
             fruits.sort(by: >)
-            while store.count > 0 { store.remove(at: 0) }
-            for _ in fruits { store.appendPlaceholder() }
+            while store.count > 0 {
+                store.remove(at: 0)
+            }
+            for _ in fruits {
+                store.appendPlaceholder()
+            }
         }
 
         let resetBtn = Button(label: "Reset")
@@ -153,10 +165,14 @@ struct FilterSortExample: DemoExample {
                 "Apple", "Banana", "Cherry", "Date", "Elderberry",
                 "Fig", "Grape", "Honeydew", "Kiwi", "Lemon",
                 "Mango", "Nectarine", "Orange", "Papaya", "Quince",
-                "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon",
+                "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon"
             ]
-            while store.count > 0 { store.remove(at: 0) }
-            for _ in fruits { store.appendPlaceholder() }
+            while store.count > 0 {
+                store.remove(at: 0)
+            }
+            for _ in fruits {
+                store.appendPlaceholder()
+            }
         }
 
         sortRow.addSuffix(sortAscBtn)

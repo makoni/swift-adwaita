@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct GtkDetailTests {
+@Suite(.serialized)
+struct GtkDetailTests {
 
     // MARK: - Grid
 
@@ -32,7 +33,7 @@ import CAdwaita
         grid.attach(label, column: 0, row: 0)
         let child = grid.childAt(column: 0, row: 0)
         #expect(child != nil)
-        #expect(child!.pointer == label.pointer)
+        #expect(child?.pointer == label.pointer)
     }
 
     @Test @MainActor func gridMultiColumnSpan() {
@@ -81,7 +82,7 @@ import CAdwaita
         let label = Label("popup content")
         popover.child = label
         #expect(popover.child != nil)
-        #expect(popover.child!.pointer == label.pointer)
+        #expect(popover.child?.pointer == label.pointer)
     }
 
     // MARK: - PopoverMenu
@@ -201,7 +202,7 @@ import CAdwaita
         paned.endChild = right
         #expect(paned.startChild != nil)
         #expect(paned.endChild != nil)
-        #expect(paned.startChild!.pointer == left.pointer)
+        #expect(paned.startChild?.pointer == left.pointer)
     }
 
     // MARK: - Expander
@@ -230,7 +231,7 @@ import CAdwaita
         let content = Label("Hidden content")
         exp.child = content
         #expect(exp.child != nil)
-        #expect(exp.child!.pointer == content.pointer)
+        #expect(exp.child?.pointer == content.pointer)
     }
 
     // MARK: - Notebook
@@ -304,7 +305,7 @@ import CAdwaita
         ensureAdwInit()
         let gesture = GestureLongPress()
         let c1 = gesture.onPressed { _, _ in }
-        let c2 = gesture.onCancelled { }
+        let c2 = gesture.onCancelled {}
         c1.disconnect()
         c2.disconnect()
     }
@@ -341,8 +342,8 @@ import CAdwaita
     @Test @MainActor func eventControllerFocusSignals() {
         ensureAdwInit()
         let focus = EventControllerFocus()
-        let c1 = focus.onEnter { }
-        let c2 = focus.onLeave { }
+        let c1 = focus.onEnter {}
+        let c2 = focus.onLeave {}
         c1.disconnect()
         c2.disconnect()
     }
@@ -409,6 +410,5 @@ import CAdwaita
         dialog.modal = false
         #expect(!dialog.modal)
     }
-
 
 }

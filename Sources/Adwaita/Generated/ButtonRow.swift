@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A clickable row that looks like a button inside a list box.
 ///
 /// Wraps `AdwButtonRow`. A `PreferencesRow` subclass styled to look and
@@ -29,7 +30,7 @@ import GObjectSupport
 public final class ButtonRow: PreferencesRow {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -42,19 +43,21 @@ public final class ButtonRow: PreferencesRow {
     }
 
     /// Whether `ButtonRow` is available on the running libadwaita version (1.6+).
-    public static var isAvailable: Bool { AdwaitaVersion.isAtLeast(1, 6) }
+    public static var isAvailable: Bool {
+        AdwaitaVersion.isAtLeast(1, 6)
+    }
 
     /// The icon name displayed at the trailing edge of the row.
     /// - Since: libadwaita 1.6
     public var endIconName: String? {
-        get { (adw_button_row_get_end_icon_name(opaquePointer)).map { String(cString: $0) } }
+        get { adw_button_row_get_end_icon_name(opaquePointer).map { String(cString: $0) } }
         set { adw_button_row_set_end_icon_name(opaquePointer, newValue) }
     }
 
     /// The icon name displayed at the leading edge of the row.
     /// - Since: libadwaita 1.6
     public var startIconName: String? {
-        get { (adw_button_row_get_start_icon_name(opaquePointer)).map { String(cString: $0) } }
+        get { adw_button_row_get_start_icon_name(opaquePointer).map { String(cString: $0) } }
         set { adw_button_row_set_start_icon_name(opaquePointer, newValue) }
     }
 

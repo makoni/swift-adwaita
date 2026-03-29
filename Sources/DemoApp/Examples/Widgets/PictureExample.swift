@@ -43,8 +43,8 @@ struct PictureExample: DemoExample {
         let width = 400
         let height = 300
         var pixels = [UInt8](repeating: 0, count: width * height * 4)
-        for y in 0..<height {
-            for x in 0..<width {
+        for y in 0 ..< height {
+            for x in 0 ..< width {
                 let i = (y * width + x) * 4
                 let fx = Double(x) / Double(width)
                 let fy = Double(y) / Double(height)
@@ -69,7 +69,7 @@ struct PictureExample: DemoExample {
             dialog.title = "Open Image"
             dialog.setFilters([
                 FileFilter(name: "Images", suffixes: ["png", "jpg", "jpeg", "webp", "svg", "bmp", "gif"]),
-                FileFilter(name: "All files", patterns: ["*"]),
+                FileFilter(name: "All files", patterns: ["*"])
             ])
             dialog.open(parent: box.root) { path in
                 if let path {

@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct SignalWidgetTests {
+@Suite(.serialized)
+struct SignalWidgetTests {
 
     // MARK: - Signal Infrastructure Tests
 
@@ -12,17 +13,27 @@ import CAdwaita
 
     @Test @MainActor func signalHelperMethodsExist() {
         let _: (GObjectRef, SignalName, @escaping @MainActor () -> Void) -> SignalConnection = SignalHelper.connect
-        let _: (GObjectRef, SignalName, @escaping @MainActor (String) -> Void) -> SignalConnection = SignalHelper.connectString
-        let _: (GObjectRef, SignalName, @escaping @MainActor (UInt32) -> Void) -> SignalConnection = SignalHelper.connectUInt
-        let _: (GObjectRef, SignalName, @escaping @MainActor (Int32) -> Void) -> SignalConnection = SignalHelper.connectInt
-        let _: (GObjectRef, SignalName, @escaping @MainActor (Double) -> Void) -> SignalConnection = SignalHelper.connectDouble
-        let _: (GObjectRef, SignalName, @escaping @MainActor (Bool) -> Void) -> SignalConnection = SignalHelper.connectBool
-        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection = SignalHelper.connectPointer
-        let _: (GObjectRef, SignalName, @escaping @MainActor (Double, Double) -> Void) -> SignalConnection = SignalHelper.connectDoubleDouble
-        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, Int32) -> Void) -> SignalConnection = SignalHelper.connectPointerInt
+        let _: (GObjectRef, SignalName, @escaping @MainActor (String) -> Void) -> SignalConnection = SignalHelper
+            .connectString
+        let _: (GObjectRef, SignalName, @escaping @MainActor (UInt32) -> Void) -> SignalConnection = SignalHelper
+            .connectUInt
+        let _: (GObjectRef, SignalName, @escaping @MainActor (Int32) -> Void) -> SignalConnection = SignalHelper
+            .connectInt
+        let _: (GObjectRef, SignalName, @escaping @MainActor (Double) -> Void) -> SignalConnection = SignalHelper
+            .connectDouble
+        let _: (GObjectRef, SignalName, @escaping @MainActor (Bool) -> Void) -> SignalConnection = SignalHelper
+            .connectBool
+        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection = SignalHelper
+            .connectPointer
+        let _: (GObjectRef, SignalName, @escaping @MainActor (Double, Double) -> Void)
+            -> SignalConnection = SignalHelper.connectDoubleDouble
+        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, Int32) -> Void)
+            -> SignalConnection = SignalHelper.connectPointerInt
         let _: (GObjectRef, PropertyName, @escaping @MainActor () -> Void) -> SignalConnection = SignalHelper.onNotify
-        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> Bool) -> SignalConnection = SignalHelper.connectPointerGValueReturnBool
-        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction) -> SignalConnection = SignalHelper.connectPointerGValueReturnGdkDragAction
+        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> Bool)
+            -> SignalConnection = SignalHelper.connectPointerGValueReturnBool
+        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction)
+            -> SignalConnection = SignalHelper.connectPointerGValueReturnGdkDragAction
     }
 
     // MARK: - GTK Widget Wrapper Tests
@@ -54,7 +65,7 @@ import CAdwaita
             TabView.self, TabBar.self, TabOverview.self,
             NavigationView.self, NavigationPage.self,
             AlertDialog.self, Carousel.self, Toast.self,
-            SwipeTracker.self, SpinRow.self,
+            SwipeTracker.self, SpinRow.self
         ]
         #expect(signalTypes.count >= 10)
     }
@@ -399,6 +410,5 @@ import CAdwaita
         #expect(label.halign == GTK_ALIGN_CENTER)
         #expect(label.valign == GTK_ALIGN_END)
     }
-
 
 }

@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A stack-based navigation container that pushes and pops pages.
 ///
 /// Wraps `AdwNavigationView`. This is the primary navigation pattern for
@@ -28,7 +29,7 @@ import GObjectSupport
 public final class NavigationView: Widget, Swipeable {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -71,13 +72,14 @@ public final class NavigationView: Widget, Swipeable {
     /// The currently visible page on top of the navigation stack (read-only).
     /// - Since: libadwaita 1.4
     public var visiblePage: NavigationPage? {
-        (adw_navigation_view_get_visible_page(opaquePointer)).map { NavigationPage(borrowing: UnsafeMutableRawPointer($0)) }
+        adw_navigation_view_get_visible_page(opaquePointer)
+            .map { NavigationPage(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// The tag of the currently visible page (read-only).
     /// - Since: libadwaita 1.7
     public var visiblePageTag: String? {
-        (adw_navigation_view_get_visible_page_tag(opaquePointer)).map { String(cString: $0) }
+        adw_navigation_view_get_visible_page_tag(opaquePointer).map { String(cString: $0) }
     }
 
     /// Finds a page by its tag, or returns `nil` if no page has that tag.
@@ -85,13 +87,13 @@ public final class NavigationView: Widget, Swipeable {
     /// - Parameter tag: The tag string assigned to the page.
     @discardableResult
     public func findPage(_ tag: String) -> NavigationPage? {
-        return (adw_navigation_view_find_page(opaquePointer, tag)).map { NavigationPage(borrowing: UnsafeMutableRawPointer($0)) }
+        adw_navigation_view_find_page(opaquePointer, tag).map { NavigationPage(borrowing: UnsafeMutableRawPointer($0)) }
     }
 
     /// Pops the visible page from the navigation stack. Returns `true` if a
     /// page was popped, `false` if the stack had only one page.
     public func pop() -> Bool {
-        return adw_navigation_view_pop(opaquePointer) != 0
+        adw_navigation_view_pop(opaquePointer) != 0
     }
 
     /// Pops pages until the page with the given tag is visible. Returns `true`
@@ -99,7 +101,7 @@ public final class NavigationView: Widget, Swipeable {
     ///
     /// - Parameter tag: The tag of the target page to pop back to.
     public func popToTag(_ tag: String) -> Bool {
-        return adw_navigation_view_pop_to_tag(opaquePointer, tag) != 0
+        adw_navigation_view_pop_to_tag(opaquePointer, tag) != 0
     }
 
     /// Pushes a previously added page onto the stack by its tag.

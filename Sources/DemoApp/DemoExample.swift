@@ -17,7 +17,9 @@ protocol DemoExample {
 }
 
 extension DemoExample {
-    var opensInWindow: Bool { false }
+    var opensInWindow: Bool {
+        false
+    }
 }
 
 @MainActor
@@ -100,5 +102,5 @@ let allExamples: [any DemoExample] = [
     GridViewExample(),
     ColumnViewExample(),
     TreeListExample(),
-    FilterSortExample(),
+    FilterSortExample()
 ]

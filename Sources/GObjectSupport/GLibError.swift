@@ -28,11 +28,13 @@ public struct GLibError: Error, CustomStringConvertible {
     /// - Parameter error: A non-null GError pointer. Ownership is transferred
     ///   to this initializer — the GError is freed after copying its fields.
     public init(consuming error: UnsafeMutablePointer<GError>) {
-        self.domain = error.pointee.domain
-        self.code = error.pointee.code
-        self.message = String(cString: error.pointee.message)
+        domain = error.pointee.domain
+        code = error.pointee.code
+        message = String(cString: error.pointee.message)
         g_error_free(error)
     }
 
-    public var description: String { message }
+    public var description: String {
+        message
+    }
 }

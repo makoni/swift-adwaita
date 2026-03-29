@@ -63,22 +63,22 @@ public final class Button: Widget {
     /// Creates a button with a label and a click handler.
     public convenience init(label: String, onClicked handler: @escaping @MainActor () -> Void) {
         self.init(label: label)
-        self.onClicked(handler)
+        onClicked(handler)
     }
 
     /// Creates a button with an icon and a click handler.
     public convenience init(iconName: String, onClicked handler: @escaping @MainActor () -> Void) {
         self.init(iconName: iconName)
-        self.onClicked(handler)
+        onClicked(handler)
     }
 
     /// Creates a button with a type-safe icon and a click handler.
     public convenience init(icon: IconName, onClicked handler: @escaping @MainActor () -> Void) {
         self.init(iconName: icon.name)
-        self.onClicked(handler)
+        onClicked(handler)
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A list model whose items are the values of a GLib-registered enum.
 ///
 /// Wraps `AdwEnumListModel`. Each item is an ``EnumListItem`` exposing
@@ -17,7 +18,7 @@ import GObjectSupport
 public final class EnumListModel: GObjectRef {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -38,6 +39,6 @@ public final class EnumListModel: GObjectRef {
     /// - Returns: The zero-based index of the matching item, or `GTK_INVALID_LIST_POSITION` if not found.
     @discardableResult
     public func findPosition(_ value: Int) -> Int {
-        return Int(adw_enum_list_model_find_position(opaquePointer, Int32(value)))
+        Int(adw_enum_list_model_find_position(opaquePointer, Int32(value)))
     }
 }

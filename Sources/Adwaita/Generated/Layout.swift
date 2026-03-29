@@ -16,7 +16,7 @@ import GObjectSupport
 public final class Layout: GObjectRef {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -36,7 +36,7 @@ public final class Layout: GObjectRef {
     /// An optional identifier for this layout, used to switch between layouts in a ``MultiLayoutView``.
     /// - Since: libadwaita 1.6
     public var name: String? {
-        get { (cadw_layout_get_name(pointer)).map { String(cString: $0) } }
+        get { cadw_layout_get_name(pointer).map { String(cString: $0) } }
         set { cadw_layout_set_name(pointer, newValue) }
     }
 }

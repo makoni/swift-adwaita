@@ -32,7 +32,7 @@ import GObjectSupport
 public class AlertDialog: Dialog {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -53,34 +53,53 @@ public class AlertDialog: Dialog {
     /// - Since: libadwaita 1.5
     public var bodyUseMarkup: Bool {
         get { adw_alert_dialog_get_body_use_markup(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>) != 0 }
-        set { adw_alert_dialog_set_body_use_markup(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, newValue ? 1 : 0) }
+        set { adw_alert_dialog_set_body_use_markup(
+            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+            newValue ? 1 : 0
+        ) }
     }
 
     /// The response ID used when the dialog is closed (e.g. by pressing Escape).
     /// - Since: libadwaita 1.5
     public var closeResponse: String {
-        get { String(cString: adw_alert_dialog_get_close_response(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>)) }
+        get {
+            String(
+                cString: adw_alert_dialog_get_close_response(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>)
+            )
+        }
         set { adw_alert_dialog_set_close_response(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, newValue) }
     }
 
     /// The response ID activated when the user presses Enter.
     /// - Since: libadwaita 1.5
     public var defaultResponse: String? {
-        get { (adw_alert_dialog_get_default_response(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>)).map { String(cString: $0) } }
+        get {
+            adw_alert_dialog_get_default_response(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>)
+                .map { String(cString: $0) }
+        }
         set { adw_alert_dialog_set_default_response(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, newValue) }
     }
 
     /// An optional custom widget displayed below the body text.
     /// - Since: libadwaita 1.5
     public var extraChild: Widget? {
-        get { (adw_alert_dialog_get_extra_child(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
-        set { adw_alert_dialog_set_extra_child(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, newValue?.widgetPointer) }
+        get {
+            adw_alert_dialog_get_extra_child(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>)
+                .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        }
+        set { adw_alert_dialog_set_extra_child(
+            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+            newValue?.widgetPointer
+        ) }
     }
 
     /// The heading text displayed at the top of the dialog.
     /// - Since: libadwaita 1.5
     public var heading: String? {
-        get { (adw_alert_dialog_get_heading(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>)).map { String(cString: $0) } }
+        get {
+            adw_alert_dialog_get_heading(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>)
+                .map { String(cString: $0) }
+        }
         set { adw_alert_dialog_set_heading(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, newValue) }
     }
 
@@ -88,14 +107,20 @@ public class AlertDialog: Dialog {
     /// - Since: libadwaita 1.5
     public var headingUseMarkup: Bool {
         get { adw_alert_dialog_get_heading_use_markup(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>) != 0 }
-        set { adw_alert_dialog_set_heading_use_markup(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, newValue ? 1 : 0) }
+        set { adw_alert_dialog_set_heading_use_markup(
+            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+            newValue ? 1 : 0
+        ) }
     }
 
     /// Whether to use a wider layout with the heading and body side by side.
     /// - Since: libadwaita 1.6
     public var preferWideLayout: Bool {
         get { adw_alert_dialog_get_prefer_wide_layout(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>) != 0 }
-        set { adw_alert_dialog_set_prefer_wide_layout(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, newValue ? 1 : 0) }
+        set { adw_alert_dialog_set_prefer_wide_layout(
+            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+            newValue ? 1 : 0
+        ) }
     }
 
     /// Adds a response button to the dialog.
@@ -112,7 +137,7 @@ public class AlertDialog: Dialog {
     /// - Returns: The appearance style (e.g. `ADW_RESPONSE_DESTRUCTIVE`).
     @discardableResult
     public func getResponseAppearance(_ response: String) -> AdwResponseAppearance {
-        return adw_alert_dialog_get_response_appearance(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, response)
+        adw_alert_dialog_get_response_appearance(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, response)
     }
 
     /// Returns whether a response button is enabled.
@@ -120,7 +145,7 @@ public class AlertDialog: Dialog {
     /// - Parameter response: The response ID to query.
     /// - Returns: `true` if the response button is enabled.
     public func getResponseEnabled(_ response: String) -> Bool {
-        return adw_alert_dialog_get_response_enabled(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, response) != 0
+        adw_alert_dialog_get_response_enabled(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, response) != 0
     }
 
     /// Returns the label of a response button.
@@ -129,7 +154,10 @@ public class AlertDialog: Dialog {
     /// - Returns: The label text displayed on the button.
     @discardableResult
     public func getResponseLabel(_ response: String) -> String {
-        return String(cString: adw_alert_dialog_get_response_label(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, response))
+        String(cString: adw_alert_dialog_get_response_label(
+            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+            response
+        ))
     }
 
     /// Checks whether a response with the given ID exists.
@@ -137,7 +165,7 @@ public class AlertDialog: Dialog {
     /// - Parameter response: The response ID to check.
     /// - Returns: `true` if a response with this ID has been added.
     public func hasResponse(_ response: String) -> Bool {
-        return adw_alert_dialog_has_response(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, response) != 0
+        adw_alert_dialog_has_response(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, response) != 0
     }
 
     /// Removes a response button from the dialog.
@@ -155,7 +183,11 @@ public class AlertDialog: Dialog {
     /// - Parameter response: The response ID to style.
     /// - Parameter appearance: The appearance to apply.
     public func setResponseAppearance(_ response: String, appearance: AdwResponseAppearance) {
-        adw_alert_dialog_set_response_appearance(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, response, appearance)
+        adw_alert_dialog_set_response_appearance(
+            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+            response,
+            appearance
+        )
     }
 
     /// Enables or disables a response button.
@@ -163,7 +195,11 @@ public class AlertDialog: Dialog {
     /// - Parameter response: The response ID to modify.
     /// - Parameter enabled: `true` to enable the button, `false` to disable it.
     public func setResponseEnabled(_ response: String, enabled: Bool) {
-        adw_alert_dialog_set_response_enabled(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>, response, enabled ? 1 : 0)
+        adw_alert_dialog_set_response_enabled(
+            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+            response,
+            enabled ? 1 : 0
+        )
     }
 
     /// Changes the label of a response button.

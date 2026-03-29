@@ -26,8 +26,8 @@ struct GridExample: DemoExample {
         grid.halign = .center
         grid.valign = .center
 
-        for row in 0..<3 {
-            for col in 0..<3 {
+        for row in 0 ..< 3 {
+            for col in 0 ..< 3 {
                 let btn = Button(label: "(\(col), \(row))")
                 btn.addCSSClass("pill")
                 grid.attach(btn, column: col, row: row)

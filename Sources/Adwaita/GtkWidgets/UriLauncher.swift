@@ -4,7 +4,9 @@ import GObjectSupport
 /// A helper for the async callback pattern.
 private final class UriAsyncBox<T>: @unchecked Sendable {
     let value: T
-    init(_ value: T) { self.value = value }
+    init(_ value: T) {
+        self.value = value
+    }
 }
 
 /// Launches URIs (URLs, files) using the default system handler.
@@ -34,7 +36,7 @@ public final class UriLauncher: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -76,7 +78,8 @@ public final class UriLauncher: GObjectRef {
                         &error
                     )
                     if let error { g_error_free(error) }
-                    let box = Unmanaged<UriAsyncBox<CheckedContinuation<Bool, Never>>>.fromOpaque(userData).takeRetainedValue()
+                    let box = Unmanaged<UriAsyncBox<CheckedContinuation<Bool, Never>>>.fromOpaque(userData)
+                        .takeRetainedValue()
                     MainActor.assumeIsolated {
                         box.value.resume(returning: success != 0)
                     }

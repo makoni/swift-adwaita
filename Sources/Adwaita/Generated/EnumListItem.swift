@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// An item representing a single value in an ``EnumListModel``.
 ///
 /// Wraps `AdwEnumListItem`. Provides read-only access to the C enum

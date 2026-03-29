@@ -66,7 +66,7 @@ struct FlowBoxExample: DemoExample {
             ("edit-cut-symbolic", "Cut"),
             ("edit-undo-symbolic", "Undo"),
             ("edit-redo-symbolic", "Redo"),
-            ("folder-symbolic", "Folder"),
+            ("folder-symbolic", "Folder")
         ]
 
         for (icon, label) in items {

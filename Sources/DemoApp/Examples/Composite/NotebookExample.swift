@@ -19,7 +19,7 @@ struct NotebookExample: DemoExample {
         notebook.scrollable = true
 
         // Add several pages
-        for i in 1...5 {
+        for i in 1 ... 5 {
             let page = Box(orientation: .vertical, spacing: 12)
             page.setMargins(24)
             page.halign = .center

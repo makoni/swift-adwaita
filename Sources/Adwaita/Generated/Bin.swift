@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A simple single-child container widget.
 ///
 /// Wraps `AdwBin`. A basic container that holds exactly one child widget.
@@ -23,7 +24,7 @@ import GObjectSupport
 public class Bin: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -35,7 +36,10 @@ public class Bin: Widget {
 
     /// The single child widget contained in the bin.
     public var child: Widget? {
-        get { (adw_bin_get_child(castedPointer() as UnsafeMutablePointer<AdwBin>)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
+        get {
+            adw_bin_get_child(castedPointer() as UnsafeMutablePointer<AdwBin>)
+                .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        }
         set { adw_bin_set_child(castedPointer() as UnsafeMutablePointer<AdwBin>, newValue?.widgetPointer) }
     }
 }

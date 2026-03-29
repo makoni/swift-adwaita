@@ -86,10 +86,10 @@ public final class TreeListModel: GObjectRef, ListModelConvertible {
         super.init(raw: UnsafeMutableRawPointer(ptr))
 
         // Keep a reference to the box for safety.
-        self.closureBox = box
+        closureBox = box
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -105,8 +105,6 @@ public final class TreeListModel: GObjectRef, ListModelConvertible {
     public var passthrough: Bool {
         gtk_tree_list_model_get_passthrough(opaquePointer) != 0
     }
-
-
 
     // MARK: - Row Access
 
@@ -126,7 +124,7 @@ public final class TreeListModel: GObjectRef, ListModelConvertible {
 @MainActor
 public final class TreeListRow: GObjectRef {
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

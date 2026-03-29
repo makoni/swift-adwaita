@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A two-column or three-column adaptive navigation layout.
 ///
 /// Wraps `AdwNavigationSplitView`. Presents a sidebar and content side by side
@@ -41,7 +42,7 @@ import GObjectSupport
 public final class NavigationSplitView: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 

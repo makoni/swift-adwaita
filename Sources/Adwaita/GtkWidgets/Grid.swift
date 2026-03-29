@@ -19,7 +19,7 @@ public final class Grid: Widget {
         self.rowSpacing = rowSpacing
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -36,8 +36,16 @@ public final class Grid: Widget {
     }
 
     /// Attaches a child widget next to an existing child.
-    public func attachNextTo(_ child: Widget, sibling: Widget?, side: GtkPositionType, width: Int = 1, height: Int = 1) {
-        gtk_grid_attach_next_to(castedPointer(), child.widgetPointer, sibling?.widgetPointer, side, Int32(width), Int32(height))
+    public func attachNextTo(_ child: Widget, sibling: Widget?, side: GtkPositionType, width: Int = 1,
+                             height: Int = 1) {
+        gtk_grid_attach_next_to(
+            castedPointer(),
+            child.widgetPointer,
+            sibling?.widgetPointer,
+            side,
+            Int32(width),
+            Int32(height)
+        )
     }
 
     /// Removes a child widget from the grid.

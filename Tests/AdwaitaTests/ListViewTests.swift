@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct ListViewTests {
+@Suite(.serialized)
+struct ListViewTests {
 
     // MARK: - ListView Infrastructure
 
@@ -52,7 +53,7 @@ import CAdwaita
         store.appendPlaceholder()
         store.appendPlaceholder()
         let selection = SingleSelection(model: store)
-        #expect(selection.selected == 0)  // autoselects first
+        #expect(selection.selected == 0) // autoselects first
         selection.canUnselect = true
         #expect(selection.canUnselect == true)
     }
@@ -239,7 +240,7 @@ import CAdwaita
     @Test @MainActor func filterListModelRejectsAll() {
         ensureAdwInit()
         let store = ListStore()
-        for _ in 0..<5 {
+        for _ in 0 ..< 5 {
             store.appendPlaceholder()
         }
         #expect(store.count == 5)
@@ -312,7 +313,7 @@ import CAdwaita
     @Test @MainActor func sortListModelPreservesCount() {
         ensureAdwInit()
         let store = ListStore()
-        for _ in 0..<10 {
+        for _ in 0 ..< 10 {
             store.appendPlaceholder()
         }
         let sorter = CustomSorter { _, _ in 0 }
@@ -355,7 +356,7 @@ import CAdwaita
     @Test @MainActor func filterAndSortCombined() {
         ensureAdwInit()
         let store = ListStore()
-        for _ in 0..<5 {
+        for _ in 0 ..< 5 {
             store.appendPlaceholder()
         }
         let filter = CustomFilter { _ in true }
@@ -367,6 +368,5 @@ import CAdwaita
         let selection = NoSelection(listModel: sorted.listModelPointer)
         #expect(selection.selectionModelPointer != nil)
     }
-
 
 }

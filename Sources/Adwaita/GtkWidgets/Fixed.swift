@@ -25,11 +25,13 @@ public final class Fixed: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
-    private var fixedPointer: UnsafeMutablePointer<GtkFixed> { castedPointer() }
+    private var fixedPointer: UnsafeMutablePointer<GtkFixed> {
+        castedPointer()
+    }
 
     /// Adds a child widget at the given position.
     public func put(_ child: Widget, x: Double, y: Double) {

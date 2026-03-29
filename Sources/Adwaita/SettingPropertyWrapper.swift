@@ -39,7 +39,7 @@ public struct Setting<Value: SettingValue> {
     ///   - wrappedValue: The default value (used before `bind(to:)` is called).
     public init(wrappedValue: Value, key: String) {
         self.key = key
-        self.defaultValue = wrappedValue
+        defaultValue = wrappedValue
     }
 
     /// Binds this setting to a GSettings instance.
@@ -72,6 +72,7 @@ extension String: SettingValue {
     @MainActor public static func get(from settings: Settings, key: String) -> String {
         settings.getString(key)
     }
+
     @MainActor public static func set(_ value: String, in settings: Settings, key: String) {
         settings.setString(key, value: value)
     }
@@ -81,6 +82,7 @@ extension Int: SettingValue {
     @MainActor public static func get(from settings: Settings, key: String) -> Int {
         settings.getInt(key)
     }
+
     @MainActor public static func set(_ value: Int, in settings: Settings, key: String) {
         settings.setInt(key, value: value)
     }
@@ -90,6 +92,7 @@ extension Bool: SettingValue {
     @MainActor public static func get(from settings: Settings, key: String) -> Bool {
         settings.getBool(key)
     }
+
     @MainActor public static func set(_ value: Bool, in settings: Settings, key: String) {
         settings.setBool(key, value: value)
     }
@@ -99,6 +102,7 @@ extension Double: SettingValue {
     @MainActor public static func get(from settings: Settings, key: String) -> Double {
         settings.getDouble(key)
     }
+
     @MainActor public static func set(_ value: Double, in settings: Settings, key: String) {
         settings.setDouble(key, value: value)
     }

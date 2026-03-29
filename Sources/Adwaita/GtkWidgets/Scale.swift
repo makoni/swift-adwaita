@@ -7,17 +7,27 @@ import GObjectSupport
 @MainActor
 public final class Scale: Widget {
     /// Creates a new scale.
-    public init(orientation: GtkOrientation = GTK_ORIENTATION_HORIZONTAL, min: Double = 0, max: Double = 100, step: Double = 1) {
+    public init(
+        orientation: GtkOrientation = GTK_ORIENTATION_HORIZONTAL,
+        min: Double = 0,
+        max: Double = 100,
+        step: Double = 1
+    ) {
         let ptr = gtk_scale_new_with_range(orientation, min, max, step)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
-    private var rangePointer: UnsafeMutablePointer<GtkRange> { castedPointer() }
-    private var scalePointer: UnsafeMutablePointer<GtkScale> { castedPointer() }
+    private var rangePointer: UnsafeMutablePointer<GtkRange> {
+        castedPointer()
+    }
+
+    private var scalePointer: UnsafeMutablePointer<GtkScale> {
+        castedPointer()
+    }
 
     /// The current value.
     public var value: Double {
@@ -116,7 +126,7 @@ public final class Scale: Widget {
     /// Sets whether to draw the value and returns self for chaining.
     @discardableResult
     public func drawValue(_ draw: Bool = true) -> Self {
-        self.drawValue = draw
+        drawValue = draw
         return self
     }
 

@@ -35,7 +35,7 @@ struct WrapBoxExample: DemoExample {
 
         let tags = [
             "Swift", "GTK4", "Adwaita", "Linux", "GNOME", "GObject",
-            "libadwaita", "Vala", "Flatpak", "Meson", "Blueprint", "Rust",
+            "libadwaita", "Vala", "Flatpak", "Meson", "Blueprint", "Rust"
         ]
         for tag in tags {
             let btn = Button(label: tag)
@@ -53,7 +53,7 @@ struct WrapBoxExample: DemoExample {
         wrap2.lineHomogeneous = true
         wrap2.setMargins(12)
 
-        for i in 1...12 {
+        for i in 1 ... 12 {
             let label = Label("Item \(i)")
             label.addCSSClass("card")
             label.setMargins(8)

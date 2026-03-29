@@ -8,7 +8,9 @@ import CAdwaita
 /// ```
 public struct KeyModifiers: OptionSet, Sendable {
     public let rawValue: Int
-    public init(rawValue: Int) { self.rawValue = rawValue }
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
 
     /// The Control (Ctrl) key.
     public static let control = KeyModifiers(rawValue: 1 << 0)
@@ -20,7 +22,7 @@ public struct KeyModifiers: OptionSet, Sendable {
     public static let `super` = KeyModifiers(rawValue: 1 << 3)
 
     /// Builds the GTK accelerator prefix string (e.g. "\<Control\>\<Shift\>").
-    internal var acceleratorPrefix: String {
+    var acceleratorPrefix: String {
         var parts = ""
         if contains(.control) { parts += "<Control>" }
         if contains(.shift) { parts += "<Shift>" }
@@ -67,42 +69,37 @@ public enum Key: Sendable {
     case grave
 
     /// The GTK accelerator name for this key.
-    internal var acceleratorName: String {
+    var acceleratorName: String {
         switch self {
-        case .a: "a"  case .b: "b"  case .c: "c"  case .d: "d"
-        case .e: "e"  case .f: "f"  case .g: "g"  case .h: "h"
-        case .i: "i"  case .j: "j"  case .k: "k"  case .l: "l"
-        case .m: "m"  case .n: "n"  case .o: "o"  case .p: "p"
-        case .q: "q"  case .r: "r"  case .s: "s"  case .t: "t"
-        case .u: "u"  case .v: "v"  case .w: "w"  case .x: "x"
-        case .y: "y"  case .z: "z"
-
-        case .digit0: "0"  case .digit1: "1"  case .digit2: "2"
-        case .digit3: "3"  case .digit4: "4"  case .digit5: "5"
-        case .digit6: "6"  case .digit7: "7"  case .digit8: "8"
+        case .a: "a" case .b: "b" case .c: "c" case .d: "d"
+        case .e: "e" case .f: "f" case .g: "g" case .h: "h"
+        case .i: "i" case .j: "j" case .k: "k" case .l: "l"
+        case .m: "m" case .n: "n" case .o: "o" case .p: "p"
+        case .q: "q" case .r: "r" case .s: "s" case .t: "t"
+        case .u: "u" case .v: "v" case .w: "w" case .x: "x"
+        case .y: "y" case .z: "z"
+        case .digit0: "0" case .digit1: "1" case .digit2: "2"
+        case .digit3: "3" case .digit4: "4" case .digit5: "5"
+        case .digit6: "6" case .digit7: "7" case .digit8: "8"
         case .digit9: "9"
-
-        case .f1: "F1"    case .f2: "F2"    case .f3: "F3"
-        case .f4: "F4"    case .f5: "F5"    case .f6: "F6"
-        case .f7: "F7"    case .f8: "F8"    case .f9: "F9"
-        case .f10: "F10"  case .f11: "F11"  case .f12: "F12"
-
-        case .up: "Up"          case .down: "Down"
-        case .left: "Left"      case .right: "Right"
-        case .home: "Home"      case .end: "End"
+        case .f1: "F1" case .f2: "F2" case .f3: "F3"
+        case .f4: "F4" case .f5: "F5" case .f6: "F6"
+        case .f7: "F7" case .f8: "F8" case .f9: "F9"
+        case .f10: "F10" case .f11: "F11" case .f12: "F12"
+        case .up: "Up" case .down: "Down"
+        case .left: "Left" case .right: "Right"
+        case .home: "Home" case .end: "End"
         case .pageUp: "Page_Up" case .pageDown: "Page_Down"
-
-        case .escape: "Escape"      case .return: "Return"
-        case .tab: "Tab"            case .space: "space"
+        case .escape: "Escape" case .return: "Return"
+        case .tab: "Tab" case .space: "space"
         case .backspace: "BackSpace" case .delete: "Delete"
         case .insert: "Insert"
-
-        case .plus: "plus"            case .minus: "minus"
-        case .equal: "equal"          case .bracketLeft: "bracketleft"
+        case .plus: "plus" case .minus: "minus"
+        case .equal: "equal" case .bracketLeft: "bracketleft"
         case .bracketRight: "bracketright"
-        case .slash: "slash"          case .backslash: "backslash"
-        case .comma: "comma"          case .period: "period"
-        case .semicolon: "semicolon"  case .apostrophe: "apostrophe"
+        case .slash: "slash" case .backslash: "backslash"
+        case .comma: "comma" case .period: "period"
+        case .semicolon: "semicolon" case .apostrophe: "apostrophe"
         case .grave: "grave"
         }
     }
@@ -111,6 +108,6 @@ public enum Key: Sendable {
 /// Builds a GTK accelerator string from a key and modifiers.
 ///
 /// Example: `acceleratorString(key: .s, modifiers: .control)` → `"<Control>s"`
-internal func acceleratorString(key: Key, modifiers: KeyModifiers = []) -> String {
+func acceleratorString(key: Key, modifiers: KeyModifiers = []) -> String {
     modifiers.acceleratorPrefix + key.acceleratorName
 }

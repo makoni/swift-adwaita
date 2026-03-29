@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct ExpandedWidgetTests {
+@Suite(.serialized)
+struct ExpandedWidgetTests {
 
     // MARK: - BottomSheet (1.6+)
 

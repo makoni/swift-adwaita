@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A page within a ``NavigationView`` or ``NavigationSplitView``.
 ///
 /// Wraps `AdwNavigationPage`. Each page has a title (shown in the header bar)
@@ -25,7 +26,7 @@ import GObjectSupport
 public class NavigationPage: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -56,28 +57,42 @@ public class NavigationPage: Widget {
     /// - Since: libadwaita 1.4
     public var canPop: Bool {
         get { adw_navigation_page_get_can_pop(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>) != 0 }
-        set { adw_navigation_page_set_can_pop(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>, newValue ? 1 : 0) }
+        set { adw_navigation_page_set_can_pop(
+            castedPointer() as UnsafeMutablePointer<AdwNavigationPage>,
+            newValue ? 1 : 0
+        ) }
     }
 
     /// The content widget displayed inside this page.
     /// - Since: libadwaita 1.4
     public var child: Widget? {
-        get { (adw_navigation_page_get_child(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
-        set { adw_navigation_page_set_child(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>, newValue?.widgetPointer) }
+        get {
+            adw_navigation_page_get_child(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)
+                .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        }
+        set { adw_navigation_page_set_child(
+            castedPointer() as UnsafeMutablePointer<AdwNavigationPage>,
+            newValue?.widgetPointer
+        ) }
     }
 
     /// A unique string identifier for this page, used with
     /// ``NavigationView/pushByTag(_:)`` and ``NavigationView/findPage(_:)``.
     /// - Since: libadwaita 1.4
     public var tag: String? {
-        get { (adw_navigation_page_get_tag(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)).map { String(cString: $0) } }
+        get {
+            adw_navigation_page_get_tag(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)
+                .map { String(cString: $0) }
+        }
         set { adw_navigation_page_set_tag(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>, newValue) }
     }
 
     /// The page title displayed in the header bar and back button of the navigation view.
     /// - Since: libadwaita 1.4
     public var title: String {
-        get { String(cString: adw_navigation_page_get_title(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)) }
+        get {
+            String(cString: adw_navigation_page_get_title(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>))
+        }
         set { adw_navigation_page_set_title(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>, newValue) }
     }
 

@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct NavigationAndTabTests {
+@Suite(.serialized)
+struct NavigationAndTabTests {
 
     // MARK: - TabView Tests
 
@@ -238,7 +239,7 @@ import CAdwaita
     @Test @MainActor func tabButtonSignals() {
         ensureAdwInit()
         let tabButton = TabButton()
-        let conn = tabButton.onClicked { }
+        let conn = tabButton.onClicked {}
         conn.disconnect()
     }
 

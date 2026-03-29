@@ -27,13 +27,14 @@ public final class GestureClick: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
     /// Emitted when a button is pressed.
     ///
-    /// - Parameter handler: Called when a button press is detected. Receives the number of presses, x coordinate, and y coordinate.
+    /// - Parameter handler: Called when a button press is detected. Receives the number of presses, x coordinate, and y
+    /// coordinate.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onPressed(_ handler: @escaping @MainActor (Int, Double, Double) -> Void) -> SignalConnection {
@@ -44,7 +45,8 @@ public final class GestureClick: GObjectRef {
 
     /// Emitted when a button is released.
     ///
-    /// - Parameter handler: Called when a button release is detected. Receives the number of presses, x coordinate, and y coordinate.
+    /// - Parameter handler: Called when a button release is detected. Receives the number of presses, x coordinate, and
+    /// y coordinate.
     /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
     @discardableResult
     public func onReleased(_ handler: @escaping @MainActor (Int, Double, Double) -> Void) -> SignalConnection {

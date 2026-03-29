@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct TreeModelTests {
+@Suite(.serialized)
+struct TreeModelTests {
 
     // MARK: - TreeListModel Tests
 
@@ -13,7 +14,7 @@ import CAdwaita
         rootStore.appendPlaceholder()
 
         let treeModel = TreeListModel(root: rootStore) { _ in
-            return nil
+            nil
         }
         #expect(treeModel.listModelPointer != nil)
     }
@@ -24,7 +25,7 @@ import CAdwaita
         rootStore.appendPlaceholder()
 
         let treeModel = TreeListModel(root: rootStore, autoexpand: true) { _ in
-            return nil
+            nil
         }
         #expect(treeModel.autoexpand == true)
         treeModel.autoexpand = false
@@ -37,12 +38,12 @@ import CAdwaita
         rootStore.appendPlaceholder()
 
         let treeModel = TreeListModel(root: rootStore, passthrough: true) { _ in
-            return nil
+            nil
         }
         #expect(treeModel.passthrough == true)
 
         let treeModel2 = TreeListModel(root: ListStore(), passthrough: false) { _ in
-            return nil
+            nil
         }
         #expect(treeModel2.passthrough == false)
     }
@@ -69,7 +70,7 @@ import CAdwaita
         rootStore.appendPlaceholder()
 
         let treeModel = TreeListModel(root: rootStore, passthrough: false) { _ in
-            return nil
+            nil
         }
 
         let row = treeModel.row(at: 0)
@@ -84,7 +85,7 @@ import CAdwaita
         rootStore.appendPlaceholder()
 
         let treeModel = TreeListModel(root: rootStore) { _ in
-            return nil
+            nil
         }
 
         let selection = SingleSelection(listModel: treeModel.listModelPointer)
@@ -237,7 +238,7 @@ import CAdwaita
         store.appendPlaceholder()
         store.appendPlaceholder()
 
-        let mapped = MapListModel(model: store) { item in
+        let mapped = MapListModel(model: store) { _ in
             GObjectRef(raw: cadw_object_new(cadw_type_object())!)
         }
         #expect(mapped.pointer != nil)
@@ -247,7 +248,7 @@ import CAdwaita
     @Test @MainActor func mapListModelEmptyStore() {
         ensureAdwInit()
         let store = ListStore()
-        let mapped = MapListModel(model: store) { item in
+        let mapped = MapListModel(model: store) { _ in
             GObjectRef(raw: cadw_object_new(cadw_type_object())!)
         }
         #expect(mapped.count == 0)
@@ -257,7 +258,7 @@ import CAdwaita
         ensureAdwInit()
         let store = ListStore()
         store.appendPlaceholder()
-        let mapped = MapListModel(model: store) { item in
+        let mapped = MapListModel(model: store) { _ in
             GObjectRef(raw: cadw_object_new(cadw_type_object())!)
         }
         #expect(mapped.listModelPointer != nil)
@@ -268,7 +269,7 @@ import CAdwaita
         let store = ListStore()
         store.appendPlaceholder()
         store.appendPlaceholder()
-        let mapped = MapListModel(listModel: store.listModelPointer) { item in
+        let mapped = MapListModel(listModel: store.listModelPointer) { _ in
             GObjectRef(raw: cadw_object_new(cadw_type_object())!)
         }
         #expect(mapped.count == 2)
@@ -278,7 +279,7 @@ import CAdwaita
         ensureAdwInit()
         let store = ListStore()
         store.appendPlaceholder()
-        let mapped = MapListModel(model: store) { item in
+        let mapped = MapListModel(model: store) { _ in
             GObjectRef(raw: cadw_object_new(cadw_type_object())!)
         }
         #expect(mapped.count == 1)
@@ -293,7 +294,7 @@ import CAdwaita
         let store = ListStore()
         store.appendPlaceholder()
         store.appendPlaceholder()
-        let mapped = MapListModel(model: store) { item in
+        let mapped = MapListModel(model: store) { _ in
             GObjectRef(raw: cadw_object_new(cadw_type_object())!)
         }
         let selection = NoSelection(listModel: mapped.listModelPointer)
@@ -346,6 +347,5 @@ import CAdwaita
     @Test @MainActor func flattenListModelInheritsFromGObjectRef() {
         #expect(isSubclass(FlattenListModel.self, of: GObjectRef.self))
     }
-
 
 }

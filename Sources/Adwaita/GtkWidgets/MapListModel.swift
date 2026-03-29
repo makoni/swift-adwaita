@@ -58,7 +58,7 @@ public final class MapListModel: GObjectRef, ListModelConvertible {
 
         let ptr = gtk_map_list_model_new(nil, nil, nil, nil)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
-        self.closureBox = box
+        closureBox = box
 
         gtk_map_list_model_set_model(opaquePointer, model.listModelPointer)
         gtk_map_list_model_set_map_func(
@@ -84,7 +84,7 @@ public final class MapListModel: GObjectRef, ListModelConvertible {
 
         let ptr = gtk_map_list_model_new(nil, nil, nil, nil)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
-        self.closureBox = box
+        closureBox = box
 
         gtk_map_list_model_set_model(opaquePointer, listModel)
         gtk_map_list_model_set_map_func(
@@ -98,7 +98,7 @@ public final class MapListModel: GObjectRef, ListModelConvertible {
         )
     }
 
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -108,7 +108,5 @@ public final class MapListModel: GObjectRef, ListModelConvertible {
     public var count: Int {
         Int(g_list_model_get_n_items(opaquePointer))
     }
-
-
 
 }

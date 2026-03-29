@@ -29,7 +29,7 @@ public final class Variant {
     private init(sinking ptr: OpaquePointer) {
         // g_variant_ref_sink: if floating, sinks it (consumes the floating ref
         // and gives us a real ref); if not floating, adds a ref.
-        self.pointer = g_variant_ref_sink(ptr)
+        pointer = g_variant_ref_sink(ptr)
     }
 
     /// Borrows a reference to an existing GVariant by adding a new strong ref.
@@ -37,7 +37,7 @@ public final class Variant {
     /// Use this when receiving a GVariant pointer that you do not own (e.g.
     /// from a signal parameter) and need to keep it alive.
     public init(borrowing ptr: OpaquePointer) {
-        self.pointer = g_variant_ref(ptr)
+        pointer = g_variant_ref(ptr)
     }
 
     deinit {

@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct EnhancementTests {
+@Suite(.serialized)
+struct EnhancementTests {
 
     // MARK: - Scale marks
 
@@ -172,7 +173,7 @@ import CAdwaita
     @Test @MainActor func mainContextCancelAndSourceID() {
         ensureAdwInit()
         // Schedule a timeout and immediately cancel it
-        let id: SourceID = MainContext.timeout(intervalMs: 60000) { return true }
+        let id: SourceID = MainContext.timeout(intervalMs: 60000) { true }
         let removed = MainContext.cancel(sourceId: id)
         #expect(removed == true)
     }
@@ -277,6 +278,5 @@ import CAdwaita
         dd.showArrow = false
         #expect(dd.showArrow == false)
     }
-
 
 }

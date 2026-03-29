@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A bottom bar that acts as a view switcher for a ``ViewStack``.
 ///
 /// Wraps `AdwViewSwitcherBar`. Designed to sit at the bottom of the window
@@ -34,7 +35,7 @@ import GObjectSupport
 public final class ViewSwitcherBar: Widget {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -52,7 +53,7 @@ public final class ViewSwitcherBar: Widget {
 
     /// The ``ViewStack`` whose pages are displayed as buttons in the bar.
     public var stack: ViewStack? {
-        get { (adw_view_switcher_bar_get_stack(opaquePointer)).map { ViewStack(borrowing: UnsafeMutableRawPointer($0)) } }
+        get { adw_view_switcher_bar_get_stack(opaquePointer).map { ViewStack(borrowing: UnsafeMutableRawPointer($0)) } }
         set { adw_view_switcher_bar_set_stack(opaquePointer, newValue?.opaquePointer) }
     }
 }

@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct NavigationMiscTests {
+@Suite(.serialized)
+struct NavigationMiscTests {
 
     // MARK: - NavigationView
 
@@ -205,7 +206,7 @@ import CAdwaita
 
     @Test @MainActor func aspectFrameCreation() {
         ensureAdwInit()
-        let af = AspectFrame(xalign: 0.5, yalign: 0.5, ratio: 16.0/9.0)
+        let af = AspectFrame(xalign: 0.5, yalign: 0.5, ratio: 16.0 / 9.0)
         #expect(af.ratio > 1.7 && af.ratio < 1.8)
         #expect(af.obeyChild == false)
     }
@@ -426,6 +427,5 @@ import CAdwaita
         entry.onIconPress { _ in }
         // No crash = success
     }
-
 
 }

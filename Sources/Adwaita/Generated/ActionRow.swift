@@ -1,6 +1,7 @@
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport
+
 /// A list box row with a title, subtitle, and optional prefix/suffix widgets.
 ///
 /// Wraps `AdwActionRow`. The standard row type for GNOME preference panels and
@@ -20,7 +21,7 @@ import GObjectSupport
 public class ActionRow: PreferencesRow {
 
     /// Internal raw-pointer initializer.
-    required internal init(raw pointer: UnsafeMutableRawPointer) {
+    required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)
     }
 
@@ -45,27 +46,40 @@ public class ActionRow: PreferencesRow {
 
     /// The widget activated when the row is tapped (e.g. a switch or button).
     public var activatableWidget: Widget? {
-        get { (adw_action_row_get_activatable_widget(castedPointer() as UnsafeMutablePointer<AdwActionRow>)).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
-        set { adw_action_row_set_activatable_widget(castedPointer() as UnsafeMutablePointer<AdwActionRow>, newValue?.widgetPointer) }
+        get {
+            adw_action_row_get_activatable_widget(castedPointer() as UnsafeMutablePointer<AdwActionRow>)
+                .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        }
+        set { adw_action_row_set_activatable_widget(
+            castedPointer() as UnsafeMutablePointer<AdwActionRow>,
+            newValue?.widgetPointer
+        ) }
     }
 
     /// The secondary text displayed below the title.
     public var subtitle: String? {
-        get { (adw_action_row_get_subtitle(castedPointer() as UnsafeMutablePointer<AdwActionRow>)).map { String(cString: $0) } }
+        get {
+            adw_action_row_get_subtitle(castedPointer() as UnsafeMutablePointer<AdwActionRow>)
+                .map { String(cString: $0) }
+        }
         set { adw_action_row_set_subtitle(castedPointer() as UnsafeMutablePointer<AdwActionRow>, newValue) }
     }
 
     /// The maximum number of lines for the subtitle (0 for unlimited).
     public var subtitleLines: Int {
         get { Int(adw_action_row_get_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>)) }
-        set { adw_action_row_set_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>, Int32(newValue)) }
+        set { adw_action_row_set_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>, Int32(newValue))
+        }
     }
 
     /// Whether the subtitle text can be selected and copied by the user.
     /// - Since: libadwaita 1.3
     public var subtitleSelectable: Bool {
         get { adw_action_row_get_subtitle_selectable(castedPointer() as UnsafeMutablePointer<AdwActionRow>) != 0 }
-        set { adw_action_row_set_subtitle_selectable(castedPointer() as UnsafeMutablePointer<AdwActionRow>, newValue ? 1 : 0) }
+        set { adw_action_row_set_subtitle_selectable(
+            castedPointer() as UnsafeMutablePointer<AdwActionRow>,
+            newValue ? 1 : 0
+        ) }
     }
 
     /// The maximum number of lines for the title (0 for unlimited).

@@ -13,13 +13,19 @@ import CAdwaita
 /// ```
 public enum AdwaitaVersion {
     /// The major version of the installed libadwaita.
-    public static var major: Int { Int(cadw_adw_major_version()) }
+    public static var major: Int {
+        Int(cadw_adw_major_version())
+    }
 
     /// The minor version of the installed libadwaita.
-    public static var minor: Int { Int(cadw_adw_minor_version()) }
+    public static var minor: Int {
+        Int(cadw_adw_minor_version())
+    }
 
     /// The micro version of the installed libadwaita.
-    public static var micro: Int { Int(cadw_adw_micro_version()) }
+    public static var micro: Int {
+        Int(cadw_adw_micro_version())
+    }
 
     /// Returns `true` if the installed libadwaita is at least the given version.
     public static func isAtLeast(_ major: Int, _ minor: Int, _ micro: Int = 0) -> Bool {

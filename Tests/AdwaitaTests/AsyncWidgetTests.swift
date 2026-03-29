@@ -2,7 +2,8 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-@Suite(.serialized) struct AsyncWidgetTests {
+@Suite(.serialized)
+struct AsyncWidgetTests {
 
     // MARK: - FileDialog
 

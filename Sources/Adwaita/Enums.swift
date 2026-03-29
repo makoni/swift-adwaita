@@ -2,335 +2,335 @@ import CAdwaita
 
 // MARK: - GTK Enums
 
-/// Swift-friendly extensions on GTK and Adwaita C enums.
-///
-/// These extensions add static properties so you can use dot-syntax instead
-/// of C-style constants.
-///
-/// ```swift
-/// let box = Box(orientation: .vertical, spacing: 6)
-/// box.halign = .center
-/// box.valign = .fill
-///
-/// let stack = Stack()
-/// stack.transitionType = .crossfade
-/// ```
+// Swift-friendly extensions on GTK and Adwaita C enums.
+//
+// These extensions add static properties so you can use dot-syntax instead
+// of C-style constants.
+//
+// ```swift
+// let box = Box(orientation: .vertical, spacing: 6)
+// box.halign = .center
+// box.valign = .fill
+//
+// let stack = Stack()
+// stack.transitionType = .crossfade
+// ```
 
-extension GtkOrientation {
+public extension GtkOrientation {
     /// Vertical orientation.
-    public static let vertical = GTK_ORIENTATION_VERTICAL
+    static let vertical = GTK_ORIENTATION_VERTICAL
     /// Horizontal orientation.
-    public static let horizontal = GTK_ORIENTATION_HORIZONTAL
+    static let horizontal = GTK_ORIENTATION_HORIZONTAL
 }
 
-extension GtkAlign {
+public extension GtkAlign {
     /// Fill the available space.
-    public static let fill = GTK_ALIGN_FILL
+    static let fill = GTK_ALIGN_FILL
     /// Align to the start.
-    public static let start = GTK_ALIGN_START
+    static let start = GTK_ALIGN_START
     /// Align to the end.
-    public static let end = GTK_ALIGN_END
+    static let end = GTK_ALIGN_END
     /// Align to the center.
-    public static let center = GTK_ALIGN_CENTER
+    static let center = GTK_ALIGN_CENTER
     /// Use baseline alignment.
-    public static let baseline = GTK_ALIGN_BASELINE_CENTER
+    static let baseline = GTK_ALIGN_BASELINE_CENTER
 }
 
-extension GtkSelectionMode {
+public extension GtkSelectionMode {
     /// No selection allowed.
-    public static let none = GTK_SELECTION_NONE
+    static let none = GTK_SELECTION_NONE
     /// Single selection.
-    public static let single = GTK_SELECTION_SINGLE
+    static let single = GTK_SELECTION_SINGLE
     /// Allow browsing selection.
-    public static let browse = GTK_SELECTION_BROWSE
+    static let browse = GTK_SELECTION_BROWSE
     /// Allow multiple selection.
-    public static let multiple = GTK_SELECTION_MULTIPLE
+    static let multiple = GTK_SELECTION_MULTIPLE
 }
 
-extension GtkStackTransitionType {
+public extension GtkStackTransitionType {
     /// No transition.
-    public static let none = GTK_STACK_TRANSITION_TYPE_NONE
+    static let none = GTK_STACK_TRANSITION_TYPE_NONE
     /// Crossfade transition.
-    public static let crossfade = GTK_STACK_TRANSITION_TYPE_CROSSFADE
+    static let crossfade = GTK_STACK_TRANSITION_TYPE_CROSSFADE
     /// Slide right transition.
-    public static let slideRight = GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT
+    static let slideRight = GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT
     /// Slide left transition.
-    public static let slideLeft = GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT
+    static let slideLeft = GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT
     /// Slide up transition.
-    public static let slideUp = GTK_STACK_TRANSITION_TYPE_SLIDE_UP
+    static let slideUp = GTK_STACK_TRANSITION_TYPE_SLIDE_UP
     /// Slide down transition.
-    public static let slideDown = GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN
+    static let slideDown = GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN
     /// Slide left-right transition.
-    public static let slideLeftRight = GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT
+    static let slideLeftRight = GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT
     /// Slide up-down transition.
-    public static let slideUpDown = GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN
+    static let slideUpDown = GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN
     /// Rotate left transition.
-    public static let rotateLeft = GTK_STACK_TRANSITION_TYPE_ROTATE_LEFT
+    static let rotateLeft = GTK_STACK_TRANSITION_TYPE_ROTATE_LEFT
     /// Rotate right transition.
-    public static let rotateRight = GTK_STACK_TRANSITION_TYPE_ROTATE_RIGHT
+    static let rotateRight = GTK_STACK_TRANSITION_TYPE_ROTATE_RIGHT
 }
 
-extension GtkRevealerTransitionType {
+public extension GtkRevealerTransitionType {
     /// No transition.
-    public static let none = GTK_REVEALER_TRANSITION_TYPE_NONE
+    static let none = GTK_REVEALER_TRANSITION_TYPE_NONE
     /// Crossfade transition.
-    public static let crossfade = GTK_REVEALER_TRANSITION_TYPE_CROSSFADE
+    static let crossfade = GTK_REVEALER_TRANSITION_TYPE_CROSSFADE
     /// Slide right transition.
-    public static let slideRight = GTK_REVEALER_TRANSITION_TYPE_SLIDE_RIGHT
+    static let slideRight = GTK_REVEALER_TRANSITION_TYPE_SLIDE_RIGHT
     /// Slide left transition.
-    public static let slideLeft = GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT
+    static let slideLeft = GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT
     /// Slide up transition.
-    public static let slideUp = GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP
+    static let slideUp = GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP
     /// Slide down transition.
-    public static let slideDown = GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN
+    static let slideDown = GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN
     /// Swing right transition.
-    public static let swingRight = GTK_REVEALER_TRANSITION_TYPE_SWING_RIGHT
+    static let swingRight = GTK_REVEALER_TRANSITION_TYPE_SWING_RIGHT
     /// Swing left transition.
-    public static let swingLeft = GTK_REVEALER_TRANSITION_TYPE_SWING_LEFT
+    static let swingLeft = GTK_REVEALER_TRANSITION_TYPE_SWING_LEFT
     /// Swing up transition.
-    public static let swingUp = GTK_REVEALER_TRANSITION_TYPE_SWING_UP
+    static let swingUp = GTK_REVEALER_TRANSITION_TYPE_SWING_UP
     /// Swing down transition.
-    public static let swingDown = GTK_REVEALER_TRANSITION_TYPE_SWING_DOWN
+    static let swingDown = GTK_REVEALER_TRANSITION_TYPE_SWING_DOWN
 }
 
-extension GtkPolicyType {
+public extension GtkPolicyType {
     /// Always show scrollbar.
-    public static let always = GTK_POLICY_ALWAYS
+    static let always = GTK_POLICY_ALWAYS
     /// Show scrollbar automatically.
-    public static let automatic = GTK_POLICY_AUTOMATIC
+    static let automatic = GTK_POLICY_AUTOMATIC
     /// Never show scrollbar.
-    public static let never = GTK_POLICY_NEVER
+    static let never = GTK_POLICY_NEVER
     /// Show scrollbar as an external overlay.
-    public static let external = GTK_POLICY_EXTERNAL
+    static let external = GTK_POLICY_EXTERNAL
 }
 
-extension GtkWrapMode {
+public extension GtkWrapMode {
     /// No wrapping.
-    public static let none = GTK_WRAP_NONE
+    static let none = GTK_WRAP_NONE
     /// Wrap at character boundaries.
-    public static let char = GTK_WRAP_CHAR
+    static let char = GTK_WRAP_CHAR
     /// Wrap at word boundaries.
-    public static let word = GTK_WRAP_WORD
+    static let word = GTK_WRAP_WORD
     /// Wrap at word boundaries, but fall back to char.
-    public static let wordChar = GTK_WRAP_WORD_CHAR
+    static let wordChar = GTK_WRAP_WORD_CHAR
 }
 
-extension GtkPositionType {
+public extension GtkPositionType {
     /// Left position.
-    public static let left = GTK_POS_LEFT
+    static let left = GTK_POS_LEFT
     /// Right position.
-    public static let right = GTK_POS_RIGHT
+    static let right = GTK_POS_RIGHT
     /// Top position.
-    public static let top = GTK_POS_TOP
+    static let top = GTK_POS_TOP
     /// Bottom position.
-    public static let bottom = GTK_POS_BOTTOM
+    static let bottom = GTK_POS_BOTTOM
 }
 
-extension GtkContentFit {
+public extension GtkContentFit {
     /// Fill the entire allocation, ignoring aspect ratio.
-    public static let fill = GTK_CONTENT_FIT_FILL
+    static let fill = GTK_CONTENT_FIT_FILL
     /// Scale to fit the allocation, preserving aspect ratio.
-    public static let contain = GTK_CONTENT_FIT_CONTAIN
+    static let contain = GTK_CONTENT_FIT_CONTAIN
     /// Cover the entire allocation, preserving aspect ratio.
-    public static let cover = GTK_CONTENT_FIT_COVER
+    static let cover = GTK_CONTENT_FIT_COVER
     /// Scale down to fit, but never scale up.
-    public static let scaleDown = GTK_CONTENT_FIT_SCALE_DOWN
+    static let scaleDown = GTK_CONTENT_FIT_SCALE_DOWN
 }
 
-extension GtkArrowType {
+public extension GtkArrowType {
     /// Up arrow.
-    public static let up = GTK_ARROW_UP
+    static let up = GTK_ARROW_UP
     /// Down arrow.
-    public static let down = GTK_ARROW_DOWN
+    static let down = GTK_ARROW_DOWN
     /// Left arrow.
-    public static let left = GTK_ARROW_LEFT
+    static let left = GTK_ARROW_LEFT
     /// Right arrow.
-    public static let right = GTK_ARROW_RIGHT
+    static let right = GTK_ARROW_RIGHT
     /// No arrow.
-    public static let none = GTK_ARROW_NONE
+    static let none = GTK_ARROW_NONE
 }
 
-extension GtkLicense {
+public extension GtkLicense {
     /// Unknown license.
-    public static let unknown = GTK_LICENSE_UNKNOWN
+    static let unknown = GTK_LICENSE_UNKNOWN
     /// Custom license.
-    public static let custom = GTK_LICENSE_CUSTOM
+    static let custom = GTK_LICENSE_CUSTOM
     /// GPL 2.0.
-    public static let gpl20 = GTK_LICENSE_GPL_2_0
+    static let gpl20 = GTK_LICENSE_GPL_2_0
     /// GPL 3.0.
-    public static let gpl30 = GTK_LICENSE_GPL_3_0
+    static let gpl30 = GTK_LICENSE_GPL_3_0
     /// LGPL 2.1.
-    public static let lgpl21 = GTK_LICENSE_LGPL_2_1
+    static let lgpl21 = GTK_LICENSE_LGPL_2_1
     /// LGPL 3.0.
-    public static let lgpl30 = GTK_LICENSE_LGPL_3_0
+    static let lgpl30 = GTK_LICENSE_LGPL_3_0
     /// MIT license.
-    public static let mit = GTK_LICENSE_MIT_X11
+    static let mit = GTK_LICENSE_MIT_X11
     /// Apache 2.0.
-    public static let apache20 = GTK_LICENSE_APACHE_2_0
+    static let apache20 = GTK_LICENSE_APACHE_2_0
 }
 
 // MARK: - Adwaita Enums
 
-extension AdwResponseAppearance {
+public extension AdwResponseAppearance {
     /// Default appearance.
-    public static let `default` = ADW_RESPONSE_DEFAULT
+    static let `default` = ADW_RESPONSE_DEFAULT
     /// Suggested action appearance.
-    public static let suggested = ADW_RESPONSE_SUGGESTED
+    static let suggested = ADW_RESPONSE_SUGGESTED
     /// Destructive action appearance.
-    public static let destructive = ADW_RESPONSE_DESTRUCTIVE
+    static let destructive = ADW_RESPONSE_DESTRUCTIVE
 }
 
-extension AdwColorScheme {
+public extension AdwColorScheme {
     /// Default color scheme.
-    public static let `default` = ADW_COLOR_SCHEME_DEFAULT
+    static let `default` = ADW_COLOR_SCHEME_DEFAULT
     /// Force light theme.
-    public static let forceLight = ADW_COLOR_SCHEME_FORCE_LIGHT
+    static let forceLight = ADW_COLOR_SCHEME_FORCE_LIGHT
     /// Prefer light theme.
-    public static let preferLight = ADW_COLOR_SCHEME_PREFER_LIGHT
+    static let preferLight = ADW_COLOR_SCHEME_PREFER_LIGHT
     /// Prefer dark theme.
-    public static let preferDark = ADW_COLOR_SCHEME_PREFER_DARK
+    static let preferDark = ADW_COLOR_SCHEME_PREFER_DARK
     /// Force dark theme.
-    public static let forceDark = ADW_COLOR_SCHEME_FORCE_DARK
+    static let forceDark = ADW_COLOR_SCHEME_FORCE_DARK
 }
 
-extension AdwLengthUnit {
+public extension AdwLengthUnit {
     /// Pixels.
-    public static let px = ADW_LENGTH_UNIT_PX
+    static let px = ADW_LENGTH_UNIT_PX
     /// Points.
-    public static let pt = ADW_LENGTH_UNIT_PT
+    static let pt = ADW_LENGTH_UNIT_PT
     /// Scale-independent pixels.
-    public static let sp = ADW_LENGTH_UNIT_SP
+    static let sp = ADW_LENGTH_UNIT_SP
 }
 
-extension AdwNavigationDirection {
+public extension AdwNavigationDirection {
     /// Back direction.
-    public static let back = ADW_NAVIGATION_DIRECTION_BACK
+    static let back = ADW_NAVIGATION_DIRECTION_BACK
     /// Forward direction.
-    public static let forward = ADW_NAVIGATION_DIRECTION_FORWARD
+    static let forward = ADW_NAVIGATION_DIRECTION_FORWARD
 }
 
-extension AdwEasing {
+public extension AdwEasing {
     /// Linear easing.
-    public static let linear = ADW_LINEAR
+    static let linear = ADW_LINEAR
     /// Ease-in quad.
-    public static let easeInQuad = ADW_EASE_IN_QUAD
+    static let easeInQuad = ADW_EASE_IN_QUAD
     /// Ease-out quad.
-    public static let easeOutQuad = ADW_EASE_OUT_QUAD
+    static let easeOutQuad = ADW_EASE_OUT_QUAD
     /// Ease-in-out quad.
-    public static let easeInOutQuad = ADW_EASE_IN_OUT_QUAD
+    static let easeInOutQuad = ADW_EASE_IN_OUT_QUAD
     /// Ease-in cubic.
-    public static let easeInCubic = ADW_EASE_IN_CUBIC
+    static let easeInCubic = ADW_EASE_IN_CUBIC
     /// Ease-out cubic.
-    public static let easeOutCubic = ADW_EASE_OUT_CUBIC
+    static let easeOutCubic = ADW_EASE_OUT_CUBIC
     /// Ease-in-out cubic.
-    public static let easeInOutCubic = ADW_EASE_IN_OUT_CUBIC
+    static let easeInOutCubic = ADW_EASE_IN_OUT_CUBIC
     /// Ease-in quart.
-    public static let easeInQuart = ADW_EASE_IN_QUART
+    static let easeInQuart = ADW_EASE_IN_QUART
     /// Ease-out quart.
-    public static let easeOutQuart = ADW_EASE_OUT_QUART
+    static let easeOutQuart = ADW_EASE_OUT_QUART
     /// Ease-in-out quart.
-    public static let easeInOutQuart = ADW_EASE_IN_OUT_QUART
+    static let easeInOutQuart = ADW_EASE_IN_OUT_QUART
     /// Ease-in quint.
-    public static let easeInQuint = ADW_EASE_IN_QUINT
+    static let easeInQuint = ADW_EASE_IN_QUINT
     /// Ease-out quint.
-    public static let easeOutQuint = ADW_EASE_OUT_QUINT
+    static let easeOutQuint = ADW_EASE_OUT_QUINT
     /// Ease-in-out quint.
-    public static let easeInOutQuint = ADW_EASE_IN_OUT_QUINT
+    static let easeInOutQuint = ADW_EASE_IN_OUT_QUINT
     /// Ease-in bounce.
-    public static let easeInBounce = ADW_EASE_IN_BOUNCE
+    static let easeInBounce = ADW_EASE_IN_BOUNCE
     /// Ease-out bounce.
-    public static let easeOutBounce = ADW_EASE_OUT_BOUNCE
+    static let easeOutBounce = ADW_EASE_OUT_BOUNCE
     /// Ease-in-out bounce.
-    public static let easeInOutBounce = ADW_EASE_IN_OUT_BOUNCE
+    static let easeInOutBounce = ADW_EASE_IN_OUT_BOUNCE
 }
 
-extension GtkOverflow {
+public extension GtkOverflow {
     /// Visible — no clipping.
-    public static let visible = GTK_OVERFLOW_VISIBLE
+    static let visible = GTK_OVERFLOW_VISIBLE
     /// Hidden — clip to allocation.
-    public static let hidden = GTK_OVERFLOW_HIDDEN
+    static let hidden = GTK_OVERFLOW_HIDDEN
 }
 
-extension AdwToastPriority {
+public extension AdwToastPriority {
     /// Normal priority.
-    public static let normal = ADW_TOAST_PRIORITY_NORMAL
+    static let normal = ADW_TOAST_PRIORITY_NORMAL
     /// High priority.
-    public static let high = ADW_TOAST_PRIORITY_HIGH
+    static let high = ADW_TOAST_PRIORITY_HIGH
 }
 
-extension AdwViewSwitcherPolicy {
+public extension AdwViewSwitcherPolicy {
     /// Narrow policy.
-    public static let narrow = ADW_VIEW_SWITCHER_POLICY_NARROW
+    static let narrow = ADW_VIEW_SWITCHER_POLICY_NARROW
     /// Wide policy.
-    public static let wide = ADW_VIEW_SWITCHER_POLICY_WIDE
+    static let wide = ADW_VIEW_SWITCHER_POLICY_WIDE
 }
 
-extension GtkPackType {
+public extension GtkPackType {
     /// Start side (left for LTR).
-    public static let start = GTK_PACK_START
+    static let start = GTK_PACK_START
     /// End side (right for LTR).
-    public static let end = GTK_PACK_END
+    static let end = GTK_PACK_END
 }
 
-extension GtkJustification {
+public extension GtkJustification {
     /// Left justified.
-    public static let left = GTK_JUSTIFY_LEFT
+    static let left = GTK_JUSTIFY_LEFT
     /// Right justified.
-    public static let right = GTK_JUSTIFY_RIGHT
+    static let right = GTK_JUSTIFY_RIGHT
     /// Centered.
-    public static let center = GTK_JUSTIFY_CENTER
+    static let center = GTK_JUSTIFY_CENTER
     /// Fill the available width.
-    public static let fill = GTK_JUSTIFY_FILL
+    static let fill = GTK_JUSTIFY_FILL
 }
 
-extension GtkInputPurpose {
+public extension GtkInputPurpose {
     /// Free-form text.
-    public static let freeForm = GTK_INPUT_PURPOSE_FREE_FORM
+    static let freeForm = GTK_INPUT_PURPOSE_FREE_FORM
     /// Digits only.
-    public static let digits = GTK_INPUT_PURPOSE_DIGITS
+    static let digits = GTK_INPUT_PURPOSE_DIGITS
     /// A number (may include decimals/signs).
-    public static let number = GTK_INPUT_PURPOSE_NUMBER
+    static let number = GTK_INPUT_PURPOSE_NUMBER
     /// A phone number.
-    public static let phone = GTK_INPUT_PURPOSE_PHONE
+    static let phone = GTK_INPUT_PURPOSE_PHONE
     /// A URL.
-    public static let url = GTK_INPUT_PURPOSE_URL
+    static let url = GTK_INPUT_PURPOSE_URL
     /// An email address.
-    public static let email = GTK_INPUT_PURPOSE_EMAIL
+    static let email = GTK_INPUT_PURPOSE_EMAIL
     /// A name.
-    public static let name = GTK_INPUT_PURPOSE_NAME
+    static let name = GTK_INPUT_PURPOSE_NAME
     /// A password.
-    public static let password = GTK_INPUT_PURPOSE_PASSWORD
+    static let password = GTK_INPUT_PURPOSE_PASSWORD
     /// A PIN.
-    public static let pin = GTK_INPUT_PURPOSE_PIN
+    static let pin = GTK_INPUT_PURPOSE_PIN
     /// Terminal input.
-    public static let terminal = GTK_INPUT_PURPOSE_TERMINAL
+    static let terminal = GTK_INPUT_PURPOSE_TERMINAL
 }
 
-extension GtkEntryIconPosition {
+public extension GtkEntryIconPosition {
     /// The primary icon (start of entry).
-    public static let primary = GTK_ENTRY_ICON_PRIMARY
+    static let primary = GTK_ENTRY_ICON_PRIMARY
     /// The secondary icon (end of entry).
-    public static let secondary = GTK_ENTRY_ICON_SECONDARY
+    static let secondary = GTK_ENTRY_ICON_SECONDARY
 }
 
-extension GtkNaturalWrapMode {
+public extension GtkNaturalWrapMode {
     /// Inherit from parent.
-    public static let inherit = GTK_NATURAL_WRAP_INHERIT
+    static let inherit = GTK_NATURAL_WRAP_INHERIT
     /// No natural wrap.
-    public static let none = GTK_NATURAL_WRAP_NONE
+    static let none = GTK_NATURAL_WRAP_NONE
     /// Wrap at word boundaries.
-    public static let word = GTK_NATURAL_WRAP_WORD
+    static let word = GTK_NATURAL_WRAP_WORD
 }
 
-extension AdwAnimationState {
+public extension AdwAnimationState {
     /// Idle state.
-    public static let idle = ADW_ANIMATION_IDLE
+    static let idle = ADW_ANIMATION_IDLE
     /// Paused state.
-    public static let paused = ADW_ANIMATION_PAUSED
+    static let paused = ADW_ANIMATION_PAUSED
     /// Playing state.
-    public static let playing = ADW_ANIMATION_PLAYING
+    static let playing = ADW_ANIMATION_PLAYING
     /// Finished state.
-    public static let finished = ADW_ANIMATION_FINISHED
+    static let finished = ADW_ANIMATION_FINISHED
 }
 
 /// Swift-friendly option set for `GtkListScrollFlags`.
@@ -340,7 +340,9 @@ extension AdwAnimationState {
 public struct ListScrollFlags: OptionSet, Sendable {
     public let rawValue: UInt32
 
-    public init(rawValue: UInt32) { self.rawValue = rawValue }
+    public init(rawValue: UInt32) {
+        self.rawValue = rawValue
+    }
 
     /// Don't do anything extra — just scroll.
     public static let none = ListScrollFlags(rawValue: GTK_LIST_SCROLL_NONE.rawValue)
