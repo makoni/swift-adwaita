@@ -23,7 +23,7 @@ jobs:
           apt-get install -y libadwaita-1-dev xvfb
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Swift version
         run: swift --version
@@ -32,7 +32,18 @@ jobs:
         run: swift build
 
       - name: Run tests
-        run: xvfb-run swift test
+        run: xvfb-run swift test --enable-code-coverage
+
+      - name: Generate coverage report
+        if: matrix.swift == '6.3'
+        run: |
+          BIN=$(swift build --show-bin-path)
+          PROFDATA=$(find .build -name default.profdata -type f | head -1)
+          TEST_BIN="$BIN/swift-adwaitaPackageTests.xctest"
+          llvm-cov report \
+            -instr-profile "$PROFDATA" \
+            "$TEST_BIN" \
+            -ignore-filename-regex=".build|Tests|DemoApp"
 
   docs:
     name: Build Documentation
@@ -46,7 +57,7 @@ jobs:
           apt-get install -y libadwaita-1-dev
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Build documentation
         run: |
