@@ -3,6 +3,14 @@
 #include <adwaita.h>
 
 // ---------------------------------------------------------------------------
+// Helper to emit a GObject signal by name with no arguments.
+// g_signal_emit_by_name is variadic and cannot be called directly from Swift.
+// ---------------------------------------------------------------------------
+static inline void g_signal_emit_by_name_no_args(gpointer instance, const gchar *signal_name) {
+    g_signal_emit_by_name(instance, signal_name);
+}
+
+// ---------------------------------------------------------------------------
 // Compile-time stubs for libadwaita 1.6+ / 1.7+ / 1.8+ symbols.
 //
 // When building against older headers (e.g. libadwaita 1.5 on Ubuntu 24.04),

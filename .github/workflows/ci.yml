@@ -33,3 +33,43 @@ jobs:
 
       - name: Run tests
         run: xvfb-run swift test
+
+  build-fedora:
+    name: Build & Test on Fedora
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:41
+    steps:
+      - name: Install system dependencies
+        run: |
+          dnf install -y swift-lang libadwaita-devel xorg-x11-server-Xvfb git
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Swift version
+        run: swift --version
+
+      - name: Build
+        run: swift build
+
+      - name: Run tests
+        run: xvfb-run swift test
+
+  docs:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    container:
+      image: swift:6.3
+    steps:
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y libadwaita-1-dev
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build documentation
+        run: |
+          swift package generate-documentation --target Adwaita --disable-indexing 2>&1 | tail -5
