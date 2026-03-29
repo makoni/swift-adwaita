@@ -1,5 +1,9 @@
 # swift-adwaita
 
+[![CI](https://github.com/makoni/swift-adwaita/actions/workflows/ci.yml/badge.svg)](https://github.com/makoni/swift-adwaita/actions/workflows/ci.yml)
+[![Swift 6.0+](https://img.shields.io/badge/Swift-6.0+-F05138.svg)](https://swift.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
+
 An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadwaita](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/latest/), designed for building native GNOME desktop applications.
 
 ## Features
@@ -26,7 +30,7 @@ An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadw
 - **@Setting property wrapper** — type-safe GSettings binding
 - **Adaptive layout** — `Breakpoint.minWidth()`, `Breakpoint.maxWidth()` helpers
 - **Swift 6 concurrency** — full `@MainActor` isolation, `Sendable` types
-- **670 tests**, **76 demo examples**, **CI with GitHub Actions**
+- **1032 tests**, **77 demo examples**, **CI with GitHub Actions**
 
 ## Requirements
 
@@ -337,7 +341,7 @@ widget.addCSSClass("my-widget")
 
 ## Demo App
 
-An interactive gallery with 76 examples showcasing every widget:
+An interactive gallery with 77 examples showcasing every widget:
 
 ```bash
 swift run DemoApp
@@ -349,7 +353,7 @@ Features sidebar navigation with search, source code viewer, and windowed demos 
 
 ```bash
 swift build       # Build library
-swift test        # Run 670 tests
+swift test        # Run 1032 tests
 swift run DemoApp # Launch demo gallery
 ```
 
