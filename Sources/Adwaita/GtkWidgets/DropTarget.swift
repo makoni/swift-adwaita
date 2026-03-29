@@ -123,11 +123,12 @@ private func dropTrampoline(
 ) -> gboolean {
     let box = Unmanaged<PublicClosureBox<@MainActor (String?) -> Bool>>.fromOpaque(userData)
         .takeUnretainedValue()
-    nonisolated(unsafe) let capturedValue = value
+    struct WrappedGValue: @unchecked Sendable { let ptr: UnsafePointer<GValue> }
+    let wrapped = WrappedGValue(ptr: value)
     return MainActor.assumeIsolated {
         let text: String?
-        if cadw_value_holds_string(capturedValue) != 0 {
-            text = g_value_get_string(capturedValue).map { String(cString: $0) }
+        if cadw_value_holds_string(wrapped.ptr) != 0 {
+            text = g_value_get_string(wrapped.ptr).map { String(cString: $0) }
         } else {
             text = nil
         }

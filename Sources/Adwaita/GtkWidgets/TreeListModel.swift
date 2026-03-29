@@ -62,9 +62,11 @@ public final class TreeListModel: GObjectRef, ListModelConvertible {
                 guard let userData, let item else { return nil }
                 let box = Unmanaged<PublicClosureBox<@MainActor (GObjectRef) -> ListStore?>>
                     .fromOpaque(userData).takeUnretainedValue()
+                struct WrappedItem: @unchecked Sendable { let ptr: gpointer }
+                let wrapped = WrappedItem(ptr: item)
                 nonisolated(unsafe) var resultPtr: UnsafeMutableRawPointer? = nil
                 MainActor.assumeIsolated {
-                    let gobject = GObjectRef(borrowing: UnsafeMutableRawPointer(item))
+                    let gobject = GObjectRef(borrowing: UnsafeMutableRawPointer(wrapped.ptr))
                     guard let childStore = box.closure(gobject) else { return }
                     // gtk_tree_list_model takes ownership (transfer full),
                     // so add a ref to keep the Swift wrapper valid.

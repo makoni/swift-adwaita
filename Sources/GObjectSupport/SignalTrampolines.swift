@@ -1,5 +1,11 @@
 import CAdwaita
 
+// Wrapper types for crossing isolation boundaries in signal trampolines.
+// These are safe because GTK signals are always emitted on the main thread,
+// and MainActor.assumeIsolated asserts this at runtime.
+struct UncheckedOpaquePointer: @unchecked Sendable { let value: OpaquePointer }
+struct UncheckedGValuePointer: @unchecked Sendable { let value: UnsafePointer<GValue> }
+
 // MARK: - C-compatible trampoline functions
 
 /// C-compatible trampoline functions that bridge GObject signal callbacks to Swift closures.
@@ -110,9 +116,9 @@ func signalTrampolinePointer(
 ) {
     let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer) -> Void>>.fromOpaque(userData)
         .takeUnretainedValue()
-    nonisolated(unsafe) let captured = value
+    let wrapped = UncheckedOpaquePointer(value: value)
     MainActor.assumeIsolated {
-        box.closure(captured)
+        box.closure(wrapped.value)
     }
 }
 
@@ -150,9 +156,9 @@ func signalTrampolinePointerInt(
 ) {
     let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer, Int32) -> Void>>.fromOpaque(userData)
         .takeUnretainedValue()
-    nonisolated(unsafe) let capturedPtr = ptr
+    let wrapped = UncheckedOpaquePointer(value: ptr)
     MainActor.assumeIsolated {
-        box.closure(capturedPtr, value)
+        box.closure(wrapped.value, value)
     }
 }
 
@@ -164,10 +170,10 @@ func signalTrampolinePointerGValueBool(
 ) -> gboolean {
     let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer, UnsafePointer<GValue>) -> Bool>>.fromOpaque(userData)
         .takeUnretainedValue()
-    nonisolated(unsafe) let capturedPtr = ptr
-    nonisolated(unsafe) let capturedGV = gvalue
+    let wrappedPtr = UncheckedOpaquePointer(value: ptr)
+    let wrappedGV = UncheckedGValuePointer(value: gvalue)
     return MainActor.assumeIsolated {
-        box.closure(capturedPtr, capturedGV) ? 1 : 0
+        box.closure(wrappedPtr.value, wrappedGV.value) ? 1 : 0
     }
 }
 
@@ -179,10 +185,10 @@ func signalTrampolinePointerGValueDragAction(
 ) -> GdkDragAction {
     let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction>>.fromOpaque(userData)
         .takeUnretainedValue()
-    nonisolated(unsafe) let capturedPtr = ptr
-    nonisolated(unsafe) let capturedGV = gvalue
+    let wrappedPtr = UncheckedOpaquePointer(value: ptr)
+    let wrappedGV = UncheckedGValuePointer(value: gvalue)
     return MainActor.assumeIsolated {
-        box.closure(capturedPtr, capturedGV)
+        box.closure(wrappedPtr.value, wrappedGV.value)
     }
 }
 

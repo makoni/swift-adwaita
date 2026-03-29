@@ -9,10 +9,11 @@ private func _mapListModelCallback(
     guard let userData, let item else { return nil }
     let box = Unmanaged<PublicClosureBox<@MainActor (GObjectRef) -> GObjectRef>>
         .fromOpaque(userData).takeUnretainedValue()
-    nonisolated(unsafe) let itemPtr = item
+    struct Wrapped: @unchecked Sendable { let ptr: gpointer }
+    let wrapped = Wrapped(ptr: item)
     nonisolated(unsafe) var result: gpointer?
     MainActor.assumeIsolated {
-        let obj = GObjectRef(borrowing: UnsafeMutableRawPointer(itemPtr))
+        let obj = GObjectRef(borrowing: UnsafeMutableRawPointer(wrapped.ptr))
         let mapped = box.closure(obj)
         // Transfer full: GTK takes ownership, so retain before returning.
         result = Unmanaged.passRetained(mapped).toOpaque()

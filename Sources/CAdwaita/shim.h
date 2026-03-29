@@ -91,6 +91,8 @@ typedef struct _AdwToggleGroup AdwToggleGroup;
 typedef struct _AdwWrapBox AdwWrapBox;
 typedef struct _AdwWrapLayout AdwWrapLayout;
 typedef unsigned int AdwJustifyMode;
+#define ADW_JUSTIFY_NONE ((AdwJustifyMode)0)
+#define ADW_JUSTIFY_FILL ((AdwJustifyMode)1)
 typedef unsigned int AdwPackDirection;
 typedef unsigned int AdwWrapPolicy;
 typedef unsigned int AdwBannerButtonStyle;
