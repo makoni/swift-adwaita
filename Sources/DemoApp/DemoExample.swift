@@ -92,6 +92,7 @@ let allExamples: [any DemoExample] = [
     ClipboardExample(),
     FileDialogExample(),
     DragDropExample(),
+    GestureExample(),
     CssProviderExample(),
     VideoExample(),
     StackSwitcherExample(),

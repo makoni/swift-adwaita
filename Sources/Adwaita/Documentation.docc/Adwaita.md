@@ -95,6 +95,7 @@ automatically.
 - <doc:FeedbackWidgets>
 - <doc:AnimationsAndGestures>
 - <doc:FlatpakDistribution>
+- <doc:VersionCompatibility>
 
 ### Layout Containers
 
