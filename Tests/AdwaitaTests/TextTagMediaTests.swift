@@ -1,3 +1,4 @@
+#if swift(>=6.3)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -274,3 +275,4 @@ struct TextTagMediaTests {
         #expect(launcher.uri == nil)
     }
 }
+#endif

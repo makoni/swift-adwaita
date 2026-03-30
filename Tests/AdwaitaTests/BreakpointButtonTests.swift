@@ -1,3 +1,4 @@
+#if swift(>=6.3)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -409,3 +410,4 @@ struct BreakpointButtonTests {
         #expect(section.title == "Now has a title")
     }
 }
+#endif

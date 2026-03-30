@@ -1,3 +1,4 @@
+#if swift(>=6.3)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -457,3 +458,4 @@ struct DeepCoverageTests {
         #expect(drawCalled == false)
     }
 }
+#endif

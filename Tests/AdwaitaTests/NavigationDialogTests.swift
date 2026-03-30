@@ -1,3 +1,4 @@
+#if swift(>=6.3)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -472,3 +473,4 @@ struct NavigationDialogTests {
         #expect(about.contentHeight == 400)
     }
 }
+#endif

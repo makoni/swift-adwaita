@@ -1,3 +1,4 @@
+#if swift(>=6.3)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -434,3 +435,4 @@ struct WidgetBaseTests {
         #expect(notified, "onNotify should fire when property changes")
     }
 }
+#endif

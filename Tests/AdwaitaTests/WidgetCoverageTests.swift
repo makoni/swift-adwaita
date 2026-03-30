@@ -1,3 +1,4 @@
+#if swift(>=6.3)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -430,3 +431,4 @@ struct WidgetCoverageTests {
         #expect(notebook.getTabLabelText(content) == "Renamed")
     }
 }
+#endif
