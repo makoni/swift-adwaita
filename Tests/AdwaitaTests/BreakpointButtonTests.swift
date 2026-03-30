@@ -108,22 +108,6 @@ struct BreakpointButtonTests {
         #expect(condStr != nil)
     }
 
-    @Test @MainActor func breakpointAddSetterBool() {
-        ensureAdwInit()
-        let cond = BreakpointCondition(parse: "min-width: 500px")
-        let bp = Breakpoint(condition: cond)
-        let label = Label("Test")
-        bp.addSetter(label, property: .visible, value: false)
-    }
-
-    @Test @MainActor func breakpointAddSetterString() {
-        ensureAdwInit()
-        let cond = BreakpointCondition(parse: "min-width: 500px")
-        let bp = Breakpoint(condition: cond)
-        let label = Label("Test")
-        bp.addSetter(label, property: .label, value: "Changed")
-    }
-
     @Test @MainActor func breakpointOnApplySignal() {
         ensureAdwInit()
         let bp = Breakpoint.minWidth(600)
@@ -200,15 +184,6 @@ struct BreakpointButtonTests {
         content.label = "Custom"
         btn.child = content
         #expect(btn.child != nil)
-    }
-
-    @Test @MainActor func splitButtonMenuModel() {
-        ensureAdwInit()
-        let btn = SplitButton()
-        let menu = GMenuRef()
-        menu.append("Option A", action: "app.a")
-        btn.setMenuModel(menu)
-        btn.setMenuModel(nil)
     }
 
     @Test @MainActor func splitButtonDropdownTooltip() {

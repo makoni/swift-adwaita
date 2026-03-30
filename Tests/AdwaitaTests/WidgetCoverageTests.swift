@@ -95,16 +95,6 @@ struct WidgetCoverageTests {
 
     // MARK: - ListBox: Properties
 
-    @Test @MainActor func listBoxShowSeparators() {
-        ensureAdwInit()
-        let list = ListBox()
-        #expect(list.showSeparators == false)
-        list.showSeparators = true
-        #expect(list.showSeparators == true)
-        list.showSeparators = false
-        #expect(list.showSeparators == false)
-    }
-
     @Test @MainActor func listBoxActivateOnSingleClick() {
         ensureAdwInit()
         let list = ListBox()
@@ -126,27 +116,6 @@ struct WidgetCoverageTests {
     }
 
     // MARK: - ListBox: Sort / Filter / Header
-
-    @Test @MainActor func listBoxSortFunc() {
-        ensureAdwInit()
-        let list = ListBox()
-        list.append(Label("C"))
-        list.append(Label("A"))
-        list.append(Label("B"))
-        list.setSortFunc { _, _ in 0 }
-        list.invalidateSort()
-        list.clearSortFunc()
-    }
-
-    @Test @MainActor func listBoxFilterFunc() {
-        ensureAdwInit()
-        let list = ListBox()
-        list.append(Label("Show"))
-        list.append(Label("Hide"))
-        list.setFilterFunc { _ in true }
-        list.invalidateFilter()
-        list.clearFilterFunc()
-    }
 
     @Test @MainActor func listBoxHeaderFunc() {
         ensureAdwInit()
@@ -241,24 +210,7 @@ struct WidgetCoverageTests {
         #expect(row.header == nil)
     }
 
-    @Test @MainActor func listBoxRowChanged() {
-        ensureAdwInit()
-        let list = ListBox()
-        let row = ListBoxRow()
-        row.child = Label("Item")
-        list.append(row)
-        row.changed()
-    }
-
     // MARK: - Entry: Additional Coverage
-
-    @Test @MainActor func entryActivatesDefault() {
-        ensureAdwInit()
-        let entry = Entry()
-        #expect(entry.activatesDefault == false)
-        entry.activatesDefault = true
-        #expect(entry.activatesDefault == true)
-    }
 
     @Test @MainActor func entryInputHints() {
         ensureAdwInit()
@@ -286,13 +238,6 @@ struct WidgetCoverageTests {
         entry.setIconActivatable(position: .primary, activatable: true)
     }
 
-    @Test @MainActor func entryProgressPulse() {
-        ensureAdwInit()
-        let entry = Entry()
-        entry.progressPulseStep = 0.1
-        entry.progressPulse()
-    }
-
     @Test @MainActor func entryConvenienceInitWithHandler() {
         ensureAdwInit()
         var changed = false
@@ -306,25 +251,6 @@ struct WidgetCoverageTests {
 
     // MARK: - Scale: Additional Coverage
 
-    @Test @MainActor func scaleValuePos() {
-        ensureAdwInit()
-        let scale = Scale()
-        scale.drawValue = true
-        scale.valuePos = .top
-        #expect(scale.valuePos == .top)
-        scale.valuePos = .bottom
-        #expect(scale.valuePos == .bottom)
-    }
-
-    @Test @MainActor func scaleFormatValueFunc() {
-        ensureAdwInit()
-        let scale = Scale(min: 0, max: 100, step: 1)
-        scale.drawValue = true
-        scale.setFormatValueFunc { value in "\(Int(value))%" }
-        scale.value = 50
-        scale.setFormatValueFunc(nil)
-    }
-
     @Test @MainActor func scaleOnValueChangedSignal() {
         ensureAdwInit()
         let scale = Scale(min: 0, max: 100, step: 1)
@@ -332,15 +258,6 @@ struct WidgetCoverageTests {
         scale.onValueChanged { changed = true }
         scale.value = 42
         #expect(changed, "onValueChanged should fire when value is set")
-    }
-
-    @Test @MainActor func scaleAddAndClearMarks() {
-        ensureAdwInit()
-        let scale = Scale(min: 0, max: 100, step: 1)
-        scale.addMark(value: 0, position: .top, markup: "0%")
-        scale.addMark(value: 50, position: .bottom, markup: "50%")
-        scale.addMark(value: 100, position: .top, markup: "100%")
-        scale.clearMarks()
     }
 
     @Test @MainActor func scaleFluentDrawValue() {

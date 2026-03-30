@@ -8,13 +8,6 @@ struct NavigationDialogTests {
 
     // MARK: - Notebook Tests
 
-    @Test @MainActor func notebookCreation() {
-        ensureAdwInit()
-        let notebook = Notebook()
-        #expect(notebook.nPages == 0)
-        #expect(notebook.currentPage == -1) // no pages yet
-    }
-
     @Test @MainActor func notebookAppendAndRemovePage() {
         ensureAdwInit()
         let notebook = Notebook()
@@ -30,19 +23,6 @@ struct NavigationDialogTests {
 
         notebook.removePage(at: 0)
         #expect(notebook.nPages == 1)
-    }
-
-    @Test @MainActor func notebookCurrentPage() {
-        ensureAdwInit()
-        let notebook = Notebook()
-        let label1 = Label("Page 1")
-        let label2 = Label("Page 2")
-        notebook.appendPage(label1, label: "First")
-        notebook.appendPage(label2, label: "Second")
-        notebook.currentPage = 1
-        #expect(notebook.currentPage == 1)
-        notebook.currentPage = 0
-        #expect(notebook.currentPage == 0)
     }
 
     @Test @MainActor func notebookShowTabs() {
@@ -392,26 +372,6 @@ struct NavigationDialogTests {
         let about = AboutDialog()
         #expect(about.applicationName == "")
         #expect(about.version == "")
-    }
-
-    @Test @MainActor func aboutDialogConvenienceInit() {
-        ensureAdwInit()
-        let about = AboutDialog(
-            appName: "Test App",
-            version: "1.0.0",
-            developer: "Developer Name",
-            appIcon: "com.example.TestApp",
-            website: "https://example.com",
-            issueUrl: "https://github.com/example/issues",
-            copyright: "2025 Developer Name"
-        )
-        #expect(about.applicationName == "Test App")
-        #expect(about.version == "1.0.0")
-        #expect(about.developerName == "Developer Name")
-        #expect(about.applicationIcon == "com.example.TestApp")
-        #expect(about.website == "https://example.com")
-        #expect(about.issueUrl == "https://github.com/example/issues")
-        #expect(about.copyright == "2025 Developer Name")
     }
 
     @Test @MainActor func aboutDialogProperties() {

@@ -179,13 +179,6 @@ struct SignalWidgetTests {
         #expect(entry.placeholderText == "Enter name...")
     }
 
-    @Test @MainActor func entryMaxLength() {
-        ensureAdwInit()
-        let entry = Entry()
-        entry.maxLength = 50
-        #expect(entry.maxLength == 50)
-    }
-
     @Test @MainActor func entryVisibility() {
         ensureAdwInit()
         let entry = Entry()

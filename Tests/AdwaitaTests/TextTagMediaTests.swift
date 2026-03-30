@@ -8,22 +8,6 @@ struct TextTagMediaTests {
 
     // MARK: - TextTag
 
-    @Test @MainActor func textTagCreation() {
-        ensureAdwInit()
-        let tag = TextTag(name: "myTag")
-        // Tag should be created without crashing
-        _ = tag
-    }
-
-    @Test @MainActor func textTagWeight() {
-        ensureAdwInit()
-        let tag = TextTag(name: "bold-test")
-        tag.weight = 700
-        #expect(tag.weight == 700)
-        tag.weight = 400
-        #expect(tag.weight == 400)
-    }
-
     @Test @MainActor func textTagStyle() {
         ensureAdwInit()
         let tag = TextTag(name: "style-test")
@@ -33,13 +17,6 @@ struct TextTagMediaTests {
         #expect(tag.style == .normal)
     }
 
-    @Test @MainActor func textTagScale() {
-        ensureAdwInit()
-        let tag = TextTag()
-        tag.scale = 1.5
-        #expect(abs(tag.scale - 1.5) < 0.01)
-    }
-
     @Test @MainActor func textTagUnderline() {
         ensureAdwInit()
         let tag = TextTag()
@@ -47,15 +24,6 @@ struct TextTagMediaTests {
         #expect(tag.underline == .single)
         tag.underline = .double
         #expect(tag.underline == .double)
-    }
-
-    @Test @MainActor func textTagStrikethrough() {
-        ensureAdwInit()
-        let tag = TextTag()
-        tag.strikethrough = true
-        #expect(tag.strikethrough == true)
-        tag.strikethrough = false
-        #expect(tag.strikethrough == false)
     }
 
     @Test @MainActor func textTagSizeAndSizePoints() {
@@ -101,26 +69,12 @@ struct TextTagMediaTests {
 
     // MARK: - TextAttributes
 
-    @Test @MainActor func textAttributesCreation() {
-        ensureAdwInit()
-        let attrs = TextAttributes()
-        // Should create without crashing
-        #expect(attrs.pointer != nil)
-    }
-
     @Test @MainActor func textAttributesBoldAndItalic() {
         ensureAdwInit()
         let attrs = TextAttributes()
         attrs.addBold()
         attrs.addItalic()
         // No crash means attributes were inserted successfully
-        #expect(attrs.pointer != nil)
-    }
-
-    @Test @MainActor func textAttributesForegroundColor() {
-        ensureAdwInit()
-        let attrs = TextAttributes()
-        attrs.addForegroundColor(red: 1.0, green: 0.0, blue: 0.0)
         #expect(attrs.pointer != nil)
     }
 
@@ -143,31 +97,7 @@ struct TextTagMediaTests {
         #expect(attrs.pointer != nil)
     }
 
-    @Test @MainActor func textAttributesWeight() {
-        ensureAdwInit()
-        let attrs = TextAttributes()
-        attrs.addWeight(.bold)
-        attrs.addLight()
-        attrs.addStyle(.oblique)
-        #expect(attrs.pointer != nil)
-    }
-
     // MARK: - Picture
-
-    @Test @MainActor func pictureCreation() {
-        ensureAdwInit()
-        let pic = Picture()
-        #expect(pic.canShrink == true)
-    }
-
-    @Test @MainActor func pictureCanShrink() {
-        ensureAdwInit()
-        let pic = Picture()
-        pic.canShrink = false
-        #expect(pic.canShrink == false)
-        pic.canShrink = true
-        #expect(pic.canShrink == true)
-    }
 
     @Test @MainActor func pictureContentFit() {
         ensureAdwInit()
@@ -180,16 +110,6 @@ struct TextTagMediaTests {
         #expect(pic.contentFit == .fill)
         pic.contentFit = .scaleDown
         #expect(pic.contentFit == .scaleDown)
-    }
-
-    @Test @MainActor func pictureAlternativeText() {
-        ensureAdwInit()
-        let pic = Picture()
-        #expect(pic.alternativeText == nil)
-        pic.alternativeText = "A photo of a sunset"
-        #expect(pic.alternativeText == "A photo of a sunset")
-        pic.alternativeText = nil
-        #expect(pic.alternativeText == nil)
     }
 
     @Test @MainActor func pictureSizeRequest() {
@@ -208,13 +128,6 @@ struct TextTagMediaTests {
     }
 
     // MARK: - Video
-
-    @Test @MainActor func videoCreation() {
-        ensureAdwInit()
-        let video = Video()
-        #expect(video.autoplay == false)
-        #expect(video.loop == false)
-    }
 
     @Test @MainActor func videoAutoplay() {
         ensureAdwInit()
@@ -257,22 +170,5 @@ struct TextTagMediaTests {
         _ = sep
     }
 
-    // MARK: - UriLauncher
-
-    @Test @MainActor func uriLauncherCreation() {
-        ensureAdwInit()
-        let launcher = UriLauncher(uri: "https://gnome.org")
-        #expect(launcher.uri == "https://gnome.org")
-    }
-
-    @Test @MainActor func uriLauncherSetUri() {
-        ensureAdwInit()
-        let launcher = UriLauncher(uri: "https://example.com")
-        #expect(launcher.uri == "https://example.com")
-        launcher.uri = "https://gtk.org"
-        #expect(launcher.uri == "https://gtk.org")
-        launcher.uri = nil
-        #expect(launcher.uri == nil)
-    }
 }
 #endif

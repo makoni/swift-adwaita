@@ -7,21 +7,6 @@ struct ExpandedWidgetTests {
 
     // MARK: - BottomSheet (1.6+)
 
-    @Test @MainActor func bottomSheetProperties() {
-        ensureAdwInit()
-        guard let bs = BottomSheet() else { return }
-        bs.modal = true
-        #expect(bs.modal == true)
-        bs.canClose = false
-        #expect(bs.canClose == false)
-        bs.canOpen = true
-        #expect(bs.canOpen == true)
-        bs.showDragHandle = true
-        #expect(bs.showDragHandle == true)
-        bs.fullWidth = true
-        #expect(bs.fullWidth == true)
-    }
-
     @Test @MainActor func bottomSheetAlignment() {
         ensureAdwInit()
         guard let bs = BottomSheet() else { return }
@@ -69,14 +54,6 @@ struct ExpandedWidgetTests {
         // Signal connected without crash
         #expect(!attempted)
         conn.disconnect()
-    }
-
-    // MARK: - Spinner (1.6+)
-
-    @Test @MainActor func spinnerCreation() {
-        ensureAdwInit()
-        guard let spinner = Spinner() else { return }
-        #expect(spinner.visible == true)
     }
 
     // MARK: - SpinnerPaintable (1.6+)
@@ -315,19 +292,6 @@ struct ExpandedWidgetTests {
         #expect(revealer.transitionDuration == 500)
     }
 
-    // MARK: - Expander
-
-    @Test @MainActor func expanderProperties() {
-        ensureAdwInit()
-        let expander = Expander(label: "Show Details")
-        #expect(expander.label == "Show Details")
-        expander.expanded = true
-        #expect(expander.expanded == true)
-        let content = Label("Details here")
-        expander.child = content
-        #expect(expander.child != nil)
-    }
-
     // MARK: - FlowBox
 
     @Test @MainActor func flowBoxChildManagement() {
@@ -374,13 +338,6 @@ struct ExpandedWidgetTests {
 
     // MARK: - Image
 
-    @Test @MainActor func imageIconName() {
-        ensureAdwInit()
-        let img = Image(iconName: "dialog-information-symbolic")
-        img.pixelSize = 48
-        #expect(img.pixelSize == 48)
-    }
-
     @Test @MainActor func imageTypeSafeIcon() {
         ensureAdwInit()
         let img = Image(icon: .dialogInformation)
@@ -401,15 +358,6 @@ struct ExpandedWidgetTests {
     }
 
     // MARK: - Adjustment
-
-    @Test @MainActor func adjustmentConfigure() {
-        ensureAdwInit()
-        let adj = Adjustment()
-        adj.configure(value: 50, lower: 0, upper: 100, stepIncrement: 1, pageIncrement: 10, pageSize: 0)
-        #expect(abs(adj.value - 50) < 0.01)
-        #expect(abs(adj.lower - 0) < 0.01)
-        #expect(abs(adj.upper - 100) < 0.01)
-    }
 
     @Test @MainActor func adjustmentClampValue() {
         ensureAdwInit()

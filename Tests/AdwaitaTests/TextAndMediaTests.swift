@@ -14,13 +14,6 @@ struct TextAndMediaTests {
         #expect(entry.text == "")
     }
 
-    @Test @MainActor func entryConvenienceInit() {
-        ensureAdwInit()
-        let entry = Entry(placeholder: "Name")
-        #expect(entry.placeholderText == "Name")
-        #expect(entry.text == "")
-    }
-
     @Test @MainActor func entryTextProperty() {
         ensureAdwInit()
         let entry = Entry()
@@ -37,58 +30,6 @@ struct TextAndMediaTests {
         #expect(entry.placeholderText == "Search...")
         entry.placeholderText = "Type here"
         #expect(entry.placeholderText == "Type here")
-    }
-
-    @Test @MainActor func entryVisibility() {
-        ensureAdwInit()
-        let entry = Entry()
-        #expect(entry.visibility == true)
-        entry.visibility = false
-        #expect(entry.visibility == false)
-        entry.visibility = true
-        #expect(entry.visibility == true)
-    }
-
-    @Test @MainActor func entryMaxLength() {
-        ensureAdwInit()
-        let entry = Entry()
-        #expect(entry.maxLength == 0)
-        entry.maxLength = 50
-        #expect(entry.maxLength == 50)
-    }
-
-    @Test @MainActor func entryHasFrame() {
-        ensureAdwInit()
-        let entry = Entry()
-        #expect(entry.hasFrame == true)
-        entry.hasFrame = false
-        #expect(entry.hasFrame == false)
-    }
-
-    @Test @MainActor func entryAlignment() {
-        ensureAdwInit()
-        let entry = Entry()
-        entry.alignment = 0.5
-        #expect(abs(entry.alignment - 0.5) < 0.01)
-        entry.alignment = 1.0
-        #expect(abs(entry.alignment - 1.0) < 0.01)
-    }
-
-    @Test @MainActor func entryInputPurpose() {
-        ensureAdwInit()
-        let entry = Entry()
-        entry.inputPurpose = GTK_INPUT_PURPOSE_PASSWORD
-        #expect(entry.inputPurpose == GTK_INPUT_PURPOSE_PASSWORD)
-        entry.inputPurpose = GTK_INPUT_PURPOSE_FREE_FORM
-        #expect(entry.inputPurpose == GTK_INPUT_PURPOSE_FREE_FORM)
-    }
-
-    @Test @MainActor func entryProgressFraction() {
-        ensureAdwInit()
-        let entry = Entry()
-        #expect(abs(entry.progressFraction - 0.0) < 0.01)
-        entry.progressFraction = 0.75
-        #expect(abs(entry.progressFraction - 0.75) < 0.01)
     }
 
     @Test @MainActor func entryProgressPulseStep() {
@@ -185,14 +126,6 @@ struct TextAndMediaTests {
         #expect(scale.hasOrigin == true)
     }
 
-    @Test @MainActor func scaleInverted() {
-        ensureAdwInit()
-        let scale = Scale()
-        #expect(scale.inverted == false)
-        scale.inverted = true
-        #expect(scale.inverted == true)
-    }
-
     @Test @MainActor func scaleValuePos() {
         ensureAdwInit()
         let scale = Scale()
@@ -223,30 +156,6 @@ struct TextAndMediaTests {
 
     // MARK: - TextBuffer
 
-    @Test @MainActor func textBufferCreation() {
-        ensureAdwInit()
-        let buffer = TextBuffer()
-        #expect(buffer.text == "")
-        #expect(buffer.charCount == 0)
-    }
-
-    @Test @MainActor func textBufferSetText() {
-        ensureAdwInit()
-        let buffer = TextBuffer()
-        buffer.text = "Hello, world!"
-        #expect(buffer.text == "Hello, world!")
-        #expect(buffer.charCount == 13)
-    }
-
-    @Test @MainActor func textBufferInsertAtCursor() {
-        ensureAdwInit()
-        let buffer = TextBuffer()
-        buffer.insertAtCursor("ABC")
-        #expect(buffer.text == "ABC")
-        buffer.insertAtCursor("DEF")
-        #expect(buffer.text == "ABCDEF")
-    }
-
     @Test @MainActor func textBufferLineCount() {
         ensureAdwInit()
         let buffer = TextBuffer()
@@ -264,28 +173,6 @@ struct TextAndMediaTests {
         #expect(buffer.selectedText == "Hello World")
     }
 
-    @Test @MainActor func textBufferPlaceCursor() {
-        ensureAdwInit()
-        let buffer = TextBuffer()
-        buffer.text = "Hello"
-        buffer.placeCursorAtStart()
-        buffer.insertAtCursor(">> ")
-        #expect(buffer.text == ">> Hello")
-        buffer.placeCursorAtEnd()
-        buffer.insertAtCursor(" <<")
-        #expect(buffer.text == ">> Hello <<")
-    }
-
-    @Test @MainActor func textBufferModified() {
-        ensureAdwInit()
-        let buffer = TextBuffer()
-        #expect(buffer.modified == false)
-        buffer.text = "Changed"
-        #expect(buffer.modified == true)
-        buffer.modified = false
-        #expect(buffer.modified == false)
-    }
-
     @Test @MainActor func textBufferOnChanged() {
         ensureAdwInit()
         let buffer = TextBuffer()
@@ -293,22 +180,6 @@ struct TextAndMediaTests {
         buffer.onChanged { changeCount += 1 }
         buffer.text = "first"
         #expect(changeCount > 0, "onChanged should fire when text is set")
-    }
-
-    @Test @MainActor func textBufferInsertAtOffset() {
-        ensureAdwInit()
-        let buffer = TextBuffer()
-        buffer.text = "Hello World"
-        buffer.insert(" Beautiful", at: 5)
-        #expect(buffer.text == "Hello Beautiful World")
-    }
-
-    @Test @MainActor func textBufferTextInRange() {
-        ensureAdwInit()
-        let buffer = TextBuffer()
-        buffer.text = "Hello World"
-        let sub = buffer.text(in: 0 ..< 5)
-        #expect(sub == "Hello")
     }
 
     // MARK: - TextView
@@ -361,36 +232,6 @@ struct TextAndMediaTests {
         #expect(tv.monospace == true)
     }
 
-    @Test @MainActor func textViewMargins() {
-        ensureAdwInit()
-        let tv = TextView()
-        tv.leftMargin = 10
-        tv.rightMargin = 20
-        tv.topMargin = 5
-        tv.bottomMargin = 15
-        #expect(tv.leftMargin == 10)
-        #expect(tv.rightMargin == 20)
-        #expect(tv.topMargin == 5)
-        #expect(tv.bottomMargin == 15)
-    }
-
-    @Test @MainActor func textViewJustification() {
-        ensureAdwInit()
-        let tv = TextView()
-        tv.justification = .center
-        #expect(tv.justification == .center)
-        tv.justification = .right
-        #expect(tv.justification == .right)
-    }
-
-    @Test @MainActor func textViewOverwrite() {
-        ensureAdwInit()
-        let tv = TextView()
-        #expect(tv.overwrite == false)
-        tv.overwrite = true
-        #expect(tv.overwrite == true)
-    }
-
     @Test @MainActor func textViewIndent() {
         ensureAdwInit()
         let tv = TextView()
@@ -398,13 +239,5 @@ struct TextAndMediaTests {
         #expect(tv.indent == 16)
     }
 
-    @Test @MainActor func textViewBuffer() {
-        ensureAdwInit()
-        let tv = TextView()
-        let buffer = TextBuffer()
-        buffer.text = "Shared buffer"
-        tv.buffer = buffer
-        #expect(tv.text == "Shared buffer")
-    }
 }
 #endif

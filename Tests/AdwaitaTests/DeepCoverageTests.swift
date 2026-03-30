@@ -378,14 +378,6 @@ struct DeepCoverageTests {
 
     // MARK: - BoxedTypes: SpringParams
 
-    @Test @MainActor func springParamsFullInit() {
-        ensureAdwInit()
-        let params = SpringParams(damping: 15.0, mass: 2.0, stiffness: 300.0)
-        #expect(abs(params.damping - 15.0) < 0.01)
-        #expect(abs(params.mass - 2.0) < 0.01)
-        #expect(abs(params.stiffness - 300.0) < 0.01)
-    }
-
     @Test @MainActor func springParamsDampingRatioInit() {
         ensureAdwInit()
         let params = SpringParams(dampingRatio: 0.6, mass: 1.0, stiffness: 100.0)

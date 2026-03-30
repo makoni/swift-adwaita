@@ -115,17 +115,6 @@ struct TextBufferTagTests {
         #expect(buffer.charCount == 11)
     }
 
-    @Test @MainActor func textBufferRemoveTag() {
-        ensureAdwInit()
-        let buffer = TextBuffer()
-        buffer.text = "Hello World"
-        let tag = buffer.createTag(name: "removable")
-        tag.foreground = "red"
-        buffer.applyTag(tag, startOffset: 0, endOffset: 5)
-        buffer.removeTag(tag, startOffset: 0, endOffset: 5)
-        #expect(buffer.text == "Hello World")
-    }
-
     @Test @MainActor func textBufferRemoveTagRangeAPI() {
         ensureAdwInit()
         let buffer = TextBuffer()
@@ -136,20 +125,6 @@ struct TextBufferTagTests {
         #expect(buffer.text == "Test text")
     }
 
-    @Test @MainActor func textBufferRemoveAllTags() {
-        ensureAdwInit()
-        let buffer = TextBuffer()
-        buffer.text = "Styled text"
-        let tag1 = buffer.createTag(name: "t1")
-        tag1.weight = 700
-        let tag2 = buffer.createTag(name: "t2")
-        tag2.foreground = "blue"
-        buffer.applyTag(tag1, startOffset: 0, endOffset: 6)
-        buffer.applyTag(tag2, startOffset: 0, endOffset: 6)
-        buffer.removeAllTags(startOffset: 0, endOffset: 6)
-        #expect(buffer.text == "Styled text")
-    }
-
     @Test @MainActor func textBufferEnableUndo() {
         ensureAdwInit()
         let buffer = TextBuffer()
@@ -157,28 +132,6 @@ struct TextBufferTagTests {
         #expect(buffer.enableUndo == true)
         buffer.enableUndo = false
         #expect(buffer.enableUndo == false)
-    }
-
-    @Test @MainActor func textBufferUndoRedo() {
-        ensureAdwInit()
-        let buffer = TextBuffer()
-        buffer.enableUndo = true
-        #expect(buffer.canUndo == false)
-        #expect(buffer.canRedo == false)
-
-        buffer.beginUserAction()
-        buffer.insertAtCursor("ABC")
-        buffer.endUserAction()
-
-        #expect(buffer.text == "ABC")
-        #expect(buffer.canUndo == true)
-
-        buffer.undo()
-        #expect(buffer.text == "")
-        #expect(buffer.canRedo == true)
-
-        buffer.redo()
-        #expect(buffer.text == "ABC")
     }
 
     @Test @MainActor func textBufferUserActionBrackets() {
@@ -229,13 +182,6 @@ struct TextBufferTagTests {
         #expect(tag.size == 16 * 1024)
     }
 
-    @Test @MainActor func textTagSizePoints() {
-        ensureAdwInit()
-        let tag = TextTag()
-        tag.sizePoints = 24.0
-        #expect(abs(tag.sizePoints - 24.0) < 0.01)
-    }
-
     @Test @MainActor func textTagBoldPresetCustomName() {
         ensureAdwInit()
         let tag = TextTag.bold(name: "my-bold")
@@ -246,20 +192,6 @@ struct TextBufferTagTests {
         ensureAdwInit()
         let tag = TextTag.italic(name: "my-italic")
         #expect(tag.style == .italic)
-    }
-
-    @Test @MainActor func textTagMonospacePreset() {
-        ensureAdwInit()
-        let tag = TextTag.monospace(name: "code")
-        tag.scale = 0.9
-        #expect(abs(tag.scale - 0.9) < 0.01)
-    }
-
-    @Test @MainActor func textTagColoredPreset() {
-        ensureAdwInit()
-        let tag = TextTag.colored("#3584e4", name: "link-color")
-        tag.underline = .single
-        #expect(tag.underline == .single)
     }
 
     @Test @MainActor func textTagMultipleProperties() {

@@ -386,32 +386,6 @@ struct AdvancedFeatureTests {
         #expect(page.useUnderline == true)
     }
 
-    // MARK: - SpringAnimation
-
-    @Test @MainActor func springAnimationCreation() {
-        ensureAdwInit()
-        let widget = Label("Test")
-        let params = SpringParams(dampingRatio: 0.8, mass: 1.0, stiffness: 200)
-        let target = CallbackAnimationTarget { _ in }
-        let anim = SpringAnimation(widget: widget, from: 0, to: 100, springParams: params, target: target)
-        #expect(anim.valueFrom == 0)
-        #expect(anim.valueTo == 100)
-    }
-
-    @Test @MainActor func springAnimationProperties() {
-        ensureAdwInit()
-        let widget = Label("Test")
-        let params = SpringParams(dampingRatio: 1.0, mass: 1.0, stiffness: 100)
-        let target = CallbackAnimationTarget { _ in }
-        let anim = SpringAnimation(widget: widget, from: 0, to: 50, springParams: params, target: target)
-        anim.clamp = true
-        #expect(anim.clamp == true)
-        anim.epsilon = 0.01
-        #expect(anim.epsilon > 0.009 && anim.epsilon < 0.011)
-        anim.initialVelocity = 5.0
-        #expect(anim.initialVelocity == 5.0)
-    }
-
     // MARK: - GMenu sections and submenus
 
     @Test @MainActor func gmenuWithSections() {

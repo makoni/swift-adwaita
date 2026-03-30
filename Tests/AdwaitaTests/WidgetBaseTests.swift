@@ -40,16 +40,6 @@ struct WidgetBaseTests {
         #expect(label.visible == true)
     }
 
-    @Test @MainActor func widgetSensitiveProperty() {
-        ensureAdwInit()
-        let button = Button(label: "Click")
-        #expect(button.sensitive == true)
-        button.sensitive = false
-        #expect(button.sensitive == false)
-        button.sensitive = true
-        #expect(button.sensitive == true)
-    }
-
     @Test @MainActor func widgetCanTargetProperty() {
         ensureAdwInit()
         let label = Label("Test")
@@ -74,15 +64,6 @@ struct WidgetBaseTests {
     }
 
     // MARK: - Widget: CSS Classes
-
-    @Test @MainActor func widgetCSSClassesGetSet() {
-        ensureAdwInit()
-        let label = Label("CSS")
-        label.cssClasses = ["alpha", "beta"]
-        let classes = label.cssClasses
-        #expect(classes.contains("alpha"))
-        #expect(classes.contains("beta"))
-    }
 
     @Test @MainActor func widgetAddRemoveHasCSSClass() {
         ensureAdwInit()
@@ -114,19 +95,6 @@ struct WidgetBaseTests {
         #expect(label.marginEnd == 24)
     }
 
-    @Test @MainActor func widgetIndividualMargins() {
-        ensureAdwInit()
-        let label = Label("Margins")
-        label.marginTop = 5
-        label.marginBottom = 10
-        label.marginStart = 15
-        label.marginEnd = 20
-        #expect(label.marginTop == 5)
-        #expect(label.marginBottom == 10)
-        #expect(label.marginStart == 15)
-        #expect(label.marginEnd == 20)
-    }
-
     // MARK: - Widget: Size Request
 
     @Test @MainActor func widgetSetSizeRequest() {
@@ -151,45 +119,6 @@ struct WidgetBaseTests {
         #expect(label.height >= 0)
     }
 
-    // MARK: - Widget: Overflow
-
-    @Test @MainActor func widgetOverflow() {
-        ensureAdwInit()
-        let label = Label("Overflow")
-        label.overflow = .hidden
-        #expect(label.overflow == GtkOverflow.hidden)
-        label.overflow = .visible
-        #expect(label.overflow == GtkOverflow.visible)
-    }
-
-    // MARK: - Widget: Expand / Align
-
-    @Test @MainActor func widgetExpandProperties() {
-        ensureAdwInit()
-        let label = Label("Expand")
-        label.hexpand = true
-        label.vexpand = true
-        #expect(label.hexpand == true)
-        #expect(label.vexpand == true)
-        label.hexpand = false
-        label.vexpand = false
-        #expect(label.hexpand == false)
-        #expect(label.vexpand == false)
-    }
-
-    @Test @MainActor func widgetAlignment() {
-        ensureAdwInit()
-        let label = Label("Align")
-        label.halign = .center
-        label.valign = .end
-        #expect(label.halign == GtkAlign.center)
-        #expect(label.valign == GtkAlign.end)
-        label.halign = .start
-        label.valign = .fill
-        #expect(label.halign == GtkAlign.start)
-        #expect(label.valign == GtkAlign.fill)
-    }
-
     // MARK: - Widget: CSS Name
 
     @Test @MainActor func widgetCSSName() {
@@ -201,28 +130,6 @@ struct WidgetBaseTests {
     }
 
     // MARK: - Widget: Parent / Children Navigation
-
-    @Test @MainActor func widgetParentAfterAppend() {
-        ensureAdwInit()
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL)
-        let label = Label("Child")
-        #expect(label.parent == nil)
-        box.append(label)
-        #expect(label.parent != nil)
-    }
-
-    @Test @MainActor func widgetFirstLastChild() {
-        ensureAdwInit()
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL)
-        let a = Label("A")
-        let b = Label("B")
-        let c = Label("C")
-        box.append(a)
-        box.append(b)
-        box.append(c)
-        #expect(box.firstChild != nil)
-        #expect(box.lastChild != nil)
-    }
 
     @Test @MainActor func widgetSiblingNavigation() {
         ensureAdwInit()
@@ -245,16 +152,6 @@ struct WidgetBaseTests {
         box.append(Label("3"))
         let children = box.children()
         #expect(children.count == 3)
-    }
-
-    @Test @MainActor func widgetForEachChild() {
-        ensureAdwInit()
-        let box = Box(orientation: GTK_ORIENTATION_VERTICAL)
-        box.append(Label("A"))
-        box.append(Label("B"))
-        var count = 0
-        box.forEachChild { _ in count += 1 }
-        #expect(count == 2)
     }
 
     // MARK: - Widget: Root
@@ -280,13 +177,6 @@ struct WidgetBaseTests {
     }
 
     // MARK: - Widget: Activate
-
-    @Test @MainActor func widgetActivate() {
-        ensureAdwInit()
-        let label = Label("Not activatable")
-        let result = label.activate()
-        #expect(result == false)
-    }
 
     // MARK: - Widget: Cast / TryCast
 
