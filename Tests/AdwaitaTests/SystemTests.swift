@@ -73,9 +73,10 @@ struct SystemTests {
 
     // MARK: - GtkWindow Icon Tests
 
-    @Test @MainActor func gtkWindowIconName() {
+    @Test @MainActor func gtkWindowIconName() throws {
         ensureAdwInit()
         let app = Application(id: "com.test.windowicon\(UInt32.random(in: 0 ..< UInt32.max))")
+        try app.register()
         let win = ApplicationWindow(application: app)
         win.iconName = "dialog-information-symbolic"
         #expect(win.iconName == "dialog-information-symbolic")
@@ -209,9 +210,10 @@ struct SystemTests {
 
     // MARK: - ApplicationWindow.onCloseRequest Test
 
-    @Test @MainActor func applicationWindowOnCloseRequest() {
+    @Test @MainActor func applicationWindowOnCloseRequest() throws {
         ensureAdwInit()
         let app = Application(id: "com.test.closereq\(UInt32.random(in: 0 ..< UInt32.max))")
+        try app.register()
         let win = ApplicationWindow(application: app)
         var called = false
         win.onCloseRequest {

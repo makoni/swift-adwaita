@@ -1,7 +1,19 @@
 import CAdwaita
 
 private final class GObjectLifetimeObserver: @unchecked Sendable {
-    var isAlive = true
+    private var state: Int32 = 1
+
+    var isAlive: Bool {
+        g_atomic_int_get(&state) != 0
+    }
+
+    func markFinalized() {
+        g_atomic_int_set(&state, 0)
+    }
+
+    func consumeAliveFlag() -> Bool {
+        g_atomic_int_compare_and_exchange(&state, 1, 0) != 0
+    }
 }
 
 /// Base class for all GObject-derived Swift wrappers.
@@ -45,7 +57,7 @@ open class GObjectRef {
         g_object_weak_ref(
             pointer.assumingMemoryBound(to: GObject.self),
             gobjectFinalizeTrampoline,
-            Unmanaged.passUnretained(lifetimeObserver).toOpaque()
+            Unmanaged.passRetained(lifetimeObserver).toOpaque()
         )
     }
 
@@ -59,9 +71,7 @@ open class GObjectRef {
     }
 
     deinit {
-        let observerPointer = Unmanaged.passUnretained(lifetimeObserver).toOpaque()
-        guard lifetimeObserver.isAlive else { return }
-        g_object_weak_unref(pointer.assumingMemoryBound(to: GObject.self), gobjectFinalizeTrampoline, observerPointer)
+        guard lifetimeObserver.consumeAliveFlag() else { return }
         g_object_unref(pointer)
     }
 
@@ -111,5 +121,6 @@ open class GObjectRef {
 private let gobjectFinalizeTrampoline:
     @convention(c) (UnsafeMutableRawPointer?, UnsafeMutablePointer<GObject>?) -> Void = { data, _ in
         guard let data else { return }
-        Unmanaged<GObjectLifetimeObserver>.fromOpaque(data).takeUnretainedValue().isAlive = false
+        let observer = Unmanaged<GObjectLifetimeObserver>.fromOpaque(data).takeRetainedValue()
+        observer.markFinalized()
     }

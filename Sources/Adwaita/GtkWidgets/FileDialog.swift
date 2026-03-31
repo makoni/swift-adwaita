@@ -1,14 +1,6 @@
 import CAdwaita
 import GObjectSupport
 
-/// A helper for the async callback pattern.
-private final class AsyncBox<T>: @unchecked Sendable {
-    let closure: T
-    init(_ closure: T) {
-        self.closure = closure
-    }
-}
-
 /// A file chooser dialog for opening and saving files.
 ///
 /// Wraps `GtkFileDialog` (GTK 4.10+). Uses async callbacks — results
@@ -110,13 +102,21 @@ public final class FileDialog: GObjectRef {
     ///   - parent: The parent window, or nil.
     ///   - completion: Called with the selected file path, or nil if cancelled.
     public func open(parent: Widget?, completion: @escaping @MainActor (String?) -> Void) {
-        let box = Unmanaged.passRetained(AsyncBox(completion)).toOpaque()
+        let box = DialogAsyncSupport.retainBox(completion)
         gtk_file_dialog_open(
             opaquePointer,
             parent.map { cadw_cast_window($0.pointer) },
             nil,
             { source, result, userData in
-                guard let userData, let source, let result else { return }
+                let box = DialogAsyncSupport.takeBox(
+                    userData,
+                    as: (@MainActor (String?) -> Void).self,
+                    context: #function
+                )
+                guard let source, let result else {
+                    MainActor.assumeIsolated { box.closure(nil) }
+                    return
+                }
                 var error: UnsafeMutablePointer<GError>?
                 let file = gtk_file_dialog_open_finish(OpaquePointer(source), result, &error)
                 let path: String?
@@ -129,7 +129,6 @@ public final class FileDialog: GObjectRef {
                     path = nil
                 }
                 if let error { g_error_free(error) }
-                let box = Unmanaged<AsyncBox<@MainActor (String?) -> Void>>.fromOpaque(userData).takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(path) }
             },
             box
@@ -144,13 +143,21 @@ public final class FileDialog: GObjectRef {
         parent: Widget?,
         completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
     ) {
-        let box = Unmanaged.passRetained(AsyncBox(completion)).toOpaque()
+        let box = DialogAsyncSupport.retainBox(completion)
         gtk_file_dialog_open(
             opaquePointer,
             parent.map { cadw_cast_window($0.pointer) },
             nil,
             { source, result, userData in
-                guard let userData, let source, let result else { return }
+                let box = DialogAsyncSupport.takeBox(
+                    userData,
+                    as: (@MainActor (Result<String?, GLibError>) -> Void).self,
+                    context: #function
+                )
+                guard let source, let result else {
+                    MainActor.assumeIsolated { box.closure(.success(nil)) }
+                    return
+                }
                 var error: UnsafeMutablePointer<GError>?
                 let file = gtk_file_dialog_open_finish(OpaquePointer(source), result, &error)
                 let callResult: Result<String?, GLibError>
@@ -161,9 +168,7 @@ public final class FileDialog: GObjectRef {
                     g_object_unref(gpointer(file))
                     callResult = .success(path)
                 } else if let error {
-                    // Check if it's a cancellation (GTK_DIALOG_ERROR_DISMISSED)
-                    let dismissed = g_quark_try_string("gtk-dialog-error-quark")
-                    if error.pointee.domain == dismissed, error.pointee.code == 2 {
+                    if DialogAsyncSupport.isDismissed(error) {
                         g_error_free(error)
                         callResult = .success(nil)
                     } else {
@@ -172,8 +177,6 @@ public final class FileDialog: GObjectRef {
                 } else {
                     callResult = .success(nil)
                 }
-                let box = Unmanaged<AsyncBox<@MainActor (Result<String?, GLibError>) -> Void>>
-                    .fromOpaque(userData).takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(callResult) }
             },
             box
@@ -208,13 +211,21 @@ public final class FileDialog: GObjectRef {
     ///   - parent: The parent window, or nil.
     ///   - completion: Called with the selected save path, or nil if cancelled.
     public func save(parent: Widget?, completion: @escaping @MainActor (String?) -> Void) {
-        let box = Unmanaged.passRetained(AsyncBox(completion)).toOpaque()
+        let box = DialogAsyncSupport.retainBox(completion)
         gtk_file_dialog_save(
             opaquePointer,
             parent.map { cadw_cast_window($0.pointer) },
             nil,
             { source, result, userData in
-                guard let userData, let source, let result else { return }
+                let box = DialogAsyncSupport.takeBox(
+                    userData,
+                    as: (@MainActor (String?) -> Void).self,
+                    context: #function
+                )
+                guard let source, let result else {
+                    MainActor.assumeIsolated { box.closure(nil) }
+                    return
+                }
                 var error: UnsafeMutablePointer<GError>?
                 let file = gtk_file_dialog_save_finish(OpaquePointer(source), result, &error)
                 let path: String?
@@ -227,7 +238,6 @@ public final class FileDialog: GObjectRef {
                     path = nil
                 }
                 if let error { g_error_free(error) }
-                let box = Unmanaged<AsyncBox<@MainActor (String?) -> Void>>.fromOpaque(userData).takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(path) }
             },
             box
@@ -239,13 +249,21 @@ public final class FileDialog: GObjectRef {
         parent: Widget?,
         completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
     ) {
-        let box = Unmanaged.passRetained(AsyncBox(completion)).toOpaque()
+        let box = DialogAsyncSupport.retainBox(completion)
         gtk_file_dialog_save(
             opaquePointer,
             parent.map { cadw_cast_window($0.pointer) },
             nil,
             { source, result, userData in
-                guard let userData, let source, let result else { return }
+                let box = DialogAsyncSupport.takeBox(
+                    userData,
+                    as: (@MainActor (Result<String?, GLibError>) -> Void).self,
+                    context: #function
+                )
+                guard let source, let result else {
+                    MainActor.assumeIsolated { box.closure(.success(nil)) }
+                    return
+                }
                 var error: UnsafeMutablePointer<GError>?
                 let file = gtk_file_dialog_save_finish(OpaquePointer(source), result, &error)
                 let callResult: Result<String?, GLibError>
@@ -256,8 +274,7 @@ public final class FileDialog: GObjectRef {
                     g_object_unref(gpointer(file))
                     callResult = .success(path)
                 } else if let error {
-                    let dismissed = g_quark_try_string("gtk-dialog-error-quark")
-                    if error.pointee.domain == dismissed, error.pointee.code == 2 {
+                    if DialogAsyncSupport.isDismissed(error) {
                         g_error_free(error)
                         callResult = .success(nil)
                     } else {
@@ -266,8 +283,6 @@ public final class FileDialog: GObjectRef {
                 } else {
                     callResult = .success(nil)
                 }
-                let box = Unmanaged<AsyncBox<@MainActor (Result<String?, GLibError>) -> Void>>
-                    .fromOpaque(userData).takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(callResult) }
             },
             box
@@ -302,13 +317,21 @@ public final class FileDialog: GObjectRef {
     ///   - parent: The parent window, or nil.
     ///   - completion: Called with the selected folder path, or nil if cancelled.
     public func selectFolder(parent: Widget?, completion: @escaping @MainActor (String?) -> Void) {
-        let box = Unmanaged.passRetained(AsyncBox(completion)).toOpaque()
+        let box = DialogAsyncSupport.retainBox(completion)
         gtk_file_dialog_select_folder(
             opaquePointer,
             parent.map { cadw_cast_window($0.pointer) },
             nil,
             { source, result, userData in
-                guard let userData, let source, let result else { return }
+                let box = DialogAsyncSupport.takeBox(
+                    userData,
+                    as: (@MainActor (String?) -> Void).self,
+                    context: #function
+                )
+                guard let source, let result else {
+                    MainActor.assumeIsolated { box.closure(nil) }
+                    return
+                }
                 var error: UnsafeMutablePointer<GError>?
                 let file = gtk_file_dialog_select_folder_finish(OpaquePointer(source), result, &error)
                 let path: String?
@@ -321,7 +344,6 @@ public final class FileDialog: GObjectRef {
                     path = nil
                 }
                 if let error { g_error_free(error) }
-                let box = Unmanaged<AsyncBox<@MainActor (String?) -> Void>>.fromOpaque(userData).takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(path) }
             },
             box
@@ -333,13 +355,21 @@ public final class FileDialog: GObjectRef {
         parent: Widget?,
         completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
     ) {
-        let box = Unmanaged.passRetained(AsyncBox(completion)).toOpaque()
+        let box = DialogAsyncSupport.retainBox(completion)
         gtk_file_dialog_select_folder(
             opaquePointer,
             parent.map { cadw_cast_window($0.pointer) },
             nil,
             { source, result, userData in
-                guard let userData, let source, let result else { return }
+                let box = DialogAsyncSupport.takeBox(
+                    userData,
+                    as: (@MainActor (Result<String?, GLibError>) -> Void).self,
+                    context: #function
+                )
+                guard let source, let result else {
+                    MainActor.assumeIsolated { box.closure(.success(nil)) }
+                    return
+                }
                 var error: UnsafeMutablePointer<GError>?
                 let file = gtk_file_dialog_select_folder_finish(OpaquePointer(source), result, &error)
                 let callResult: Result<String?, GLibError>
@@ -350,8 +380,7 @@ public final class FileDialog: GObjectRef {
                     g_object_unref(gpointer(file))
                     callResult = .success(path)
                 } else if let error {
-                    let dismissed = g_quark_try_string("gtk-dialog-error-quark")
-                    if error.pointee.domain == dismissed, error.pointee.code == 2 {
+                    if DialogAsyncSupport.isDismissed(error) {
                         g_error_free(error)
                         callResult = .success(nil)
                     } else {
@@ -360,8 +389,6 @@ public final class FileDialog: GObjectRef {
                 } else {
                     callResult = .success(nil)
                 }
-                let box = Unmanaged<AsyncBox<@MainActor (Result<String?, GLibError>) -> Void>>
-                    .fromOpaque(userData).takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(callResult) }
             },
             box

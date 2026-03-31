@@ -5,6 +5,12 @@ import CAdwaita
 @Suite(.serialized)
 struct AsyncWidgetTests {
 
+    @Test @MainActor func dialogAsyncDismissedDomainMatchesGtk() {
+        let domain = DialogAsyncSupport.dismissedDialogErrorDomain
+        #expect(domain != 0)
+        #expect(domain == g_quark_from_string("gtk-dialog-error-quark"))
+    }
+
     // MARK: - FileDialog
 
     @Test @MainActor func fileDialogModal() {
@@ -70,6 +76,28 @@ struct AsyncWidgetTests {
         btn.onColorChanged { changed = true }
         btn.rgba = RGBA(red: 0.5, green: 0.5, blue: 0.5)
         #expect(changed, "onColorChanged should fire when rgba is set")
+    }
+
+    @Test @MainActor func dialogAsyncDismissedDetectionMatchesExpectedError() throws {
+        let domain = DialogAsyncSupport.dismissedDialogErrorDomain
+        let message = try #require(g_strdup("dismissed"))
+        defer { g_free(gpointer(message)) }
+
+        let error = try #require(g_error_new_literal(domain, DialogAsyncSupport.dismissedDialogErrorCode, message))
+        defer { g_error_free(error) }
+
+        #expect(DialogAsyncSupport.isDismissed(error))
+    }
+
+    @Test @MainActor func dialogAsyncDismissedDetectionRejectsOtherErrors() throws {
+        let domain = DialogAsyncSupport.dismissedDialogErrorDomain
+        let message = try #require(g_strdup("other"))
+        defer { g_free(gpointer(message)) }
+
+        let error = try #require(g_error_new_literal(domain, 99, message))
+        defer { g_error_free(error) }
+
+        #expect(!DialogAsyncSupport.isDismissed(error))
     }
 
     // MARK: - RGBA

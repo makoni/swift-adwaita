@@ -38,7 +38,7 @@ An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadw
 ## Requirements
 
 - Swift 6.0+
-- libadwaita 1.4+ development headers
+- libadwaita 1.5+ development headers
 - Linux
 
 ### Ubuntu/Debian

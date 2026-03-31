@@ -1,14 +1,6 @@
 import CAdwaita
 import GObjectSupport
 
-/// A helper for the async callback pattern.
-private final class ColorAsyncBox<T>: @unchecked Sendable {
-    let closure: T
-    init(_ closure: T) {
-        self.closure = closure
-    }
-}
-
 /// A simple RGBA color representation.
 public struct RGBA: Sendable, Equatable {
     public var red: Double
@@ -84,10 +76,18 @@ public final class ColorDialog: GObjectRef {
         initialColor: RGBA? = nil,
         completion: @escaping @MainActor (RGBA?) -> Void
     ) {
-        let box = Unmanaged.passRetained(ColorAsyncBox(completion)).toOpaque()
+        let box = DialogAsyncSupport.retainBox(completion)
         let parentPtr = parent.flatMap { cadw_cast_window($0.pointer) }
         let callback: GAsyncReadyCallback = { source, result, userData in
-            guard let userData, let source, let result else { return }
+            let box = DialogAsyncSupport.takeBox(
+                userData,
+                as: (@MainActor (RGBA?) -> Void).self,
+                context: #function
+            )
+            guard let source, let result else {
+                MainActor.assumeIsolated { box.closure(nil) }
+                return
+            }
             var error: UnsafeMutablePointer<GError>?
             let rgba = gtk_color_dialog_choose_rgba_finish(OpaquePointer(source), result, &error)
             let color: RGBA?
@@ -103,7 +103,6 @@ public final class ColorDialog: GObjectRef {
                 color = nil
             }
             if let error { g_error_free(error) }
-            let box = Unmanaged<ColorAsyncBox<@MainActor (RGBA?) -> Void>>.fromOpaque(userData).takeRetainedValue()
             MainActor.assumeIsolated { box.closure(color) }
         }
         if let initialColor {
@@ -140,10 +139,18 @@ public final class ColorDialog: GObjectRef {
         initialColor: RGBA? = nil,
         completion: @escaping @MainActor (Result<RGBA?, GLibError>) -> Void
     ) {
-        let box = Unmanaged.passRetained(ColorAsyncBox(completion)).toOpaque()
+        let box = DialogAsyncSupport.retainBox(completion)
         let parentPtr = parent.flatMap { cadw_cast_window($0.pointer) }
         let callback: GAsyncReadyCallback = { source, result, userData in
-            guard let userData, let source, let result else { return }
+            let box = DialogAsyncSupport.takeBox(
+                userData,
+                as: (@MainActor (Result<RGBA?, GLibError>) -> Void).self,
+                context: #function
+            )
+            guard let source, let result else {
+                MainActor.assumeIsolated { box.closure(.success(nil)) }
+                return
+            }
             var error: UnsafeMutablePointer<GError>?
             let rgba = gtk_color_dialog_choose_rgba_finish(OpaquePointer(source), result, &error)
             let callResult: Result<RGBA?, GLibError>
@@ -157,8 +164,7 @@ public final class ColorDialog: GObjectRef {
                 gdk_rgba_free(UnsafeMutablePointer(mutating: rgba))
                 callResult = .success(color)
             } else if let error {
-                let dismissed = g_quark_try_string("gtk-dialog-error-quark")
-                if error.pointee.domain == dismissed, error.pointee.code == 2 {
+                if DialogAsyncSupport.isDismissed(error) {
                     g_error_free(error)
                     callResult = .success(nil)
                 } else {
@@ -167,8 +173,6 @@ public final class ColorDialog: GObjectRef {
             } else {
                 callResult = .success(nil)
             }
-            let box = Unmanaged<ColorAsyncBox<@MainActor (Result<RGBA?, GLibError>) -> Void>>
-                .fromOpaque(userData).takeRetainedValue()
             MainActor.assumeIsolated { box.closure(callResult) }
         }
         if let initialColor {

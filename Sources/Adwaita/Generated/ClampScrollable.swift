@@ -11,7 +11,7 @@ import GObjectSupport
 /// let clamp = ClampScrollable()
 /// clamp.maximumSize = 600
 /// clamp.tighteningThreshold = 400
-/// clamp.child = contentWidget
+/// clamp.child = TextView()
 /// ```
 ///
 @MainActor
@@ -29,9 +29,22 @@ public final class ClampScrollable: Widget {
     }
 
     /// The child widget whose size is constrained by the clamp.
+    ///
+    /// The child must implement `GtkScrollable`, such as `ListView` or `TextView`.
     public var child: Widget? {
         get { adw_clamp_scrollable_get_child(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }
-        set { adw_clamp_scrollable_set_child(opaquePointer, newValue?.widgetPointer) }
+        set {
+            if let newValue {
+                precondition(
+                    g_type_check_instance_is_a(
+                        newValue.pointer.assumingMemoryBound(to: GTypeInstance.self),
+                        gtk_scrollable_get_type()
+                    ) != 0,
+                    "ClampScrollable child must implement GtkScrollable, such as ListView or TextView."
+                )
+            }
+            adw_clamp_scrollable_set_child(opaquePointer, newValue?.widgetPointer)
+        }
     }
 
     /// The maximum allowed size of the child in the clamping direction.

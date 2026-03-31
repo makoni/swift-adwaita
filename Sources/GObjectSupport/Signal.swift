@@ -9,8 +9,11 @@ import CAdwaita
 /// // Later, disconnect:
 /// conn.disconnect()
 /// ```
+///
+/// This type is re-exported through `Adwaita`, so client code does not need to
+/// import `GObjectSupport` directly.
 public final class SignalConnection: @unchecked Sendable {
-    private let handlerID: gulong
+    private var handlerID: gulong
     private weak var source: GObjectRef?
 
     init(handlerID: gulong, source: GObjectRef) {
@@ -21,8 +24,13 @@ public final class SignalConnection: @unchecked Sendable {
     /// Disconnects this signal handler.
     @MainActor
     public func disconnect() {
-        guard let source else { return }
+        guard handlerID != 0, let source else { return }
+        guard g_signal_handler_is_connected(source.pointer, handlerID) != 0 else {
+            handlerID = 0
+            return
+        }
         g_signal_handler_disconnect(source.pointer, handlerID)
+        handlerID = 0
     }
 }
 

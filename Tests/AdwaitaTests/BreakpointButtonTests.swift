@@ -71,8 +71,8 @@ struct BreakpointButtonTests {
         ensureAdwInit()
         let clamp = ClampScrollable()
         #expect(clamp.child == nil)
-        let label = Label("Scrollable content")
-        clamp.child = label
+        let textView = TextView()
+        clamp.child = textView
         #expect(clamp.child != nil)
     }
 

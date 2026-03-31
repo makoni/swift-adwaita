@@ -1,14 +1,6 @@
 import CAdwaita
 import GObjectSupport
 
-/// A helper for the async callback pattern.
-private final class FontAsyncBox<T>: @unchecked Sendable {
-    let closure: T
-    init(_ closure: T) {
-        self.closure = closure
-    }
-}
-
 /// A font chooser dialog.
 ///
 /// Wraps `GtkFontDialog` (GTK 4.10+).
@@ -63,7 +55,7 @@ public final class FontDialog: GObjectRef {
         initialFont: String? = nil,
         completion: @escaping @MainActor (String?) -> Void
     ) {
-        let box = Unmanaged.passRetained(FontAsyncBox(completion)).toOpaque()
+        let box = DialogAsyncSupport.retainBox(completion)
         let initialDesc: OpaquePointer? = if let initialFont {
             pango_font_description_from_string(initialFont)
         } else {
@@ -75,7 +67,15 @@ public final class FontDialog: GObjectRef {
             initialDesc,
             nil,
             { source, result, userData in
-                guard let userData, let source, let result else { return }
+                let box = DialogAsyncSupport.takeBox(
+                    userData,
+                    as: (@MainActor (String?) -> Void).self,
+                    context: #function
+                )
+                guard let source, let result else {
+                    MainActor.assumeIsolated { box.closure(nil) }
+                    return
+                }
                 var error: UnsafeMutablePointer<GError>?
                 let fontDesc = gtk_font_dialog_choose_font_finish(OpaquePointer(source), result, &error)
                 let font: String?
@@ -88,7 +88,6 @@ public final class FontDialog: GObjectRef {
                     font = nil
                 }
                 if let error { g_error_free(error) }
-                let box = Unmanaged<FontAsyncBox<@MainActor (String?) -> Void>>.fromOpaque(userData).takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(font) }
             },
             box
@@ -117,7 +116,7 @@ public final class FontDialog: GObjectRef {
         initialFont: String? = nil,
         completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
     ) {
-        let box = Unmanaged.passRetained(FontAsyncBox(completion)).toOpaque()
+        let box = DialogAsyncSupport.retainBox(completion)
         let initialDesc: OpaquePointer? = if let initialFont {
             pango_font_description_from_string(initialFont)
         } else {
@@ -129,7 +128,15 @@ public final class FontDialog: GObjectRef {
             initialDesc,
             nil,
             { source, result, userData in
-                guard let userData, let source, let result else { return }
+                let box = DialogAsyncSupport.takeBox(
+                    userData,
+                    as: (@MainActor (Result<String?, GLibError>) -> Void).self,
+                    context: #function
+                )
+                guard let source, let result else {
+                    MainActor.assumeIsolated { box.closure(.success(nil)) }
+                    return
+                }
                 var error: UnsafeMutablePointer<GError>?
                 let fontDesc = gtk_font_dialog_choose_font_finish(OpaquePointer(source), result, &error)
                 let callResult: Result<String?, GLibError>
@@ -140,8 +147,7 @@ public final class FontDialog: GObjectRef {
                     pango_font_description_free(fontDesc)
                     callResult = .success(font)
                 } else if let error {
-                    let dismissed = g_quark_try_string("gtk-dialog-error-quark")
-                    if error.pointee.domain == dismissed, error.pointee.code == 2 {
+                    if DialogAsyncSupport.isDismissed(error) {
                         g_error_free(error)
                         callResult = .success(nil)
                     } else {
@@ -150,8 +156,6 @@ public final class FontDialog: GObjectRef {
                 } else {
                     callResult = .success(nil)
                 }
-                let box = Unmanaged<FontAsyncBox<@MainActor (Result<String?, GLibError>) -> Void>>
-                    .fromOpaque(userData).takeRetainedValue()
                 MainActor.assumeIsolated { box.closure(callResult) }
             },
             box

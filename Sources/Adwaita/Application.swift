@@ -56,6 +56,31 @@ public final class Application: GObjectRef {
         return Int(g_application_run(gApp, 0, nil))
     }
 
+    /// Registers the application with the session bus and emits `startup` if needed.
+    ///
+    /// Call this before creating application windows in tests or other non-`run()`
+    /// code paths that need the application to be started without entering the
+    /// main loop.
+    public func register() throws {
+        let gApp: UnsafeMutablePointer<GApplication> = castedPointer()
+        guard g_application_get_is_registered(gApp) == 0 else { return }
+
+        var error: UnsafeMutablePointer<GError>?
+        let registered = g_application_register(gApp, nil, &error)
+        guard registered != 0 else {
+            if let error {
+                throw GLibError(consuming: error)
+            }
+            fatalError("g_application_register failed without setting a GError")
+        }
+    }
+
+    /// Whether the application has been registered and started.
+    public var isRegistered: Bool {
+        let gApp: UnsafeMutablePointer<GApplication> = castedPointer()
+        return g_application_get_is_registered(gApp) != 0
+    }
+
     /// Connects a handler to the `activate` signal.
     ///
     /// This is called when the application is launched (e.g. the user opens it).

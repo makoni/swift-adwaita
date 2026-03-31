@@ -22,7 +22,7 @@ func ensureAdwInit() {
 func spinMainLoop(iterations: Int = 10) {
     guard iterations > 0 else { return }
     let context = g_main_context_default()
-    for _ in 0..<iterations {
+    for _ in 0 ..< iterations {
         while g_main_context_pending(context) != 0 {
             g_main_context_iteration(context, 0)
         }

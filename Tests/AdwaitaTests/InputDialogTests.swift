@@ -389,27 +389,30 @@ struct InputDialogTests {
 
     // MARK: - ApplicationWindow enhancements
 
-    @Test @MainActor func windowModalProperty() {
+    @Test @MainActor func windowModalProperty() throws {
         ensureAdwInit()
         let app = Application(id: "com.test.windowmodal")
+        try app.register()
         let win = ApplicationWindow(application: app)
         #expect(win.modal == false)
         win.modal = true
         #expect(win.modal == true)
     }
 
-    @Test @MainActor func windowResizableProperty() {
+    @Test @MainActor func windowResizableProperty() throws {
         ensureAdwInit()
         let app = Application(id: "com.test.windowresizable")
+        try app.register()
         let win = ApplicationWindow(application: app)
         #expect(win.resizable == true)
         win.resizable = false
         #expect(win.resizable == false)
     }
 
-    @Test @MainActor func windowDecoratedProperty() {
+    @Test @MainActor func windowDecoratedProperty() throws {
         ensureAdwInit()
         let app = Application(id: "com.test.windowdecorated")
+        try app.register()
         let win = ApplicationWindow(application: app)
         #expect(win.decorated == true)
         win.decorated = false
