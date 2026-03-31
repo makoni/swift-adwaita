@@ -2,11 +2,14 @@
 
 [![CI](https://github.com/makoni/swift-adwaita/actions/workflows/ci.yml/badge.svg)](https://github.com/makoni/swift-adwaita/actions/workflows/ci.yml)
 [![Swift 6.0+](https://img.shields.io/badge/Swift-6.0+-F05138.svg)](https://swift.org)
+[![Documentation](https://img.shields.io/badge/Documentation-Online-0A84FF.svg)](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
 
 <img alt="Swift Adwaita" src="https://spaceinbox.me/images/swift-adwaita-2.webp">
 
 An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadwaita](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/latest/), designed for building native GNOME desktop applications.
+
+Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita)
 
 <img alt="Swift Adwaita" src="https://spaceinbox.me/images/swift-adwaita-demo.gif">
 
