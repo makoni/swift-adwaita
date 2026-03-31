@@ -6,7 +6,7 @@
 
 An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadwaita](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/latest/), designed for building native GNOME desktop applications.
 
-<img alt="Swift Adwaita" src="https://spaceinbox.me/images/swift-adwaita.gif">
+<img alt="Swift Adwaita" src="https://spaceinbox.me/images/swift-adwaita.gif?1">
 
 
 ## Features
