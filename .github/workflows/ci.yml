@@ -32,7 +32,7 @@ jobs:
         run: swift build
 
       - name: Run tests
-        run: xvfb-run swift test --enable-code-coverage
+        run: xvfb-run swift test --no-parallel --enable-code-coverage
 
       - name: Generate coverage report
         if: matrix.swift == '6.3'

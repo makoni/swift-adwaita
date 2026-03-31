@@ -34,7 +34,7 @@ public final class StackSwitcher: Widget {
     public var stack: Stack? {
         get {
             guard let ptr = gtk_stack_switcher_get_stack(opaquePointer) else { return nil }
-            return Stack(raw: UnsafeMutableRawPointer(ptr))
+            return Stack(borrowing: UnsafeMutableRawPointer(ptr))
         }
         set { gtk_stack_switcher_set_stack(opaquePointer, newValue?.opaquePointer) }
     }

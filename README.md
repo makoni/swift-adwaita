@@ -356,7 +356,7 @@ Features sidebar navigation with search, source code viewer, and windowed demos 
 
 ```bash
 swift build       # Build library
-swift test        # Run 1032 tests
+swift test --no-parallel        # Run the test suite safely for GTK/libadwaita
 swift run DemoApp # Launch demo gallery
 ```
 

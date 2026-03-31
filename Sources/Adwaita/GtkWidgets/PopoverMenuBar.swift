@@ -38,7 +38,7 @@ public final class PopoverMenuBar: Widget {
     public var menuModel: GMenuRef? {
         get {
             guard let ptr = gtk_popover_menu_bar_get_menu_model(opaquePointer) else { return nil }
-            return GMenuRef(raw: UnsafeMutableRawPointer(ptr))
+            return GMenuRef(borrowing: UnsafeMutableRawPointer(ptr))
         }
         set {
             gtk_popover_menu_bar_set_menu_model(opaquePointer, newValue?.menuModelPointer)
