@@ -8,17 +8,17 @@ let package = Package(
         .library(
             name: "Adwaita",
             targets: ["Adwaita"]
-        ),
+        )
     ],
     dependencies: [
-        .package(url: "https://github.com/swiftlang/swift-docc-plugin.git", from: "1.3.0"),
+        .package(url: "https://github.com/swiftlang/swift-docc-plugin.git", from: "1.3.0")
     ],
     targets: [
         .systemLibrary(
             name: "CAdwaita",
             pkgConfig: "libadwaita-1",
             providers: [
-                .apt(["libadwaita-1-dev"]),
+                .apt(["libadwaita-1-dev"])
             ]
         ),
         .target(
@@ -32,11 +32,14 @@ let package = Package(
         .executableTarget(
             name: "DemoApp",
             dependencies: ["Adwaita"],
-            path: "Sources/DemoApp"
+            path: "Sources/DemoApp",
+            resources: [
+                .copy("Resources")
+            ]
         ),
         .testTarget(
             name: "AdwaitaTests",
             dependencies: ["Adwaita"]
-        ),
+        )
     ]
 )

@@ -1,4 +1,31 @@
 import Adwaita
+import CAdwaita
+import Foundation
+
+private var demoIconsRegistered = false
+
+@MainActor
+private func registerDemoIcons(for display: Display) {
+    guard !demoIconsRegistered else { return }
+
+    let fileManager = FileManager.default
+    let candidatePaths = [
+        Bundle.module.resourceURL?
+            .appendingPathComponent("Resources", isDirectory: true)
+            .appendingPathComponent("icons", isDirectory: true),
+        Bundle.module.resourceURL?
+            .appendingPathComponent("icons", isDirectory: true)
+    ].compactMap(\.self)
+
+    guard let iconsPath = candidatePaths.first(where: { fileManager.fileExists(atPath: $0.path) }) else {
+        assertionFailure("DemoApp icon resources were not found in the resource bundle.")
+        return
+    }
+
+    let iconTheme = gtk_icon_theme_get_for_display(display.opaquePointer)
+    gtk_icon_theme_add_search_path(iconTheme, iconsPath.path)
+    demoIconsRegistered = true
+}
 
 @MainActor
 func buildApp() {
@@ -6,6 +33,7 @@ func buildApp() {
 
     app.onActivate {
         let window = ApplicationWindow(application: app)
+        registerDemoIcons(for: window.display)
         window.title = "swift-adwaita Demo"
         window.defaultWidth = 900
         window.defaultHeight = 600

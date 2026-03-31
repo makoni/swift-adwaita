@@ -211,7 +211,7 @@ public enum IconName: Sendable, Equatable {
         case .heartOutline: "heart-outline-thick-symbolic"
         case .bookmarkNew: "bookmark-new-symbolic"
         case .tabNew: "tab-new-symbolic"
-        case .code: "code-symbolic"
+        case .code: "text-editor-symbolic"
         case .terminalApp: "utilities-terminal-symbolic"
         case .preferences: "preferences-other-symbolic"
         case .securityHigh: "security-high-symbolic"
