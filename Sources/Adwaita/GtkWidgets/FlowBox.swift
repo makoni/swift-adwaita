@@ -110,7 +110,7 @@ public final class FlowBox: Widget, Container {
     /// Emitted when a child is activated by click or keyboard.
     ///
     /// - Parameter handler: Called when a child widget is activated.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onChildActivated(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .childActivated, handler: handler)
@@ -119,7 +119,7 @@ public final class FlowBox: Widget, Container {
     /// Emitted when the selection changes.
     ///
     /// - Parameter handler: Called when the set of selected children changes.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onSelectedChildrenChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .selectedChildrenChanged, handler: handler)

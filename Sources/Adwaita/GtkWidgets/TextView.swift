@@ -123,7 +123,7 @@ public final class TextView: Widget {
     /// Emitted when the buffer text is modified.
     ///
     /// - Parameter handler: Called when the text view content changes.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         let buf = gtk_text_view_get_buffer(castedPointer())!

@@ -213,7 +213,7 @@ public final class AboutDialog: Dialog {
     /// Emitted when a URL link in the dialog is activated.
     ///
     /// - Parameter handler: Called with the URL string that was clicked.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onActivateLink(_ handler: @escaping @MainActor (String) -> Void) -> SignalConnection {
         SignalHelper.connectString(self, signal: .activateLink, handler: handler)

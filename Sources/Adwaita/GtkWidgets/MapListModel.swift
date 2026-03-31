@@ -27,8 +27,8 @@ private func _mapListModelCallback(
 /// using a user-supplied closure. The result itself conforms to `GListModel`,
 /// so it can be passed to selection models and ``ListView``.
 ///
-/// The map function receives each source item as a ``GObjectRef`` and must
-/// return a new ``GObjectRef`` that becomes the item in the mapped model.
+/// The map function receives each source item as a `GObjectRef` and must
+/// return a new `GObjectRef` that becomes the item in the mapped model.
 /// Since the items in a ``ListStore`` are placeholder `GObject`s, a common
 /// pattern is to create a new placeholder for each mapped item.
 ///
@@ -50,8 +50,8 @@ public final class MapListModel: GObjectRef, ListModelConvertible {
     ///
     /// - Parameters:
     ///   - model: The source ``ListStore`` to map.
-    ///   - mapFunc: A closure that receives each item as a ``GObjectRef``
-    ///     and returns a new ``GObjectRef`` for the mapped model.
+    ///   - mapFunc: A closure that receives each item as a `GObjectRef`
+    ///     and returns a new `GObjectRef` for the mapped model.
     public init(model: ListStore, mapFunc: @escaping @MainActor (GObjectRef) -> GObjectRef) {
         let box = PublicClosureBox(mapFunc)
         let boxPtr = Unmanaged.passRetained(box).toOpaque()
@@ -76,8 +76,8 @@ public final class MapListModel: GObjectRef, ListModelConvertible {
     ///
     /// - Parameters:
     ///   - listModel: A raw `GListModel` pointer.
-    ///   - mapFunc: A closure that receives each item as a ``GObjectRef``
-    ///     and returns a new ``GObjectRef`` for the mapped model.
+    ///   - mapFunc: A closure that receives each item as a `GObjectRef`
+    ///     and returns a new `GObjectRef` for the mapped model.
     public init(listModel: OpaquePointer, mapFunc: @escaping @MainActor (GObjectRef) -> GObjectRef) {
         let box = PublicClosureBox(mapFunc)
         let boxPtr = Unmanaged.passRetained(box).toOpaque()

@@ -5,7 +5,7 @@ import GObjectSupport
 ///
 /// Wraps a Swift predicate closure and passes it to GTK's filter infrastructure.
 /// Since items in a ``ListStore`` are placeholder `GObject`s, the predicate
-/// receives a ``GObjectRef`` representing the item. Map it back to your data
+/// receives a `GObjectRef` representing the item. Map it back to your data
 /// by looking up its position in the underlying model.
 ///
 /// ```swift
@@ -24,7 +24,7 @@ public final class CustomFilter: GObjectRef {
     /// Creates a custom filter with the given predicate.
     ///
     /// - Parameter predicate: A closure that receives each item as a
-    ///   ``GObjectRef`` and returns `true` to keep it or `false` to hide it.
+    ///   `GObjectRef` and returns `true` to keep it or `false` to hide it.
     public init(_ predicate: @escaping @MainActor (GObjectRef) -> Bool) {
         let box = PublicClosureBox(predicate)
         let boxPtr = Unmanaged.passRetained(box).toOpaque()

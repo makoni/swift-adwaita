@@ -6,7 +6,7 @@ private nonisolated(unsafe) var _textDomain: String?
 /// Looks up a translated string in the app's gettext domain.
 ///
 /// Set the domain first with ``setTextDomain(_:)``, then
-/// use this function (or ``String/localized``) to look up translations.
+/// use this function (or `String.localized`) to look up translations.
 ///
 /// ```swift
 /// setTextDomain("myapp", localeDir: "/usr/share/locale")
@@ -49,7 +49,7 @@ public func nlocalized(_ msgid: String, _ msgidPlural: String, count: UInt) -> S
 /// Sets the gettext text domain for the application.
 ///
 /// Call this early in your app (e.g., before `app.run()`) to enable
-/// translations via ``localized(_:)`` and ``String/localized``.
+/// translations via `localized(_:)` and `String.localized`.
 ///
 /// - Parameter domain: The gettext domain (typically your app ID, e.g. "com.example.MyApp").
 public func setTextDomain(_ domain: String) {

@@ -36,7 +36,7 @@ public final class EventControllerScroll: GObjectRef {
     /// Emitted when a scroll event occurs.
     ///
     /// - Parameter handler: Called on scroll. Receives dx and dy deltas. Return `true` to stop propagation.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onScroll(_ handler: @escaping @MainActor (Double, Double) -> Bool) -> SignalConnection {
         SignalHelper.connectDoubleDoubleReturnBool(self, signal: .scroll, handler: handler)
@@ -45,7 +45,7 @@ public final class EventControllerScroll: GObjectRef {
     /// Emitted when scrolling begins.
     ///
     /// - Parameter handler: Called when a scroll gesture starts.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onScrollBegin(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .scrollBegin, handler: handler)
@@ -54,7 +54,7 @@ public final class EventControllerScroll: GObjectRef {
     /// Emitted when scrolling ends.
     ///
     /// - Parameter handler: Called when a scroll gesture ends.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onScrollEnd(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .scrollEnd, handler: handler)

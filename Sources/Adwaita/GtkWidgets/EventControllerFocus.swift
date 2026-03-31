@@ -46,7 +46,7 @@ public final class EventControllerFocus: GObjectRef {
     /// Emitted when the widget gains focus.
     ///
     /// - Parameter handler: Called when focus enters the widget.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onEnter(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .enter, handler: handler)
@@ -55,7 +55,7 @@ public final class EventControllerFocus: GObjectRef {
     /// Emitted when the widget loses focus.
     ///
     /// - Parameter handler: Called when focus leaves the widget.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onLeave(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .leave, handler: handler)

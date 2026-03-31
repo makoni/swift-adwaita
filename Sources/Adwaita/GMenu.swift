@@ -107,7 +107,7 @@ public final class GMenuItemRef: GObjectRef {
         )
     }
 
-    /// Sets a custom attribute using a ``Variant`` value.
+    /// Sets a custom attribute using a `Variant` value.
     public func setAttribute(_ attribute: String, variant: Variant) {
         g_menu_item_set_attribute_value(
             itemPointer,
@@ -178,7 +178,7 @@ public final class SimpleAction: GObjectRef {
     /// Creates a stateful action with an initial state.
     ///
     /// Stateful actions are used for toggles and radio buttons. The state
-    /// is a ``Variant`` value that persists across activations.
+    /// is a `Variant` value that persists across activations.
     ///
     /// ```swift
     /// let boldAction = SimpleAction(name: "bold", state: .boolean(false)) {

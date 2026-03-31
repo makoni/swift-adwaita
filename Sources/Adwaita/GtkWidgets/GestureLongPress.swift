@@ -38,7 +38,7 @@ public final class GestureLongPress: GObjectRef {
     /// Emitted when a long press is detected.
     ///
     /// - Parameter handler: Called when the long press fires. Receives the x and y coordinates.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onPressed(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectDoubleDouble(self, signal: .pressed, handler: handler)
@@ -47,7 +47,7 @@ public final class GestureLongPress: GObjectRef {
     /// Emitted when a long press is cancelled.
     ///
     /// - Parameter handler: Called when the long press is cancelled.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onCancelled(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .cancelled, handler: handler)

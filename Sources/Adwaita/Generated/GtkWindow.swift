@@ -168,7 +168,7 @@ public class GtkWindow: Widget {
     /// Return `true` from the handler to prevent the window from closing.
     ///
     /// - Parameter handler: A closure invoked when the close request occurs.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onCloseRequest(_ handler: @escaping @MainActor () -> Bool) -> SignalConnection {
         SignalHelper.connectReturnBool(self, signal: .closeRequest, handler: handler)

@@ -85,7 +85,7 @@ public final class LevelBar: Widget {
     /// Emitted when the value changes.
     ///
     /// - Parameter handler: Called when the level bar value changes.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onValueChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.onNotify(self, property: .value, handler: handler)

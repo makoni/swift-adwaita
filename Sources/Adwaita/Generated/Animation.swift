@@ -101,7 +101,7 @@ public class Animation: GObjectRef {
     /// end naturally, being skipped, or completing after being reset.
     ///
     /// - Parameter handler: A closure invoked when the animation finishes.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onDone(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .done, handler: handler)

@@ -146,7 +146,7 @@ public final class Notebook: Widget {
     /// Emitted when the active page is switched.
     ///
     /// - Parameter handler: Called when a page switch occurs. Receives the new page index.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onSwitchPage(_ handler: @escaping @MainActor (Int) -> Void) -> SignalConnection {
         SignalHelper.connectPointerInt(self, signal: .switchPage) { _, pageNum in

@@ -97,7 +97,7 @@ public final class FontDialog: GObjectRef {
 
     /// Opens the font dialog (throwing version).
     ///
-    /// Throws a ``GLibError`` if the dialog fails for a reason other than
+    /// Throws a `GLibError` if the dialog fails for a reason other than
     /// the user cancelling. Cancellation returns `nil`.
     public func chooseFontThrowing(parent: Widget?, initialFont: String? = nil) async throws -> String? {
         try await withCheckedThrowingContinuation { continuation in

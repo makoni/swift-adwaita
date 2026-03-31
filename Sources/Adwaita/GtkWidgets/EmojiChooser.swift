@@ -30,7 +30,7 @@ public final class EmojiChooser: Widget {
     /// Emitted when an emoji is selected.
     ///
     /// - Parameter handler: Called when an emoji is picked. Receives the emoji as a string.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onEmojiPicked(_ handler: @escaping @MainActor (String) -> Void) -> SignalConnection {
         SignalHelper.connectString(self, signal: .emojiPicked, handler: handler)

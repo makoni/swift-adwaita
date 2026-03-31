@@ -81,7 +81,7 @@ public final class SwipeTracker: GObjectRef {
     /// Emitted when a swipe gesture begins.
     ///
     /// - Parameter handler: A closure invoked at the start of the swipe.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onBeginSwipe(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .beginSwipe, handler: handler)
@@ -90,7 +90,7 @@ public final class SwipeTracker: GObjectRef {
     /// Emitted when the user lifts their finger and the swipe gesture ends.
     ///
     /// - Parameter handler: A closure receiving the final velocity and the snap point the swipe will settle to.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onEndSwipe(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectDoubleDouble(self, signal: .endSwipe, handler: handler)
@@ -99,7 +99,7 @@ public final class SwipeTracker: GObjectRef {
     /// Emitted when the tracker is preparing for a new swipe, before the gesture starts.
     ///
     /// - Parameter handler: A closure receiving the navigation direction (back or forward) of the upcoming swipe.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onPrepare(_ handler: @escaping @MainActor (AdwNavigationDirection) -> Void) -> SignalConnection {
         SignalHelper.connectEnum(self, signal: .prepare, handler: handler)
@@ -109,7 +109,7 @@ public final class SwipeTracker: GObjectRef {
     ///
     /// - Parameter handler: A closure receiving the current swipe progress as a fractional position between snap
     /// points.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onUpdateSwipe(_ handler: @escaping @MainActor (Double) -> Void) -> SignalConnection {
         SignalHelper.connectDouble(self, signal: .updateSwipe, handler: handler)

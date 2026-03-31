@@ -11,7 +11,7 @@ any supported version — newer features simply return `nil` on older systems.
 
 ### Checking the runtime version
 
-Use ``AdwaitaVersion`` to check what's available at runtime:
+Use `AdwaitaVersion` to check what's available at runtime:
 
 ```swift
 if AdwaitaVersion.isAtLeast(1, 6) {

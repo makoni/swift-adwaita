@@ -56,7 +56,7 @@ public final class TabButton: Widget {
     /// Emitted when the button is activated (e.g. via keyboard).
     ///
     /// - Parameter handler: A closure invoked when the button is activated.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .activate, handler: handler)
@@ -65,7 +65,7 @@ public final class TabButton: Widget {
     /// Emitted when the button is clicked.
     ///
     /// - Parameter handler: A closure invoked when the button is clicked.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .clicked, handler: handler)

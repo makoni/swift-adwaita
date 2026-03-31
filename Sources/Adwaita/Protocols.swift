@@ -7,9 +7,9 @@ import GObjectSupport
 /// Conform to this protocol to allow your model to be passed directly
 /// to ``SingleSelection``, ``NoSelection``, ``MultiSelection``,
 /// ``FilterListModel``, ``SortListModel``, and other list-model consumers
-/// without requiring an ``OpaquePointer``.
+/// without requiring an `OpaquePointer`.
 ///
-/// All conforming types must be ``GObjectRef`` subclasses.
+/// All conforming types must be `GObjectRef` subclasses.
 @MainActor
 public protocol ListModelConvertible: AnyObject {}
 
@@ -25,9 +25,9 @@ public extension ListModelConvertible {
 ///
 /// Conform to this protocol to allow your selection model to be passed
 /// directly to ``ListView``, ``GridView``, and ``ColumnView`` without
-/// requiring an ``OpaquePointer``.
+/// requiring an `OpaquePointer`.
 ///
-/// All conforming types must be ``GObjectRef`` subclasses.
+/// All conforming types must be `GObjectRef` subclasses.
 @MainActor
 public protocol SelectionModelConvertible: AnyObject {}
 
@@ -56,7 +56,7 @@ public protocol Container: AnyObject {
 /// Conform to this protocol to allow your widget to be used as
 /// the swipeable target for a ``SwipeTracker``.
 ///
-/// All conforming types must be ``GObjectRef`` subclasses.
+/// All conforming types must be `GObjectRef` subclasses.
 @MainActor
 public protocol Swipeable: AnyObject {}
 

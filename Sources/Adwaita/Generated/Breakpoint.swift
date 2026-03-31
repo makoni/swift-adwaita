@@ -120,7 +120,7 @@ public final class Breakpoint: GObjectRef {
     /// Emitted when the breakpoint condition is met.
     ///
     /// - Parameter handler: A closure invoked when the breakpoint is applied.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onApply(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .apply, handler: handler)
@@ -129,7 +129,7 @@ public final class Breakpoint: GObjectRef {
     /// Emitted when the breakpoint condition is no longer met.
     ///
     /// - Parameter handler: A closure invoked when the breakpoint is unapplied.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onUnapply(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .unapply, handler: handler)

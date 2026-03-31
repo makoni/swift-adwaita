@@ -64,7 +64,7 @@ public final class DropDown: Widget {
     /// Emitted when the selection changes.
     ///
     /// - Parameter handler: Called when the selected item changes.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onSelectedChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.onNotify(self, property: .selected, handler: handler)

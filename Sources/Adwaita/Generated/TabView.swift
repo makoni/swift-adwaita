@@ -341,7 +341,7 @@ public final class TabView: Widget {
     /// or cancel the close.
     ///
     /// - Parameter handler: Called with the ``TabPage`` being closed.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onClosePage(_ handler: @escaping @MainActor (TabPage) -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .closePage) { (ptr: OpaquePointer) in
@@ -352,7 +352,7 @@ public final class TabView: Widget {
     /// Emitted when a new window should be created for a detached tab.
     ///
     /// - Parameter handler: Called when a tab is dragged out of the window.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onCreateWindow(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .createWindow, handler: handler)
@@ -361,7 +361,7 @@ public final class TabView: Widget {
     /// Emitted when a tab's indicator icon is clicked.
     ///
     /// - Parameter handler: Called with the ``TabPage`` whose indicator was activated.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onIndicatorActivated(_ handler: @escaping @MainActor (TabPage) -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .indicatorActivated) { (ptr: OpaquePointer) in
@@ -372,7 +372,7 @@ public final class TabView: Widget {
     /// Emitted when a page is added to the tab view.
     ///
     /// - Parameter handler: Called with the attached ``TabPage`` and its position.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onPageAttached(_ handler: @escaping @MainActor (TabPage, Int) -> Void) -> SignalConnection {
         SignalHelper.connectPointerInt(self, signal: .pageAttached) { (ptr: OpaquePointer, pos: Int32) in
@@ -383,7 +383,7 @@ public final class TabView: Widget {
     /// Emitted when a page is removed from the tab view.
     ///
     /// - Parameter handler: Called with the detached ``TabPage`` and its former position.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onPageDetached(_ handler: @escaping @MainActor (TabPage, Int) -> Void) -> SignalConnection {
         SignalHelper.connectPointerInt(self, signal: .pageDetached) { (ptr: OpaquePointer, pos: Int32) in
@@ -394,7 +394,7 @@ public final class TabView: Widget {
     /// Emitted when a page is moved to a new position.
     ///
     /// - Parameter handler: Called with the reordered ``TabPage`` and its new position.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onPageReordered(_ handler: @escaping @MainActor (TabPage, Int) -> Void) -> SignalConnection {
         SignalHelper.connectPointerInt(self, signal: .pageReordered) { (ptr: OpaquePointer, pos: Int32) in
@@ -407,7 +407,7 @@ public final class TabView: Widget {
     /// Use this to populate a context menu model before it is displayed.
     ///
     /// - Parameter handler: Called with the ``TabPage`` the menu is for.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onSetupMenu(_ handler: @escaping @MainActor (TabPage) -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .setupMenu) { (ptr: OpaquePointer) in

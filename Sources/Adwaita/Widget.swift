@@ -416,7 +416,7 @@ open class Widget: GObjectRef {
     /// - Parameters:
     ///   - property: The property to observe.
     ///   - handler: Called when the property value changes.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onNotify(_ property: PropertyName, handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.onNotify(self, property: property, handler: handler)
@@ -472,7 +472,7 @@ open class Widget: GObjectRef {
     /// Emitted when the widget has been associated with a display.
     ///
     /// - Parameter handler: A closure invoked when the widget is realized.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onRealize(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .realize, handler: handler)
@@ -481,7 +481,7 @@ open class Widget: GObjectRef {
     /// Emitted when the widget is being disassociated from its display.
     ///
     /// - Parameter handler: A closure invoked when the widget is unrealized.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onUnrealize(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .unrealize, handler: handler)
@@ -490,7 +490,7 @@ open class Widget: GObjectRef {
     /// Emitted when the widget is about to be shown.
     ///
     /// - Parameter handler: A closure invoked when the widget is mapped.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onMap(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .map, handler: handler)
@@ -499,7 +499,7 @@ open class Widget: GObjectRef {
     /// Emitted when the widget is about to be hidden.
     ///
     /// - Parameter handler: A closure invoked when the widget is unmapped.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onUnmap(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .unmap, handler: handler)
@@ -508,7 +508,7 @@ open class Widget: GObjectRef {
     /// Emitted when the widget is being destroyed.
     ///
     /// - Parameter handler: A closure invoked when the widget is destroyed.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onDestroy(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .destroy, handler: handler)

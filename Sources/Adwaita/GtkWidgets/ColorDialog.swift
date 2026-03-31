@@ -120,7 +120,7 @@ public final class ColorDialog: GObjectRef {
 
     /// Opens the color dialog (throwing version).
     ///
-    /// Throws a ``GLibError`` if the dialog fails for a reason other than
+    /// Throws a `GLibError` if the dialog fails for a reason other than
     /// the user cancelling. Cancellation returns `nil`.
     public func chooseRGBAThrowing(parent: Widget?, initialColor: RGBA? = nil) async throws -> RGBA? {
         try await withCheckedThrowingContinuation { continuation in

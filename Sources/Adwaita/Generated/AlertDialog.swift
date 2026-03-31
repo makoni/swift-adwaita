@@ -213,7 +213,7 @@ public class AlertDialog: Dialog {
     /// Emitted when the user activates a response button.
     ///
     /// - Parameter handler: Called with the response ID string (e.g. `"cancel"`, `"delete"`).
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onResponse(_ handler: @escaping @MainActor (String) -> Void) -> SignalConnection {
         SignalHelper.connectString(self, signal: .response, handler: handler)

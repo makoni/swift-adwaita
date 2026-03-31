@@ -163,7 +163,7 @@ public class Dialog: Widget {
     /// Emitted when the user tries to close the dialog while ``canClose`` is `false`.
     ///
     /// - Parameter handler: Called when a close attempt is blocked.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onCloseAttempt(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .closeAttempt, handler: handler)
@@ -172,7 +172,7 @@ public class Dialog: Widget {
     /// Emitted after the dialog has been closed.
     ///
     /// - Parameter handler: Called when the dialog finishes closing.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onClosed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .closed, handler: handler)

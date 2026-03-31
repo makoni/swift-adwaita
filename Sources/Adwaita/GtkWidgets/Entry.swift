@@ -97,7 +97,7 @@ public final class Entry: Widget {
     /// Use this to submit a form or trigger an action when the user confirms input.
     ///
     /// - Parameter handler: Called when the entry is activated.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .activate, handler: handler)
@@ -176,7 +176,7 @@ public final class Entry: Widget {
     /// Emitted when an icon in the entry is clicked.
     ///
     /// - Parameter handler: Called when an icon is pressed. Receives the icon position.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onIconPress(_ handler: @escaping @MainActor (GtkEntryIconPosition) -> Void) -> SignalConnection {
         SignalHelper.connectInt(self, signal: .iconPress) { pos in
@@ -187,7 +187,7 @@ public final class Entry: Widget {
     /// Emitted when the text changes.
     ///
     /// - Parameter handler: Called when the entry text changes.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.onNotify(self, property: .text, handler: handler)

@@ -5,7 +5,7 @@ import GObjectSupport
 ///
 /// Wraps a Swift comparison closure and passes it to GTK's sorting
 /// infrastructure. Since items in a ``ListStore`` are placeholder `GObject`s,
-/// the comparison function receives two ``GObjectRef`` values representing
+/// the comparison function receives two `GObjectRef` values representing
 /// the items being compared. Map them back to your data by looking up their
 /// positions in the underlying model.
 ///
@@ -24,7 +24,7 @@ public final class CustomSorter: GObjectRef {
 
     /// Creates a custom sorter with the given comparison function.
     ///
-    /// - Parameter compare: A closure that receives two items as ``GObjectRef``
+    /// - Parameter compare: A closure that receives two items as `GObjectRef`
     ///   and returns a negative value if the first should come before the second,
     ///   zero if they are equal, or a positive value if the first should come after.
     public init(_ compare: @escaping @MainActor (GObjectRef, GObjectRef) -> Int) {

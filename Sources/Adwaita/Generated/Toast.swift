@@ -110,7 +110,7 @@ public final class Toast: GObjectRef {
     /// Emitted when the toast's action button is clicked.
     ///
     /// - Parameter handler: Called when the button is clicked.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onButtonClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .buttonClicked, handler: handler)
@@ -119,7 +119,7 @@ public final class Toast: GObjectRef {
     /// Emitted when the toast is dismissed (either by timeout or manually).
     ///
     /// - Parameter handler: Called when the toast disappears.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onDismissed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .dismissed, handler: handler)

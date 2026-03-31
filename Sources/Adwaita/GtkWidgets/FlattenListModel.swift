@@ -18,7 +18,7 @@ public final class FlattenListModel: GObjectRef, ListModelConvertible {
 
     /// Creates a flattened list model.
     ///
-    /// - Parameter model: A ``GObjectRef`` whose underlying pointer is a
+    /// - Parameter model: A `GObjectRef` whose underlying pointer is a
     ///   `GListModel` of `GListModel`s.
     public init(model: GObjectRef) {
         let ptr = gtk_flatten_list_model_new(nil)!

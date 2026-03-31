@@ -37,7 +37,7 @@ public final class EventControllerKey: GObjectRef {
     ///
     /// - Parameter handler: Called on key press. Receives keyval (GDK key code), keycode, and modifier state. Return
     /// `true` to stop propagation.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onKeyPressed(_ handler: @escaping @MainActor (UInt32, UInt32, GdkModifierType) -> Bool)
         -> SignalConnection {
@@ -49,7 +49,7 @@ public final class EventControllerKey: GObjectRef {
     /// Emitted when a key is released.
     ///
     /// - Parameter handler: Called on key release. Receives keyval (GDK key code), keycode, and modifier state.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onKeyReleased(_ handler: @escaping @MainActor (UInt32, UInt32, GdkModifierType) -> Void)
         -> SignalConnection {

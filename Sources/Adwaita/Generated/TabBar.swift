@@ -114,7 +114,7 @@ public final class TabBar: Widget {
     ///
     /// - Parameter handler: A closure receiving the target ``TabPage`` and the dropped `GValue`.
     ///   Return `true` to accept the drop.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onExtraDragDrop(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> Bool)
         -> SignalConnection {
@@ -129,8 +129,8 @@ public final class TabBar: Widget {
     /// Emitted when an external drag data value is received over a tab.
     ///
     /// - Parameter handler: A closure receiving the target ``TabPage`` and the drag `GValue`.
-    ///   Return the preferred ``GdkDragAction``.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    ///   Return the preferred `GdkDragAction`.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onExtraDragValue(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> GdkDragAction)
         -> SignalConnection {

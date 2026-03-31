@@ -41,7 +41,7 @@ public final class GestureSwipe: GObjectRef {
     ///
     /// - Parameter handler: Called when the swipe is recognized. Receives velocity x and velocity y in pixels per
     /// second.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onSwipe(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectDoubleDouble(self, signal: .swipe, handler: handler)

@@ -105,7 +105,7 @@ public final class Adjustment: GObjectRef {
     /// Emitted when the value changes.
     ///
     /// - Parameter handler: Called when the adjustment value changes.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onValueChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .valueChanged, handler: handler)
@@ -114,7 +114,7 @@ public final class Adjustment: GObjectRef {
     /// Emitted when the bounds or increments change.
     ///
     /// - Parameter handler: Called when the adjustment bounds or increments change.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .changed, handler: handler)

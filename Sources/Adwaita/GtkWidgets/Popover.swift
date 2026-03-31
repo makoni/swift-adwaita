@@ -81,7 +81,7 @@ public final class Popover: Widget {
     /// Emitted when the popover is closed.
     ///
     /// - Parameter handler: Called when the popover is closed.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onClosed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .closed, handler: handler)

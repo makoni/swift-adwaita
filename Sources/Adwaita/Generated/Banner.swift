@@ -84,7 +84,7 @@ public final class Banner: Widget {
     /// Connects a handler that is called when the user clicks the banner's action button.
     ///
     /// - Parameter handler: A closure invoked on button click.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onButtonClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .buttonClicked, handler: handler)

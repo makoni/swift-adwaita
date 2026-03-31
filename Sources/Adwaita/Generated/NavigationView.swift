@@ -145,7 +145,7 @@ public final class NavigationView: Widget, Swipeable {
     /// Emitted when the next page is needed for forward navigation (e.g. swipe gestures).
     ///
     /// - Parameter handler: A closure invoked when forward navigation requires a new page.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onGetNextPage(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .getNextPage, handler: handler)
@@ -156,7 +156,7 @@ public final class NavigationView: Widget, Swipeable {
     /// The handler receives the page that was removed from the stack.
     ///
     /// - Parameter handler: A closure invoked with the popped ``NavigationPage``.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onPopped(_ handler: @escaping @MainActor (NavigationPage) -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .popped) { (ptr: OpaquePointer) in
@@ -167,7 +167,7 @@ public final class NavigationView: Widget, Swipeable {
     /// Emitted when a page has been pushed onto the navigation stack.
     ///
     /// - Parameter handler: A closure invoked after the page is pushed.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onPushed(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .pushed, handler: handler)
@@ -176,7 +176,7 @@ public final class NavigationView: Widget, Swipeable {
     /// Emitted when the navigation stack has been replaced (e.g. all pages swapped at once).
     ///
     /// - Parameter handler: A closure invoked after the stack is replaced.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onReplaced(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .replaced, handler: handler)

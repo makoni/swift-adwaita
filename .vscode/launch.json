@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-adwaita}",
+            "name": "Debug DemoApp",
+            "target": "DemoApp",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug DemoApp"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:swift-adwaita}",
+            "name": "Release DemoApp",
+            "target": "DemoApp",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release DemoApp"
+        }
+    ]
+}

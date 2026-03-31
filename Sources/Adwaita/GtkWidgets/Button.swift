@@ -132,7 +132,7 @@ public final class Button: Widget {
     /// clicks the button or activates it via keyboard.
     ///
     /// - Parameter handler: The closure to run when the button is clicked.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .clicked, handler: handler)

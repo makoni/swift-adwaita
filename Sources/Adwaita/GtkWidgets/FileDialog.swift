@@ -82,7 +82,7 @@ public final class FileDialog: GObjectRef {
 
     /// Opens the file dialog for selecting a file (throwing version).
     ///
-    /// Throws a ``GLibError`` if the dialog fails for a reason other than
+    /// Throws a `GLibError` if the dialog fails for a reason other than
     /// the user cancelling. Cancellation returns `nil`.
     ///
     /// ```swift
@@ -196,7 +196,7 @@ public final class FileDialog: GObjectRef {
 
     /// Opens the file dialog for saving a file (throwing version).
     ///
-    /// Throws a ``GLibError`` on failure. Cancellation returns `nil`.
+    /// Throws a `GLibError` on failure. Cancellation returns `nil`.
     public func saveThrowing(parent: Widget?) async throws -> String? {
         try await withCheckedThrowingContinuation { continuation in
             saveThrowing(parent: parent) { result in
@@ -302,7 +302,7 @@ public final class FileDialog: GObjectRef {
 
     /// Opens the file dialog for selecting a folder (throwing version).
     ///
-    /// Throws a ``GLibError`` on failure. Cancellation returns `nil`.
+    /// Throws a `GLibError` on failure. Cancellation returns `nil`.
     public func selectFolderThrowing(parent: Widget?) async throws -> String? {
         try await withCheckedThrowingContinuation { continuation in
             selectFolderThrowing(parent: parent) { result in

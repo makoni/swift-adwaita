@@ -70,7 +70,7 @@ public final class DropTarget: GObjectRef {
     ///
     /// - Parameter handler: Called when a drop occurs. Receives the dropped text (or nil). Return `true` to accept the
     /// drop.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onDrop(_ handler: @escaping @MainActor (String?) -> Bool) -> SignalConnection {
         // The "drop" signal has signature (GtkDropTarget, GValue, double, double) -> gboolean
@@ -94,7 +94,7 @@ public final class DropTarget: GObjectRef {
     /// Emitted when the pointer enters the widget during a drag.
     ///
     /// - Parameter handler: Called when the pointer enters. Receives the x and y coordinates.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onEnter(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectDoubleDouble(self, signal: .enter) { x, y in handler(x, y) }
@@ -103,7 +103,7 @@ public final class DropTarget: GObjectRef {
     /// Emitted when the pointer leaves the widget during a drag.
     ///
     /// - Parameter handler: Called when the pointer leaves.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onLeave(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .leave, handler: handler)
@@ -112,7 +112,7 @@ public final class DropTarget: GObjectRef {
     /// Emitted when the pointer moves over the widget during a drag.
     ///
     /// - Parameter handler: Called when the pointer moves. Receives the x and y coordinates.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onMotion(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         SignalHelper.connectDoubleDouble(self, signal: .motion) { x, y in handler(x, y) }

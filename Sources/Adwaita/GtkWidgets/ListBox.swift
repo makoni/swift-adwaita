@@ -96,7 +96,7 @@ public final class ListBox: Widget, Container {
     /// Emitted when a row is activated by double-click or keyboard.
     ///
     /// - Parameter handler: A closure that receives the activated ``ListBoxRow``.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onRowActivated(_ handler: @escaping @MainActor (ListBoxRow) -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .rowActivated) { (ptr: OpaquePointer) in
@@ -107,7 +107,7 @@ public final class ListBox: Widget, Container {
     /// Emitted when the selected row changes.
     ///
     /// - Parameter handler: A closure that receives the newly selected ``ListBoxRow``.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onRowSelected(_ handler: @escaping @MainActor (ListBoxRow) -> Void) -> SignalConnection {
         SignalHelper.connectPointer(self, signal: .rowSelected) { (ptr: OpaquePointer) in

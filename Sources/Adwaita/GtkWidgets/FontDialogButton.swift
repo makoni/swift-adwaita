@@ -57,7 +57,7 @@ public final class FontDialogButton: Widget {
     /// Emitted when the selected font changes.
     ///
     /// - Parameter handler: Called when a new font is selected.
-    /// - Returns: A ``SignalConnection`` that can be used to disconnect the handler.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onFontChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.onNotify(self, property: .fontDesc, handler: handler)
