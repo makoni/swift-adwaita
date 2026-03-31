@@ -1,9 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-OUTPUT_PATH="${DOCC_OUTPUT_PATH:-$(cd "$(dirname "$0")" && pwd)/docs-html}"
+OUTPUT_PATH="${DOCC_OUTPUT_PATH:-$HOME/Downloads/swift-adwaita}"
 OUTPUT_PARENT="$(dirname "$OUTPUT_PATH")"
-HOSTING_BASE_PATH="${DOCC_HOSTING_BASE_PATH:-swift-adwaita}"
+HOSTING_BASE_PATH="${DOCC_HOSTING_BASE_PATH:-docs/swift-adwaita}"
 TARGET="Adwaita"
 
 echo "=== Building documentation for ${TARGET} ==="
