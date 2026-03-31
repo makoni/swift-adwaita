@@ -4,6 +4,8 @@
 [![Swift 6.0+](https://img.shields.io/badge/Swift-6.0+-F05138.svg)](https://swift.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
 
+<img alt="Swift Adwaita" src="https://spaceinbox.me/images/swift-adwaita-2.webp">
+
 An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadwaita](https://gnome.pages.gitlab.gnome.org/libadwaita/doc/latest/), designed for building native GNOME desktop applications.
 
 <img alt="Swift Adwaita" src="https://spaceinbox.me/images/swift-adwaita-demo.gif">
