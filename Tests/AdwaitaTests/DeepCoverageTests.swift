@@ -285,6 +285,16 @@ struct DeepCoverageTests {
         conn.disconnect()
     }
 
+    @Test @MainActor func windowPresentAndCloseDoesNotCrash() {
+        ensureAdwInit()
+        let win = Window()
+        win.title = "Transient"
+        win.present()
+        spinMainLoop()
+        win.close()
+        spinMainLoop()
+    }
+
     @Test @MainActor func windowContent() {
         ensureAdwInit()
         let win = Window()

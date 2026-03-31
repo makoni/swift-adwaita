@@ -224,9 +224,10 @@ open class Widget: GObjectRef {
     /// Keeps the underlying GObject alive until this widget is destroyed.
     ///
     /// Call this on windows or widgets that are created locally and would
-    /// otherwise be deallocated when the variable goes out of scope. An
-    /// extra GObject reference is added and released after the widget's
-    /// `destroy` signal fires during dispose.
+    /// otherwise be deallocated when the variable goes out of scope. This
+    /// installs a destroy handler that captures `self`, keeping the Swift
+    /// wrapper alive until GTK disposes the widget and the signal system
+    /// releases the handler on the next main-loop iteration.
     ///
     /// ```swift
     /// let secondary = ApplicationWindow(application: app)
@@ -240,18 +241,13 @@ open class Widget: GObjectRef {
         guard g_object_get_data(gobjectPointer, key) == nil else { return }
         g_object_set_data(gobjectPointer, key, UnsafeMutableRawPointer(bitPattern: 1))
 
-        // Add an extra GObject ref so the object survives after the Swift
-        // wrapper is deallocated. When the "destroy" signal fires during
-        // gtk_widget_dispose(), we schedule an idle callback that releases
-        // the extra ref on the next main-loop iteration — safely after
-        // dispose has fully completed.
-        g_object_ref(pointer)
-        cadw_signal_connect(
-            pointer,
-            "destroy",
-            unsafeBitCast(retainDestroyTrampoline, to: GCallback.self),
-            pointer
-        )
+        // Capture `self` in a destroy handler so the Swift wrapper's own
+        // reference keeps the GObject alive until GTK disposes the widget.
+        // SignalHelper already defers closure release to idle, avoiding
+        // re-entrant finalization during dispose.
+        onDestroy { [self] in
+            _ = self
+        }
     }
 
     /// The parent widget.
@@ -668,17 +664,3 @@ open class Widget: GObjectRef {
     }
 
 }
-
-/// C trampoline for the "destroy" signal in ``Widget/retainUntilClose()``.
-///
-/// Schedules `g_object_unref` on the next main-loop iteration so the extra
-/// ref is released safely after `gtk_widget_dispose()` has completed.
-private let retainDestroyTrampoline:
-    @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void = { _, userData in
-        guard let userData else { return }
-        g_idle_add({ userData in
-            guard let userData else { return 0 }
-            g_object_unref(userData)
-            return 0 // G_SOURCE_REMOVE
-        }, userData)
-    }

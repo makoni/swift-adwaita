@@ -16,3 +16,16 @@ func ensureAdwInit() {
     adw_init()
     Once.done = true
 }
+
+/// Runs a few iterations of the GLib main loop to flush idle/destroy work.
+@MainActor
+func spinMainLoop(iterations: Int = 10) {
+    guard iterations > 0 else { return }
+    let context = g_main_context_default()
+    for _ in 0..<iterations {
+        while g_main_context_pending(context) != 0 {
+            g_main_context_iteration(context, 0)
+        }
+        g_main_context_iteration(context, 0)
+    }
+}
