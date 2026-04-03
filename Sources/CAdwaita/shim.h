@@ -3,6 +3,18 @@
 #include <adwaita.h>
 
 // ---------------------------------------------------------------------------
+// GTK compatibility helpers.
+// ---------------------------------------------------------------------------
+
+static inline void swiftadw_gtk_calendar_set_date_compat(GtkCalendar *calendar, GDateTime *date) {
+#if GTK_CHECK_VERSION(4, 20, 0)
+    gtk_calendar_set_date(calendar, date);
+#else
+    gtk_calendar_select_day(calendar, date);
+#endif
+}
+
+// ---------------------------------------------------------------------------
 // Helper to emit a GObject signal by name with no arguments.
 // g_signal_emit_by_name is variadic and cannot be called directly from Swift.
 // ---------------------------------------------------------------------------

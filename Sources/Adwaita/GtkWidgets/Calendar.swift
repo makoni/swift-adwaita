@@ -32,7 +32,7 @@ public final class Calendar: Widget {
 
     private func setDate(year: Int, month: Int, day: Int) {
         guard let dt = g_date_time_new_local(Int32(year), Int32(month), Int32(day), 0, 0, 0) else { return }
-        gtk_calendar_set_date(opaquePointer, dt)
+        swiftadw_gtk_calendar_set_date_compat(opaquePointer, dt)
         g_date_time_unref(dt)
     }
 
