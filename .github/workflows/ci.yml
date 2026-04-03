@@ -32,12 +32,7 @@ jobs:
         run: swift build
 
       - name: Run tests
-        run: |
-          if [ "${{ matrix.swift }}" = "6.3" ]; then
-            xvfb-run swift test --no-parallel --enable-code-coverage
-          else
-            xvfb-run swift test --no-parallel --enable-code-coverage -Xswiftc -suppress-warnings
-          fi
+        run: xvfb-run swift test --no-parallel --enable-code-coverage
 
       - name: Generate coverage report
         if: matrix.swift == '6.3'
