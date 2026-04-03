@@ -7,7 +7,8 @@ import Foundation
 /// ``SourceLanguageManager/languages`` to inspect all IDs available on the
 /// current machine, and use the static convenience values below for common
 /// languages.
-public struct SourceLanguageID: RawRepresentable, Hashable, Codable, Sendable, ExpressibleByStringLiteral, CustomStringConvertible {
+public struct SourceLanguageID: RawRepresentable, Hashable, Codable, Sendable, ExpressibleByStringLiteral,
+    CustomStringConvertible {
     public let rawValue: String
 
     public init(rawValue: String) {

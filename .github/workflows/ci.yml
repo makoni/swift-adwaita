@@ -20,7 +20,7 @@ jobs:
       - name: Install system dependencies
         run: |
           apt-get update
-          apt-get install -y libadwaita-1-dev xvfb
+          apt-get install -y libadwaita-1-dev libgtksourceview-5-dev xvfb
 
       - name: Checkout
         uses: actions/checkout@v5
@@ -80,7 +80,7 @@ jobs:
       - name: Install system dependencies
         run: |
           apt-get update
-          apt-get install -y libadwaita-1-dev
+          apt-get install -y libadwaita-1-dev libgtksourceview-5-dev
 
       - name: Checkout
         uses: actions/checkout@v5

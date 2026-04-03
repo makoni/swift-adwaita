@@ -7,7 +7,8 @@ import GObjectSupport
 /// The full set of available schemes depends on the runtime environment, so
 /// use ``SourceStyleSchemeManager/schemes`` to inspect what is available on the
 /// current machine. Static convenience values cover common built-in schemes.
-public struct SourceStyleSchemeID: RawRepresentable, Hashable, Codable, Sendable, ExpressibleByStringLiteral, CustomStringConvertible {
+public struct SourceStyleSchemeID: RawRepresentable, Hashable, Codable, Sendable, ExpressibleByStringLiteral,
+    CustomStringConvertible {
     public let rawValue: String
 
     public init(rawValue: String) {
