@@ -54,7 +54,7 @@ struct LayoutAndMenuTests {
         let popoverMenu = PopoverMenu(model: menu)
 
         #expect(popoverMenu.present(from: row, x: 4, y: 4) == false)
-        #expect(popoverMenu.parent === row)
+        #expect(popoverMenu.parent?.widgetPointer == row.widgetPointer)
     }
 
     @Test @MainActor func gmenuAppendSubmenu() {

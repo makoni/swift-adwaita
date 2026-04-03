@@ -34,6 +34,40 @@ public final class SourceStyleSchemeManager: GObjectRef {
         schemeIDs.map { SourceStyleSchemeID(rawValue: $0) }
     }
 
+    /// Chooses a preferred style-scheme identifier from a list of available schemes.
+    ///
+    /// This prefers common GNOME/Ubuntu pairs (`Yaru`, `Adwaita`) and then falls
+    /// back to other well-known light/dark schemes before using a generic
+    /// darkness-based heuristic.
+    public static func preferredSchemeID(
+        available schemes: [SourceStyleSchemeID],
+        dark: Bool
+    ) -> SourceStyleSchemeID? {
+        guard !schemes.isEmpty else { return nil }
+
+        let available = Set(schemes)
+        let preferredDark: [SourceStyleSchemeID] = [.yaruDark, .adwaitaDark, .oblivion, .cobalt]
+        let preferredLight: [SourceStyleSchemeID] = [.yaru, .adwaita, .classic, .kate, .tango]
+        let preferred = dark ? preferredDark : preferredLight
+
+        if let exact = preferred.first(where: { available.contains($0) }) {
+            return exact
+        }
+
+        if dark, let firstDark = schemes.first(where: { $0.rawValue.localizedCaseInsensitiveContains("dark") }) {
+            return firstDark
+        }
+        if !dark, let firstLight = schemes.first(where: { !$0.rawValue.localizedCaseInsensitiveContains("dark") }) {
+            return firstLight
+        }
+        return schemes.first
+    }
+
+    /// Chooses a preferred style-scheme identifier for the current environment.
+    public func preferredSchemeID(dark: Bool = StyleManager.default.dark) -> SourceStyleSchemeID? {
+        Self.preferredSchemeID(available: schemes, dark: dark)
+    }
+
     /// Looks up a style scheme by identifier.
     public func scheme(id: String) -> SourceStyleScheme? {
         guard let ptr = gtk_source_style_scheme_manager_get_scheme(opaquePointer, id) else { return nil }
@@ -43,5 +77,11 @@ public final class SourceStyleSchemeManager: GObjectRef {
     /// Looks up a style scheme by typed identifier.
     public func scheme(id: SourceStyleSchemeID) -> SourceStyleScheme? {
         scheme(id: id.rawValue)
+    }
+
+    /// Chooses a preferred style scheme for the current environment.
+    public func preferredScheme(dark: Bool = StyleManager.default.dark) -> SourceStyleScheme? {
+        guard let id = preferredSchemeID(dark: dark) else { return nil }
+        return scheme(id: id)
     }
 }

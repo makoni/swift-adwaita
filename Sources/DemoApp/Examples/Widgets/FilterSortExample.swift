@@ -41,20 +41,6 @@ struct FilterSortExample: DemoExample {
 
         // Filter state
         var searchText = ""
-        var sortAscending = true
-
-        // Custom filter
-        let filter = CustomFilter { _ in
-            if searchText.isEmpty { return true }
-            // Find item position in the original store
-            // For simplicity, we accept all when filtering by item
-            // (the filter function receives the GObject, not position)
-            return true
-        }
-
-        // We use a position-aware approach: rebuild filter on each change
-        // by storing accepted positions
-        var acceptedPositions = Set<Int>(0 ..< fruits.count)
 
         let positionFilter = CustomFilter { _ in
             // Since items are placeholder GObjects, we check by pointer identity
@@ -99,7 +85,7 @@ struct FilterSortExample: DemoExample {
         let searchEntry = SearchEntry()
         searchEntry.placeholderText = "Filter fruits..."
         searchEntry.hexpand = true
-        searchEntry.onSearchChanged { [positionFilter] in
+        searchEntry.onSearchChanged {
             searchText = searchEntry.text
             // Rebuild store to match filter
             // Since CustomFilter works on GObjects (not positions),

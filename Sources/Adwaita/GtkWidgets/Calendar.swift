@@ -30,31 +30,28 @@ public final class Calendar: Widget {
         super.init(raw: pointer)
     }
 
+    private func setDate(year: Int, month: Int, day: Int) {
+        guard let dt = g_date_time_new_local(Int32(year), Int32(month), Int32(day), 0, 0, 0) else { return }
+        gtk_calendar_set_date(opaquePointer, dt)
+        g_date_time_unref(dt)
+    }
+
     /// The selected year.
     public var year: Int {
         get { Int(gtk_calendar_get_year(opaquePointer)) }
-        set {
-            let dt = g_date_time_new_local(Int32(newValue), Int32(month), Int32(day), 0, 0, 0)
-            gtk_calendar_select_day(opaquePointer, dt)
-        }
+        set { setDate(year: newValue, month: month, day: day) }
     }
 
     /// The selected month (1–12).
     public var month: Int {
         get { Int(gtk_calendar_get_month(opaquePointer)) + 1 }
-        set {
-            let dt = g_date_time_new_local(Int32(year), Int32(newValue), Int32(day), 0, 0, 0)
-            gtk_calendar_select_day(opaquePointer, dt)
-        }
+        set { setDate(year: year, month: newValue, day: day) }
     }
 
     /// The selected day of the month (1–31).
     public var day: Int {
         get { Int(gtk_calendar_get_day(opaquePointer)) }
-        set {
-            let dt = g_date_time_new_local(Int32(year), Int32(month), Int32(newValue), 0, 0, 0)
-            gtk_calendar_select_day(opaquePointer, dt)
-        }
+        set { setDate(year: year, month: month, day: newValue) }
     }
 
     /// Whether the calendar shows day names.

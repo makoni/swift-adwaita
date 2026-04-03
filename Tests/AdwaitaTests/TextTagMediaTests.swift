@@ -3,6 +3,7 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
+extension SerializedLifecycleSuites {
 @Suite(.serialized)
 struct TextTagMediaTests {
 
@@ -75,7 +76,7 @@ struct TextTagMediaTests {
         attrs.addBold()
         attrs.addItalic()
         // No crash means attributes were inserted successfully
-        #expect(attrs.pointer != nil)
+        #expect(attrs.pointer != OpaquePointer(bitPattern: 0))
     }
 
     @Test @MainActor func textAttributesStrikethroughAndUnderline() {
@@ -85,7 +86,7 @@ struct TextTagMediaTests {
         attrs.addUnderline(.single)
         attrs.addUnderlineColor(red: 0.0, green: 0.0, blue: 1.0)
         attrs.addStrikethroughColor(red: 1.0, green: 0.0, blue: 0.0)
-        #expect(attrs.pointer != nil)
+        #expect(attrs.pointer != OpaquePointer(bitPattern: 0))
     }
 
     @Test @MainActor func textAttributesFamilyAndSize() {
@@ -94,7 +95,7 @@ struct TextTagMediaTests {
         attrs.addFamily("monospace")
         attrs.addSizePoints(14.0)
         attrs.addSizeAbsolute(20)
-        #expect(attrs.pointer != nil)
+        #expect(attrs.pointer != OpaquePointer(bitPattern: 0))
     }
 
     // MARK: - Picture
@@ -170,5 +171,6 @@ struct TextTagMediaTests {
         _ = sep
     }
 
+}
 }
 #endif

@@ -3,6 +3,7 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
+extension SerializedLifecycleSuites {
 @Suite(.serialized)
 struct DeepCoverageTests {
 
@@ -285,14 +286,14 @@ struct DeepCoverageTests {
         conn.disconnect()
     }
 
-    @Test @MainActor func windowPresentAndCloseDoesNotCrash() {
+    @Test @MainActor func windowPresentAndCloseDoesNotCrash() throws {
         ensureAdwInit()
-        let win = Window()
+        let app = Application(id: "com.test.deepcoverage.window.\(UInt32.random(in: 0 ..< UInt32.max))")
+        try app.register()
+        let win = ApplicationWindow(application: app)
         win.title = "Transient"
         win.present()
-        spinMainLoop()
         win.close()
-        spinMainLoop()
     }
 
     @Test @MainActor func windowContent() {
@@ -459,5 +460,6 @@ struct DeepCoverageTests {
         }
         #expect(drawCalled == false)
     }
+}
 }
 #endif

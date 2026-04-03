@@ -29,3 +29,12 @@ func spinMainLoop(iterations: Int = 10) {
         g_main_context_iteration(context, 0)
     }
 }
+
+/// Runs a test body and then drains the GLib main loop after local GTK objects
+/// have gone out of scope, which helps async destroy/finalize work complete.
+@MainActor
+func withMainLoopDrain<T>(iterations: Int = 20, _ body: () throws -> T) rethrows -> T {
+    let result = try body()
+    spinMainLoop(iterations: iterations)
+    return result
+}

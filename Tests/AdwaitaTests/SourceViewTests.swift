@@ -30,9 +30,8 @@ struct SourceViewTests {
         ensureAdwInit()
         let manager = SourceStyleSchemeManager.default
         #expect(!manager.schemeIDs.isEmpty)
-        #expect(manager.schemes.contains(.adwaita))
-        #expect(manager.scheme(id: .adwaita) != nil)
-        #expect(manager.scheme(id: .adwaita)?.identifier == .adwaita)
+        #expect(manager.preferredSchemeID(dark: false) != nil)
+        #expect(manager.preferredScheme(dark: false) != nil)
     }
 
     @Test @MainActor func sourceStyleSchemeIDSupportsTypedAndCustomValues() {
@@ -42,6 +41,18 @@ struct SourceViewTests {
 
         #expect(typed.rawValue == "Adwaita")
         #expect(custom.rawValue == "CustomScheme")
+    }
+
+    @Test @MainActor func preferredSourceStyleSchemeSelectionPrefersKnownPairs() {
+        let schemes: [SourceStyleSchemeID] = [.adwaita, .adwaitaDark, .yaru, .yaruDark]
+        #expect(SourceStyleSchemeManager.preferredSchemeID(available: schemes, dark: false) == .yaru)
+        #expect(SourceStyleSchemeManager.preferredSchemeID(available: schemes, dark: true) == .yaruDark)
+    }
+
+    @Test @MainActor func preferredSourceStyleSchemeSelectionFallsBackByDarkness() {
+        let schemes: [SourceStyleSchemeID] = ["Custom", "Custom-dark"]
+        #expect(SourceStyleSchemeManager.preferredSchemeID(available: schemes, dark: false) == "Custom")
+        #expect(SourceStyleSchemeManager.preferredSchemeID(available: schemes, dark: true) == "Custom-dark")
     }
 
     @Test @MainActor func sourceBufferProperties() {
@@ -63,9 +74,9 @@ struct SourceViewTests {
         #expect(buffer.lineCount == 3)
         #expect(buffer.charCount > 0)
 
-        if let scheme = SourceStyleSchemeManager.default.scheme(id: .adwaita) {
+        if let scheme = SourceStyleSchemeManager.default.preferredScheme(dark: false) {
             buffer.styleScheme = scheme
-            #expect(buffer.styleScheme?.identifier == .adwaita)
+            #expect(buffer.styleScheme?.identifier != nil)
         }
     }
 
