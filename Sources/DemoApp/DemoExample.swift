@@ -74,6 +74,7 @@ let allExamples: [any DemoExample] = [
     CalendarExample(),
     DrawingAreaExample(),
     TextViewExample(),
+    SourceViewExample(),
     FlowBoxExample(),
     OverlayExample(),
     EmojiChooserExample(),

@@ -45,13 +45,50 @@ public final class Popover: Widget {
     }
 
     /// Presents the popover to the user.
-    public func popup() {
+    ///
+    /// - Returns: `true` if the popover was shown, `false` if it is not attached
+    ///   to a live widget tree yet.
+    @discardableResult
+    public func popup() -> Bool {
+        guard parent != nil, root != nil else { return false }
         gtk_popover_popup(castedPointer())
+        return true
     }
 
     /// Hides the popover.
     public func popdown() {
         gtk_popover_popdown(castedPointer())
+    }
+
+    /// Attaches the popover to a widget and presents it if the widget is already
+    /// in a live widget tree.
+    ///
+    /// - Parameters:
+    ///   - parent: The widget the popover should be anchored to.
+    ///   - x: Optional x coordinate of the pointing rectangle in the parent's coordinates.
+    ///   - y: Optional y coordinate of the pointing rectangle in the parent's coordinates.
+    ///   - width: Width of the pointing rectangle.
+    ///   - height: Height of the pointing rectangle.
+    /// - Returns: `true` if the popover was shown, `false` otherwise.
+    @discardableResult
+    public func present(
+        from parent: Widget,
+        x: Int? = nil,
+        y: Int? = nil,
+        width: Int = 1,
+        height: Int = 1
+    ) -> Bool {
+        if self.parent !== parent {
+            if self.parent != nil {
+                gtk_widget_unparent(widgetPointer)
+            }
+            gtk_widget_set_parent(widgetPointer, parent.widgetPointer)
+        }
+        if let x, let y {
+            var rect = GdkRectangle(x: Int32(x), y: Int32(y), width: Int32(width), height: Int32(height))
+            gtk_popover_set_pointing_to(castedPointer(), &rect)
+        }
+        return popup()
     }
 
     /// Whether the popover has an arrow.

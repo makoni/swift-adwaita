@@ -165,4 +165,15 @@ public final class Label: Widget {
         get { gtk_label_get_natural_wrap_mode(opaquePointer) }
         set { gtk_label_set_natural_wrap_mode(opaquePointer, newValue) }
     }
+
+    /// Emitted when a link in the label's markup is activated.
+    ///
+    /// The label must contain Pango markup with `<a href="...">`.
+    ///
+    /// - Parameter handler: Called with the activated URI.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
+    @discardableResult
+    public func onActivateLink(_ handler: @escaping @MainActor (String) -> Void) -> SignalConnection {
+        SignalHelper.connectString(self, signal: .activateLink, handler: handler)
+    }
 }

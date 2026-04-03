@@ -71,4 +71,16 @@ public final class ScrolledWindow: Widget {
         get { gtk_scrolled_window_get_kinetic_scrolling(opaquePointer) != 0 }
         set { gtk_scrolled_window_set_kinetic_scrolling(opaquePointer, newValue ? 1 : 0) }
     }
+
+    /// The vertical adjustment controlling the scroll position.
+    public var verticalAdjustment: Adjustment {
+        let ptr = gtk_scrolled_window_get_vadjustment(opaquePointer)!
+        return Adjustment(borrowing: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The horizontal adjustment controlling the scroll position.
+    public var horizontalAdjustment: Adjustment {
+        let ptr = gtk_scrolled_window_get_hadjustment(opaquePointer)!
+        return Adjustment(borrowing: UnsafeMutableRawPointer(ptr))
+    }
 }

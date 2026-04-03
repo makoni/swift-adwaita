@@ -21,13 +21,20 @@ let package = Package(
                 .apt(["libadwaita-1-dev"])
             ]
         ),
+        .systemLibrary(
+            name: "CGtkSource",
+            pkgConfig: "gtksourceview-5",
+            providers: [
+                .apt(["libgtksourceview-5-dev"])
+            ]
+        ),
         .target(
             name: "GObjectSupport",
             dependencies: ["CAdwaita"]
         ),
         .target(
             name: "Adwaita",
-            dependencies: ["GObjectSupport"]
+            dependencies: ["GObjectSupport", "CGtkSource"]
         ),
         .executableTarget(
             name: "DemoApp",

@@ -45,6 +45,18 @@ struct LayoutAndMenuTests {
         menu.appendSection(nil, section: section)
     }
 
+    @Test @MainActor func popoverMenuPresentReturnsFalseWithoutLiveRoot() {
+        ensureAdwInit()
+        let menu = GMenuRef()
+        menu.append("Copy", action: "app.copy")
+
+        let row = ListBoxRow()
+        let popoverMenu = PopoverMenu(model: menu)
+
+        #expect(popoverMenu.present(from: row, x: 4, y: 4) == false)
+        #expect(popoverMenu.parent === row)
+    }
+
     @Test @MainActor func gmenuAppendSubmenu() {
         ensureAdwInit()
         let menu = GMenuRef()
