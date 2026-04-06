@@ -256,6 +256,11 @@ open class Widget: GObjectRef {
         return Widget(borrowing: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Removes this widget from its current parent, if any.
+    public func unparent() {
+        gtk_widget_unparent(widgetPointer)
+    }
+
     /// The first child widget.
     public var firstChild: Widget? {
         guard let ptr = gtk_widget_get_first_child(widgetPointer) else { return nil }
