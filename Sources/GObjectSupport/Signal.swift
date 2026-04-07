@@ -88,22 +88,17 @@ public enum SignalHelper {
         box: AnyObject
     ) -> SignalConnection {
         let boxPtr = Unmanaged.passRetained(box).toOpaque()
+        let destroyNotify = unsafeBitCast(
+            deferredBoxDestroyNotify as @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void,
+            to: GClosureNotify.self
+        )
 
-        let handlerID = g_signal_connect_data(
+        let handlerID = cadw_signal_connect_with_destroy(
             instance.pointer,
             signal.name,
             trampoline,
             boxPtr,
-            { userData, _ in
-                guard let userData else { return }
-                // Defer release to the next main-loop iteration so that
-                // captured widget references are freed after dispose completes.
-                g_idle_add({ ptr in
-                    guard let ptr else { return 0 }
-                    Unmanaged<AnyObject>.fromOpaque(ptr).release()
-                    return 0 // G_SOURCE_REMOVE
-                }, userData)
-            },
+            destroyNotify,
             GConnectFlags(rawValue: 0)
         )
 

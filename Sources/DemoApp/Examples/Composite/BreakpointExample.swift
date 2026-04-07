@@ -96,6 +96,7 @@ struct BreakpointExample: DemoExample {
         bin.addBreakpoint(bp)
         bin.hexpand = true
         bin.vexpand = true
+        bin.setSizeRequest(width: 360, height: 260)
 
         return bin
     }

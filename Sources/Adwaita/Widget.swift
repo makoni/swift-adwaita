@@ -571,8 +571,7 @@ open class Widget: GObjectRef {
             },
             box,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
         return UInt(id)
@@ -657,8 +656,7 @@ open class Widget: GObjectRef {
             },
             box,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
         let shortcut = gtk_shortcut_new(trigger, action)

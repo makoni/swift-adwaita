@@ -44,8 +44,7 @@ public final class CustomSorter: GObjectRef {
             },
             boxPtr,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )!
 

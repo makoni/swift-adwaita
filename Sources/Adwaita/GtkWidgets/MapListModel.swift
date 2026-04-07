@@ -66,8 +66,7 @@ public final class MapListModel: GObjectRef, ListModelConvertible {
             _mapListModelCallback,
             boxPtr,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
     }
@@ -92,8 +91,7 @@ public final class MapListModel: GObjectRef, ListModelConvertible {
             _mapListModelCallback,
             boxPtr,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
     }

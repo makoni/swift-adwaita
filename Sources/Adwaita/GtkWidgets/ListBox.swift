@@ -169,8 +169,7 @@ public final class ListBox: Widget, Container {
             },
             box,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
     }
@@ -197,8 +196,7 @@ public final class ListBox: Widget, Container {
             },
             box,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
     }
@@ -241,8 +239,7 @@ public final class ListBox: Widget, Container {
             },
             box,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
     }

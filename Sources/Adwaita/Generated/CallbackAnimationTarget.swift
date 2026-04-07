@@ -53,8 +53,7 @@ public final class CallbackAnimationTarget: AnimationTarget {
             },
             userData: box,
             destroy: { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
     }

@@ -76,6 +76,14 @@ public class GtkWindow: Widget {
         }
     }
 
+    /// Sets the default size of the window in a single GTK call.
+    ///
+    /// This avoids transient "half-configured" sizes during startup, which can
+    /// matter in environments without a window manager.
+    public func setDefaultSize(width: Int, height: Int) {
+        gtk_window_set_default_size(windowPointer, Int32(width), Int32(height))
+    }
+
     /// Whether the window is modal.
     public var modal: Bool {
         get { gtk_window_get_modal(windowPointer) != 0 }

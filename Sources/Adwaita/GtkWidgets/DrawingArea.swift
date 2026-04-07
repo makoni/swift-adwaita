@@ -59,8 +59,7 @@ public final class DrawingArea: Widget {
             },
             box,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
     }

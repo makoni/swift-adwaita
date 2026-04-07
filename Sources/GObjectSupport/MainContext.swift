@@ -44,8 +44,7 @@ public enum MainContext {
             },
             box,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
     }
@@ -83,8 +82,7 @@ public enum MainContext {
             },
             box,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
     }

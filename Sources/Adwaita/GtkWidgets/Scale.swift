@@ -108,8 +108,7 @@ public final class Scale: Widget {
             },
             box,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
     }

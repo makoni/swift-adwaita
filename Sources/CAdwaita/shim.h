@@ -310,6 +310,16 @@ cadw_signal_connect(gpointer instance, const gchar *detailed_signal,
 }
 
 static inline gulong
+cadw_signal_connect_with_destroy(gpointer instance, const gchar *detailed_signal,
+                                 GCallback c_handler, gpointer data,
+                                 GClosureNotify destroy_data,
+                                 GConnectFlags connect_flags)
+{
+    return g_signal_connect_data(instance, detailed_signal, c_handler, data,
+                                 destroy_data, connect_flags);
+}
+
+static inline gulong
 cadw_signal_connect_after(gpointer instance, const gchar *detailed_signal,
                           GCallback c_handler, gpointer data)
 {

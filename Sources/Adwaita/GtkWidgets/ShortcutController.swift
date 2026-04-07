@@ -67,8 +67,7 @@ public final class ShortcutController: GObjectRef {
             },
             box,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )
         let shortcut = gtk_shortcut_new(trigger, action)

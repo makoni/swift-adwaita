@@ -78,8 +78,7 @@ public final class TreeListModel: GObjectRef, ListModelConvertible {
             },
             boxPtr,
             { userData in
-                guard let userData else { return }
-                Unmanaged<AnyObject>.fromOpaque(userData).release()
+                scheduleDeferredBoxRelease(userData)
             }
         )!
 
