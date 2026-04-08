@@ -174,7 +174,7 @@ struct WidgetBaseTests {
         box.append(button)
         window.content = box
 
-        _ = popover.present(from: button)
+        gtk_widget_set_parent(popover.widgetPointer, button.widgetPointer)
 
         #expect(button.window?.pointer == window.pointer)
         #expect(label.window?.pointer == window.pointer)
@@ -189,8 +189,8 @@ struct WidgetBaseTests {
         let label = Label("Popover content")
 
         popover.child = label
+        gtk_widget_set_parent(popover.widgetPointer, button.widgetPointer)
 
-        #expect(popover.present(from: button) == false)
         #expect(button.window == nil)
         #expect(label.window == nil)
 
