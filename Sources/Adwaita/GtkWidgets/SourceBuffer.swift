@@ -50,6 +50,11 @@ public final class SourceBuffer: GObjectRef {
         }
     }
 
+    /// Inserts text at the current cursor position.
+    public func insertAtCursor(_ text: String) {
+        gtk_text_buffer_insert_at_cursor(textBufferPointer, text, Int32(text.utf8.count))
+    }
+
     /// The configured syntax-highlighting language, if any.
     public var language: SourceLanguage? {
         get {

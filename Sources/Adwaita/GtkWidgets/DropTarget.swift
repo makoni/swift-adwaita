@@ -1,4 +1,5 @@
 import CAdwaita
+import Foundation
 import GObjectSupport
 
 /// A controller for accepting drop operations on a widget.
@@ -42,6 +43,11 @@ public final class DropTarget: GObjectRef {
         DropTarget(type: cadw_type_string(), actions: actions)
     }
 
+    /// Creates a drop target that accepts one or more dropped files.
+    public static func forFiles(actions: GdkDragAction = GDK_ACTION_COPY) -> DropTarget {
+        DropTarget(type: gdk_file_list_get_type(), actions: actions)
+    }
+
     /// The allowed drop actions.
     public var actions: GdkDragAction {
         get { gtk_drop_target_get_actions(opaquePointer) }
@@ -59,6 +65,12 @@ public final class DropTarget: GObjectRef {
         guard let value = gtk_drop_target_get_value(opaquePointer) else { return nil }
         guard cadw_value_holds_string(value) != 0 else { return nil }
         return g_value_get_string(value).map { String(cString: $0) }
+    }
+
+    /// Returns the dropped files as local file URLs, if available.
+    public var droppedFiles: [URL] {
+        guard let value = gtk_drop_target_get_value(opaquePointer) else { return [] }
+        return droppedFileURLs(from: value)
     }
 
     /// Rejects the current drop.
@@ -79,6 +91,29 @@ public final class DropTarget: GObjectRef {
             signal: .drop,
             trampoline: unsafeBitCast(
                 dropTrampoline as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UnsafePointer<GValue>,
+                    Double,
+                    Double,
+                    UnsafeMutableRawPointer
+                ) -> gboolean,
+                to: GCallback.self
+            ),
+            box: PublicClosureBox(handler)
+        )
+    }
+
+    /// Emitted when file URLs are dropped on the widget.
+    ///
+    /// - Parameter handler: Called when a drop occurs. Receives local file URLs. Return `true` to accept the drop.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
+    @discardableResult
+    public func onDropFiles(_ handler: @escaping @MainActor ([URL]) -> Bool) -> SignalConnection {
+        SignalHelper.connectCustom(
+            self,
+            signal: .drop,
+            trampoline: unsafeBitCast(
+                fileDropTrampoline as @convention(c) (
                     UnsafeMutableRawPointer,
                     UnsafePointer<GValue>,
                     Double,
@@ -140,4 +175,41 @@ private func dropTrampoline(
         }
         return box.closure(text) ? 1 : 0
     }
+}
+
+private func fileDropTrampoline(
+    _ instance: UnsafeMutableRawPointer,
+    _ value: UnsafePointer<GValue>,
+    _ x: Double,
+    _ y: Double,
+    _ userData: UnsafeMutableRawPointer
+) -> gboolean {
+    let box = Unmanaged<PublicClosureBox<@MainActor ([URL]) -> Bool>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    struct WrappedGValue: @unchecked Sendable { let ptr: UnsafePointer<GValue> }
+    let wrapped = WrappedGValue(ptr: value)
+    return MainActor.assumeIsolated {
+        let files = droppedFileURLs(from: wrapped.ptr)
+        return box.closure(files) ? 1 : 0
+    }
+}
+
+private func droppedFileURLs(from value: UnsafePointer<GValue>) -> [URL] {
+    guard let fileList = cadw_value_get_file_list(value) else { return [] }
+    guard let files = gdk_file_list_get_files(fileList) else { return [] }
+    defer { g_slist_free(files) }
+
+    var urls: [URL] = []
+    var node: UnsafeMutablePointer<GSList>? = files
+    while let current = node {
+        if let data = current.pointee.data {
+            let file = OpaquePointer(data)
+            if let path = g_file_get_path(file) {
+                urls.append(URL(fileURLWithPath: String(cString: path)))
+                g_free(path)
+            }
+        }
+        node = current.pointee.next
+    }
+    return urls
 }

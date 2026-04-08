@@ -410,6 +410,17 @@ static inline gboolean cadw_value_holds_double(const GValue *value) {
     return G_VALUE_HOLDS_DOUBLE(value);
 }
 
+static inline gboolean cadw_value_holds_file_list(const GValue *value) {
+    return G_VALUE_HOLDS(value, GDK_TYPE_FILE_LIST);
+}
+
+static inline GdkFileList *cadw_value_get_file_list(const GValue *value) {
+    if (!cadw_value_holds_file_list(value)) {
+        return NULL;
+    }
+    return (GdkFileList *)g_value_get_boxed(value);
+}
+
 // Runtime version checking — always uses the loaded library's version.
 static inline guint cadw_adw_major_version(void) { return adw_get_major_version(); }
 static inline guint cadw_adw_minor_version(void) { return adw_get_minor_version(); }
