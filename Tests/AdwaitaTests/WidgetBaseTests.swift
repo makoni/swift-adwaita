@@ -162,6 +162,41 @@ struct WidgetBaseTests {
         #expect(label.root == nil)
     }
 
+    @Test @MainActor func widgetWindowUsesContainingParentChain() {
+        ensureAdwInit()
+        let window = Window()
+        let box = Box(orientation: GTK_ORIENTATION_VERTICAL)
+        let button = Button(label: "Anchor")
+        let popover = Popover()
+        let label = Label("Popover content")
+
+        popover.child = label
+        box.append(button)
+        window.content = box
+
+        _ = popover.present(from: button)
+
+        #expect(button.window?.pointer == window.pointer)
+        #expect(label.window?.pointer == window.pointer)
+
+        popover.unparent()
+    }
+
+    @Test @MainActor func widgetWindowIsNilWithoutContainingWindow() {
+        ensureAdwInit()
+        let button = Button(label: "Anchor")
+        let popover = Popover()
+        let label = Label("Popover content")
+
+        popover.child = label
+
+        #expect(popover.present(from: button) == false)
+        #expect(button.window == nil)
+        #expect(label.window == nil)
+
+        popover.unparent()
+    }
+
     // MARK: - Widget: Configure
 
     @Test @MainActor func widgetConfigure() {

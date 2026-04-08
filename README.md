@@ -44,23 +44,24 @@ Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/document
 
 - Swift 6.0+
 - libadwaita 1.5+ development headers
+- GtkSourceView 5 development headers
 - Linux
 
 ### Ubuntu/Debian
 
 ```bash
-sudo apt install libadwaita-1-dev
+sudo apt install libadwaita-1-dev libgtksourceview-5-dev
 ```
 
 ### Fedora
 
 ```bash
-sudo dnf install libadwaita-devel
+sudo dnf install libadwaita-devel gtksourceview5-devel
 ```
 
 ## Installation
 
-Add to your `Package.swift`:
+Install the system packages above first, then add this package to your `Package.swift`:
 
 ```swift
 dependencies: [

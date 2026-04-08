@@ -192,7 +192,8 @@ open class Widget: GObjectRef {
 
     /// The containing ``GtkWindow``, if this widget is inside a window.
     ///
-    /// This walks up the widget tree to find the toplevel window. Use this
+    /// This walks up the widget parent chain to find the nearest containing
+    /// toplevel window. Use this
     /// instead of capturing a window reference in signal closures to avoid
     /// preventing deallocation during GTK dispose.
     ///
@@ -203,8 +204,17 @@ open class Widget: GObjectRef {
     /// }
     /// ```
     public var window: GtkWindow? {
-        guard let ptr = gtk_widget_get_root(widgetPointer) else { return nil }
-        return GtkWindow(borrowing: UnsafeMutableRawPointer(ptr))
+        var current: UnsafeMutablePointer<GtkWidget>? = widgetPointer
+
+        while let widget = current {
+            let instance = UnsafeMutableRawPointer(widget).assumingMemoryBound(to: GTypeInstance.self)
+            if g_type_check_instance_is_a(instance, gtk_window_get_type()) != 0 {
+                return GtkWindow(borrowing: UnsafeMutableRawPointer(widget))
+            }
+            current = gtk_widget_get_parent(widget)
+        }
+
+        return nil
     }
 
     /// Closes the containing window.
