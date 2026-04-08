@@ -72,7 +72,7 @@ public final class PopoverMenu: Widget {
     }
 
     /// Removes this popover menu from its parent widget.
-    public override func unparent() {
+    override public func unparent() {
         gtk_widget_unparent(widgetPointer)
     }
 

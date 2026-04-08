@@ -3,7 +3,22 @@ import CAdwaita
 /// A GLib main loop source identifier returned by timeout/idle functions.
 public typealias SourceID = UInt32
 
-/// Helpers for integrating with the GLib main loop.
+/// Helpers for scheduling work on the GLib main loop.
+///
+/// GTK applications run GLib's event loop (`g_application_run`), **not**
+/// Swift's dispatch main queue.  `Task { @MainActor in … }` schedules on
+/// `DispatchQueue.main`, which is never drained inside the GLib loop —
+/// the task body simply never executes.
+///
+/// Use the methods on this enum instead:
+///
+/// | Instead of                         | Use                              |
+/// |------------------------------------|----------------------------------|
+/// | `Task { @MainActor in work() }`    | `MainContext.idle { work() }`    |
+/// | `Task.sleep(for: .seconds(1))`     | `MainContext.delay(ms: 1000) {}` |
+/// | recurring `Task` + `Task.sleep`    | `MainContext.timeout(intervalMs:)`|
+///
+/// All closures are `@MainActor`-isolated and run on the GLib main thread.
 @MainActor
 public enum MainContext {
 
