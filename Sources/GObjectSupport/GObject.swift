@@ -1,5 +1,10 @@
 import CAdwaita
 
+public extension GBindingFlags {
+    static let bidirectional = Self(rawValue: 1 << 0)
+    static let syncCreate = Self(rawValue: 1 << 1)
+}
+
 private final class GObjectLifetimeObserver: @unchecked Sendable {
     private var state: Int32 = 1
 
@@ -106,7 +111,7 @@ open class GObjectRef {
         _ sourceProperty: PropertyName,
         to target: GObjectRef,
         property targetProperty: PropertyName,
-        flags: GBindingFlags = G_BINDING_SYNC_CREATE
+        flags: GBindingFlags = .syncCreate
     ) -> OpaquePointer {
         g_object_bind_property(
             pointer,
