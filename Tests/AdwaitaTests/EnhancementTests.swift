@@ -178,6 +178,114 @@ struct EnhancementTests {
         #expect(removed == true)
     }
 
+    @Test @MainActor func mainContextTaskRunsOnIdle() {
+        ensureAdwInit()
+        var called = false
+
+        let task = MainContext.task {
+            called = true
+        }
+
+        spinMainLoop()
+
+        #expect(called)
+        #expect(!task.isScheduled)
+    }
+
+    @Test @MainActor func mainContextTaskRunsAfterDurationDelay() {
+        ensureAdwInit()
+        var called = false
+
+        let task = MainContext.task(after: .milliseconds(5)) {
+            called = true
+        }
+
+        g_usleep(20_000)
+        spinMainLoop()
+
+        #expect(called)
+        #expect(!task.isScheduled)
+    }
+
+    @Test @MainActor func mainContextTaskCancelPreventsDelayedExecution() {
+        ensureAdwInit()
+        var called = false
+
+        let task = MainContext.task(after: .milliseconds(20)) {
+            called = true
+        }
+
+        #expect(task.isScheduled)
+        #expect(task.cancel())
+
+        g_usleep(40_000)
+        spinMainLoop()
+
+        #expect(!called)
+        #expect(!task.isScheduled)
+    }
+
+    @Test @MainActor func mainContextRepeatingTaskStopsWhenClosureReturnsFalse() {
+        ensureAdwInit()
+        var values: [Int] = []
+
+        let task = MainContext.task(every: .milliseconds(5)) {
+            values.append(values.count + 1)
+            return values.count < 3
+        }
+
+        for _ in 0..<6 {
+            g_usleep(10_000)
+            spinMainLoop()
+        }
+
+        #expect(values == [1, 2, 3])
+        #expect(!task.isScheduled)
+    }
+
+    @Test @MainActor func mainContextRunAsyncReturnsValue() async {
+        ensureAdwInit()
+        let value = Task { await MainContext.run { 42 } }
+
+        await Task.yield()
+        spinMainLoop()
+
+        #expect(await value.value == 42)
+    }
+
+    @Test @MainActor func mainContextYieldAsyncResumesOnNextLoopTurn() async {
+        ensureAdwInit()
+        let recorder = BoolRecorder()
+
+        let wait = Task {
+            await MainContext.yield()
+            await recorder.mark()
+        }
+
+        await Task.yield()
+        #expect(await recorder.snapshot() == false)
+        spinMainLoop()
+        await wait.value
+        #expect(await recorder.snapshot())
+    }
+
+    @Test @MainActor func mainContextSleepAsyncResumesAfterDelay() async {
+        ensureAdwInit()
+        let recorder = BoolRecorder()
+
+        let wait = Task {
+            await MainContext.sleep(for: .milliseconds(5))
+            await recorder.mark()
+        }
+
+        await Task.yield()
+        #expect(await recorder.snapshot() == false)
+        g_usleep(20_000)
+        spinMainLoop()
+        await wait.value
+        #expect(await recorder.snapshot())
+    }
+
     // MARK: - New enum extensions
 
     @Test @MainActor func inputPurposeEnum() {

@@ -38,3 +38,15 @@ func withMainLoopDrain<T>(iterations: Int = 20, _ body: () throws -> T) rethrows
     spinMainLoop(iterations: iterations)
     return result
 }
+
+actor BoolRecorder {
+    private var value = false
+
+    func mark() {
+        value = true
+    }
+
+    func snapshot() -> Bool {
+        value
+    }
+}
