@@ -234,7 +234,7 @@ struct EnhancementTests {
             return values.count < 3
         }
 
-        for _ in 0..<6 {
+        for _ in 0 ..< 6 {
             g_usleep(10_000)
             spinMainLoop()
         }
