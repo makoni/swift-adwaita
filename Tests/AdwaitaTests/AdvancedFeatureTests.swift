@@ -332,7 +332,7 @@ struct AdvancedFeatureTests {
         let switch2 = Switch()
         switch1.active = true
         // Bind active properties — syncCreate means switch2 gets switch1's value
-        switch1.bind(.active, to: switch2, property: .active, flags: G_BINDING_SYNC_CREATE)
+        switch1.bind(.active, to: switch2, property: .active, flags: .syncCreate)
         #expect(switch2.active == true)
     }
 

@@ -32,7 +32,7 @@ public final class Application: GObjectRef {
     /// - Parameters:
     ///   - id: The application identifier (e.g. `"com.example.MyApp"`).
     ///   - flags: Application flags. Defaults to `.flagsNone`.
-    public init(id: String, flags: GApplicationFlags = G_APPLICATION_DEFAULT_FLAGS) {
+    public init(id: String, flags: GApplicationFlags = GApplicationFlags(rawValue: 0)) {
         let ptr = adw_application_new(id, flags)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
