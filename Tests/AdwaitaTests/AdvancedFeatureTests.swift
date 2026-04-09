@@ -341,7 +341,7 @@ struct AdvancedFeatureTests {
         let label1 = Label("Hello")
         let label2 = Label("World")
         label1.bind(.label, to: label2, property: .label,
-                    flags: [.bidirectional, .syncCreate])
+                    flags: GBindingFlags(rawValue: GBindingFlags.bidirectional.rawValue | GBindingFlags.syncCreate.rawValue))
         #expect(label2.text == "Hello")
     }
 
