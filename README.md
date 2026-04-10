@@ -11,6 +11,11 @@ An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadw
 
 Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita)
 
+## Apps built with swift-adwaita
+- [Swifty Notes](https://github.com/makoni/swifty-notes-gtk)
+
+## Demo app
+
 <img alt="Swift Adwaita" src="https://spaceinbox.me/images/swift-adwaita-demo.gif">
 
 
