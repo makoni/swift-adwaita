@@ -1,4 +1,5 @@
 import CAdwaita
+import Foundation
 
 /// Represents a connected signal that can be disconnected later.
 ///
@@ -552,6 +553,29 @@ public enum SignalHelper {
                 signalTrampolineNotify as @convention(c) (
                     UnsafeMutableRawPointer,
                     OpaquePointer,
+                    UnsafeMutableRawPointer
+                ) -> Void,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
+    /// Connects an application `open`-style signal carrying a list of `GFile` values.
+    @discardableResult
+    public static func connectOpenFiles(
+        _ instance: GObjectRef,
+        signal: SignalName,
+        handler: @escaping @MainActor ([URL], String?) -> Void
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineOpenFiles as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UnsafeMutablePointer<OpaquePointer?>?,
+                    Int32,
+                    UnsafePointer<CChar>?,
                     UnsafeMutableRawPointer
                 ) -> Void,
                 to: GCallback.self

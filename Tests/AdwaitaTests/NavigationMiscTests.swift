@@ -1,6 +1,7 @@
 import Testing
 @testable import Adwaita
 import CAdwaita
+import Foundation
 
 @Suite(.serialized)
 struct NavigationMiscTests {
@@ -200,6 +201,51 @@ struct NavigationMiscTests {
         // Just verify signal connection doesn't crash
         app.onStartup {}
         app.onShutdown {}
+        app.onOpen { _, _ in }
+    }
+
+    @Test @MainActor func applicationOpenDeliversFileURLsAndHint() throws {
+        ensureAdwInit()
+
+        let directoryURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: directoryURL) }
+        try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true)
+
+        let fileURL = directoryURL.appendingPathComponent("opened.md", isDirectory: false)
+        try "# Opened from desktop\n".write(to: fileURL, atomically: true, encoding: .utf8)
+
+        let app = Application(
+            id: "com.test.open.signal.x\(UInt32.random(in: 0 ..< UInt32.max))",
+            flags: G_APPLICATION_HANDLES_OPEN
+        )
+        try app.register()
+
+        var capturedURLs: [URL] = []
+        var capturedHint: String?
+        app.onOpen { urls, hint in
+            capturedURLs = urls
+            capturedHint = hint
+        }
+
+        let file = g_file_new_for_path(fileURL.path())
+        defer { g_object_unref(gpointer(file)) }
+
+        var files: [OpaquePointer?] = [file, nil]
+        let gApplication = UnsafeMutableRawPointer(app.gtkApplicationPointer)
+            .assumingMemoryBound(to: GApplication.self)
+        files.withUnsafeMutableBufferPointer { buffer in
+            g_application_open(
+                gApplication,
+                buffer.baseAddress,
+                1,
+                "open-with-swifty-notes"
+            )
+        }
+        spinMainLoop()
+
+        #expect(capturedURLs == [fileURL])
+        #expect(capturedHint == "open-with-swifty-notes")
     }
 
     // MARK: - AspectFrame

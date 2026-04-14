@@ -1,4 +1,5 @@
 import CAdwaita
+import Foundation
 
 // Wrapper types for crossing isolation boundaries in signal trampolines.
 // These are safe because GTK signals are always emitted on the main thread,
@@ -193,6 +194,22 @@ func signalTrampolinePointerGValueDragAction(
     }
 }
 
+func signalTrampolineOpenFiles(
+    _ instance: UnsafeMutableRawPointer,
+    _ files: UnsafeMutablePointer<OpaquePointer?>?,
+    _ count: Int32,
+    _ hint: UnsafePointer<CChar>?,
+    _ userData: UnsafeMutableRawPointer
+) {
+    let box = Unmanaged<ClosureBox<@MainActor ([URL], String?) -> Void>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    let urls = openFileURLs(from: files, count: count)
+    let openHint = hint.map(String.init(cString:)).flatMap { $0.isEmpty ? nil : $0 }
+    MainActor.assumeIsolated {
+        box.closure(urls, openHint)
+    }
+}
+
 func signalTrampolineIntDoubleDouble(
     _ instance: UnsafeMutableRawPointer,
     _ value1: Int32,
@@ -257,4 +274,28 @@ func signalTrampolineDoubleDoubleBool(
     return MainActor.assumeIsolated {
         box.closure(value1, value2) ? 1 : 0
     }
+}
+
+private func openFileURLs(from files: UnsafeMutablePointer<OpaquePointer?>?, count: Int32) -> [URL] {
+    guard let files, count > 0 else { return [] }
+    var urls: [URL] = []
+    urls.reserveCapacity(Int(count))
+
+    for index in 0 ..< Int(count) {
+        guard let file = files[index] else { continue }
+        if let path = g_file_get_path(file) {
+            urls.append(URL(fileURLWithPath: String(cString: path)).standardizedFileURL)
+            g_free(path)
+            continue
+        }
+        if let uri = g_file_get_uri(file) {
+            let uriString = String(cString: uri)
+            if let url = URL(string: uriString) {
+                urls.append(url)
+            }
+            g_free(uri)
+        }
+    }
+
+    return urls
 }

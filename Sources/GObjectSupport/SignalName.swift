@@ -24,6 +24,7 @@ public enum SignalName: Sendable, Equatable {
     // MARK: - Application & Window lifecycle
 
     case activate
+    case open
     case startup
     case shutdown
     case closeRequest
@@ -183,6 +184,7 @@ public enum SignalName: Sendable, Equatable {
         switch self {
         // Application & Window lifecycle
         case .activate: "activate"
+        case .open: "open"
         case .startup: "startup"
         case .shutdown: "shutdown"
         case .closeRequest: "close-request"

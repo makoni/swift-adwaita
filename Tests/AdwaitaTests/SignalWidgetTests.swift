@@ -1,6 +1,7 @@
 import Testing
 @testable import Adwaita
 import CAdwaita
+import Foundation
 
 @Suite(.serialized)
 struct SignalWidgetTests {
@@ -34,6 +35,13 @@ struct SignalWidgetTests {
             -> SignalConnection = SignalHelper.connectPointerGValueReturnBool
         let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction)
             -> SignalConnection = SignalHelper.connectPointerGValueReturnGdkDragAction
+    }
+
+    @Test @MainActor func applicationOpenApiSurfaceExists() {
+        ensureAdwInit()
+        let app = Application(id: "com.test.open-api-surface")
+        let _: (@escaping @MainActor ([URL], String?) -> Void) -> SignalConnection = app.onOpen
+        let _: ([String]) -> Int = app.run(arguments:)
     }
 
     // MARK: - GTK Widget Wrapper Tests

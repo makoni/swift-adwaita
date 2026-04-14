@@ -1,5 +1,12 @@
 import CAdwaita
+import Foundation
 import GObjectSupport
+
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
 
 /// The entry point for an Adwaita application.
 ///
@@ -49,11 +56,26 @@ public final class Application: GObjectRef {
 
     /// Runs the application. Blocks until the application exits.
     ///
+    /// By default this forwards `CommandLine.arguments` to `g_application_run(...)`
+    /// so GTK/GApplication can process file-open requests and other activation data.
+    ///
+    /// - Parameter arguments: Full process arguments, including argv[0].
     /// - Returns: The exit status.
     @discardableResult
-    public func run() -> Int {
+    public func run(arguments: [String] = CommandLine.arguments) -> Int {
         let gApp: UnsafeMutablePointer<GApplication> = castedPointer()
-        return Int(g_application_run(gApp, 0, nil))
+        var argv = arguments.map { strdup($0) }
+        argv.append(nil)
+        defer {
+            for argument in argv {
+                if let argument {
+                    free(argument)
+                }
+            }
+        }
+        return argv.withUnsafeMutableBufferPointer { argvBuffer in
+            Int(g_application_run(gApp, Int32(arguments.count), argvBuffer.baseAddress))
+        }
     }
 
     /// Registers the application with the session bus and emits `startup` if needed.
@@ -87,6 +109,17 @@ public final class Application: GObjectRef {
     @discardableResult
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .activate, handler: handler)
+    }
+
+    /// Connects a handler to the `open` signal.
+    ///
+    /// This is emitted when the application is launched or activated with files
+    /// and the application was created with `G_APPLICATION_HANDLES_OPEN`.
+    ///
+    /// - Parameter handler: Receives the opened file URLs and the optional open hint.
+    @discardableResult
+    public func onOpen(_ handler: @escaping @MainActor ([URL], String?) -> Void) -> SignalConnection {
+        SignalHelper.connectOpenFiles(self, signal: .open, handler: handler)
     }
 
     /// Connects a handler to the `startup` signal.
