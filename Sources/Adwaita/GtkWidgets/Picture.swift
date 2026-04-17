@@ -1,4 +1,5 @@
 import CAdwaita
+import Foundation
 import GObjectSupport
 
 /// A widget that displays an image at its natural size or scaled.
@@ -68,6 +69,35 @@ public final class Picture: Widget {
     public func setPaintable(_ paintable: Texture?) {
         gtk_picture_set_paintable(opaquePointer, paintable.map { OpaquePointer($0.pointer) })
     }
+
+    /// The intrinsic pixel size of the currently displayed paintable, if any.
+    ///
+    /// Returns `nil` when the picture has no paintable or the paintable does
+    /// not report usable dimensions (for example, before an async load has
+    /// populated the content).
+    public struct IntrinsicSize: Sendable, Equatable {
+        public let width: Int
+        public let height: Int
+
+        public init(width: Int, height: Int) {
+            self.width = width
+            self.height = height
+        }
+    }
+
+    /// Reads the current paintable's natural pixel dimensions.
+    ///
+    /// Useful for aspect-ratio calculations after loading an image into a
+    /// picture whose container size is dictated by the layout.
+    public var intrinsicSize: IntrinsicSize? {
+        guard let paintable = gtk_picture_get_paintable(opaquePointer) else {
+            return nil
+        }
+        let width = Int(gdk_paintable_get_intrinsic_width(paintable))
+        let height = Int(gdk_paintable_get_intrinsic_height(paintable))
+        guard width > 0, height > 0 else { return nil }
+        return IntrinsicSize(width: width, height: height)
+    }
 }
 
 /// A pixel-based image loaded into GPU memory.
@@ -117,5 +147,23 @@ public final class Texture: GObjectRef {
     /// The height of the texture in pixels.
     public var height: Int {
         Int(gdk_texture_get_height(OpaquePointer(pointer)))
+    }
+
+    /// Asynchronously decodes a raster image (PNG, JPEG, GIF, WebP, TIFF, BMP — anything
+    /// registered with GdkPixbuf on the host system) and returns a GPU-resident texture.
+    ///
+    /// The file is decoded off the main actor; the resulting ``Texture`` is constructed
+    /// on the main actor. Supports a wider set of formats than ``Texture/init(filename:)``
+    /// (which uses `gdk_texture_new_from_filename` and only natively handles PNG and JPEG
+    /// on most GTK builds).
+    ///
+    /// - Parameter fileURL: A file URL pointing to a readable image.
+    /// - Throws: ``ImageDecodingError`` if the file cannot be opened or decoded.
+    /// - Returns: A texture that mirrors the file's pixel data.
+    public static func load(from fileURL: URL) async throws -> Texture {
+        let pixels = try await Task.detached(priority: .userInitiated) {
+            try PixbufPixelDecoder.decode(at: fileURL)
+        }.value
+        return Texture(rgbaData: pixels.rgba, width: pixels.width, height: pixels.height)
     }
 }

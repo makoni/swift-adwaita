@@ -5,6 +5,7 @@ module CAdwaita [system] {
     link "gobject-2.0"
     link "glib-2.0"
     link "gio-2.0"
+    link "gdk_pixbuf-2.0"
     link "dl"
     export *
 }

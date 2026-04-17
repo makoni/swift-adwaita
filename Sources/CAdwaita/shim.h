@@ -1,6 +1,7 @@
 #pragma once
 
 #include <adwaita.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 // ---------------------------------------------------------------------------
 // GTK compatibility helpers.
