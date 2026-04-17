@@ -172,17 +172,22 @@ let filters = ListStore(itemType: FileFilter.gType)
 filters.append(filter)
 dialog.filters = filters
 
-// Open a file
-dialog.open(parent: window) { file in
-    guard let file else { return }  // User cancelled
-    let path = file.path
-    print("Selected: \(path)")
+// Open a file — non-throwing variant treats cancel + error as nil
+Task { @MainActor in
+    if let path = await dialog.open(parent: window) {
+        print("Selected: \(path)")
+    }
 }
 
-// Save a file
-dialog.save(parent: window) { file in
-    guard let file else { return }
-    print("Save to: \(file.path)")
+// Throwing variant distinguishes cancellation (nil) from a real error
+Task { @MainActor in
+    do {
+        if let path = try await dialog.saveThrowing(parent: window) {
+            print("Save to: \(path)")
+        }
+    } catch {
+        print("Save dialog failed: \((error as? GLibError)?.message ?? error.localizedDescription)")
+    }
 }
 ```
 

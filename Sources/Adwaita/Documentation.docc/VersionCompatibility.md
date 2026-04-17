@@ -133,6 +133,6 @@ See <doc:FlatpakDistribution> for details on Flatpak packaging.
 
 ### CI testing across versions
 
-The CI matrix tests against Ubuntu (libadwaita 1.5) with Swift 6.1, 6.2,
+The CI matrix tests against Ubuntu (libadwaita 1.5) with Swift 6.2
 and 6.3. C stubs in `Sources/CAdwaita/shim.h` ensure compilation succeeds
 even when newer API symbols are missing from the system headers.

@@ -1,7 +1,7 @@
 # swift-adwaita
 
 [![CI](https://github.com/makoni/swift-adwaita/actions/workflows/ci.yml/badge.svg)](https://github.com/makoni/swift-adwaita/actions/workflows/ci.yml)
-[![Swift 6.0+](https://img.shields.io/badge/Swift-6.0+-F05138.svg)](https://swift.org)
+[![Swift 6.2+](https://img.shields.io/badge/Swift-6.2+-F05138.svg)](https://swift.org)
 [![Documentation](https://img.shields.io/badge/Documentation-Online-0A84FF.svg)](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
 
@@ -22,7 +22,7 @@ Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/document
 ## Features
 
 - **Imperative API** — no declarative DSL; create and configure widgets directly
-- **164 widget wrappers** — 74 auto-generated Adwaita + 90 hand-written GTK widgets
+- **176 widget wrappers** — 74 auto-generated Adwaita + 102 hand-written GTK widgets
 - **Zero raw pointers in public API** — all `OpaquePointer`/`gpointer` hidden behind Swift types
 - **Type-safe enums** — `SignalName`, `PropertyName`, `CSSClass`, `IconName` instead of raw strings
 - **Fluent setters** — method chaining: `Label("Hi").halign(.center).cssClass(.title1)`
@@ -43,11 +43,11 @@ Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/document
 - **@Setting property wrapper** — type-safe GSettings binding
 - **Adaptive layout** — `Breakpoint.minWidth()`, `Breakpoint.maxWidth()` helpers
 - **Swift 6 concurrency** — full `@MainActor` isolation, `Sendable` types
-- **1032 tests**, **77 demo examples**, **CI with GitHub Actions**
+- **1139 tests**, **78 demo examples**, **CI with GitHub Actions**
 
 ## Requirements
 
-- Swift 6.0+
+- Swift 6.2+
 - libadwaita 1.5+ development headers
 - GtkSourceView 5 development headers
 - Linux
@@ -355,7 +355,7 @@ widget.addCSSClass("my-widget")
 
 ## Demo App
 
-An interactive gallery with 77 examples showcasing every widget:
+An interactive gallery with 78 examples showcasing every widget:
 
 ```bash
 swift run DemoApp

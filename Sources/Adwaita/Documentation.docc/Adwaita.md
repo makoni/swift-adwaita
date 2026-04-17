@@ -40,7 +40,7 @@ app.run()
 
 ### Key features
 
-- **74 Adw widgets + 17 GTK widgets** wrapped as Swift classes
+- **74 Adw widgets + 102 GTK widgets** wrapped as Swift classes
 - **Signals** — connect handlers with `onClicked`, `onActivate`, and 47 more
 - **Fluent setters** — chain `.halign(.center).vexpand().cssClass(.pill)`
 - **Type-safe CSS classes** — `CSSClass.destructiveAction`, `.title1`, `.pill`
@@ -51,7 +51,7 @@ app.run()
 ### Requirements
 
 - **Linux** with GTK4 and libadwaita installed
-- **Swift 6.0+**
+- **Swift 6.2+**
 - System package: `libadwaita-1-dev` (apt) or equivalent
 
 ### Installation

@@ -6,7 +6,7 @@ Thank you for your interest in contributing! This guide covers how to set up the
 
 ### Prerequisites
 
-- **Swift 6.1+** ([swiftly](https://swift-server.github.io/swiftly/) recommended for installing)
+- **Swift 6.2+** ([swiftly](https://swift-server.github.io/swiftly/) recommended for installing)
 - **libadwaita 1.5+** development headers
 - **Linux** (Ubuntu, Fedora, or other GTK4-supported distro)
 
