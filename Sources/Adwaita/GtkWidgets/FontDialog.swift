@@ -32,20 +32,13 @@ public final class FontDialog: GObjectRef {
     /// Opens the font dialog for the user to choose a font.
     ///
     /// Returns the selected font description string, or `nil` if the user cancelled.
+    /// Throws a `GLibError` if the underlying GTK call fails.
     ///
     /// ```swift
-    /// let font = await dialog.chooseFont(parent: window)
+    /// let font = try await dialog.chooseFont(parent: window)
     /// if let font { print("Selected: \(font)") }
     /// ```
-    public func chooseFont(parent: Widget?, initialFont: String? = nil) async -> String? {
-        await (try? chooseFontThrowing(parent: parent, initialFont: initialFont)) ?? nil
-    }
-
-    /// Opens the font dialog (throwing version).
-    ///
-    /// Throws a `GLibError` if the dialog fails for a reason other than
-    /// the user cancelling. Cancellation returns `nil`.
-    public func chooseFontThrowing(parent: Widget?, initialFont: String? = nil) async throws(GLibError) -> String? {
+    public func chooseFont(parent: Widget?, initialFont: String? = nil) async throws(GLibError) -> String? {
         try await FontDialog.retype {
             try await withCheckedThrowingContinuation { continuation in
                 let box = DialogAsyncSupport.retainBox(continuation)

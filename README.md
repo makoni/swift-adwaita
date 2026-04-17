@@ -228,14 +228,14 @@ button.addCSSClass(.destructiveAction)
 ### Async/Await
 
 ```swift
-// File dialog
+// File dialog — throws GLibError on failure; cancellation returns nil
 let dialog = FileDialog()
-if let file = await dialog.open(parent: window) {
+if let file = try await dialog.open(parent: window) {
     print("Selected: \(file)")
 }
 
-// Throwing variant (distinguishes cancel from error)
-let path = try await dialog.openThrowing(parent: window)
+// If you don't care about distinguishing cancellation from error:
+let path = try? await dialog.open(parent: window)
 
 // URI launcher
 let launcher = UriLauncher(uri: "https://gnome.org")

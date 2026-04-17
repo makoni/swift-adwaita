@@ -5,8 +5,8 @@ import GObjectSupport
 ///
 /// Wraps `GtkFileDialog` (GTK 4.10+). All dialog methods are async
 /// and resume on the main actor when the user makes a selection or
-/// dismisses the dialog. Throwing variants report a `GLibError` when
-/// the underlying GTK call fails for a reason other than cancellation.
+/// dismisses the dialog. User cancellation returns `nil`; other
+/// failures throw a `GLibError`.
 @MainActor
 public final class FileDialog: GObjectRef {
     /// Creates a new file dialog.
@@ -69,24 +69,13 @@ public final class FileDialog: GObjectRef {
     /// Opens the file dialog for selecting a file.
     ///
     /// Returns the selected file path, or `nil` if the user cancelled.
+    /// Throws a `GLibError` if the underlying GTK call fails.
     ///
     /// ```swift
-    /// let path = await dialog.open(parent: window)
+    /// let path = try await dialog.open(parent: window)
     /// if let path { print("Selected: \(path)") }
     /// ```
-    public func open(parent: Widget?) async -> String? {
-        await (try? openThrowing(parent: parent)) ?? nil
-    }
-
-    /// Opens the file dialog for selecting a file (throwing version).
-    ///
-    /// Throws a `GLibError` if the dialog fails for a reason other than
-    /// the user cancelling. Cancellation returns `nil`.
-    ///
-    /// ```swift
-    /// let path = try await dialog.openThrowing(parent: window)
-    /// ```
-    public func openThrowing(parent: Widget?) async throws(GLibError) -> String? {
+    public func open(parent: Widget?) async throws(GLibError) -> String? {
         try await FileDialog.retype {
             try await withCheckedThrowingContinuation { continuation in
                 let box = DialogAsyncSupport.retainBox(continuation)
@@ -113,14 +102,8 @@ public final class FileDialog: GObjectRef {
     /// Opens the file dialog for saving a file.
     ///
     /// Returns the selected save path, or `nil` if the user cancelled.
-    public func save(parent: Widget?) async -> String? {
-        await (try? saveThrowing(parent: parent)) ?? nil
-    }
-
-    /// Opens the file dialog for saving a file (throwing version).
-    ///
-    /// Throws a `GLibError` on failure. Cancellation returns `nil`.
-    public func saveThrowing(parent: Widget?) async throws(GLibError) -> String? {
+    /// Throws a `GLibError` on failure.
+    public func save(parent: Widget?) async throws(GLibError) -> String? {
         try await FileDialog.retype {
             try await withCheckedThrowingContinuation { continuation in
                 let box = DialogAsyncSupport.retainBox(continuation)
@@ -147,14 +130,8 @@ public final class FileDialog: GObjectRef {
     /// Opens the file dialog for selecting a folder.
     ///
     /// Returns the selected folder path, or `nil` if the user cancelled.
-    public func selectFolder(parent: Widget?) async -> String? {
-        await (try? selectFolderThrowing(parent: parent)) ?? nil
-    }
-
-    /// Opens the file dialog for selecting a folder (throwing version).
-    ///
-    /// Throws a `GLibError` on failure. Cancellation returns `nil`.
-    public func selectFolderThrowing(parent: Widget?) async throws(GLibError) -> String? {
+    /// Throws a `GLibError` on failure.
+    public func selectFolder(parent: Widget?) async throws(GLibError) -> String? {
         try await FileDialog.retype {
             try await withCheckedThrowingContinuation { continuation in
                 let box = DialogAsyncSupport.retainBox(continuation)

@@ -53,20 +53,13 @@ public final class ColorDialog: GObjectRef {
     /// Opens the color dialog for the user to choose a color.
     ///
     /// Returns the selected color, or `nil` if the user cancelled.
+    /// Throws a `GLibError` if the underlying GTK call fails.
     ///
     /// ```swift
-    /// let color = await dialog.chooseRGBA(parent: window)
+    /// let color = try await dialog.chooseRGBA(parent: window)
     /// if let color { print("Selected: \(color)") }
     /// ```
-    public func chooseRGBA(parent: Widget?, initialColor: RGBA? = nil) async -> RGBA? {
-        await (try? chooseRGBAThrowing(parent: parent, initialColor: initialColor)) ?? nil
-    }
-
-    /// Opens the color dialog (throwing version).
-    ///
-    /// Throws a `GLibError` if the dialog fails for a reason other than
-    /// the user cancelling. Cancellation returns `nil`.
-    public func chooseRGBAThrowing(parent: Widget?, initialColor: RGBA? = nil) async throws(GLibError) -> RGBA? {
+    public func chooseRGBA(parent: Widget?, initialColor: RGBA? = nil) async throws(GLibError) -> RGBA? {
         try await ColorDialog.retype {
             try await withCheckedThrowingContinuation { continuation in
                 let box = DialogAsyncSupport.retainBox(continuation)

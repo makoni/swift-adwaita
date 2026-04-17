@@ -18,8 +18,10 @@ struct PictureExample: DemoExample {
 
     // Load via FileDialog
     let dialog = FileDialog()
-    dialog.open(parent: window) { path in
-        if let path { picture.setFilename(path) }
+    Task { @MainActor in
+        if let path = try? await dialog.open(parent: window) {
+            picture.setFilename(path)
+        }
     }
     """
 
@@ -72,7 +74,7 @@ struct PictureExample: DemoExample {
                 FileFilter(name: "All files", patterns: ["*"])
             ])
             Task { @MainActor in
-                if let path = await dialog.open(parent: box.root) {
+                if let path = try? await dialog.open(parent: box.root) {
                     picture.setFilename(path)
                 }
             }

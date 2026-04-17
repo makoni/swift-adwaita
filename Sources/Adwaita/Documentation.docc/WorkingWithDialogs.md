@@ -172,21 +172,21 @@ let filters = ListStore(itemType: FileFilter.gType)
 filters.append(filter)
 dialog.filters = filters
 
-// Open a file — non-throwing variant treats cancel + error as nil
+// Open a file — cancellation returns nil, GTK failures throw GLibError
 Task { @MainActor in
-    if let path = await dialog.open(parent: window) {
-        print("Selected: \(path)")
+    do {
+        if let path = try await dialog.open(parent: window) {
+            print("Selected: \(path)")
+        }
+    } catch {
+        print("Open dialog failed: \((error as? GLibError)?.message ?? error.localizedDescription)")
     }
 }
 
-// Throwing variant distinguishes cancellation (nil) from a real error
+// If you only care about the path (cancel + error both collapse to nil):
 Task { @MainActor in
-    do {
-        if let path = try await dialog.saveThrowing(parent: window) {
-            print("Save to: \(path)")
-        }
-    } catch {
-        print("Save dialog failed: \((error as? GLibError)?.message ?? error.localizedDescription)")
+    if let path = try? await dialog.save(parent: window) {
+        print("Save to: \(path)")
     }
 }
 ```

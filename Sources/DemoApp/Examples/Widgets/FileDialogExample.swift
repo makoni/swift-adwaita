@@ -18,7 +18,7 @@ struct FileDialogExample: DemoExample {
 
     // Open
     Task { @MainActor in
-        if let path = await dialog.open(parent: widget) {
+        if let path = try? await dialog.open(parent: widget) {
             print("Selected: \\(path)")
         }
     }
@@ -26,14 +26,14 @@ struct FileDialogExample: DemoExample {
     // Save
     dialog.initialName = "untitled.swift"
     Task { @MainActor in
-        if let path = await dialog.save(parent: widget) {
+        if let path = try? await dialog.save(parent: widget) {
             print("Save to: \\(path)")
         }
     }
 
     // Select folder
     Task { @MainActor in
-        if let path = await dialog.selectFolder(parent: widget) {
+        if let path = try? await dialog.selectFolder(parent: widget) {
             print("Folder: \\(path)")
         }
     }
@@ -74,7 +74,7 @@ struct FileDialogExample: DemoExample {
                 FileFilter(name: "All files", patterns: ["*"])
             ])
             Task { @MainActor in
-                let path = await dialog.open(parent: box.root)
+                let path = try? await dialog.open(parent: box.root)
                 resultLabel.text = path ?? "Cancelled"
             }
         }
@@ -93,7 +93,7 @@ struct FileDialogExample: DemoExample {
             dialog.title = "Save File"
             dialog.initialName = "untitled.swift"
             Task { @MainActor in
-                let path = await dialog.save(parent: box.root)
+                let path = try? await dialog.save(parent: box.root)
                 resultLabel.text = path ?? "Cancelled"
             }
         }
@@ -111,7 +111,7 @@ struct FileDialogExample: DemoExample {
             let dialog = FileDialog()
             dialog.title = "Select Folder"
             Task { @MainActor in
-                let path = await dialog.selectFolder(parent: box.root)
+                let path = try? await dialog.selectFolder(parent: box.root)
                 resultLabel.text = path ?? "Cancelled"
             }
         }
