@@ -18,7 +18,8 @@ public struct RGBA: Sendable, Equatable {
 
 /// A color chooser dialog.
 ///
-/// Wraps `GtkColorDialog` (GTK 4.10+).
+/// Wraps `GtkColorDialog` (GTK 4.10+). Async methods resume on the main
+/// actor once the user picks a color or dismisses the dialog.
 @MainActor
 public final class ColorDialog: GObjectRef {
     /// Creates a new color dialog.
@@ -58,133 +59,82 @@ public final class ColorDialog: GObjectRef {
     /// if let color { print("Selected: \(color)") }
     /// ```
     public func chooseRGBA(parent: Widget?, initialColor: RGBA? = nil) async -> RGBA? {
-        await withCheckedContinuation { continuation in
-            chooseRGBA(parent: parent, initialColor: initialColor) { color in
-                continuation.resume(returning: color)
-            }
-        }
-    }
-
-    /// Opens the color dialog for the user to choose a color.
-    ///
-    /// - Parameters:
-    ///   - parent: The parent window, or nil.
-    ///   - initialColor: The initial color, or nil.
-    ///   - completion: Called with the selected color, or nil if cancelled.
-    public func chooseRGBA(
-        parent: Widget?,
-        initialColor: RGBA? = nil,
-        completion: @escaping @MainActor (RGBA?) -> Void
-    ) {
-        let box = DialogAsyncSupport.retainBox(completion)
-        let parentPtr = parent.flatMap { cadw_cast_window($0.pointer) }
-        let callback: GAsyncReadyCallback = { source, result, userData in
-            let box = DialogAsyncSupport.takeBox(
-                userData,
-                as: (@MainActor (RGBA?) -> Void).self,
-                context: #function
-            )
-            guard let source, let result else {
-                MainActor.assumeIsolated { box.closure(nil) }
-                return
-            }
-            var error: UnsafeMutablePointer<GError>?
-            let rgba = gtk_color_dialog_choose_rgba_finish(OpaquePointer(source), result, &error)
-            let color: RGBA?
-            if let rgba {
-                color = RGBA(
-                    red: Double(rgba.pointee.red),
-                    green: Double(rgba.pointee.green),
-                    blue: Double(rgba.pointee.blue),
-                    alpha: Double(rgba.pointee.alpha)
-                )
-                gdk_rgba_free(UnsafeMutablePointer(mutating: rgba))
-            } else {
-                color = nil
-            }
-            if let error { g_error_free(error) }
-            MainActor.assumeIsolated { box.closure(color) }
-        }
-        if let initialColor {
-            var gdkColor = GdkRGBA(
-                red: Float(initialColor.red),
-                green: Float(initialColor.green),
-                blue: Float(initialColor.blue),
-                alpha: Float(initialColor.alpha)
-            )
-            gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, &gdkColor, nil, callback, box)
-        } else {
-            gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, nil, nil, callback, box)
-        }
+        (try? await chooseRGBAThrowing(parent: parent, initialColor: initialColor)) ?? nil
     }
 
     /// Opens the color dialog (throwing version).
     ///
     /// Throws a `GLibError` if the dialog fails for a reason other than
     /// the user cancelling. Cancellation returns `nil`.
-    public func chooseRGBAThrowing(parent: Widget?, initialColor: RGBA? = nil) async throws -> RGBA? {
-        try await withCheckedThrowingContinuation { continuation in
-            chooseRGBAThrowing(parent: parent, initialColor: initialColor) { result in
-                continuation.resume(with: result)
+    public func chooseRGBAThrowing(parent: Widget?, initialColor: RGBA? = nil) async throws(GLibError) -> RGBA? {
+        try await ColorDialog.retype {
+            try await withCheckedThrowingContinuation { continuation in
+                let box = DialogAsyncSupport.retainBox(continuation)
+                let parentPtr = parent.flatMap { cadw_cast_window($0.pointer) }
+                let callback: GAsyncReadyCallback = { source, result, userData in
+                    ColorDialog.finishColor(userData: userData, source: source, result: result)
+                }
+                if let initialColor {
+                    var gdkColor = GdkRGBA(
+                        red: Float(initialColor.red),
+                        green: Float(initialColor.green),
+                        blue: Float(initialColor.blue),
+                        alpha: Float(initialColor.alpha)
+                    )
+                    gtk_color_dialog_choose_rgba(self.opaquePointer, parentPtr, &gdkColor, nil, callback, box)
+                } else {
+                    gtk_color_dialog_choose_rgba(self.opaquePointer, parentPtr, nil, nil, callback, box)
+                }
             }
         }
     }
+}
 
-    /// Opens the color dialog (throwing version).
-    ///
-    /// The completion handler receives a `Result` — `.success(nil)` on cancel,
-    /// `.success(color)` on selection, or `.failure(GLibError)` on error.
-    public func chooseRGBAThrowing(
-        parent: Widget?,
-        initialColor: RGBA? = nil,
-        completion: @escaping @MainActor (Result<RGBA?, GLibError>) -> Void
-    ) {
-        let box = DialogAsyncSupport.retainBox(completion)
-        let parentPtr = parent.flatMap { cadw_cast_window($0.pointer) }
-        let callback: GAsyncReadyCallback = { source, result, userData in
-            let box = DialogAsyncSupport.takeBox(
-                userData,
-                as: (@MainActor (Result<RGBA?, GLibError>) -> Void).self,
-                context: #function
-            )
-            guard let source, let result else {
-                MainActor.assumeIsolated { box.closure(.success(nil)) }
-                return
-            }
-            var error: UnsafeMutablePointer<GError>?
-            let rgba = gtk_color_dialog_choose_rgba_finish(OpaquePointer(source), result, &error)
-            let callResult: Result<RGBA?, GLibError>
-            if let rgba {
-                let color = RGBA(
-                    red: Double(rgba.pointee.red),
-                    green: Double(rgba.pointee.green),
-                    blue: Double(rgba.pointee.blue),
-                    alpha: Double(rgba.pointee.alpha)
-                )
-                gdk_rgba_free(UnsafeMutablePointer(mutating: rgba))
-                callResult = .success(color)
-            } else if let error {
-                if DialogAsyncSupport.isDismissed(error) {
-                    g_error_free(error)
-                    callResult = .success(nil)
-                } else {
-                    callResult = .failure(GLibError(consuming: error))
-                }
-            } else {
-                callResult = .success(nil)
-            }
-            MainActor.assumeIsolated { box.closure(callResult) }
+private extension ColorDialog {
+    static func retype<T>(_ operation: () async throws -> T) async throws(GLibError) -> T {
+        do {
+            return try await operation()
+        } catch let error as GLibError {
+            throw error
+        } catch {
+            preconditionFailure("ColorDialog continuation threw non-GLibError: \(error)")
         }
-        if let initialColor {
-            var gdkColor = GdkRGBA(
-                red: Float(initialColor.red),
-                green: Float(initialColor.green),
-                blue: Float(initialColor.blue),
-                alpha: Float(initialColor.alpha)
+    }
+
+    static func finishColor(
+        userData: UnsafeMutableRawPointer?,
+        source: UnsafeMutablePointer<GObject>?,
+        result: OpaquePointer?
+    ) {
+        let continuation = DialogAsyncSupport.takeBox(
+            userData,
+            as: CheckedContinuation<RGBA?, any Error>.self,
+            context: #function
+        ).closure
+        guard let source, let result else {
+            continuation.resume(returning: nil)
+            return
+        }
+        var error: UnsafeMutablePointer<GError>?
+        let rgba = gtk_color_dialog_choose_rgba_finish(OpaquePointer(source), result, &error)
+        if let rgba {
+            let color = RGBA(
+                red: Double(rgba.pointee.red),
+                green: Double(rgba.pointee.green),
+                blue: Double(rgba.pointee.blue),
+                alpha: Double(rgba.pointee.alpha)
             )
-            gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, &gdkColor, nil, callback, box)
+            gdk_rgba_free(UnsafeMutablePointer(mutating: rgba))
+            continuation.resume(returning: color)
+        } else if let error {
+            if DialogAsyncSupport.isDismissed(error) {
+                g_error_free(error)
+                continuation.resume(returning: nil)
+            } else {
+                continuation.resume(throwing: GLibError(consuming: error))
+            }
         } else {
-            gtk_color_dialog_choose_rgba(opaquePointer, parentPtr, nil, nil, callback, box)
+            continuation.resume(returning: nil)
         }
     }
 }

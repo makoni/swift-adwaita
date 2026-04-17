@@ -71,8 +71,8 @@ struct PictureExample: DemoExample {
                 FileFilter(name: "Images", suffixes: ["png", "jpg", "jpeg", "webp", "svg", "bmp", "gif"]),
                 FileFilter(name: "All files", patterns: ["*"])
             ])
-            dialog.open(parent: box.root) { path in
-                if let path {
+            Task { @MainActor in
+                if let path = await dialog.open(parent: box.root) {
                     picture.setFilename(path)
                 }
             }

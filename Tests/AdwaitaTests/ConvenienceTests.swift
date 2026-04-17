@@ -118,15 +118,21 @@ struct ConvenienceTests {
     @Test @MainActor func fontDialogThrowingMethodExists() {
         ensureAdwInit()
         let dialog = FontDialog()
-        let _: (Widget?, String?, @escaping @MainActor (Result<String?, GLibError>) -> Void) -> Void = dialog
-            .chooseFontThrowing
+        let _: (Widget?, String?) async throws(GLibError) -> String? = dialog.chooseFontThrowing
     }
 
     @Test @MainActor func colorDialogThrowingMethodExists() {
         ensureAdwInit()
         let dialog = ColorDialog()
-        let _: (Widget?, RGBA?, @escaping @MainActor (Result<RGBA?, GLibError>) -> Void) -> Void = dialog
-            .chooseRGBAThrowing
+        let _: (Widget?, RGBA?) async throws(GLibError) -> RGBA? = dialog.chooseRGBAThrowing
+    }
+
+    @Test @MainActor func fileDialogThrowingMethodsExist() {
+        ensureAdwInit()
+        let dialog = FileDialog()
+        let _: (Widget?) async throws(GLibError) -> String? = dialog.openThrowing
+        let _: (Widget?) async throws(GLibError) -> String? = dialog.saveThrowing
+        let _: (Widget?) async throws(GLibError) -> String? = dialog.selectFolderThrowing
     }
 
     // MARK: - Localization

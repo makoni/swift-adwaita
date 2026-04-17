@@ -17,21 +17,25 @@ struct FileDialogExample: DemoExample {
     ])
 
     // Open
-    dialog.open(parent: widget) { path in
-        if let path {
+    Task { @MainActor in
+        if let path = await dialog.open(parent: widget) {
             print("Selected: \\(path)")
         }
     }
 
     // Save
     dialog.initialName = "untitled.swift"
-    dialog.save(parent: widget) { path in
-        if let path { print("Save to: \\(path)") }
+    Task { @MainActor in
+        if let path = await dialog.save(parent: widget) {
+            print("Save to: \\(path)")
+        }
     }
 
     // Select folder
-    dialog.selectFolder(parent: widget) { path in
-        if let path { print("Folder: \\(path)") }
+    Task { @MainActor in
+        if let path = await dialog.selectFolder(parent: widget) {
+            print("Folder: \\(path)")
+        }
     }
     """
 
@@ -69,7 +73,8 @@ struct FileDialogExample: DemoExample {
                 FileFilter(name: "Text files", suffixes: ["txt", "md"]),
                 FileFilter(name: "All files", patterns: ["*"])
             ])
-            dialog.open(parent: box.root) { path in
+            Task { @MainActor in
+                let path = await dialog.open(parent: box.root)
                 resultLabel.text = path ?? "Cancelled"
             }
         }
@@ -87,7 +92,8 @@ struct FileDialogExample: DemoExample {
             let dialog = FileDialog()
             dialog.title = "Save File"
             dialog.initialName = "untitled.swift"
-            dialog.save(parent: box.root) { path in
+            Task { @MainActor in
+                let path = await dialog.save(parent: box.root)
                 resultLabel.text = path ?? "Cancelled"
             }
         }
@@ -104,7 +110,8 @@ struct FileDialogExample: DemoExample {
         folderBtn.onClicked { [resultLabel, box] in
             let dialog = FileDialog()
             dialog.title = "Select Folder"
-            dialog.selectFolder(parent: box.root) { path in
+            Task { @MainActor in
+                let path = await dialog.selectFolder(parent: box.root)
                 resultLabel.text = path ?? "Cancelled"
             }
         }

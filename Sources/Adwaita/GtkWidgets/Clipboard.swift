@@ -1,14 +1,6 @@
 import CAdwaita
 import GObjectSupport
 
-/// A helper for the async callback pattern.
-private final class ClipboardAsyncBox<T>: @unchecked Sendable {
-    let closure: T
-    init(_ closure: T) {
-        self.closure = closure
-    }
-}
-
 /// Provides access to the system clipboard for copy/paste.
 ///
 /// Wraps `GdkClipboard`. Obtain an instance via `Widget.clipboard`.
@@ -18,34 +10,6 @@ public final class Clipboard: GObjectRef {
     /// Sets the clipboard content to the given text.
     public func setText(_ text: String) {
         gdk_clipboard_set_text(opaquePointer, text)
-    }
-
-    /// Reads text from the clipboard asynchronously.
-    ///
-    /// - Parameter completion: Called with the clipboard text, or nil if not available.
-    public func readText(completion: @escaping @MainActor (String?) -> Void) {
-        let box = Unmanaged.passRetained(ClipboardAsyncBox(completion)).toOpaque()
-        gdk_clipboard_read_text_async(
-            opaquePointer,
-            nil,
-            { source, result, userData in
-                guard let userData, let source, let result else { return }
-                var error: UnsafeMutablePointer<GError>?
-                let cStr = gdk_clipboard_read_text_finish(OpaquePointer(source), result, &error)
-                let text: String?
-                if let cStr {
-                    text = String(cString: cStr)
-                    g_free(gpointer(mutating: cStr))
-                } else {
-                    text = nil
-                }
-                if let error { g_error_free(error) }
-                let box = Unmanaged<ClipboardAsyncBox<@MainActor (String?) -> Void>>.fromOpaque(userData)
-                    .takeRetainedValue()
-                MainActor.assumeIsolated { box.closure(text) }
-            },
-            box
-        )
     }
 
     /// Sets the clipboard content to an image via a `GdkTexture`.
@@ -59,41 +23,20 @@ public final class Clipboard: GObjectRef {
         gdk_clipboard_set_texture(opaquePointer, OpaquePointer(texture.pointer))
     }
 
-    /// Reads a texture (image) from the clipboard asynchronously.
-    ///
-    /// - Parameter completion: Called with the texture, or nil if not available.
-    public func readTexture(completion: @escaping @MainActor (Texture?) -> Void) {
-        let box = Unmanaged.passRetained(ClipboardAsyncBox(completion)).toOpaque()
-        gdk_clipboard_read_texture_async(
-            opaquePointer,
-            nil,
-            { source, result, userData in
-                guard let userData, let source, let result else { return }
-                var error: UnsafeMutablePointer<GError>?
-                let texture = gdk_clipboard_read_texture_finish(OpaquePointer(source), result, &error)
-                let value: Texture? = if let texture {
-                    // Transfer full — we own the reference
-                    Texture(raw: UnsafeMutableRawPointer(texture))
-                } else {
-                    nil
-                }
-                if let error { g_error_free(error) }
-                let box = Unmanaged<ClipboardAsyncBox<@MainActor (Texture?) -> Void>>.fromOpaque(userData)
-                    .takeRetainedValue()
-                MainActor.assumeIsolated { box.closure(value) }
-            },
-            box
-        )
-    }
-
     /// Reads text from the clipboard using async/await.
     ///
     /// - Returns: The clipboard text, or nil if not available.
     public func readText() async -> String? {
         await withCheckedContinuation { continuation in
-            readText { text in
-                continuation.resume(returning: text)
-            }
+            let box = DialogAsyncSupport.retainBox(continuation)
+            gdk_clipboard_read_text_async(
+                opaquePointer,
+                nil,
+                { source, result, userData in
+                    Clipboard.finishText(userData: userData, source: source, result: result)
+                },
+                box
+            )
         }
     }
 
@@ -102,9 +45,15 @@ public final class Clipboard: GObjectRef {
     /// - Returns: The texture, or nil if not available.
     public func readTexture() async -> Texture? {
         await withCheckedContinuation { continuation in
-            readTexture { texture in
-                continuation.resume(returning: texture)
-            }
+            let box = DialogAsyncSupport.retainBox(continuation)
+            gdk_clipboard_read_texture_async(
+                opaquePointer,
+                nil,
+                { source, result, userData in
+                    Clipboard.finishTexture(userData: userData, source: source, result: result)
+                },
+                box
+            )
         }
     }
 
@@ -120,6 +69,58 @@ public final class Clipboard: GObjectRef {
     @discardableResult
     public func onChanged(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .changed, handler: handler)
+    }
+}
+
+private extension Clipboard {
+    static func finishText(
+        userData: UnsafeMutableRawPointer?,
+        source: UnsafeMutablePointer<GObject>?,
+        result: OpaquePointer?
+    ) {
+        let continuation = DialogAsyncSupport.takeBox(
+            userData,
+            as: CheckedContinuation<String?, Never>.self,
+            context: #function
+        ).closure
+        guard let source, let result else {
+            continuation.resume(returning: nil)
+            return
+        }
+        var error: UnsafeMutablePointer<GError>?
+        let cStr = gdk_clipboard_read_text_finish(OpaquePointer(source), result, &error)
+        if let error { g_error_free(error) }
+        guard let cStr else {
+            continuation.resume(returning: nil)
+            return
+        }
+        let text = String(cString: cStr)
+        g_free(gpointer(mutating: cStr))
+        continuation.resume(returning: text)
+    }
+
+    static func finishTexture(
+        userData: UnsafeMutableRawPointer?,
+        source: UnsafeMutablePointer<GObject>?,
+        result: OpaquePointer?
+    ) {
+        let continuation = DialogAsyncSupport.takeBox(
+            userData,
+            as: CheckedContinuation<Texture?, Never>.self,
+            context: #function
+        ).closure
+        guard let source, let result else {
+            continuation.resume(returning: nil)
+            return
+        }
+        var error: UnsafeMutablePointer<GError>?
+        let texture = gdk_clipboard_read_texture_finish(OpaquePointer(source), result, &error)
+        if let error { g_error_free(error) }
+        guard let texture else {
+            continuation.resume(returning: nil)
+            return
+        }
+        continuation.resume(returning: Texture(raw: UnsafeMutableRawPointer(texture)))
     }
 }
 

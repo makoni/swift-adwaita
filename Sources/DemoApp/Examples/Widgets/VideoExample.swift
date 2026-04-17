@@ -48,8 +48,8 @@ struct VideoExample: DemoExample {
                 FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi", "mov", "ogv"]),
                 FileFilter(name: "All files", patterns: ["*"])
             ])
-            dialog.open(parent: box.root) { path in
-                if let path {
+            Task { @MainActor in
+                if let path = await dialog.open(parent: box.root) {
                     video.setFilename(path)
                 }
             }

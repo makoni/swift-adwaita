@@ -2,103 +2,98 @@
 
 Upgrade path for `swift-adwaita` from Swift 6.0 to 6.1 tools version, plus a punch list of code that will benefit from features stabilised in 6.1.
 
-## 1. Baseline bump
+**Status: complete.** All tiers below are done. Tier 1 shipped with the 6.1 bump (commit `1782a66` + `59e52f4`); Tier 2.3 and Tier 2.4 shipped together in a follow-up since the only downstream consumer (`swifty-notes-gtk`) was migrated in lockstep.
 
-- `Package.swift` header: `// swift-tools-version: 6.1`
-- Keep `swift-language-mode: 6` (no change — Swift 6 language mode already in force).
-- Minimum toolchain: **Swift 6.1.0** (shipped March 2025 — now supported by Apple's own SDKs as the floor; Swift 6.0 is being dropped in new projects).
+## 1. Baseline bump ✅
 
-After the bump, consumers of the library must also be on 6.1+. The immediate downstream consumer (`swifty-notes-gtk`) is already on Swift 6.3, so no action needed there.
+- `Package.swift` header: `// swift-tools-version: 6.1` — done.
+- `swift-language-mode: 6` — unchanged, already in force.
+- Minimum toolchain: **Swift 6.1.0** (shipped March 2025).
 
-## 2. Modernisation opportunities (ranked by ROI)
+Downstream consumer (`swifty-notes-gtk`) runs on Swift 6.3, so no action needed there.
 
-### Tier 1 — Do during the 6.1 bump
+## 2. Modernisation — completed work
 
-#### 2.1 Isolated `deinit` (SE-0371) — remove implicit thread-safety assumptions
+### Tier 1 — Done with the 6.1 bump
 
-Classes annotated `@MainActor` whose `deinit` currently relies on GObject/GLib being ref-count-safe from any thread. Marking deinits as `isolated` makes the contract explicit and lets us also touch main-thread-only state (timers, signal IDs) without `assumeIsolated` gymnastics.
+#### 2.1 Isolated `deinit` (SE-0371) ✅
 
-Candidates:
+Classes annotated `@MainActor` whose `deinit` previously relied on GObject/GLib being ref-count-safe from any thread. Marking deinits as `isolated` makes the contract explicit and permits touching main-thread-only state (timers, signal IDs) without `assumeIsolated` gymnastics.
 
-- `Sources/GObjectSupport/GObject.swift:78-81` — `GObjectRef.deinit` calls `g_object_unref`.
-- `Sources/GObjectSupport/GVariant.swift:43-45` — `GVariant.deinit` calls `g_variant_unref`.
-- `Sources/Adwaita/BoxedTypes.swift:45-46, 155-156` — `SpringParams`, `BreakpointCondition`.
+Shipped in commit `59e52f4`:
+
+- `Sources/GObjectSupport/GObject.swift:78` — `GObjectRef.deinit` (`g_object_unref`).
+- `Sources/GObjectSupport/GVariant.swift:43` — `GVariant.deinit` (`g_variant_unref`).
+- `Sources/Adwaita/BoxedTypes.swift:45, 155` — `SpringParams`, `BreakpointCondition`.
 - `Sources/Adwaita/GtkWidgets/TextAttributes.swift:30` — `pango_attr_destroy`.
 
-After migration, the `nonisolated(unsafe) let pointer` declarations (e.g. `GObject.swift:47`, `GVariant.swift:26`, `BoxedTypes.swift:22, 94`) stay — they are correct. But any *method* that does GTK work during teardown can drop defensive `assumeIsolated` / `Task { @MainActor }` and just run in the isolated deinit.
+`nonisolated(unsafe) let pointer` declarations remain in place — that is still the correct shape for the pointer field, since the pointer value itself is address-stable and read-only after init.
 
-**Effort:** Medium · **Wins:** Medium (clearer invariants, fewer footguns).
+#### 2.2 `AnimatedImagePlayer` ships with `isolated deinit` from day one ✅
 
-#### 2.2 New `AnimatedImagePlayer` will ship with `isolated deinit` from day one
+Shipped alongside the 6.1 bump in commit `1782a66`. Lifecycle (stopping timers, releasing pixbuf animation + iterator) runs on MainActor with no workarounds.
 
-Lifecycle (stopping timers, releasing pixbuf animation + iterator) runs on MainActor without workarounds. This is a design input for the new API being added alongside the migration, not rework of existing code.
+### Tier 2 — Done in follow-up pass
 
-**Effort:** Already baked into the new API.
+#### 2.3 Typed throws on dialog APIs (SE-0413) ✅
 
-### Tier 2 — Worth doing in a follow-up pass
+All throwing dialog methods now declare `throws(GLibError)` instead of untyped `throws`.
 
-#### 2.3 Typed throws on dialog APIs (SE-0413, stable in 6.1)
+Migrated:
 
-All "throwing" dialog methods currently bounce through `Result<T, GLibError>` or `throws -> T` but in reality only ever throw `GLibError`. Typed throws makes the contract explicit without breaking source compatibility for callers that use `catch` without pattern-matching.
+- `FileDialog.openThrowing / saveThrowing / selectFolderThrowing`
+- `ColorDialog.chooseRGBAThrowing`
+- `FontDialog.chooseFontThrowing`
 
-Candidates:
-
-- `Sources/Adwaita/GtkWidgets/FileDialog.swift:91-96, 142-144, 250, 356` — `open/save/selectFolderThrowing`
-- `Sources/Adwaita/GtkWidgets/ColorDialog.swift:140` — `chooseRGBAThrowing`
-- `Sources/Adwaita/GtkWidgets/FontDialog.swift:117` — `chooseFontDescThrowing`
-
-Change pattern:
+**Swift 6.3 stdlib caveat.** `withCheckedThrowingContinuation` in Swift 6.3 still only bridges to `any Error`, not typed throws — the `async throws(E)` overload landed in the proposal but not yet in the shipping stdlib. We bridge across this gap with a per-class `retype<T>(_ operation:) async throws(GLibError) -> T` wrapper that catches `any Error`, downcasts to `GLibError`, and `preconditionFailure`s on any other error type (which is unreachable in practice because the underlying continuations only ever resume with `GLibError` or success). When the stdlib ships the typed overload, the wrapper can be deleted and the calls inlined.
 
 ```swift
-// before
-public func openThrowing() async throws -> String? { ... }
-
-// after
-public func openThrowing() async throws(GLibError) -> String? { ... }
+// pattern used in FileDialog/ColorDialog/FontDialog
+private static func retype<T>(_ op: () async throws -> T) async throws(GLibError) -> T {
+    do { return try await op() }
+    catch let error as GLibError { throw error }
+    catch { preconditionFailure("continuation threw non-GLibError: \(error)") }
+}
 ```
 
-**Effort:** Easy (≈15 lines changed) · **Wins:** Small (API clarity, better auto-completion in catch blocks).
+#### 2.4 Callback-based dialog/clipboard APIs collapsed into `async` ✅
 
-#### 2.4 Callback-based APIs → pure `async throws`
+Callback variants were removed outright — no deprecation shim — since the only downstream consumer (`swifty-notes-gtk`) was migrated in lockstep and the library has not yet had a stable release.
 
-Several async wrappers today: `callback → continuation → async`. With 6.1 isolation inference we can collapse the callback layer entirely in most dialogs. Scope is larger — do in a dedicated PR.
+Removed entirely:
 
-Candidates:
+- `Clipboard.readText(completion:) / readTexture(completion:)` — now `async -> String? / Texture?` only.
+- `FileDialog.open(parent:completion:) / save(...) / selectFolder(...)` and their throwing variants — now async-only.
+- `ColorDialog.chooseRGBA(parent:completion:)` and throwing variant — async-only.
+- `FontDialog.chooseFont(parent:completion:)` and throwing variant — async-only.
 
-- `Sources/Adwaita/GtkWidgets/Clipboard.swift:26, 65, 92-109` — `readText`, `readTexture`.
-- `Sources/Adwaita/GtkWidgets/FileDialog.swift:104, 213, 319` — `open`, `save`, `selectFolder`.
-- `Sources/Adwaita/GtkWidgets/ColorDialog.swift:77, 140` — `chooseRGBA`.
-- `Sources/Adwaita/GtkWidgets/FontDialog.swift:56, 117` — `chooseFontDesc`.
-- `Sources/Adwaita/GtkWidgets/UriLauncher.swift:55, 64` — `launch`.
+Shared async plumbing moved to `DialogAsyncSupport.retainBox` / `takeBox`; the class-private `ClipboardAsyncBox` helper was deleted.
 
-Preserve the callback variants as `@available(*, deprecated, renamed:)` shims for one release before removal.
+DemoApp examples (`FileDialogExample`, `ClipboardExample`, `PictureExample`, `VideoExample`) updated to wrap calls in `Task { @MainActor in await ... }`.
 
-**Effort:** Medium · **Wins:** Large (surface area shrinks, retained `*AsyncBox<T>` helpers become internal implementation details or are deleted).
-
-### Tier 3 — Skip / already optimal
+### Tier 3 — Skipped intentionally ✅
 
 These patterns show up in the codebase but do **not** need changes after the 6.1 bump:
 
-#### 2.5 `nonisolated(unsafe)` on pointer fields — already canonical
+#### 2.5 `nonisolated(unsafe)` on pointer fields — canonical
 
-`GObjectSupport/GObject.swift:47`, `GVariant.swift:26`, `BoxedTypes.swift:22, 94` are correctly using `nonisolated(unsafe) let pointer` — no better alternative in 6.1.
+`GObjectSupport/GObject.swift:47`, `GVariant.swift:26`, `BoxedTypes.swift:22, 94` — correct as-is; no better alternative in 6.1.
 
 #### 2.6 `MainContext` vs `DispatchQueue.main` — deliberate
 
-`Sources/GObjectSupport/MainContext.swift:10` has a comment explaining why the library intentionally uses `g_idle_add`/`g_timeout_add` instead of `DispatchQueue.main`. This is correct for GLib main-loop integration. Leave alone.
+`Sources/GObjectSupport/MainContext.swift:10` intentionally uses `g_idle_add`/`g_timeout_add` for GLib main-loop integration. Unchanged.
 
-#### 2.7 `@unchecked Sendable` trampoline boxes — leave
+#### 2.7 `@unchecked Sendable` trampoline boxes — kept
 
-`SignalTrampolines.swift:7-8`, `GObject.swift:8` (`GObjectLifetimeObserver`), `Signal.swift:16, 39`, `Clipboard.swift:5`, `DialogAsyncSupport.swift:4`. These wrap C-callback context. Region-based isolation (SE-0414) *could* in theory make some of them checked-Sendable, but the resulting code is less readable and the invariants are clearer with the explicit `@unchecked`. Keep.
+`SignalTrampolines.swift:7-8`, `GObject.swift:8` (`GObjectLifetimeObserver`), `Signal.swift:16, 39`, `Clipboard.swift:5`, `DialogAsyncSupport.swift:4` — wrap C-callback context. Region-based isolation (SE-0414) could in theory make some checked-Sendable, but the resulting code is less readable and invariants are clearer with explicit `@unchecked`. Kept.
 
-## 3. Execution order
+## 3. Execution record
 
-1. **Tools-version bump + Tier 1 (isolated deinit)** — single PR, together with the new image-loading API that depends on it.
-2. **Tier 2.3 (typed throws)** — small follow-up PR, source-compatible for most call sites.
-3. **Tier 2.4 (callback → async)** — dedicated PR, marks old signatures deprecated first.
+1. ✅ **Tools-version bump + Tier 1** — commits `1782a66` (6.1 bump + AnimatedImagePlayer) and `59e52f4` (isolated deinit on existing types).
+2. ✅ **Tier 2.3 + 2.4** — combined follow-up. Typed throws and callback-collapse landed together since the only consumer (`swifty-notes-gtk`) was migrated in the same pass, making the deprecation-shim step unnecessary.
 
-## 4. Non-goals
+## 4. Non-goals — honoured
 
-- No change to `swift-language-mode` (already 6).
-- No new dependencies beyond the existing `swift-docc-plugin`.
-- No API break for existing consumers during the 6.1 bump itself.
+- `swift-language-mode` unchanged (still 6).
+- No new dependencies beyond existing `swift-docc-plugin`.
+- `swifty-notes-gtk` call-sites were migrated in lockstep; no shipped API break for external consumers.
