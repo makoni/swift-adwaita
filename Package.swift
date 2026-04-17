@@ -30,11 +30,17 @@ let package = Package(
         ),
         .target(
             name: "GObjectSupport",
-            dependencies: ["CAdwaita"]
+            dependencies: ["CAdwaita"],
+            swiftSettings: [
+                .enableExperimentalFeature("IsolatedDeinit")
+            ]
         ),
         .target(
             name: "Adwaita",
-            dependencies: ["GObjectSupport", "CGtkSource"]
+            dependencies: ["GObjectSupport", "CGtkSource"],
+            swiftSettings: [
+                .enableExperimentalFeature("IsolatedDeinit")
+            ]
         ),
         .executableTarget(
             name: "DemoApp",
