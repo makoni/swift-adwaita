@@ -75,7 +75,7 @@ open class GObjectRef {
         self.init(raw: pointer)
     }
 
-    deinit {
+    isolated deinit {
         guard lifetimeObserver.consumeAliveFlag() else { return }
         g_object_unref(pointer)
     }

@@ -42,7 +42,7 @@ public final class SpringParams {
         adw_spring_params_ref(pointer)
     }
 
-    deinit {
+    isolated deinit {
         adw_spring_params_unref(pointer)
     }
 
@@ -152,7 +152,7 @@ public final class BreakpointCondition {
         self.pointer = adw_breakpoint_condition_copy(pointer)!
     }
 
-    deinit {
+    isolated deinit {
         adw_breakpoint_condition_free(pointer)
     }
 

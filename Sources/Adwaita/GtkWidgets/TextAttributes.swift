@@ -27,7 +27,7 @@ public final class TextAttributes {
         pointer = pango_attr_list_ref(ptr)
     }
 
-    deinit {
+    isolated deinit {
         pango_attr_list_unref(pointer)
     }
 

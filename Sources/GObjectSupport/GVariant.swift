@@ -40,7 +40,7 @@ public final class Variant {
         pointer = g_variant_ref(ptr)
     }
 
-    deinit {
+    isolated deinit {
         g_variant_unref(pointer)
     }
 
