@@ -242,7 +242,6 @@ struct NavigationMiscTests {
                 "open-with-swifty-notes"
             )
         }
-        spinMainLoop()
 
         #expect(capturedURLs == [fileURL])
         #expect(capturedHint == "open-with-swifty-notes")
