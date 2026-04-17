@@ -59,7 +59,7 @@ public final class ColorDialog: GObjectRef {
     /// if let color { print("Selected: \(color)") }
     /// ```
     public func chooseRGBA(parent: Widget?, initialColor: RGBA? = nil) async -> RGBA? {
-        (try? await chooseRGBAThrowing(parent: parent, initialColor: initialColor)) ?? nil
+        await (try? chooseRGBAThrowing(parent: parent, initialColor: initialColor)) ?? nil
     }
 
     /// Opens the color dialog (throwing version).

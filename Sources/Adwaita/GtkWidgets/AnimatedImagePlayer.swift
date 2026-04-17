@@ -74,7 +74,7 @@ public final class AnimatedImagePlayer {
         self.picture = picture
         self.animation = animation
         self.iterator = iterator
-        self.metadata = Metadata(
+        metadata = Metadata(
             width: Int(gdk_pixbuf_animation_get_width(animation)),
             height: Int(gdk_pixbuf_animation_get_height(animation))
         )
@@ -133,8 +133,8 @@ private extension AnimatedImagePlayer {
         let delay = gdk_pixbuf_animation_iter_get_delay_time(iterator)
         let intervalMs = UInt32(delay > 0 ? delay : 100)
         timerSourceID = MainContext.timeout(intervalMs: intervalMs) { [weak self] in
-            guard let self, self.isPlaying else { return false }
-            self.advanceFrame(reschedule: true)
+            guard let self, isPlaying else { return false }
+            advanceFrame(reschedule: true)
             return false
         }
     }

@@ -38,7 +38,7 @@ public final class FontDialog: GObjectRef {
     /// if let font { print("Selected: \(font)") }
     /// ```
     public func chooseFont(parent: Widget?, initialFont: String? = nil) async -> String? {
-        (try? await chooseFontThrowing(parent: parent, initialFont: initialFont)) ?? nil
+        await (try? chooseFontThrowing(parent: parent, initialFont: initialFont)) ?? nil
     }
 
     /// Opens the font dialog (throwing version).

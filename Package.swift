@@ -1,4 +1,4 @@
-// swift-tools-version: 6.1
+// swift-tools-version: 6.2
 
 import PackageDescription
 
@@ -30,17 +30,11 @@ let package = Package(
         ),
         .target(
             name: "GObjectSupport",
-            dependencies: ["CAdwaita"],
-            swiftSettings: [
-                .enableExperimentalFeature("IsolatedDeinit")
-            ]
+            dependencies: ["CAdwaita"]
         ),
         .target(
             name: "Adwaita",
-            dependencies: ["GObjectSupport", "CGtkSource"],
-            swiftSettings: [
-                .enableExperimentalFeature("IsolatedDeinit")
-            ]
+            dependencies: ["GObjectSupport", "CGtkSource"]
         ),
         .executableTarget(
             name: "DemoApp",

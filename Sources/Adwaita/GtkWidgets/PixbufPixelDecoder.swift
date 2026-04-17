@@ -9,7 +9,7 @@ import Foundation
 /// which the callers handle.
 enum PixbufPixelDecoder {
     /// Sendable representation of a decoded frame, ready to construct a texture.
-    struct DecodedPixels: Sendable {
+    struct DecodedPixels {
         let rgba: [UInt8]
         let width: Int
         let height: Int

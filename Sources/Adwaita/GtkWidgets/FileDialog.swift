@@ -75,7 +75,7 @@ public final class FileDialog: GObjectRef {
     /// if let path { print("Selected: \(path)") }
     /// ```
     public func open(parent: Widget?) async -> String? {
-        (try? await openThrowing(parent: parent)) ?? nil
+        await (try? openThrowing(parent: parent)) ?? nil
     }
 
     /// Opens the file dialog for selecting a file (throwing version).
@@ -114,7 +114,7 @@ public final class FileDialog: GObjectRef {
     ///
     /// Returns the selected save path, or `nil` if the user cancelled.
     public func save(parent: Widget?) async -> String? {
-        (try? await saveThrowing(parent: parent)) ?? nil
+        await (try? saveThrowing(parent: parent)) ?? nil
     }
 
     /// Opens the file dialog for saving a file (throwing version).
@@ -148,7 +148,7 @@ public final class FileDialog: GObjectRef {
     ///
     /// Returns the selected folder path, or `nil` if the user cancelled.
     public func selectFolder(parent: Widget?) async -> String? {
-        (try? await selectFolderThrowing(parent: parent)) ?? nil
+        await (try? selectFolderThrowing(parent: parent)) ?? nil
     }
 
     /// Opens the file dialog for selecting a folder (throwing version).
