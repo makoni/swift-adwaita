@@ -65,6 +65,51 @@ struct TextBufferTagTests {
         #expect(buffer.text == "ABCDE")
     }
 
+    @Test @MainActor func textBufferSelectRange() {
+        ensureAdwInit()
+        let buffer = TextBuffer()
+        buffer.text = "Hello World"
+        buffer.select(range: 0 ..< 5)
+        #expect(buffer.hasSelection == true)
+        #expect(buffer.selectedText == "Hello")
+    }
+
+    @Test @MainActor func textBufferSelectedRangeWithSelection() {
+        ensureAdwInit()
+        let buffer = TextBuffer()
+        buffer.text = "Hello World"
+        buffer.select(range: 6 ..< 11)
+        let range = buffer.selectedRange
+        #expect(range == 6 ..< 11)
+    }
+
+    @Test @MainActor func textBufferSelectedRangeNoSelection() {
+        ensureAdwInit()
+        let buffer = TextBuffer()
+        buffer.text = "Hello"
+        buffer.placeCursor(at: 3)
+        let range = buffer.selectedRange
+        #expect(range.lowerBound == 3)
+        #expect(range.upperBound == 3)
+    }
+
+    @Test @MainActor func textBufferDeleteRange() {
+        ensureAdwInit()
+        let buffer = TextBuffer()
+        buffer.text = "ABCDEFG"
+        buffer.delete(range: 2 ..< 5)
+        #expect(buffer.text == "ABFG")
+    }
+
+    @Test @MainActor func textBufferPlaceCursorAtOffset() {
+        ensureAdwInit()
+        let buffer = TextBuffer()
+        buffer.text = "ABCDE"
+        buffer.placeCursor(at: 2)
+        buffer.insertAtCursor("X")
+        #expect(buffer.text == "ABXCDE")
+    }
+
     @Test @MainActor func textBufferModifiedResetAndSet() {
         ensureAdwInit()
         let buffer = TextBuffer()

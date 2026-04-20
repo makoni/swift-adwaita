@@ -45,6 +45,10 @@ public final class Label: Widget {
         super.init(raw: pointer)
     }
 
+    public override class var gtkType: GType {
+        gtk_label_get_type()
+    }
+
     /// The plain text content of the label.
     ///
     /// Setting this property replaces the current text. Any markup is stripped.
@@ -164,6 +168,17 @@ public final class Label: Widget {
     public var naturalWrapMode: GtkNaturalWrapMode {
         get { gtk_label_get_natural_wrap_mode(opaquePointer) }
         set { gtk_label_set_natural_wrap_mode(opaquePointer, newValue) }
+    }
+
+    /// The Pango wrap mode used when wrapping long lines.
+    ///
+    /// Controls how wrapping occurs when ``wrap`` is `true`. Common modes are
+    /// `PANGO_WRAP_WORD` (wrap on word boundaries), `PANGO_WRAP_CHAR` (wrap on
+    /// any character), and `PANGO_WRAP_WORD_CHAR` (wrap on word boundaries but
+    /// fall back to character wrapping for very long words).
+    public var pangoWrapMode: PangoWrapMode {
+        get { gtk_label_get_wrap_mode(opaquePointer) }
+        set { gtk_label_set_wrap_mode(opaquePointer, newValue) }
     }
 
     /// Emitted when a link in the label's markup is activated.

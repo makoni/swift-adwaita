@@ -38,6 +38,10 @@ public final class Clamp: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    public override class var gtkType: GType {
+        adw_clamp_get_type()
+    }
+
     /// The widget whose width is constrained by the clamp.
     public var child: Widget? {
         get { adw_clamp_get_child(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) } }

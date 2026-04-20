@@ -73,6 +73,18 @@ struct EnhancementTests {
         #expect(label.naturalWrapMode == GtkNaturalWrapMode.word)
     }
 
+    @Test @MainActor func labelPangoWrapMode() {
+        ensureAdwInit()
+        let label = Label("Some long text that might wrap")
+        label.wrap = true
+        label.pangoWrapMode = PANGO_WRAP_WORD_CHAR
+        #expect(label.pangoWrapMode == PANGO_WRAP_WORD_CHAR)
+        label.pangoWrapMode = PANGO_WRAP_CHAR
+        #expect(label.pangoWrapMode == PANGO_WRAP_CHAR)
+        label.pangoWrapMode = PANGO_WRAP_WORD
+        #expect(label.pangoWrapMode == PANGO_WRAP_WORD)
+    }
+
     // MARK: - ListBox sort/filter
 
     @Test @MainActor func listBoxSortFunc() {

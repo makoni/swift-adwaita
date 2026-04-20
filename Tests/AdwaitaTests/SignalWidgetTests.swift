@@ -260,6 +260,28 @@ struct SignalWidgetTests {
         #expect(sw.minContentHeight == 200)
     }
 
+    @Test @MainActor func scrolledWindowOverlayScrolling() {
+        ensureAdwInit()
+        let sw = ScrolledWindow()
+        sw.overlayScrolling = false
+        #expect(sw.overlayScrolling == false)
+        sw.overlayScrolling = true
+        #expect(sw.overlayScrolling == true)
+    }
+
+    @Test @MainActor func scrolledWindowPropagateNatural() {
+        ensureAdwInit()
+        let sw = ScrolledWindow()
+        sw.propagateNaturalWidth = true
+        sw.propagateNaturalHeight = true
+        #expect(sw.propagateNaturalWidth == true)
+        #expect(sw.propagateNaturalHeight == true)
+        sw.propagateNaturalWidth = false
+        sw.propagateNaturalHeight = false
+        #expect(sw.propagateNaturalWidth == false)
+        #expect(sw.propagateNaturalHeight == false)
+    }
+
     @Test @MainActor func listBoxOperations() {
         ensureAdwInit()
         let lb = ListBox()

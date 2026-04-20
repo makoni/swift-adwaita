@@ -80,6 +80,37 @@ struct SourceViewTests {
         }
     }
 
+    @Test @MainActor func sourceBufferRangeAPIs() {
+        ensureAdwInit()
+        let buffer = SourceBuffer()
+        buffer.text = "Hello World"
+
+        buffer.select(range: 0 ..< 5)
+        #expect(buffer.selectedRange == 0 ..< 5)
+
+        buffer.placeCursor(at: 6)
+        #expect(buffer.selectedRange == 6 ..< 6)
+
+        buffer.delete(range: 0 ..< 6)
+        #expect(buffer.text == "World")
+
+        buffer.insert("!", at: 5)
+        #expect(buffer.text == "World!")
+    }
+
+    @Test @MainActor func sourceBufferUserAction() {
+        ensureAdwInit()
+        let buffer = SourceBuffer()
+        buffer.enableUndo = true
+        buffer.beginUserAction()
+        buffer.insertAtCursor("Hello")
+        buffer.insertAtCursor(" World")
+        buffer.endUserAction()
+        #expect(buffer.text == "Hello World")
+        buffer.undo()
+        #expect(buffer.text == "")
+    }
+
     @Test @MainActor func sourceViewProperties() {
         ensureAdwInit()
         let buffer = SourceBuffer()

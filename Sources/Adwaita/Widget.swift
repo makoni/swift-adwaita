@@ -184,6 +184,71 @@ open class Widget: GObjectRef {
         gtk_widget_set_size_request(widgetPointer, Int32(width), Int32(height))
     }
 
+    /// The widget's current minimum size request, as set by ``setSizeRequest(width:height:)``.
+    ///
+    /// Returns `-1` for an axis that has no explicit request.
+    public var sizeRequest: (width: Int, height: Int) {
+        var width: Int32 = 0
+        var height: Int32 = 0
+        gtk_widget_get_size_request(widgetPointer, &width, &height)
+        return (Int(width), Int(height))
+    }
+
+    /// Flags this widget as needing a resize.
+    ///
+    /// Queues a size negotiation pass on the widget and its ancestors. Use
+    /// this after changing properties (such as ``setSizeRequest(width:height:)``)
+    /// that do not automatically invalidate the layout.
+    public func queueResize() {
+        gtk_widget_queue_resize(widgetPointer)
+    }
+
+    /// The result of measuring a widget along one orientation.
+    ///
+    /// See ``measure(orientation:forSize:)``.
+    public struct Measurement: Sendable {
+        /// The minimum size in pixels.
+        public var minimum: Int
+        /// The natural (preferred) size in pixels.
+        public var natural: Int
+        /// The minimum baseline, or `-1` if not supported.
+        public var minimumBaseline: Int
+        /// The natural baseline, or `-1` if not supported.
+        public var naturalBaseline: Int
+    }
+
+    /// Measures the widget along the given orientation.
+    ///
+    /// Wraps `gtk_widget_measure`. Returns both the minimum and natural sizes
+    /// the widget would request for the given size along the other axis.
+    ///
+    /// - Parameters:
+    ///   - orientation: `GTK_ORIENTATION_HORIZONTAL` to measure width,
+    ///     `GTK_ORIENTATION_VERTICAL` to measure height.
+    ///   - forSize: The size available on the other axis, or `-1` if
+    ///     unconstrained.
+    public func measure(orientation: GtkOrientation, forSize: Int = -1) -> Measurement {
+        var minimum: Int32 = 0
+        var natural: Int32 = 0
+        var minimumBaseline: Int32 = 0
+        var naturalBaseline: Int32 = 0
+        gtk_widget_measure(
+            widgetPointer,
+            orientation,
+            Int32(forSize),
+            &minimum,
+            &natural,
+            &minimumBaseline,
+            &naturalBaseline
+        )
+        return Measurement(
+            minimum: Int(minimum),
+            natural: Int(natural),
+            minimumBaseline: Int(minimumBaseline),
+            naturalBaseline: Int(naturalBaseline)
+        )
+    }
+
     /// Returns the root widget of the widget tree this widget belongs to.
     public var root: Widget? {
         guard let ptr = gtk_widget_get_root(widgetPointer) else { return nil }
@@ -334,10 +399,34 @@ open class Widget: GObjectRef {
         return T(raw: pointer)
     }
 
+    /// The GObject type associated with this widget class.
+    ///
+    /// Subclasses override this to return their specific `gtk_*_get_type()`
+    /// value, enabling ``tryCast(_:)`` and ``isInstance(of:)-swift.method``
+    /// to perform a strict runtime type check. The default returns
+    /// `gtk_widget_get_type()`.
+    open class var gtkType: GType {
+        gtk_widget_get_type()
+    }
+
+    /// Checks whether this widget is an instance of the given GObject type.
+    public func isInstance(of gtkType: GType) -> Bool {
+        g_type_check_instance_is_a(
+            pointer.assumingMemoryBound(to: GTypeInstance.self),
+            gtkType
+        ) != 0
+    }
+
+    /// Checks whether this widget is an instance of the given widget subclass.
+    public func isInstance<T: Widget>(of type: T.Type) -> Bool {
+        isInstance(of: T.gtkType)
+    }
+
     /// Attempts to re-wrap this widget's pointer as a specific subclass.
     ///
-    /// Returns `nil` if the cast cannot be verified. Use this instead of
-    /// `cast(_:)` when you are not certain of the widget's concrete type.
+    /// Returns `nil` if the widget is not an instance of `T`. The check is
+    /// performed against ``Widget/gtkType``, so the target class must override
+    /// `gtkType` for the check to narrow beyond "is a `GtkWidget`".
     ///
     /// ```swift
     /// if let label = listItem.child?.tryCast(Label.self) {
@@ -345,15 +434,7 @@ open class Widget: GObjectRef {
     /// }
     /// ```
     public func tryCast<T: Widget>(_ type: T.Type) -> T? {
-        // All casts within the Widget hierarchy succeed at the Swift level
-        // since we use the same underlying pointer. For safety, verify the
-        // GObject is at least a valid widget.
-        guard g_type_check_instance_is_a(
-            pointer.assumingMemoryBound(to: GTypeInstance.self),
-            gtk_widget_get_type()
-        ) != 0 else {
-            return nil
-        }
+        guard isInstance(of: T.gtkType) else { return nil }
         g_object_ref(pointer)
         return T(raw: pointer)
     }

@@ -55,6 +55,68 @@ public final class SourceBuffer: GObjectRef {
         gtk_text_buffer_insert_at_cursor(textBufferPointer, text, Int32(text.utf8.count))
     }
 
+    /// Inserts text at the given character offset.
+    public func insert(_ text: String, at offset: Int) {
+        var iter = GtkTextIter()
+        gtk_text_buffer_get_iter_at_offset(textBufferPointer, &iter, Int32(offset))
+        gtk_text_buffer_insert(textBufferPointer, &iter, text, Int32(text.utf8.count))
+    }
+
+    /// Deletes text in the given character-offset range.
+    public func delete(range: Range<Int>) {
+        var start = GtkTextIter()
+        var end = GtkTextIter()
+        gtk_text_buffer_get_iter_at_offset(textBufferPointer, &start, Int32(range.lowerBound))
+        gtk_text_buffer_get_iter_at_offset(textBufferPointer, &end, Int32(range.upperBound))
+        gtk_text_buffer_delete(textBufferPointer, &start, &end)
+    }
+
+    /// Selects the text in the given character-offset range.
+    public func select(range: Range<Int>) {
+        var start = GtkTextIter()
+        var end = GtkTextIter()
+        gtk_text_buffer_get_iter_at_offset(textBufferPointer, &start, Int32(range.lowerBound))
+        gtk_text_buffer_get_iter_at_offset(textBufferPointer, &end, Int32(range.upperBound))
+        gtk_text_buffer_select_range(textBufferPointer, &start, &end)
+    }
+
+    /// The current selection as a character-offset range.
+    ///
+    /// When there is no active selection, returns an empty range at the
+    /// current insertion cursor position.
+    public var selectedRange: Range<Int> {
+        var start = GtkTextIter()
+        var end = GtkTextIter()
+        if gtk_text_buffer_get_selection_bounds(textBufferPointer, &start, &end) != 0 {
+            let lower = Int(gtk_text_iter_get_offset(&start))
+            let upper = Int(gtk_text_iter_get_offset(&end))
+            return lower..<upper
+        }
+        guard let insertMark = gtk_text_buffer_get_insert(textBufferPointer) else {
+            return 0..<0
+        }
+        gtk_text_buffer_get_iter_at_mark(textBufferPointer, &start, insertMark)
+        let offset = Int(gtk_text_iter_get_offset(&start))
+        return offset..<offset
+    }
+
+    /// Places the cursor at the given character offset.
+    public func placeCursor(at offset: Int) {
+        var iter = GtkTextIter()
+        gtk_text_buffer_get_iter_at_offset(textBufferPointer, &iter, Int32(offset))
+        gtk_text_buffer_place_cursor(textBufferPointer, &iter)
+    }
+
+    /// Begins a user-visible operation that can be undone as a unit.
+    public func beginUserAction() {
+        gtk_text_buffer_begin_user_action(textBufferPointer)
+    }
+
+    /// Ends a user-visible operation started with `beginUserAction()`.
+    public func endUserAction() {
+        gtk_text_buffer_end_user_action(textBufferPointer)
+    }
+
     /// The configured syntax-highlighting language, if any.
     public var language: SourceLanguage? {
         get {

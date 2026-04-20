@@ -18,6 +18,10 @@ public final class Picture: Widget {
         super.init(raw: pointer)
     }
 
+    public override class var gtkType: GType {
+        gtk_picture_get_type()
+    }
+
     /// Creates a picture that displays the given file.
     public init(filename: String) {
         let ptr = gtk_picture_new_for_filename(filename)!

@@ -110,6 +110,39 @@ struct WidgetBaseTests {
         label.setSizeRequest(height: 75)
     }
 
+    @Test @MainActor func widgetSizeRequestGetter() {
+        ensureAdwInit()
+        let label = Label("Getter")
+        #expect(label.sizeRequest.width == -1)
+        #expect(label.sizeRequest.height == -1)
+        label.setSizeRequest(width: 120, height: 60)
+        #expect(label.sizeRequest.width == 120)
+        #expect(label.sizeRequest.height == 60)
+    }
+
+    @Test @MainActor func widgetQueueResize() {
+        ensureAdwInit()
+        let label = Label("Resize")
+        label.setSizeRequest(width: 100, height: 40)
+        label.queueResize()
+    }
+
+    @Test @MainActor func widgetMeasureHorizontal() {
+        ensureAdwInit()
+        let label = Label("Hello")
+        let result = label.measure(orientation: GTK_ORIENTATION_HORIZONTAL, forSize: -1)
+        #expect(result.minimum >= 0)
+        #expect(result.natural >= result.minimum)
+    }
+
+    @Test @MainActor func widgetMeasureVertical() {
+        ensureAdwInit()
+        let label = Label("Hello")
+        let result = label.measure(orientation: GTK_ORIENTATION_VERTICAL, forSize: -1)
+        #expect(result.minimum >= 0)
+        #expect(result.natural >= result.minimum)
+    }
+
     // MARK: - Widget: Width / Height (unallocated)
 
     @Test @MainActor func widgetWidthHeightDefault() {
@@ -233,6 +266,23 @@ struct WidgetBaseTests {
         let child = try #require(box.firstChild)
         let asLabel = child.tryCast(Label.self)
         #expect(asLabel != nil)
+    }
+
+    @Test @MainActor func widgetTryCastWrongTypeReturnsNil() throws {
+        ensureAdwInit()
+        let label = Label("NotAPicture")
+        let box = Box(orientation: GTK_ORIENTATION_VERTICAL)
+        box.append(label)
+        let child = try #require(box.firstChild)
+        #expect(child.tryCast(Picture.self) == nil)
+        #expect(child.tryCast(Label.self) != nil)
+    }
+
+    @Test @MainActor func widgetIsInstanceOf() {
+        ensureAdwInit()
+        let label = Label("Test")
+        #expect(label.isInstance(of: Label.self) == true)
+        #expect(label.isInstance(of: Picture.self) == false)
     }
 
     // MARK: - Widget: Focus

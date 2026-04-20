@@ -72,6 +72,27 @@ public final class ScrolledWindow: Widget {
         set { gtk_scrolled_window_set_kinetic_scrolling(opaquePointer, newValue ? 1 : 0) }
     }
 
+    /// Whether overlay scrollbars are used (scrollbars drawn on top of the content
+    /// and automatically hidden when not in use).
+    public var overlayScrolling: Bool {
+        get { gtk_scrolled_window_get_overlay_scrolling(opaquePointer) != 0 }
+        set { gtk_scrolled_window_set_overlay_scrolling(opaquePointer, newValue ? 1 : 0) }
+    }
+
+    /// Whether the natural height of the child should be propagated as the
+    /// natural height of the scrolled window.
+    public var propagateNaturalHeight: Bool {
+        get { gtk_scrolled_window_get_propagate_natural_height(opaquePointer) != 0 }
+        set { gtk_scrolled_window_set_propagate_natural_height(opaquePointer, newValue ? 1 : 0) }
+    }
+
+    /// Whether the natural width of the child should be propagated as the
+    /// natural width of the scrolled window.
+    public var propagateNaturalWidth: Bool {
+        get { gtk_scrolled_window_get_propagate_natural_width(opaquePointer) != 0 }
+        set { gtk_scrolled_window_set_propagate_natural_width(opaquePointer, newValue ? 1 : 0) }
+    }
+
     /// The vertical adjustment controlling the scroll position.
     public var verticalAdjustment: Adjustment {
         let ptr = gtk_scrolled_window_get_vadjustment(opaquePointer)!
