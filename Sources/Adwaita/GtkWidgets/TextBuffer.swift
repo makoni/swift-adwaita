@@ -130,14 +130,14 @@ public final class TextBuffer: GObjectRef {
         if gtk_text_buffer_get_selection_bounds(bufferPointer, &start, &end) != 0 {
             let lower = Int(gtk_text_iter_get_offset(&start))
             let upper = Int(gtk_text_iter_get_offset(&end))
-            return lower..<upper
+            return lower ..< upper
         }
         guard let insertMark = gtk_text_buffer_get_insert(bufferPointer) else {
-            return 0..<0
+            return 0 ..< 0
         }
         gtk_text_buffer_get_iter_at_mark(bufferPointer, &start, insertMark)
         let offset = Int(gtk_text_iter_get_offset(&start))
-        return offset..<offset
+        return offset ..< offset
     }
 
     /// Deletes text in the given character-offset range.

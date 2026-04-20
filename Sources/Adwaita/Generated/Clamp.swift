@@ -38,7 +38,7 @@ public final class Clamp: Widget {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
-    public override class var gtkType: GType {
+    override public class var gtkType: GType {
         adw_clamp_get_type()
     }
 

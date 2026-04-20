@@ -18,7 +18,7 @@ public final class Picture: Widget {
         super.init(raw: pointer)
     }
 
-    public override class var gtkType: GType {
+    override public class var gtkType: GType {
         gtk_picture_get_type()
     }
 

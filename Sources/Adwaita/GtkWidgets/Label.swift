@@ -45,7 +45,7 @@ public final class Label: Widget {
         super.init(raw: pointer)
     }
 
-    public override class var gtkType: GType {
+    override public class var gtkType: GType {
         gtk_label_get_type()
     }
 

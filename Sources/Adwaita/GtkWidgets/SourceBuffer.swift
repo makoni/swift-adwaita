@@ -90,14 +90,14 @@ public final class SourceBuffer: GObjectRef {
         if gtk_text_buffer_get_selection_bounds(textBufferPointer, &start, &end) != 0 {
             let lower = Int(gtk_text_iter_get_offset(&start))
             let upper = Int(gtk_text_iter_get_offset(&end))
-            return lower..<upper
+            return lower ..< upper
         }
         guard let insertMark = gtk_text_buffer_get_insert(textBufferPointer) else {
-            return 0..<0
+            return 0 ..< 0
         }
         gtk_text_buffer_get_iter_at_mark(textBufferPointer, &start, insertMark)
         let offset = Int(gtk_text_iter_get_offset(&start))
-        return offset..<offset
+        return offset ..< offset
     }
 
     /// Places the cursor at the given character offset.
