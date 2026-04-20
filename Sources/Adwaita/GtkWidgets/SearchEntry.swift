@@ -70,4 +70,12 @@ public final class SearchEntry: Widget {
     public func onActivate(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .activate, handler: handler)
     }
+
+    /// Programmatically emits the `search-changed` signal.
+    ///
+    /// Useful for driving UI from debug helpers or tests without actually
+    /// typing into the entry.
+    public func emitSearchChanged() {
+        g_signal_emit_by_name_no_args(UnsafeMutableRawPointer(opaquePointer), "search-changed")
+    }
 }

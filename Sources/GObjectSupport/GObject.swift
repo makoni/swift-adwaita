@@ -96,6 +96,16 @@ open class GObjectRef {
         OpaquePointer(pointer)
     }
 
+    /// Whether two wrappers refer to the same underlying GObject.
+    ///
+    /// Use this instead of `===` (which compares Swift class identity) when
+    /// the same GObject may be referenced through multiple Swift wrappers —
+    /// e.g. a widget returned by a parent lookup vs. one held in a property.
+    public func isSame(as other: GObjectRef?) -> Bool {
+        guard let other else { return false }
+        return pointer == other.pointer
+    }
+
     /// Binds a property of this object to a property of another object.
     ///
     /// When the source property changes, the target property is updated automatically.

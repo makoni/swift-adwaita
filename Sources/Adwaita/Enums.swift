@@ -322,6 +322,16 @@ public extension GtkNaturalWrapMode {
     static let word = GTK_NATURAL_WRAP_WORD
 }
 
+public extension PangoWrapMode {
+    /// Wrap at word boundaries.
+    static let word = PANGO_WRAP_WORD
+    /// Wrap at any character.
+    static let char = PANGO_WRAP_CHAR
+    /// Wrap at word boundaries, falling back to character when a word
+    /// doesn't fit.
+    static let wordChar = PANGO_WRAP_WORD_CHAR
+}
+
 public extension AdwAnimationState {
     /// Idle state.
     static let idle = ADW_ANIMATION_IDLE

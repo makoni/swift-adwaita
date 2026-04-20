@@ -173,8 +173,12 @@ public enum MainContext {
     /// from asynchronous Swift code. The closure runs on the main thread
     /// during `g_main_context_iteration`.
     ///
+    /// Callable from any context (including background threads) because
+    /// `g_idle_add_full` is thread-safe; only the closure body is
+    /// `@MainActor`-isolated.
+    ///
     /// - Parameter closure: The work to perform on the main thread.
-    public static func idle(_ closure: @escaping @MainActor () -> Void) {
+    public nonisolated static func idle(_ closure: @escaping @MainActor () -> Void) {
         _ = idleSource(priority: G_PRIORITY_DEFAULT_IDLE, closure)
     }
 
@@ -221,7 +225,7 @@ public enum MainContext {
     }
 
     @discardableResult
-    private static func idleSource(
+    private nonisolated static func idleSource(
         priority: Int32,
         _ closure: @escaping @MainActor () -> Void
     ) -> SourceID {

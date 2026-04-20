@@ -231,6 +231,14 @@ public final class SimpleAction: GObjectRef {
         }
     }
 
+    /// Activates the action, optionally passing a parameter.
+    ///
+    /// For stateless or parameterless actions pass `nil`. For parameterized
+    /// actions pass a matching `Variant`.
+    public func activate(parameter: Variant? = nil) {
+        g_action_activate(OpaquePointer(pointer), parameter?.pointer)
+    }
+
     /// Connects a handler to the `activate` signal (no parameter).
     ///
     /// The GSimpleAction `activate` signal always passes a `GVariant*` parameter

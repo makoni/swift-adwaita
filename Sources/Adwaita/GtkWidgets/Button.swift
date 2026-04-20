@@ -137,4 +137,11 @@ public final class Button: Widget {
     public func onClicked(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .clicked, handler: handler)
     }
+
+    /// Programmatically emits the `clicked` signal as if the user clicked the button.
+    ///
+    /// Useful for driving UI from keyboard shortcuts, debug helpers, or tests.
+    public func emitClicked() {
+        g_signal_emit_by_name_no_args(UnsafeMutableRawPointer(opaquePointer), "clicked")
+    }
 }
