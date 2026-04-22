@@ -395,18 +395,6 @@ public extension PangoEllipsizeMode {
     static let end = PANGO_ELLIPSIZE_END
 }
 
-public extension AdwAccentColor {
-    static let blue = ADW_ACCENT_COLOR_BLUE
-    static let teal = ADW_ACCENT_COLOR_TEAL
-    static let green = ADW_ACCENT_COLOR_GREEN
-    static let yellow = ADW_ACCENT_COLOR_YELLOW
-    static let orange = ADW_ACCENT_COLOR_ORANGE
-    static let red = ADW_ACCENT_COLOR_RED
-    static let pink = ADW_ACCENT_COLOR_PINK
-    static let purple = ADW_ACCENT_COLOR_PURPLE
-    static let slate = ADW_ACCENT_COLOR_SLATE
-}
-
 public extension AdwCenteringPolicy {
     /// Centering may slide off-axis under pressure.
     static let loose = ADW_CENTERING_POLICY_LOOSE
@@ -430,13 +418,6 @@ public extension AdwJustifyMode {
     static let fill = ADW_JUSTIFY_FILL
 }
 
-public extension AdwPackDirection {
-    /// Pack children from start to end.
-    static let startToEnd = ADW_PACK_START_TO_END
-    /// Pack children from end to start.
-    static let endToStart = ADW_PACK_END_TO_START
-}
-
 public extension AdwToolbarStyle {
     /// Flat style — no background tint.
     static let flat = ADW_TOOLBAR_FLAT
@@ -444,13 +425,6 @@ public extension AdwToolbarStyle {
     static let raised = ADW_TOOLBAR_RAISED
     /// Raised with a separator border.
     static let raisedBorder = ADW_TOOLBAR_RAISED_BORDER
-}
-
-public extension AdwWrapPolicy {
-    /// Prefer the minimum width before wrapping.
-    static let minimum = ADW_WRAP_MINIMUM
-    /// Prefer the natural width before wrapping.
-    static let natural = ADW_WRAP_NATURAL
 }
 
 public extension GtkAccessibleRole {
