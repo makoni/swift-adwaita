@@ -394,6 +394,53 @@ struct GtkDetailTests {
         #expect(color.alpha == 0.8)
     }
 
+    @Test func rgbaHexParsesSixDigitFormOpaque() throws {
+        let color = try #require(RGBA(hex: "#FF8000"))
+        #expect(color.red == 1.0)
+        #expect(abs(color.green - 128.0 / 255.0) < 1e-9)
+        #expect(color.blue == 0.0)
+        #expect(color.alpha == 1.0)
+    }
+
+    @Test func rgbaHexParsesEightDigitFormWithAlpha() throws {
+        let color = try #require(RGBA(hex: "#FF8000CC"))
+        #expect(abs(color.alpha - 204.0 / 255.0) < 1e-9)
+    }
+
+    @Test func rgbaHexParsesThreeDigitShorthand() throws {
+        // #F80 -> #FF8800
+        let short = try #require(RGBA(hex: "#F80"))
+        let long = try #require(RGBA(hex: "#FF8800"))
+        #expect(short == long)
+    }
+
+    @Test func rgbaHexParsesFourDigitShorthandWithAlpha() throws {
+        // #F80C -> #FF8800CC
+        let short = try #require(RGBA(hex: "#F80C"))
+        let long = try #require(RGBA(hex: "#FF8800CC"))
+        #expect(short == long)
+    }
+
+    @Test func rgbaHexAcceptsNoLeadingHash() throws {
+        let withHash = try #require(RGBA(hex: "#10203040"))
+        let withoutHash = try #require(RGBA(hex: "10203040"))
+        #expect(withHash == withoutHash)
+    }
+
+    @Test func rgbaHexIsCaseInsensitive() throws {
+        let lower = try #require(RGBA(hex: "#abcdef"))
+        let upper = try #require(RGBA(hex: "#ABCDEF"))
+        #expect(lower == upper)
+    }
+
+    @Test func rgbaHexRejectsInvalidInput() {
+        #expect(RGBA(hex: "") == nil)
+        #expect(RGBA(hex: "#12345") == nil)
+        #expect(RGBA(hex: "#1234567") == nil)
+        #expect(RGBA(hex: "#XYZXYZ") == nil)
+        #expect(RGBA(hex: "not-a-color") == nil)
+    }
+
     // MARK: - FontDialog
 
     @Test @MainActor func fontDialogCreation() {

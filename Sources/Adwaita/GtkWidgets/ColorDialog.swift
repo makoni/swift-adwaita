@@ -14,6 +14,56 @@ public struct RGBA: Sendable, Equatable {
         self.blue = blue
         self.alpha = alpha
     }
+
+    /// Parses a CSS-style hex color string.
+    ///
+    /// Accepts `#RGB`, `#RGBA`, `#RRGGBB`, and `#RRGGBBAA`. The leading `#`
+    /// is optional, and digits are case-insensitive. Three/four-digit
+    /// shorthand is expanded by doubling each nibble, matching the CSS
+    /// rule (`#F80` → `#FF8800`). Returns `nil` for any other length,
+    /// empty input, or non-hex characters.
+    ///
+    /// ```swift
+    /// RGBA(hex: "#FF8000")    // opaque orange
+    /// RGBA(hex: "#FF8000CC")  // orange @ ~80% alpha
+    /// RGBA(hex: "F80")        // shorthand, no leading hash
+    /// ```
+    public init?(hex: String) {
+        var body = Substring(hex)
+        if body.first == "#" { body = body.dropFirst() }
+        guard !body.isEmpty else { return nil }
+
+        let expanded: String
+        switch body.count {
+        case 3, 4:
+            expanded = body.reduce(into: "") { $0.append(contentsOf: "\($1)\($1)") }
+        case 6, 8:
+            expanded = String(body)
+        default:
+            return nil
+        }
+
+        guard let value = UInt32(expanded, radix: 16) else { return nil }
+        let hasAlpha = expanded.count == 8
+        let r: UInt32, g: UInt32, b: UInt32, a: UInt32
+        if hasAlpha {
+            r = (value >> 24) & 0xFF
+            g = (value >> 16) & 0xFF
+            b = (value >> 8) & 0xFF
+            a = value & 0xFF
+        } else {
+            r = (value >> 16) & 0xFF
+            g = (value >> 8) & 0xFF
+            b = value & 0xFF
+            a = 0xFF
+        }
+        self.init(
+            red: Double(r) / 255.0,
+            green: Double(g) / 255.0,
+            blue: Double(b) / 255.0,
+            alpha: Double(a) / 255.0
+        )
+    }
 }
 
 /// A color chooser dialog.
