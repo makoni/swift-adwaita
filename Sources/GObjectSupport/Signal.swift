@@ -464,6 +464,32 @@ public enum SignalHelper {
 
     // MARK: - Signals returning Bool
 
+    /// Connects a signal with two `Double` parameters returning `GdkDragAction`.
+    /// Used for `GtkDropTarget::enter` and `::motion`, where GTK expects the
+    /// handler to return a single preferred action (not a mask) — omitting
+    /// the return value triggers a `did not return a unique preferred action`
+    /// critical.
+    @discardableResult
+    public static func connectDoubleDoubleReturnGdkDragAction(
+        _ instance: GObjectRef,
+        signal: SignalName,
+        handler: @escaping @MainActor (Double, Double) -> GdkDragAction
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineDoubleDoubleDragAction as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    Double,
+                    Double,
+                    UnsafeMutableRawPointer
+                ) -> GdkDragAction,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
     /// Connects a signal with two `Double` parameters returning `Bool`.
     /// Used for scroll signals (dx, dy).
     @discardableResult

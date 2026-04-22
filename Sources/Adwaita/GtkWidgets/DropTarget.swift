@@ -128,11 +128,33 @@ public final class DropTarget: GObjectRef {
 
     /// Emitted when the pointer enters the widget during a drag.
     ///
+    /// GTK expects the handler for `GtkDropTarget::enter` to return a single
+    /// preferred `GdkDragAction` (not a mask). The void-returning overload
+    /// installs a handler that tries to pick one bit from the target's
+    /// ``actions`` mask automatically, so existing callers just get the drop
+    /// accepted without a `did not return a unique preferred action`
+    /// critical. If you need to reject the drop or choose a specific action
+    /// based on the pointer position, use ``onEnter(preferredAction:)``.
+    ///
     /// - Parameter handler: Called when the pointer enters. Receives the x and y coordinates.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onEnter(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: .enter) { x, y in handler(x, y) }
+        SignalHelper.connectDoubleDoubleReturnGdkDragAction(self, signal: .enter) { [weak self] x, y in
+            handler(x, y)
+            return self?.preferredAction ?? GDK_ACTION_COPY
+        }
+    }
+
+    /// Same as ``onEnter(_:)`` but the handler decides which single action
+    /// to prefer for the incoming drop.
+    ///
+    /// Return `GDK_ACTION_COPY`, `GDK_ACTION_MOVE`, or `GDK_ACTION_LINK` to
+    /// accept with that action; return a value with no bits set to reject.
+    @discardableResult
+    public func onEnter(preferredAction handler: @escaping @MainActor (Double, Double) -> GdkDragAction)
+        -> SignalConnection {
+        SignalHelper.connectDoubleDoubleReturnGdkDragAction(self, signal: .enter, handler: handler)
     }
 
     /// Emitted when the pointer leaves the widget during a drag.
@@ -146,11 +168,38 @@ public final class DropTarget: GObjectRef {
 
     /// Emitted when the pointer moves over the widget during a drag.
     ///
+    /// Like ``onEnter(_:)``, GTK expects the handler for
+    /// `GtkDropTarget::motion` to return a single preferred `GdkDragAction`.
+    /// The void-returning overload auto-picks one from the target's
+    /// ``actions`` mask.
+    ///
     /// - Parameter handler: Called when the pointer moves. Receives the x and y coordinates.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onMotion(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDouble(self, signal: .motion) { x, y in handler(x, y) }
+        SignalHelper.connectDoubleDoubleReturnGdkDragAction(self, signal: .motion) { [weak self] x, y in
+            handler(x, y)
+            return self?.preferredAction ?? GDK_ACTION_COPY
+        }
+    }
+
+    /// Same as ``onMotion(_:)`` but the handler decides which single action
+    /// to prefer as the pointer moves.
+    @discardableResult
+    public func onMotion(preferredAction handler: @escaping @MainActor (Double, Double) -> GdkDragAction)
+        -> SignalConnection {
+        SignalHelper.connectDoubleDoubleReturnGdkDragAction(self, signal: .motion, handler: handler)
+    }
+
+    /// First action bit set in ``actions`` (COPY → MOVE → LINK). Used as the
+    /// default return value for the void-returning `onEnter`/`onMotion`
+    /// overloads when the handler doesn't express a choice itself.
+    private var preferredAction: GdkDragAction {
+        let mask = actions.rawValue
+        if mask & GDK_ACTION_COPY.rawValue != 0 { return GDK_ACTION_COPY }
+        if mask & GDK_ACTION_MOVE.rawValue != 0 { return GDK_ACTION_MOVE }
+        if mask & GDK_ACTION_LINK.rawValue != 0 { return GDK_ACTION_LINK }
+        return GDK_ACTION_COPY
     }
 }
 

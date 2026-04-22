@@ -276,6 +276,19 @@ func signalTrampolineDoubleDoubleBool(
     }
 }
 
+func signalTrampolineDoubleDoubleDragAction(
+    _ instance: UnsafeMutableRawPointer,
+    _ value1: Double,
+    _ value2: Double,
+    _ userData: UnsafeMutableRawPointer
+) -> GdkDragAction {
+    let box = Unmanaged<ClosureBox<@MainActor (Double, Double) -> GdkDragAction>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    return MainActor.assumeIsolated {
+        box.closure(value1, value2)
+    }
+}
+
 private func openFileURLs(from files: UnsafeMutablePointer<OpaquePointer?>?, count: Int32) -> [URL] {
     guard let files, count > 0 else { return [] }
     var urls: [URL] = []
