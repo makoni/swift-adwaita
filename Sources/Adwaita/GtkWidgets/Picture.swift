@@ -104,9 +104,43 @@ public final class Picture: Widget {
     /// The only intended use is identity comparison — detecting whether the
     /// paintable has been swapped for a different instance (for example, when
     /// animating frame by frame). Do not dereference or retain the pointer.
+    ///
+    /// Prefer ``paintableIdentity`` or ``paintableIsSame(as:)`` in new code;
+    /// this accessor leaks a raw pointer and is kept only for callers that
+    /// need interop with low-level GTK APIs.
     public var paintablePointer: UnsafeMutableRawPointer? {
         guard let paintable = gtk_picture_get_paintable(opaquePointer) else { return nil }
         return UnsafeMutableRawPointer(paintable)
+    }
+
+    /// An opaque identity token for the picture's current paintable.
+    ///
+    /// Use this to detect when the paintable has been swapped out — for
+    /// example, after ``setPaintable(_:)`` or when an ``AnimatedImagePlayer``
+    /// advances a frame. Two reads return equal values as long as the same
+    /// underlying `GdkPaintable` is installed.
+    ///
+    /// Equatable and Sendable, but the contained pointer must not be
+    /// dereferenced. Returns `nil` when no paintable is installed.
+    public struct PaintableIdentity: Equatable, Sendable {
+        fileprivate let raw: UInt
+    }
+
+    /// The current paintable's identity, or `nil` if none is installed.
+    public var paintableIdentity: PaintableIdentity? {
+        guard let paintable = gtk_picture_get_paintable(opaquePointer) else { return nil }
+        return PaintableIdentity(raw: UInt(bitPattern: Int(bitPattern: paintable)))
+    }
+
+    /// Whether the picture's current paintable is the given texture.
+    ///
+    /// Clean replacement for reading ``paintablePointer`` and comparing raw
+    /// pointers. Returns `false` when the picture has no paintable, or when
+    /// the installed paintable is a different object — including a different
+    /// ``Texture`` that happens to hold the same pixels.
+    public func paintableIsSame(as texture: Texture) -> Bool {
+        guard let paintable = gtk_picture_get_paintable(opaquePointer) else { return false }
+        return UnsafeMutableRawPointer(paintable) == texture.pointer
     }
 
     /// The intrinsic pixel size of the currently displayed paintable, if any.

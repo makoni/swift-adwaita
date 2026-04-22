@@ -516,6 +516,47 @@ struct GtkWidgetTests {
         #expect(firstPointer != secondPointer)
     }
 
+    @Test @MainActor func picturePaintableIsSameMatchesInstalledTexture() {
+        ensureAdwInit()
+        let picture = Picture()
+        let first = Texture(rgbaData: [255, 0, 0, 255], width: 1, height: 1)
+        let second = Texture(rgbaData: [0, 0, 255, 255], width: 1, height: 1)
+
+        #expect(!picture.paintableIsSame(as: first))
+
+        picture.setPaintable(first)
+        #expect(picture.paintableIsSame(as: first))
+        #expect(!picture.paintableIsSame(as: second))
+
+        picture.setPaintable(second)
+        #expect(picture.paintableIsSame(as: second))
+        #expect(!picture.paintableIsSame(as: first))
+
+        picture.setPaintable(nil)
+        #expect(!picture.paintableIsSame(as: first))
+        #expect(!picture.paintableIsSame(as: second))
+    }
+
+    @Test @MainActor func picturePaintableIdentityTracksSwaps() {
+        ensureAdwInit()
+        let picture = Picture()
+        #expect(picture.paintableIdentity == nil)
+
+        let first = Texture(rgbaData: [255, 0, 0, 255], width: 1, height: 1)
+        picture.setPaintable(first)
+        let firstIdentity = picture.paintableIdentity
+        #expect(firstIdentity != nil)
+        // The identity must remain equal while the same paintable is installed.
+        #expect(picture.paintableIdentity == firstIdentity)
+
+        let second = Texture(rgbaData: [0, 255, 0, 255], width: 1, height: 1)
+        picture.setPaintable(second)
+        #expect(picture.paintableIdentity != firstIdentity)
+
+        picture.setPaintable(nil)
+        #expect(picture.paintableIdentity == nil)
+    }
+
     @Test @MainActor func iconThemeForDisplayAcceptsSearchPath() throws {
         ensureAdwInit()
         let display = try #require(Display.default)
