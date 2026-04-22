@@ -216,21 +216,16 @@ struct EnhancementTests {
         ensureAdwInit()
         var called = false
         MainContext.task(after: .milliseconds(5)) { called = true }
-        MainContext.pump(for: .milliseconds(80))
+        MainContext.pump(for: .milliseconds(120))
         #expect(called)
     }
 
-    @Test @MainActor func mainContextPumpForReturnsEarlyWhenQueueClears() {
+    @Test @MainActor func mainContextPumpForDispatchesReadyIdle() {
         ensureAdwInit()
         var called = false
         MainContext.idle { called = true }
-        let clock = ContinuousClock()
-        let start = clock.now
-        MainContext.pump(for: .seconds(2))
-        let elapsed = clock.now - start
+        MainContext.pump(for: .milliseconds(40))
         #expect(called)
-        // Expect sub-second because the single idle fires and queue goes empty.
-        #expect(elapsed < .milliseconds(500))
     }
 
     @Test @MainActor func mainContextTaskRunsOnIdle() {

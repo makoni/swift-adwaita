@@ -253,11 +253,12 @@ public enum MainContext {
     ///
     /// Unlike ``drainPending()``, this waits for newly-armed timeouts — so
     /// `MainContext.task(after: .milliseconds(5)) { ... }` will fire if
-    /// `duration` is at least 5 milliseconds. Returns early once at least
-    /// one source has fired and the queue is empty again; otherwise runs
-    /// for the full `duration`.
+    /// `duration` is at least 5 milliseconds. Always runs for roughly the
+    /// full `duration`; there is no early-return heuristic, which keeps
+    /// behaviour deterministic across environments with different levels
+    /// of background idle work on the default context.
     ///
-    /// - Parameter duration: The maximum wall-clock time to spend pumping.
+    /// - Parameter duration: The wall-clock budget to spend pumping.
     public static func pump(for duration: Duration) {
         guard duration > .zero else {
             drainPending()
@@ -266,18 +267,14 @@ public enum MainContext {
         let context = g_main_context_default()
         let clock = ContinuousClock()
         let deadline = clock.now.advanced(by: duration)
-        var ranAny = false
         while clock.now < deadline {
             if g_main_context_pending(context) != 0 {
                 g_main_context_iteration(context, 0)
-                ranAny = true
                 continue
             }
-            if ranAny { break }
-            // Nothing is ready yet — sleep for a short tick and re-check.
             let remaining = deadline - clock.now
             guard remaining > .zero else { break }
-            let stepMs = min(UInt32(10), milliseconds(from: remaining))
+            let stepMs = min(UInt32(5), milliseconds(from: remaining))
             if stepMs == 0 { break }
             g_usleep(gulong(stepMs) * 1_000)
         }
