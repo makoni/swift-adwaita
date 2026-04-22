@@ -343,6 +343,268 @@ public extension AdwAnimationState {
     static let finished = ADW_ANIMATION_FINISHED
 }
 
+public extension GtkTextDirection {
+    /// No direction set; use the default locale direction.
+    static let none = GTK_TEXT_DIR_NONE
+    /// Left-to-right text direction.
+    static let ltr = GTK_TEXT_DIR_LTR
+    /// Right-to-left text direction.
+    static let rtl = GTK_TEXT_DIR_RTL
+}
+
+public extension GtkLevelBarMode {
+    /// Show a continuous bar proportional to the value.
+    static let continuous = GTK_LEVEL_BAR_MODE_CONTINUOUS
+    /// Show discrete blocks, one per integer step.
+    static let discrete = GTK_LEVEL_BAR_MODE_DISCRETE
+}
+
+public extension GtkShortcutScope {
+    /// Shortcut is handled by the widget itself.
+    static let local = GTK_SHORTCUT_SCOPE_LOCAL
+    /// Shortcut is handled by the first ancestor that is a `GtkShortcutManager`.
+    static let managed = GTK_SHORTCUT_SCOPE_MANAGED
+    /// Shortcut is handled by the root widget.
+    static let global = GTK_SHORTCUT_SCOPE_GLOBAL
+}
+
+public extension GtkSpinButtonUpdatePolicy {
+    /// Update value on every change.
+    static let always = GTK_UPDATE_ALWAYS
+    /// Update only when the entered value is valid.
+    static let ifValid = GTK_UPDATE_IF_VALID
+}
+
+public extension GtkStringFilterMatchMode {
+    /// Match only when the whole string is equal.
+    static let exact = GTK_STRING_FILTER_MATCH_MODE_EXACT
+    /// Match when the needle appears anywhere.
+    static let substring = GTK_STRING_FILTER_MATCH_MODE_SUBSTRING
+    /// Match when the string starts with the needle.
+    static let prefix = GTK_STRING_FILTER_MATCH_MODE_PREFIX
+}
+
+public extension PangoEllipsizeMode {
+    /// Don't ellipsize.
+    static let none = PANGO_ELLIPSIZE_NONE
+    /// Ellipsize at the start (`…foo`).
+    static let start = PANGO_ELLIPSIZE_START
+    /// Ellipsize in the middle (`fo…ar`).
+    static let middle = PANGO_ELLIPSIZE_MIDDLE
+    /// Ellipsize at the end (`foo…`).
+    static let end = PANGO_ELLIPSIZE_END
+}
+
+public extension AdwAccentColor {
+    static let blue = ADW_ACCENT_COLOR_BLUE
+    static let teal = ADW_ACCENT_COLOR_TEAL
+    static let green = ADW_ACCENT_COLOR_GREEN
+    static let yellow = ADW_ACCENT_COLOR_YELLOW
+    static let orange = ADW_ACCENT_COLOR_ORANGE
+    static let red = ADW_ACCENT_COLOR_RED
+    static let pink = ADW_ACCENT_COLOR_PINK
+    static let purple = ADW_ACCENT_COLOR_PURPLE
+    static let slate = ADW_ACCENT_COLOR_SLATE
+}
+
+public extension AdwCenteringPolicy {
+    /// Centering may slide off-axis under pressure.
+    static let loose = ADW_CENTERING_POLICY_LOOSE
+    /// Centering stays centered at all costs.
+    static let strict = ADW_CENTERING_POLICY_STRICT
+}
+
+public extension AdwDialogPresentationMode {
+    /// Choose based on window size.
+    static let auto = ADW_DIALOG_AUTO
+    /// Present as a floating dialog.
+    static let floating = ADW_DIALOG_FLOATING
+    /// Present as a bottom sheet.
+    static let bottomSheet = ADW_DIALOG_BOTTOM_SHEET
+}
+
+public extension AdwJustifyMode {
+    /// No justification.
+    static let none = ADW_JUSTIFY_NONE
+    /// Fill the available space evenly.
+    static let fill = ADW_JUSTIFY_FILL
+}
+
+public extension AdwPackDirection {
+    /// Pack children from start to end.
+    static let startToEnd = ADW_PACK_START_TO_END
+    /// Pack children from end to start.
+    static let endToStart = ADW_PACK_END_TO_START
+}
+
+public extension AdwToolbarStyle {
+    /// Flat style — no background tint.
+    static let flat = ADW_TOOLBAR_FLAT
+    /// Raised style — lifted surface.
+    static let raised = ADW_TOOLBAR_RAISED
+    /// Raised with a separator border.
+    static let raisedBorder = ADW_TOOLBAR_RAISED_BORDER
+}
+
+public extension AdwWrapPolicy {
+    /// Prefer the minimum width before wrapping.
+    static let minimum = ADW_WRAP_MINIMUM
+    /// Prefer the natural width before wrapping.
+    static let natural = ADW_WRAP_NATURAL
+}
+
+public extension GtkAccessibleRole {
+    /// A button that triggers an action when activated.
+    static let button = GTK_ACCESSIBLE_ROLE_BUTTON
+    /// A checkbox the user can toggle on or off.
+    static let checkbox = GTK_ACCESSIBLE_ROLE_CHECKBOX
+    /// A plain static label.
+    static let label = GTK_ACCESSIBLE_ROLE_LABEL
+    /// A link.
+    static let link = GTK_ACCESSIBLE_ROLE_LINK
+    /// A list of items.
+    static let list = GTK_ACCESSIBLE_ROLE_LIST
+    /// An item within a list.
+    static let listItem = GTK_ACCESSIBLE_ROLE_LIST_ITEM
+    /// A container grouping related widgets.
+    static let group = GTK_ACCESSIBLE_ROLE_GROUP
+    /// Generic container without specific role.
+    static let generic = GTK_ACCESSIBLE_ROLE_GENERIC
+    /// A search input.
+    static let searchBox = GTK_ACCESSIBLE_ROLE_SEARCH_BOX
+    /// A text entry.
+    static let textBox = GTK_ACCESSIBLE_ROLE_TEXT_BOX
+    /// A toolbar.
+    static let toolbar = GTK_ACCESSIBLE_ROLE_TOOLBAR
+    /// A tab within a tab list.
+    static let tab = GTK_ACCESSIBLE_ROLE_TAB
+    /// A tab list (row of tabs).
+    static let tabList = GTK_ACCESSIBLE_ROLE_TAB_LIST
+    /// A dialog / modal.
+    static let dialog = GTK_ACCESSIBLE_ROLE_DIALOG
+    /// An alert dialog.
+    static let alertDialog = GTK_ACCESSIBLE_ROLE_ALERT_DIALOG
+    /// Generic image role.
+    static let img = GTK_ACCESSIBLE_ROLE_IMG
+    /// Default / unspecified role.
+    static let none = GTK_ACCESSIBLE_ROLE_NONE
+}
+
+// MARK: - Bitflag-style C enums
+
+public extension GdkModifierType {
+    /// Shift modifier.
+    static let shift = GDK_SHIFT_MASK
+    /// Lock modifier (Caps Lock).
+    static let lock = GDK_LOCK_MASK
+    /// Control modifier.
+    static let control = GDK_CONTROL_MASK
+    /// Alt modifier.
+    static let alt = GDK_ALT_MASK
+    /// Meta modifier.
+    static let meta = GDK_META_MASK
+    /// Super modifier (usually the platform / "windows" key).
+    static let `super` = GDK_SUPER_MASK
+    /// Hyper modifier.
+    static let hyper = GDK_HYPER_MASK
+    /// Primary mouse button pressed.
+    static let button1 = GDK_BUTTON1_MASK
+    /// Secondary mouse button pressed.
+    static let button2 = GDK_BUTTON2_MASK
+    /// Middle mouse button pressed.
+    static let button3 = GDK_BUTTON3_MASK
+    /// Fourth mouse button pressed.
+    static let button4 = GDK_BUTTON4_MASK
+    /// Fifth mouse button pressed.
+    static let button5 = GDK_BUTTON5_MASK
+}
+
+public extension GdkDragAction {
+    /// Copy the source data.
+    static let copy = GDK_ACTION_COPY
+    /// Move the source data (remove from origin).
+    static let move = GDK_ACTION_MOVE
+    /// Create a link to the source data.
+    static let link = GDK_ACTION_LINK
+    /// Ask the user which action to take.
+    static let ask = GDK_ACTION_ASK
+}
+
+public extension GtkEventControllerScrollFlags {
+    /// Don't emit scroll events for any axis.
+    static let none = GTK_EVENT_CONTROLLER_SCROLL_NONE
+    /// Emit scroll events for the vertical axis.
+    static let vertical = GTK_EVENT_CONTROLLER_SCROLL_VERTICAL
+    /// Emit scroll events for the horizontal axis.
+    static let horizontal = GTK_EVENT_CONTROLLER_SCROLL_HORIZONTAL
+    /// Emit discrete (mouse-wheel-style) scroll events.
+    static let discrete = GTK_EVENT_CONTROLLER_SCROLL_DISCRETE
+    /// Emit kinetic scroll-decelerate events.
+    static let kinetic = GTK_EVENT_CONTROLLER_SCROLL_KINETIC
+    /// Emit scroll events for both axes.
+    static let bothAxes = GTK_EVENT_CONTROLLER_SCROLL_BOTH_AXES
+}
+
+public extension GtkInputHints {
+    /// No hints.
+    static let none = GTK_INPUT_HINT_NONE
+    /// Suggest spelling corrections.
+    static let spellcheck = GTK_INPUT_HINT_SPELLCHECK
+    /// Do not suggest spelling corrections.
+    static let noSpellcheck = GTK_INPUT_HINT_NO_SPELLCHECK
+    /// Suggest word completions.
+    static let wordCompletion = GTK_INPUT_HINT_WORD_COMPLETION
+    /// Force lowercase input.
+    static let lowercase = GTK_INPUT_HINT_LOWERCASE
+    /// Force uppercase characters.
+    static let uppercaseChars = GTK_INPUT_HINT_UPPERCASE_CHARS
+    /// Capitalise the first letter of each word.
+    static let uppercaseWords = GTK_INPUT_HINT_UPPERCASE_WORDS
+    /// Capitalise the first letter of each sentence.
+    static let uppercaseSentences = GTK_INPUT_HINT_UPPERCASE_SENTENCES
+    /// Request the on-screen keyboard to stay hidden.
+    static let inhibitOSK = GTK_INPUT_HINT_INHIBIT_OSK
+    /// Input is vertical.
+    static let verticalWriting = GTK_INPUT_HINT_VERTICAL_WRITING
+    /// Show emoji keyboard.
+    static let emoji = GTK_INPUT_HINT_EMOJI
+    /// Hide emoji keyboard.
+    static let noEmoji = GTK_INPUT_HINT_NO_EMOJI
+    /// Treat content as private (suppress logging, autofill, etc.).
+    static let `private` = GTK_INPUT_HINT_PRIVATE
+}
+
+public extension AdwTabViewShortcuts {
+    /// No shortcuts.
+    static let none = ADW_TAB_VIEW_SHORTCUT_NONE
+    /// Ctrl+Tab — switch to next tab.
+    static let controlTab = ADW_TAB_VIEW_SHORTCUT_CONTROL_TAB
+    /// Ctrl+Shift+Tab — switch to previous tab.
+    static let controlShiftTab = ADW_TAB_VIEW_SHORTCUT_CONTROL_SHIFT_TAB
+    /// Ctrl+PageUp — switch to previous tab.
+    static let controlPageUp = ADW_TAB_VIEW_SHORTCUT_CONTROL_PAGE_UP
+    /// Ctrl+PageDown — switch to next tab.
+    static let controlPageDown = ADW_TAB_VIEW_SHORTCUT_CONTROL_PAGE_DOWN
+    /// Ctrl+Home — switch to first tab.
+    static let controlHome = ADW_TAB_VIEW_SHORTCUT_CONTROL_HOME
+    /// Ctrl+End — switch to last tab.
+    static let controlEnd = ADW_TAB_VIEW_SHORTCUT_CONTROL_END
+    /// Ctrl+Shift+PageUp — move tab left.
+    static let controlShiftPageUp = ADW_TAB_VIEW_SHORTCUT_CONTROL_SHIFT_PAGE_UP
+    /// Ctrl+Shift+PageDown — move tab right.
+    static let controlShiftPageDown = ADW_TAB_VIEW_SHORTCUT_CONTROL_SHIFT_PAGE_DOWN
+    /// Ctrl+Shift+Home — move tab to first.
+    static let controlShiftHome = ADW_TAB_VIEW_SHORTCUT_CONTROL_SHIFT_HOME
+    /// Ctrl+Shift+End — move tab to last.
+    static let controlShiftEnd = ADW_TAB_VIEW_SHORTCUT_CONTROL_SHIFT_END
+    /// Alt+1 through Alt+9 — switch to tabs 1–9.
+    static let altDigits = ADW_TAB_VIEW_SHORTCUT_ALT_DIGITS
+    /// Alt+0 — switch to tab 10.
+    static let altZero = ADW_TAB_VIEW_SHORTCUT_ALT_ZERO
+    /// All shortcuts enabled.
+    static let allShortcuts = ADW_TAB_VIEW_SHORTCUT_ALL_SHORTCUTS
+}
+
 /// Swift-friendly option set for `GtkListScrollFlags`.
 ///
 /// Controls behavior when programmatically scrolling list widgets
