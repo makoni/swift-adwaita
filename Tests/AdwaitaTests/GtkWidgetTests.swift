@@ -516,4 +516,24 @@ struct GtkWidgetTests {
         #expect(firstPointer != secondPointer)
     }
 
+    @Test @MainActor func iconThemeForDisplayAcceptsSearchPath() throws {
+        ensureAdwInit()
+        let display = try #require(Display.default)
+        let theme = IconTheme(for: display)
+        theme.addSearchPath("/tmp/swift-adwaita-icon-theme-probe-does-not-exist")
+        // Smoke test — the add call must not crash and the returned instance
+        // should be the shared per-display icon theme.
+        _ = theme
+    }
+
+    @Test @MainActor func displayIconThemeConvenienceMatchesExplicit() throws {
+        ensureAdwInit()
+        let display = try #require(Display.default)
+        // Both paths must produce usable instances pointing at the same
+        // underlying GtkIconTheme (GTK returns the shared singleton).
+        let viaConvenience = display.iconTheme
+        let viaInit = IconTheme(for: display)
+        #expect(viaConvenience.pointer == viaInit.pointer)
+    }
+
 }
