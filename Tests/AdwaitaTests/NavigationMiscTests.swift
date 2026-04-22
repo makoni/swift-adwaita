@@ -204,6 +204,48 @@ struct NavigationMiscTests {
         app.onOpen { _, _ in }
     }
 
+    // MARK: - ApplicationFlags
+
+    @Test func applicationFlagsRawValuesMatchGApplicationFlags() {
+        // Each case must mirror the bit positions GLib documents for
+        // GApplicationFlags so `flags.rawValue` round-trips through
+        // `GApplicationFlags(rawValue:)`.
+        #expect(ApplicationFlags.isService.rawValue == 1 << 0)
+        #expect(ApplicationFlags.isLauncher.rawValue == 1 << 1)
+        #expect(ApplicationFlags.handlesOpen.rawValue == 1 << 2)
+        #expect(ApplicationFlags.handlesCommandLine.rawValue == 1 << 3)
+        #expect(ApplicationFlags.sendEnvironment.rawValue == 1 << 4)
+        #expect(ApplicationFlags.nonUnique.rawValue == 1 << 5)
+        #expect(ApplicationFlags.canOverrideAppId.rawValue == 1 << 6)
+        #expect(ApplicationFlags.allowReplacement.rawValue == 1 << 7)
+        #expect(ApplicationFlags.replace.rawValue == 1 << 8)
+    }
+
+    @Test func applicationFlagsOptionSetCombines() {
+        let combo: ApplicationFlags = [.handlesOpen, .nonUnique]
+        #expect(combo.contains(.handlesOpen))
+        #expect(combo.contains(.nonUnique))
+        #expect(!combo.contains(.handlesCommandLine))
+        #expect(combo.rawValue == (1 << 2) | (1 << 5))
+    }
+
+    @Test @MainActor func applicationInitWithFlagsAcceptsApplicationFlags() {
+        ensureAdwInit()
+        let app = Application(
+            id: "com.test.applicationflags.x\(UInt32.random(in: 0 ..< UInt32.max))",
+            flags: [.handlesOpen, .nonUnique]
+        )
+        // If the overload routed the flags correctly, GApplication reflects the
+        // same bits on its flags property.
+        let gApp: UnsafeMutablePointer<GApplication> = app.gtkApplicationPointer.withMemoryRebound(
+            to: GApplication.self,
+            capacity: 1
+        ) { $0 }
+        let mask = g_application_get_flags(gApp).rawValue
+        #expect((mask & UInt32(1 << 2)) != 0)
+        #expect((mask & UInt32(1 << 5)) != 0)
+    }
+
     @Test @MainActor func applicationOpenDeliversFileURLsAndHint() throws {
         ensureAdwInit()
 
