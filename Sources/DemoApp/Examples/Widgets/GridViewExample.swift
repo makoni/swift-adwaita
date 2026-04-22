@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 
 @MainActor
 struct GridViewExample: DemoExample {
@@ -77,15 +76,10 @@ struct GridViewExample: DemoExample {
             label?.cast(Label.self).text = color.name
 
             // Parse hex color and draw swatch
-            var gdkColor = GdkRGBA()
-            gdk_rgba_parse(&gdkColor, color.hex)
-            let r = Double(gdkColor.red)
-            let g = Double(gdkColor.green)
-            let b = Double(gdkColor.blue)
-
+            let rgba = RGBA(hex: color.hex) ?? RGBA(red: 0, green: 0, blue: 0)
             swatch?.cast(DrawingArea.self).setDrawFunc { cr, width, height in
                 cr.roundedRectangle(x: 0, y: 0, width: Double(width), height: Double(height), radius: 12)
-                cr.setSourceRGB(r, g, b)
+                cr.setSourceRGB(rgba.red, rgba.green, rgba.blue)
                 cr.fill()
             }
         }

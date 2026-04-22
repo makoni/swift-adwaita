@@ -1,5 +1,4 @@
 import Adwaita
-import CAdwaita
 import Foundation
 
 private var demoIconsRegistered = false
@@ -22,8 +21,7 @@ private func registerDemoIcons(for display: Display) {
         return
     }
 
-    let iconTheme = gtk_icon_theme_get_for_display(display.opaquePointer)
-    gtk_icon_theme_add_search_path(iconTheme, iconsPath.path)
+    display.iconTheme.addSearchPath(iconsPath.path)
     demoIconsRegistered = true
 }
 
