@@ -3,10 +3,18 @@ import GObjectSupport
 
 /// A file chooser dialog for opening and saving files.
 ///
-/// Wraps `GtkFileDialog` (GTK 4.10+). All dialog methods are async
-/// and resume on the main actor when the user makes a selection or
-/// dismisses the dialog. User cancellation returns `nil`; other
-/// failures throw a `GLibError`.
+/// Wraps `GtkFileDialog` (GTK 4.10+). Two parallel APIs are provided:
+///
+/// - **Callback-based** (`open(parent:completion:)`, `save(...)`,
+///   `selectFolder(...)`): the completion closure is invoked from the
+///   GLib main loop, and works in every GTK app.
+/// - **Async** (`open(parent:) async throws`, `save`, `selectFolder`):
+///   convenient but only safe when something is draining
+///   `DispatchQueue.main` — typical Swift tests, not `g_application_run`
+///   based GTK apps. Inside a running GTK app, prefer the callback form;
+///   `Task { @MainActor in ... }` bodies never execute because GLib does
+///   not drain Swift's main dispatch queue. See `MainContext.swift` for
+///   the full explanation.
 @MainActor
 public final class FileDialog: GObjectRef {
     /// Creates a new file dialog.
@@ -154,6 +162,84 @@ public final class FileDialog: GObjectRef {
             }
         }
     }
+
+    /// Opens the file dialog for selecting a file.
+    ///
+    /// The completion closure runs on the main actor when the dialog
+    /// closes. `.success(nil)` indicates user cancellation; `.success(path)`
+    /// carries the selected absolute path; `.failure` wraps a non-cancel
+    /// `GLibError`.
+    public func open(
+        parent: Widget?,
+        completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
+    ) {
+        let box = DialogAsyncSupport.retainBox(completion)
+        gtk_file_dialog_open(
+            opaquePointer,
+            parent.map { cadw_cast_window($0.pointer) },
+            nil,
+            { source, result, userData in
+                FileDialog.finishPathCallback(
+                    userData: userData,
+                    source: source,
+                    result: result
+                ) { src, res, err in
+                    gtk_file_dialog_open_finish(src, res, &err)
+                }
+            },
+            box
+        )
+    }
+
+    /// Opens the file dialog for saving a file.
+    ///
+    /// Callback semantics match `open(parent:completion:)`.
+    public func save(
+        parent: Widget?,
+        completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
+    ) {
+        let box = DialogAsyncSupport.retainBox(completion)
+        gtk_file_dialog_save(
+            opaquePointer,
+            parent.map { cadw_cast_window($0.pointer) },
+            nil,
+            { source, result, userData in
+                FileDialog.finishPathCallback(
+                    userData: userData,
+                    source: source,
+                    result: result
+                ) { src, res, err in
+                    gtk_file_dialog_save_finish(src, res, &err)
+                }
+            },
+            box
+        )
+    }
+
+    /// Opens the file dialog for selecting a folder.
+    ///
+    /// Callback semantics match `open(parent:completion:)`.
+    public func selectFolder(
+        parent: Widget?,
+        completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
+    ) {
+        let box = DialogAsyncSupport.retainBox(completion)
+        gtk_file_dialog_select_folder(
+            opaquePointer,
+            parent.map { cadw_cast_window($0.pointer) },
+            nil,
+            { source, result, userData in
+                FileDialog.finishPathCallback(
+                    userData: userData,
+                    source: source,
+                    result: result
+                ) { src, res, err in
+                    gtk_file_dialog_select_folder_finish(src, res, &err)
+                }
+            },
+            box
+        )
+    }
 }
 
 private extension FileDialog {
@@ -201,5 +287,42 @@ private extension FileDialog {
         } else {
             continuation.resume(returning: nil)
         }
+    }
+
+    static func finishPathCallback(
+        userData: UnsafeMutableRawPointer?,
+        source: UnsafeMutablePointer<GObject>?,
+        result: OpaquePointer?,
+        finish: (OpaquePointer, OpaquePointer, inout UnsafeMutablePointer<GError>?) -> OpaquePointer?
+    ) {
+        let box = DialogAsyncSupport.takeBox(
+            userData,
+            as: (@MainActor (Result<String?, GLibError>) -> Void).self,
+            context: #function
+        )
+        guard let source, let result else {
+            MainActor.assumeIsolated { box.closure(.success(nil)) }
+            return
+        }
+        var error: UnsafeMutablePointer<GError>?
+        let file = finish(OpaquePointer(source), result, &error)
+        let callResult: Result<String?, GLibError>
+        if let file {
+            let cPath = g_file_get_path(file)
+            let path = cPath.map { String(cString: $0) }
+            if let cPath { g_free(gpointer(mutating: cPath)) }
+            g_object_unref(gpointer(file))
+            callResult = .success(path)
+        } else if let error {
+            if DialogAsyncSupport.isDismissed(error) {
+                g_error_free(error)
+                callResult = .success(nil)
+            } else {
+                callResult = .failure(GLibError(consuming: error))
+            }
+        } else {
+            callResult = .success(nil)
+        }
+        MainActor.assumeIsolated { box.closure(callResult) }
     }
 }

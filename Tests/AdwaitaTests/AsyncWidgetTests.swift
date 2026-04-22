@@ -58,6 +58,21 @@ struct AsyncWidgetTests {
         #expect(filter.name == "Images")
     }
 
+    // Verify the callback-based API exists without actually invoking it —
+    // calling open/save/selectFolder would try to show a dialog under
+    // xvfb and hang waiting for user input.
+    @Test @MainActor func fileDialogExposesCallbackAPI() {
+        let openRef: (FileDialog) -> (Widget?, @escaping @MainActor (Result<String?, GLibError>) -> Void) -> Void =
+            FileDialog.open(parent:completion:)
+        let saveRef: (FileDialog) -> (Widget?, @escaping @MainActor (Result<String?, GLibError>) -> Void) -> Void =
+            FileDialog.save(parent:completion:)
+        let selectRef: (FileDialog) -> (Widget?, @escaping @MainActor (Result<String?, GLibError>) -> Void) -> Void =
+            FileDialog.selectFolder(parent:completion:)
+        _ = openRef
+        _ = saveRef
+        _ = selectRef
+    }
+
     // MARK: - ColorDialog
 
     @Test @MainActor func colorDialogButtonWithDialog() {
