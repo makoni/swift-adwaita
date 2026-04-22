@@ -57,6 +57,41 @@ public final class Clipboard: GObjectRef {
         }
     }
 
+    /// Reads text from the clipboard; completion is invoked on the main
+    /// actor from the GLib main loop.
+    ///
+    /// Prefer this over ``readText()`` inside GTK applications: Swift's
+    /// default main actor executor is `DispatchQueue.main`, which the
+    /// GLib main loop does not drain, so `Task { @MainActor in await
+    /// readText() }` bodies never execute.
+    public func readText(completion: @escaping @MainActor (String?) -> Void) {
+        let box = DialogAsyncSupport.retainBox(completion)
+        gdk_clipboard_read_text_async(
+            opaquePointer,
+            nil,
+            { source, result, userData in
+                Clipboard.finishTextCallback(userData: userData, source: source, result: result)
+            },
+            box
+        )
+    }
+
+    /// Reads a texture (image) from the clipboard; completion is invoked on
+    /// the main actor from the GLib main loop.
+    ///
+    /// Callback-based counterpart to ``readTexture()``.
+    public func readTexture(completion: @escaping @MainActor (Texture?) -> Void) {
+        let box = DialogAsyncSupport.retainBox(completion)
+        gdk_clipboard_read_texture_async(
+            opaquePointer,
+            nil,
+            { source, result, userData in
+                Clipboard.finishTextureCallback(userData: userData, source: source, result: result)
+            },
+            box
+        )
+    }
+
     /// Whether the clipboard content is local (set by this application).
     public var isLocal: Bool {
         gdk_clipboard_is_local(opaquePointer) != 0
@@ -121,6 +156,57 @@ private extension Clipboard {
             return
         }
         continuation.resume(returning: Texture(raw: UnsafeMutableRawPointer(texture)))
+    }
+
+    static func finishTextCallback(
+        userData: UnsafeMutableRawPointer?,
+        source: UnsafeMutablePointer<GObject>?,
+        result: OpaquePointer?
+    ) {
+        let box = DialogAsyncSupport.takeBox(
+            userData,
+            as: (@MainActor (String?) -> Void).self,
+            context: #function
+        )
+        guard let source, let result else {
+            MainActor.assumeIsolated { box.closure(nil) }
+            return
+        }
+        var error: UnsafeMutablePointer<GError>?
+        let cStr = gdk_clipboard_read_text_finish(OpaquePointer(source), result, &error)
+        if let error { g_error_free(error) }
+        guard let cStr else {
+            MainActor.assumeIsolated { box.closure(nil) }
+            return
+        }
+        let text = String(cString: cStr)
+        g_free(gpointer(mutating: cStr))
+        MainActor.assumeIsolated { box.closure(text) }
+    }
+
+    static func finishTextureCallback(
+        userData: UnsafeMutableRawPointer?,
+        source: UnsafeMutablePointer<GObject>?,
+        result: OpaquePointer?
+    ) {
+        let box = DialogAsyncSupport.takeBox(
+            userData,
+            as: (@MainActor (Texture?) -> Void).self,
+            context: #function
+        )
+        guard let source, let result else {
+            MainActor.assumeIsolated { box.closure(nil) }
+            return
+        }
+        var error: UnsafeMutablePointer<GError>?
+        let texture = gdk_clipboard_read_texture_finish(OpaquePointer(source), result, &error)
+        if let error { g_error_free(error) }
+        guard let texture else {
+            MainActor.assumeIsolated { box.closure(nil) }
+            return
+        }
+        let wrapped = Texture(raw: UnsafeMutableRawPointer(texture))
+        MainActor.assumeIsolated { box.closure(wrapped) }
     }
 }
 

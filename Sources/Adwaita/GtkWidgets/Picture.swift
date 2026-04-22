@@ -205,4 +205,46 @@ public final class Texture: GObjectRef {
         }.value
         return Texture(rgbaData: pixels.rgba, width: pixels.width, height: pixels.height)
     }
+
+    /// Decodes a raster image off the main thread and reports the result
+    /// through a completion handler on the GLib main loop.
+    ///
+    /// Callback-based counterpart to ``load(from:)``. Prefer this form
+    /// inside GTK applications: Swift's default main actor executor is
+    /// `DispatchQueue.main`, which the GLib main loop does not drain, so
+    /// `Task { @MainActor in let texture = try await Texture.load(...)
+    /// }` bodies never execute. The decode still runs on a cooperative
+    /// background thread via `Task.detached`; the completion hop back to
+    /// the main actor goes through ``MainContext/idle(_:)``, which the
+    /// GLib main loop does drain.
+    ///
+    /// - Parameters:
+    ///   - fileURL: A file URL pointing to a readable image.
+    ///   - completion: Called on the main actor with either the resulting
+    ///     ``Texture`` or an ``ImageDecodingError`` if the file could not
+    ///     be decoded.
+    public nonisolated static func load(
+        from fileURL: URL,
+        completion: @escaping @MainActor (Result<Texture, ImageDecodingError>) -> Void
+    ) {
+        Task.detached(priority: .userInitiated) {
+            let decode: Result<PixbufPixelDecoder.DecodedPixels, ImageDecodingError>
+            do {
+                decode = try .success(PixbufPixelDecoder.decode(at: fileURL))
+            } catch let error as ImageDecodingError {
+                decode = .failure(error)
+            } catch {
+                decode = .failure(.decodeFailed(String(describing: error)))
+            }
+            MainContext.idle {
+                switch decode {
+                case let .success(pixels):
+                    let texture = Texture(rgbaData: pixels.rgba, width: pixels.width, height: pixels.height)
+                    completion(.success(texture))
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
 }

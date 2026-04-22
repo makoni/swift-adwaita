@@ -57,6 +57,46 @@ public final class UriLauncher: GObjectRef {
         gtk_uri_launcher_launch(opaquePointer, parentPtr, nil, nil, nil)
     }
 
+    /// Launches the URI and reports success through a completion handler.
+    ///
+    /// Callback-based counterpart to ``launch(parent:)-async``. Prefer this
+    /// form inside GTK applications: Swift's default main actor executor
+    /// is `DispatchQueue.main`, which the GLib main loop does not drain,
+    /// so `Task { @MainActor in await launch(parent:) }` bodies never
+    /// execute.
+    ///
+    /// - Parameters:
+    ///   - parent: An optional parent widget for positioning dialogs.
+    ///   - completion: Called on the main actor with `true` on success.
+    public func launch(
+        parent: Widget? = nil,
+        completion: @escaping @MainActor (Bool) -> Void
+    ) {
+        let box = Unmanaged.passRetained(UriAsyncBox(completion)).toOpaque()
+        let parentPtr = parent?.pointer.assumingMemoryBound(to: CAdwaita.GtkWindow.self)
+        gtk_uri_launcher_launch(
+            opaquePointer,
+            parentPtr,
+            nil,
+            { source, result, userData in
+                guard let userData, let source, let result else { return }
+                var error: UnsafeMutablePointer<GError>?
+                let success = gtk_uri_launcher_launch_finish(
+                    OpaquePointer(source),
+                    result,
+                    &error
+                )
+                if let error { g_error_free(error) }
+                let box = Unmanaged<UriAsyncBox<@MainActor (Bool) -> Void>>.fromOpaque(userData)
+                    .takeRetainedValue()
+                MainActor.assumeIsolated {
+                    box.value(success != 0)
+                }
+            },
+            box
+        )
+    }
+
     /// Launches the URI and returns whether it was successful.
     ///
     /// - Parameter parent: An optional parent widget for positioning dialogs.

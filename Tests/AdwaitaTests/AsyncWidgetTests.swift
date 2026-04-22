@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -58,9 +59,43 @@ struct AsyncWidgetTests {
         #expect(filter.name == "Images")
     }
 
-    /// Verify the callback-based API exists without actually invoking it —
-    /// calling open/save/selectFolder would try to show a dialog under
-    /// xvfb and hang waiting for user input.
+    /// Verify the callback-based APIs exist without actually invoking them.
+    /// Actually opening a dialog / launching a URI / reading the clipboard
+    /// under xvfb would either hang for user input or pop up system UI,
+    /// so these tests just pin the API shape via unbound method references.
+    @Test @MainActor func colorDialogExposesCallbackAPI() {
+        let ref: (ColorDialog) -> (Widget?, RGBA?, @escaping @MainActor (Result<RGBA?, GLibError>) -> Void) -> Void =
+            ColorDialog.chooseRGBA(parent:initialColor:completion:)
+        _ = ref
+    }
+
+    @Test @MainActor func fontDialogExposesCallbackAPI() {
+        let ref: (FontDialog) -> (Widget?, String?, @escaping @MainActor (Result<String?, GLibError>) -> Void) -> Void =
+            FontDialog.chooseFont(parent:initialFont:completion:)
+        _ = ref
+    }
+
+    @Test @MainActor func clipboardExposesCallbackReadAPIs() {
+        let textRef: (Clipboard) -> (@escaping @MainActor (String?) -> Void) -> Void =
+            Clipboard.readText(completion:)
+        let textureRef: (Clipboard) -> (@escaping @MainActor (Texture?) -> Void) -> Void =
+            Clipboard.readTexture(completion:)
+        _ = textRef
+        _ = textureRef
+    }
+
+    @Test @MainActor func uriLauncherExposesCallbackAPI() {
+        let ref: (UriLauncher) -> (Widget?, @escaping @MainActor (Bool) -> Void) -> Void =
+            UriLauncher.launch(parent:completion:)
+        _ = ref
+    }
+
+    @Test @MainActor func textureLoadExposesCallbackAPI() {
+        let ref: (URL, @escaping @MainActor (Result<Texture, ImageDecodingError>) -> Void) -> Void =
+            Texture.load(from:completion:)
+        _ = ref
+    }
+
     @Test @MainActor func fileDialogExposesCallbackAPI() {
         let openRef: (FileDialog) -> (Widget?, @escaping @MainActor (Result<String?, GLibError>) -> Void) -> Void =
             FileDialog.open(parent:completion:)
