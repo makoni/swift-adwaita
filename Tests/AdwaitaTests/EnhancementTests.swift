@@ -190,6 +190,45 @@ struct EnhancementTests {
         #expect(removed == true)
     }
 
+    @Test @MainActor func mainContextDrainPendingRunsScheduledIdles() {
+        ensureAdwInit()
+        var hits = 0
+        MainContext.idle { hits += 1 }
+        MainContext.idle { hits += 1 }
+        MainContext.idle { hits += 1 }
+        let processed = MainContext.drainPending()
+        #expect(hits == 3)
+        #expect(processed >= 3)
+    }
+
+    @Test @MainActor func mainContextDrainPendingIsNonBlockingWhenIdle() {
+        ensureAdwInit()
+        // With no scheduled work, drainPending should return 0 and not hang.
+        let processed = MainContext.drainPending()
+        #expect(processed == 0)
+    }
+
+    @Test @MainActor func mainContextPumpForRunsDelayedTask() {
+        ensureAdwInit()
+        var called = false
+        MainContext.task(after: .milliseconds(5)) { called = true }
+        MainContext.pump(for: .milliseconds(80))
+        #expect(called)
+    }
+
+    @Test @MainActor func mainContextPumpForReturnsEarlyWhenQueueClears() {
+        ensureAdwInit()
+        var called = false
+        MainContext.idle { called = true }
+        let clock = ContinuousClock()
+        let start = clock.now
+        MainContext.pump(for: .seconds(2))
+        let elapsed = clock.now - start
+        #expect(called)
+        // Expect sub-second because the single idle fires and queue goes empty.
+        #expect(elapsed < .milliseconds(500))
+    }
+
     @Test @MainActor func mainContextTaskRunsOnIdle() {
         ensureAdwInit()
         var called = false

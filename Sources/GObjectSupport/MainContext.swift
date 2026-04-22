@@ -224,6 +224,65 @@ public enum MainContext {
         timeout(intervalMs: milliseconds(from: interval), closure)
     }
 
+    /// Drains every source that is currently ready on the GLib main loop
+    /// and returns immediately.
+    ///
+    /// Equivalent to repeatedly calling `g_main_context_iteration` with
+    /// `may_block = false` until `g_main_context_pending` returns zero.
+    /// Non-blocking: if the queue is empty, this returns `0` without
+    /// waiting. Intended for tests and other synchronous call sites that
+    /// need pending idles/timeouts (including those scheduled by
+    /// ``task(_:)``, ``idle(_:)``, and GTK's own destroy machinery) to
+    /// run before the next assertion.
+    ///
+    /// - Returns: The number of iterations that dispatched a source.
+    @discardableResult
+    public static func drainPending() -> Int {
+        let context = g_main_context_default()
+        var processed = 0
+        while g_main_context_pending(context) != 0 {
+            if g_main_context_iteration(context, 0) != 0 {
+                processed += 1
+            }
+        }
+        return processed
+    }
+
+    /// Drains ready sources, blocking up to `duration` for timeouts that
+    /// become ready in the meantime.
+    ///
+    /// Unlike ``drainPending()``, this waits for newly-armed timeouts — so
+    /// `MainContext.task(after: .milliseconds(5)) { ... }` will fire if
+    /// `duration` is at least 5 milliseconds. Returns early once at least
+    /// one source has fired and the queue is empty again; otherwise runs
+    /// for the full `duration`.
+    ///
+    /// - Parameter duration: The maximum wall-clock time to spend pumping.
+    public static func pump(for duration: Duration) {
+        guard duration > .zero else {
+            drainPending()
+            return
+        }
+        let context = g_main_context_default()
+        let clock = ContinuousClock()
+        let deadline = clock.now.advanced(by: duration)
+        var ranAny = false
+        while clock.now < deadline {
+            if g_main_context_pending(context) != 0 {
+                g_main_context_iteration(context, 0)
+                ranAny = true
+                continue
+            }
+            if ranAny { break }
+            // Nothing is ready yet — sleep for a short tick and re-check.
+            let remaining = deadline - clock.now
+            guard remaining > .zero else { break }
+            let stepMs = min(UInt32(10), milliseconds(from: remaining))
+            if stepMs == 0 { break }
+            g_usleep(gulong(stepMs) * 1_000)
+        }
+    }
+
     @discardableResult
     private nonisolated static func idleSource(
         priority: Int32,
