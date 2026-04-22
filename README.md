@@ -225,24 +225,50 @@ list.addCSSClass(.boxedList)
 button.addCSSClass(.destructiveAction)
 ```
 
-### Async/Await
+### Dialogs, clipboard, URI launching
+
+Every async-looking surface in swift-adwaita ships in two shapes:
+
+- A **callback form** — `…(parent: window) { result in … }`. The closure runs on the main actor from the GLib main loop. **Use this inside a running GTK application** (any handler called from `onClicked` / `onActivate` / a GTK signal in general).
+- An **`async` form** — `try await …`. Convenient in tests, macOS CLIs, or anywhere something else is draining Swift's `DispatchQueue.main`. Don't use it inside a `g_application_run` app.
+
+#### Why the split
+
+Swift's default `MainActor` executor is `DispatchQueue.main`, and the GLib main loop does not drain it — so a `Task { @MainActor in await dialog.open(...) }` kicked off from a button click just sits there and the dialog never appears. The callback forms side-step Swift Concurrency entirely and go through a GLib-native `GAsyncReadyCallback`, which GLib's loop does dispatch.
+
+#### Callback form (prefer this in GTK apps)
 
 ```swift
-// File dialog — throws GLibError on failure; cancellation returns nil
 let dialog = FileDialog()
-if let file = try await dialog.open(parent: window) {
-    print("Selected: \(file)")
+dialog.title = "Open a File"
+
+openButton.onClicked {
+    dialog.open(parent: window) { result in
+        switch result {
+        case let .success(path?): print("Selected: \(path)")
+        case .success(nil):       print("User cancelled")
+        case let .failure(error): print("Error: \(error.message)")
+        }
+    }
 }
 
-// If you don't care about distinguishing cancellation from error:
-let path = try? await dialog.open(parent: window)
+// Clipboard — same idea, no Result wrapping because there's no error domain.
+widget.clipboard.readText { text in
+    label.text = text ?? ""
+}
 
-// URI launcher
-let launcher = UriLauncher(uri: "https://gnome.org")
-let success = await launcher.launch()
+// URI launcher.
+UriLauncher(uri: "https://gnome.org").launch(parent: window) { success in
+    print("Launched: \(success)")
+}
+```
 
-// Clipboard
-let text = await clipboard.readText()
+The same shape is available on `FileDialog.save/selectFolder`, `ColorDialog.chooseRGBA`, `FontDialog.chooseFont`, `Clipboard.readTexture`, and `Texture.load(from:completion:)`.
+
+#### Async form (tests / non-GTK)
+
+```swift
+let path = try await dialog.open(parent: window) // ok in XCTest, don't do this inside onClicked.
 ```
 
 ### Adaptive Layout

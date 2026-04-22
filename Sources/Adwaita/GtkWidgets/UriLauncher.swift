@@ -99,6 +99,12 @@ public final class UriLauncher: GObjectRef {
 
     /// Launches the URI and returns whether it was successful.
     ///
+    /// > Warning: Inside a GTK application use ``launch(parent:completion:)``.
+    /// > `Task { @MainActor in await launcher.launch(parent:) }` never runs
+    /// > under the GLib main loop — Swift's default main actor executor is
+    /// > `DispatchQueue.main`, which GLib does not drain. The `async` form
+    /// > is intended for tests and non-GTK contexts.
+    ///
     /// - Parameter parent: An optional parent widget for positioning dialogs.
     /// - Returns: `true` if the URI was launched successfully.
     public func launch(parent: Widget? = nil) async -> Bool {

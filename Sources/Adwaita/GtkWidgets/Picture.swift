@@ -196,6 +196,13 @@ public final class Texture: GObjectRef {
     /// (which uses `gdk_texture_new_from_filename` and only natively handles PNG and JPEG
     /// on most GTK builds).
     ///
+    /// > Warning: Inside a GTK application use ``load(from:completion:)``.
+    /// > The outer `Task { @MainActor in let texture = try await
+    /// > Texture.load(...) }` never runs under the GLib main loop — Swift's
+    /// > default main actor executor is `DispatchQueue.main`, which GLib
+    /// > does not drain. The `async` form is intended for tests and non-GTK
+    /// > contexts.
+    ///
     /// - Parameter fileURL: A file URL pointing to a readable image.
     /// - Throws: ``ImageDecodingError`` if the file cannot be opened or decoded.
     /// - Returns: A texture that mirrors the file's pixel data.

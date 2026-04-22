@@ -34,6 +34,13 @@ public final class FontDialog: GObjectRef {
     /// Returns the selected font description string, or `nil` if the user cancelled.
     /// Throws a `GLibError` if the underlying GTK call fails.
     ///
+    /// > Warning: Inside a GTK application use
+    /// > ``chooseFont(parent:initialFont:completion:)``. `Task { @MainActor
+    /// > in await chooseFont(...) }` never runs under the GLib main loop —
+    /// > Swift's default main actor executor is `DispatchQueue.main`, which
+    /// > GLib does not drain. The `async` form is intended for tests and
+    /// > non-GTK contexts.
+    ///
     /// ```swift
     /// let font = try await dialog.chooseFont(parent: window)
     /// if let font { print("Selected: \(font)") }

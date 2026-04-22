@@ -79,6 +79,14 @@ public final class FileDialog: GObjectRef {
     /// Returns the selected file path, or `nil` if the user cancelled.
     /// Throws a `GLibError` if the underlying GTK call fails.
     ///
+    /// > Warning: Inside a GTK application (anything that enters
+    /// > `g_application_run`) use the callback overload
+    /// > ``open(parent:completion:)`` instead. This `async` form relies on
+    /// > `Task { @MainActor in … }`, whose body never runs under the GLib
+    /// > main loop — Swift's default main actor executor is
+    /// > `DispatchQueue.main`, and GLib does not drain it. The `async`
+    /// > form is intended for tests and non-GTK contexts.
+    ///
     /// ```swift
     /// let path = try await dialog.open(parent: window)
     /// if let path { print("Selected: \(path)") }
@@ -111,6 +119,9 @@ public final class FileDialog: GObjectRef {
     ///
     /// Returns the selected save path, or `nil` if the user cancelled.
     /// Throws a `GLibError` on failure.
+    ///
+    /// > Warning: Inside a GTK application use ``save(parent:completion:)``
+    /// > — see the warning on ``open(parent:)`` for why.
     public func save(parent: Widget?) async throws(GLibError) -> String? {
         try await FileDialog.retype {
             try await withCheckedThrowingContinuation { continuation in
@@ -139,6 +150,10 @@ public final class FileDialog: GObjectRef {
     ///
     /// Returns the selected folder path, or `nil` if the user cancelled.
     /// Throws a `GLibError` on failure.
+    ///
+    /// > Warning: Inside a GTK application use
+    /// > ``selectFolder(parent:completion:)`` — see the warning on
+    /// > ``open(parent:)`` for why.
     public func selectFolder(parent: Widget?) async throws(GLibError) -> String? {
         try await FileDialog.retype {
             try await withCheckedThrowingContinuation { continuation in

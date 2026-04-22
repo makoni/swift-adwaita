@@ -25,6 +25,12 @@ public final class Clipboard: GObjectRef {
 
     /// Reads text from the clipboard using async/await.
     ///
+    /// > Warning: Inside a GTK application use ``readText(completion:)``.
+    /// > `Task { @MainActor in await readText() }` never runs under the GLib
+    /// > main loop — Swift's default main actor executor is
+    /// > `DispatchQueue.main`, which GLib does not drain. The `async` form
+    /// > is intended for tests and non-GTK contexts.
+    ///
     /// - Returns: The clipboard text, or nil if not available.
     public func readText() async -> String? {
         await withCheckedContinuation { continuation in
@@ -41,6 +47,9 @@ public final class Clipboard: GObjectRef {
     }
 
     /// Reads a texture (image) from the clipboard using async/await.
+    ///
+    /// > Warning: Inside a GTK application use ``readTexture(completion:)``
+    /// > — see the warning on ``readText()`` for why.
     ///
     /// - Returns: The texture, or nil if not available.
     public func readTexture() async -> Texture? {
