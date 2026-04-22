@@ -39,6 +39,20 @@ public final class Picture: Widget {
         gtk_picture_set_filename(opaquePointer, filename)
     }
 
+    /// The filesystem `URL` the picture is currently displaying, if any.
+    ///
+    /// Reflects the `GFile` previously installed via ``setFilename(_:)`` (or
+    /// any other path that goes through `gtk_picture_get_file`). Returns `nil`
+    /// when the picture is empty, when it was seeded from a non-file source
+    /// (a `GdkTexture` via ``setPaintable(_:)`` or a `GResource`), or when the
+    /// `GFile` has no local path.
+    public var fileURL: URL? {
+        guard let file = gtk_picture_get_file(opaquePointer) else { return nil }
+        guard let cPath = g_file_get_path(file) else { return nil }
+        defer { g_free(gpointer(cPath)) }
+        return URL(fileURLWithPath: String(cString: cPath))
+    }
+
     /// Sets the resource to display.
     public func setResource(_ resourcePath: String?) {
         gtk_picture_set_resource(opaquePointer, resourcePath)
@@ -72,6 +86,27 @@ public final class Picture: Widget {
     /// ```
     public func setPaintable(_ paintable: Texture?) {
         gtk_picture_set_paintable(opaquePointer, paintable.map { OpaquePointer($0.pointer) })
+    }
+
+    /// Whether the picture currently has a `GdkPaintable` content attached.
+    ///
+    /// Flips to `true` after ``setPaintable(_:)`` with a non-nil texture, and
+    /// back to `false` when the paintable is cleared. Note that seeding the
+    /// picture via ``setFilename(_:)`` does not set a paintable immediately —
+    /// GTK loads it lazily on the next draw, so `hasPaintable` can read
+    /// `false` right after `setFilename` even though the image will render.
+    public var hasPaintable: Bool {
+        gtk_picture_get_paintable(opaquePointer) != nil
+    }
+
+    /// Raw pointer to the picture's current `GdkPaintable`, or `nil` if none.
+    ///
+    /// The only intended use is identity comparison — detecting whether the
+    /// paintable has been swapped for a different instance (for example, when
+    /// animating frame by frame). Do not dereference or retain the pointer.
+    public var paintablePointer: UnsafeMutableRawPointer? {
+        guard let paintable = gtk_picture_get_paintable(opaquePointer) else { return nil }
+        return UnsafeMutableRawPointer(paintable)
     }
 
     /// The intrinsic pixel size of the currently displayed paintable, if any.

@@ -37,6 +37,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Button: Widget {
+    override public class var gtkType: GType {
+        gtk_button_get_type()
+    }
+
     /// Creates a new empty button.
     public init() {
         let ptr = gtk_button_new()!

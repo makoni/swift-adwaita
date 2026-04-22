@@ -22,6 +22,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Box: Widget, Container {
+    override public class var gtkType: GType {
+        gtk_box_get_type()
+    }
+
     /// Creates a new box.
     ///
     /// - Parameters:
@@ -30,6 +34,14 @@ public final class Box: Widget, Container {
     public init(orientation: GtkOrientation = GTK_ORIENTATION_VERTICAL, spacing: Int = 0) {
         let ptr = gtk_box_new(orientation, Int32(spacing))!
         super.init(raw: UnsafeMutableRawPointer(ptr))
+    }
+
+    /// The current layout direction of the box — horizontal or vertical.
+    ///
+    /// Reflects `gtk_orientable_get_orientation()` on the underlying
+    /// `GtkBox`, which implements `GtkOrientable`.
+    public var orientation: GtkOrientation {
+        gtk_orientable_get_orientation(OpaquePointer(pointer))
     }
 
     required init(raw pointer: UnsafeMutableRawPointer) {

@@ -442,4 +442,78 @@ struct GtkWidgetTests {
             .connectReturnBool
     }
 
+    @Test @MainActor func buttonGtkTypeNarrowsFromGenericWidget() {
+        ensureAdwInit()
+        let button: Widget = Button(label: "OK")
+        let label: Widget = Label("Plain")
+        #expect(button.isInstance(of: Button.self))
+        #expect(!label.isInstance(of: Button.self))
+        #expect(button.tryCast(Button.self) != nil)
+        #expect(label.tryCast(Button.self) == nil)
+    }
+
+    @Test @MainActor func boxGtkTypeNarrowsFromGenericWidget() {
+        ensureAdwInit()
+        let box: Widget = Box(orientation: GTK_ORIENTATION_HORIZONTAL)
+        let label: Widget = Label("Plain")
+        #expect(box.isInstance(of: Box.self))
+        #expect(!label.isInstance(of: Box.self))
+        #expect(box.tryCast(Box.self) != nil)
+        #expect(label.tryCast(Box.self) == nil)
+    }
+
+    @Test @MainActor func boxOrientationReflectsInitOrientation() {
+        ensureAdwInit()
+        let horizontal = Box(orientation: GTK_ORIENTATION_HORIZONTAL)
+        let vertical = Box(orientation: GTK_ORIENTATION_VERTICAL)
+        #expect(horizontal.orientation == GTK_ORIENTATION_HORIZONTAL)
+        #expect(vertical.orientation == GTK_ORIENTATION_VERTICAL)
+    }
+
+    @Test @MainActor func pictureFileURLTracksSetFilename() {
+        ensureAdwInit()
+        let picture = Picture()
+        #expect(picture.fileURL == nil)
+        picture.setFilename("/tmp/swift-adwaita-picture-fixture.png")
+        #expect(picture.fileURL?.path(percentEncoded: false) == "/tmp/swift-adwaita-picture-fixture.png")
+        picture.setFilename(nil)
+        #expect(picture.fileURL == nil)
+    }
+
+    @Test @MainActor func pictureHasPaintableFlipsWithSetPaintable() {
+        ensureAdwInit()
+        let picture = Picture()
+        #expect(!picture.hasPaintable)
+        let rgba: [UInt8] = [255, 0, 0, 255, 0, 255, 0, 255]
+        let texture = Texture(rgbaData: rgba, width: 2, height: 1)
+        picture.setPaintable(texture)
+        #expect(picture.hasPaintable)
+        picture.setPaintable(nil)
+        #expect(!picture.hasPaintable)
+    }
+
+    @Test @MainActor func silenceSpuriousScrollbarWarningsIsIdempotent() {
+        // The installer flips a global log writer, so we can't undo it in a
+        // test — we just want to confirm the API exists and repeated calls
+        // don't crash. The writer itself is exercised by application UI
+        // smoke tests in downstream projects.
+        MainContext.silenceSpuriousScrollbarWarnings()
+        MainContext.silenceSpuriousScrollbarWarnings()
+    }
+
+    @Test @MainActor func picturePaintablePointerChangesAcrossTextureSwap() {
+        ensureAdwInit()
+        let picture = Picture()
+        #expect(picture.paintablePointer == nil)
+        let first = Texture(rgbaData: [255, 0, 0, 255], width: 1, height: 1)
+        picture.setPaintable(first)
+        let firstPointer = picture.paintablePointer
+        #expect(firstPointer != nil)
+        let second = Texture(rgbaData: [0, 0, 255, 255], width: 1, height: 1)
+        picture.setPaintable(second)
+        let secondPointer = picture.paintablePointer
+        #expect(secondPointer != nil)
+        #expect(firstPointer != secondPointer)
+    }
+
 }
