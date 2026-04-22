@@ -16,24 +16,31 @@ struct FileDialogExample: DemoExample {
         FileFilter(name: "All files", patterns: ["*"]),
     ])
 
-    // Open
-    Task { @MainActor in
-        if let path = try? await dialog.open(parent: widget) {
+    // Open — callback form (works inside a running GTK application,
+    // where Task { @MainActor in ... } bodies never execute because
+    // GLib's main loop doesn't drain Swift's DispatchQueue.main).
+    dialog.open(parent: widget) { result in
+        switch result {
+        case .success(let path?):
             print("Selected: \\(path)")
+        case .success(nil):
+            print("Cancelled")
+        case .failure(let error):
+            print("Error: \\(error.message)")
         }
     }
 
     // Save
     dialog.initialName = "untitled.swift"
-    Task { @MainActor in
-        if let path = try? await dialog.save(parent: widget) {
+    dialog.save(parent: widget) { result in
+        if case .success(let path?) = result {
             print("Save to: \\(path)")
         }
     }
 
     // Select folder
-    Task { @MainActor in
-        if let path = try? await dialog.selectFolder(parent: widget) {
+    dialog.selectFolder(parent: widget) { result in
+        if case .success(let path?) = result {
             print("Folder: \\(path)")
         }
     }
@@ -73,9 +80,8 @@ struct FileDialogExample: DemoExample {
                 FileFilter(name: "Text files", suffixes: ["txt", "md"]),
                 FileFilter(name: "All files", patterns: ["*"])
             ])
-            Task { @MainActor in
-                let path = try? await dialog.open(parent: box.root)
-                resultLabel.text = path ?? "Cancelled"
+            dialog.open(parent: box.root) { [resultLabel] result in
+                resultLabel.text = describe(result)
             }
         }
         openGroup.add(openBtn)
@@ -92,9 +98,8 @@ struct FileDialogExample: DemoExample {
             let dialog = FileDialog()
             dialog.title = "Save File"
             dialog.initialName = "untitled.swift"
-            Task { @MainActor in
-                let path = try? await dialog.save(parent: box.root)
-                resultLabel.text = path ?? "Cancelled"
+            dialog.save(parent: box.root) { [resultLabel] result in
+                resultLabel.text = describe(result)
             }
         }
         saveGroup.add(saveBtn)
@@ -110,9 +115,8 @@ struct FileDialogExample: DemoExample {
         folderBtn.onClicked { [resultLabel, box] in
             let dialog = FileDialog()
             dialog.title = "Select Folder"
-            Task { @MainActor in
-                let path = try? await dialog.selectFolder(parent: box.root)
-                resultLabel.text = path ?? "Cancelled"
+            dialog.selectFolder(parent: box.root) { [resultLabel] result in
+                resultLabel.text = describe(result)
             }
         }
         folderGroup.add(folderBtn)
@@ -123,5 +127,17 @@ struct FileDialogExample: DemoExample {
         box.append(resultGroup)
 
         return box.scrollableClamped()
+    }
+}
+
+@MainActor
+private func describe(_ result: Result<String?, GLibError>) -> String {
+    switch result {
+    case let .success(path?):
+        path
+    case .success(nil):
+        "Cancelled"
+    case let .failure(error):
+        "Error: \(error.message)"
     }
 }

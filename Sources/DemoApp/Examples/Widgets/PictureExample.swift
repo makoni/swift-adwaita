@@ -16,10 +16,11 @@ struct PictureExample: DemoExample {
     let texture = Texture(rgbaData: pixels, width: 200, height: 150)
     picture.setPaintable(texture)
 
-    // Load via FileDialog
+    // Load via FileDialog — callback form is the one that works
+    // inside a running GTK application.
     let dialog = FileDialog()
-    Task { @MainActor in
-        if let path = try? await dialog.open(parent: window) {
+    dialog.open(parent: window) { result in
+        if case .success(let path?) = result {
             picture.setFilename(path)
         }
     }
@@ -73,8 +74,8 @@ struct PictureExample: DemoExample {
                 FileFilter(name: "Images", suffixes: ["png", "jpg", "jpeg", "webp", "svg", "bmp", "gif"]),
                 FileFilter(name: "All files", patterns: ["*"])
             ])
-            Task { @MainActor in
-                if let path = try? await dialog.open(parent: box.root) {
+            dialog.open(parent: box.root) { [picture] result in
+                if case let .success(path?) = result {
                     picture.setFilename(path)
                 }
             }

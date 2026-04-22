@@ -29,6 +29,12 @@ private func registerDemoIcons(for display: Display) {
 
 @MainActor
 func buildApp() {
+    // GTK 4 emits spurious `Trying to snapshot … without a current allocation`
+    // warnings from internal GtkScrolledWindow / GtkScrollbar children at
+    // certain allocation boundaries. The helper below filters just those
+    // and leaves every other log message alone.
+    MainContext.silenceSpuriousScrollbarWarnings()
+
     let app = Application(id: "io.github.makoni.SwiftAdwaitaDemo")
 
     app.onActivate {
