@@ -67,8 +67,7 @@ struct ClipboardExample: DemoExample {
         pasteBtn.addCSSClass("pill")
         pasteBtn.halign = .center
         pasteBtn.onClicked { [box, resultLabel] in
-            Task { @MainActor in
-                let text = await box.clipboard.readText()
+            box.clipboard.readText { [resultLabel] text in
                 resultLabel.text = text ?? "(empty clipboard)"
             }
         }
