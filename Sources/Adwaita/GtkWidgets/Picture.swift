@@ -222,6 +222,23 @@ public final class Texture: GObjectRef {
         Int(gdk_texture_get_height(OpaquePointer(pointer)))
     }
 
+    /// Synchronously decodes a raster image on the calling thread and
+    /// returns a GPU-resident texture.
+    ///
+    /// Same format coverage as ``load(from:)`` (anything GdkPixbuf handles
+    /// on the host), but blocks the caller until the decode finishes. Use
+    /// from the main actor when loading small bundled assets where the
+    /// blocking cost is negligible; for user-supplied images prefer the
+    /// async or callback overloads so the UI stays responsive.
+    ///
+    /// - Parameter fileURL: A file URL pointing to a readable image.
+    /// - Throws: ``ImageDecodingError`` if the file cannot be opened or decoded.
+    /// - Returns: A texture that mirrors the file's pixel data.
+    public static func loadSynchronously(from fileURL: URL) throws -> Texture {
+        let pixels = try PixbufPixelDecoder.decode(at: fileURL)
+        return Texture(rgbaData: pixels.rgba, width: pixels.width, height: pixels.height)
+    }
+
     /// Asynchronously decodes a raster image (PNG, JPEG, GIF, WebP, TIFF, BMP — anything
     /// registered with GdkPixbuf on the host system) and returns a GPU-resident texture.
     ///

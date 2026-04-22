@@ -88,6 +88,37 @@ extension SerializedLifecycleSuites {
             }
         }
 
+        @Test @MainActor func textureLoadSynchronouslyFromPNGReturnsCorrectSize() throws {
+            ensureAdwInit()
+            guard let url = Self.writePNGFixture(width: 5, height: 4) else {
+                Issue.record("Failed to write PNG fixture")
+                return
+            }
+            defer { try? FileManager.default.removeItem(at: url) }
+
+            let texture = try Texture.loadSynchronously(from: url)
+            #expect(texture.width == 5)
+            #expect(texture.height == 4)
+        }
+
+        @Test @MainActor func textureLoadSynchronouslyFromMissingFileThrows() {
+            ensureAdwInit()
+            let missing = FileManager.default.temporaryDirectory
+                .appendingPathComponent("does-not-exist-\(UUID().uuidString).png")
+            #expect(throws: ImageDecodingError.self) {
+                _ = try Texture.loadSynchronously(from: missing)
+            }
+        }
+
+        @Test @MainActor func textureLoadSynchronouslyFromInvalidBytesThrows() {
+            ensureAdwInit()
+            let url = Self.writeFixture([0x00, 0x01, 0x02, 0x03], suffix: ".png")
+            defer { try? FileManager.default.removeItem(at: url) }
+            #expect(throws: ImageDecodingError.self) {
+                _ = try Texture.loadSynchronously(from: url)
+            }
+        }
+
         // MARK: - Picture.intrinsicSize
 
         @Test @MainActor func pictureIntrinsicSizeIsNilWhenEmpty() {

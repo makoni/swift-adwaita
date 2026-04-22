@@ -203,7 +203,11 @@ struct EnhancementTests {
 
     @Test @MainActor func mainContextDrainPendingIsNonBlockingWhenIdle() {
         ensureAdwInit()
-        // With no scheduled work, drainPending should return 0 and not hang.
+        // Clear any sources left over from deferred GObject releases or
+        // other tests sharing the default context.
+        _ = MainContext.drainPending()
+        // With nothing freshly scheduled, a second drain must return 0
+        // without hanging.
         let processed = MainContext.drainPending()
         #expect(processed == 0)
     }
