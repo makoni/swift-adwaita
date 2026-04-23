@@ -23,8 +23,8 @@ public final class IconTheme: GObjectRef {
     /// Returns the icon theme associated with the given display.
     ///
     /// GTK hands back a shared per-display object; this wraps it through
-    /// ``GObjectRef/init(borrowing:)`` so ref-counting matches the rest
-    /// of the framework.
+    /// `GObjectRef.init(borrowing:)` so ref-counting matches the rest of
+    /// the framework.
     public convenience init(for display: Display) {
         let ptr = gtk_icon_theme_get_for_display(display.opaquePointer)!
         self.init(borrowing: UnsafeMutableRawPointer(ptr))

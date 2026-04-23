@@ -402,9 +402,9 @@ open class Widget: GObjectRef {
     /// The GObject type associated with this widget class.
     ///
     /// Subclasses override this to return their specific `gtk_*_get_type()`
-    /// value, enabling ``tryCast(_:)`` and ``isInstance(of:)-swift.method``
-    /// to perform a strict runtime type check. The default returns
-    /// `gtk_widget_get_type()`.
+    /// value, enabling ``Widget/tryCast(_:)`` and
+    /// ``Widget/isInstance(of:)-(GType)`` to perform a strict runtime type
+    /// check. The default returns `gtk_widget_get_type()`.
     open class var gtkType: GType {
         gtk_widget_get_type()
     }

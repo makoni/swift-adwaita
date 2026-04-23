@@ -59,7 +59,7 @@ public final class UriLauncher: GObjectRef {
 
     /// Launches the URI and reports success through a completion handler.
     ///
-    /// Callback-based counterpart to ``launch(parent:)-async``. Prefer this
+    /// Callback-based counterpart to ``launch(parent:)->_``. Prefer this
     /// form inside GTK applications: Swift's default main actor executor
     /// is `DispatchQueue.main`, which the GLib main loop does not drain,
     /// so `Task { @MainActor in await launch(parent:) }` bodies never

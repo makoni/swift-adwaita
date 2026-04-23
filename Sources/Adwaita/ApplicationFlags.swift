@@ -6,7 +6,7 @@ import CAdwaita
 /// Mirrors `GApplicationFlags` as a Swift-native `OptionSet`, so callers
 /// can write `[.handlesOpen, .nonUnique]` instead of bit-twiddling raw
 /// `GApplicationFlags` values. Pass an instance to
-/// ``Application/init(id:flags:)-swift.init``.
+/// ``Application/init(id:flags:)-(_,ApplicationFlags)``.
 ///
 /// ```swift
 /// let app = Application(id: "com.example.MyApp", flags: .handlesOpen)

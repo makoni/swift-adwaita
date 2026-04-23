@@ -13,7 +13,7 @@ import Glibc
 /// Wraps `AdwApplication`, which extends `GtkApplication` with Adwaita
 /// style management and automatic initialization. Every Adwaita app
 /// starts by creating an `Application`, connecting the ``onActivate(_:)``
-/// signal, and calling ``run()``.
+/// signal, and calling ``run(arguments:)``.
 ///
 /// ```swift
 /// let app = Application(id: "com.example.MyApp")
@@ -39,8 +39,9 @@ public final class Application: GObjectRef {
     /// - Parameters:
     ///   - id: The application identifier (e.g. `"com.example.MyApp"`).
     ///   - flags: Raw `GApplicationFlags` bitmask. Prefer the
-    ///     ``init(id:flags:)-4s1lq`` overload taking ``ApplicationFlags``,
-    ///     which is type-safe OptionSet sugar over the same bits.
+    ///     ``init(id:flags:)-(_,ApplicationFlags)`` overload taking
+    ///     ``ApplicationFlags``, which is type-safe OptionSet sugar over
+    ///     the same bits.
     public init(id: String, flags: GApplicationFlags = GApplicationFlags(rawValue: 0)) {
         let ptr = adw_application_new(id, flags)!
         super.init(raw: UnsafeMutableRawPointer(ptr))
@@ -48,9 +49,9 @@ public final class Application: GObjectRef {
 
     /// Creates a new Adwaita application with the given ``ApplicationFlags``.
     ///
-    /// Cleaner counterpart to ``init(id:flags:)-4s1lq`` — accepts Swift's
-    /// native `OptionSet` so call-sites read as `flags: .handlesOpen` or
-    /// `flags: [.handlesOpen, .nonUnique]`.
+    /// Cleaner counterpart to ``init(id:flags:)-(_,GApplicationFlags)`` —
+    /// accepts Swift's native `OptionSet` so call-sites read as
+    /// `flags: .handlesOpen` or `flags: [.handlesOpen, .nonUnique]`.
     ///
     /// - Parameters:
     ///   - id: The application identifier (e.g. `"com.example.MyApp"`).

@@ -259,7 +259,7 @@ struct NavigationMiscTests {
 
         let app = Application(
             id: "com.test.open.signal.x\(UInt32.random(in: 0 ..< UInt32.max))",
-            flags: G_APPLICATION_HANDLES_OPEN
+            flags: .handlesOpen
         )
         try app.register()
 

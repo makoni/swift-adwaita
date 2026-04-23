@@ -273,8 +273,8 @@ public final class Texture: GObjectRef {
     /// `Task { @MainActor in let texture = try await Texture.load(...)
     /// }` bodies never execute. The decode still runs on a cooperative
     /// background thread via `Task.detached`; the completion hop back to
-    /// the main actor goes through ``MainContext/idle(_:)``, which the
-    /// GLib main loop does drain.
+    /// the main actor goes through `MainContext.idle(_:)`, which the GLib
+    /// main loop does drain.
     ///
     /// - Parameters:
     ///   - fileURL: A file URL pointing to a readable image.
