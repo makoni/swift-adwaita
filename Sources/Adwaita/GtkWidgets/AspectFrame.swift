@@ -17,6 +17,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class AspectFrame: Widget {
+    override public class var gtkType: GType {
+        gtk_aspect_frame_get_type()
+    }
+
     /// Creates a new aspect frame.
     ///
     /// - Parameters:
