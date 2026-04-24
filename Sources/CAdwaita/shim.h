@@ -24,6 +24,81 @@ static inline void g_signal_emit_by_name_no_args(gpointer instance, const gchar 
 }
 
 // ---------------------------------------------------------------------------
+// GdkPixbufAnimation shims (gdk-pixbuf >= 2.44).
+//
+// gdk-pixbuf 2.44 (February 2026, Ubuntu 26.04) soft-deprecated the whole
+// animation API with `GDK_PIXBUF_DEPRECATED_IN_2_44` macros, without shipping
+// a direct replacement: the deprecation notice literally says "Use a different
+// image loading library for animatable assets". The replacement path GNOME is
+// converging on is `libglycin`, but:
+//
+//   * Ubuntu 26.04 currently ships `glycin 2.1~beta+ds-0ubuntu3`, which has
+//     observable stability issues (SIGSEGV in background sandbox cleanup).
+//   * Upstream stable `glycin 2.1.1` landed in GNOME 50.1 on 2026-04-11; the
+//     distro packages should catch up within the 50.x cycle.
+//   * `libglycin 2.x` supports the forthcoming `glycin 3.x`, which is the
+//     stabilisation target we want before migrating. Likely shipped with
+//     GNOME 51 on 2026-09-16.
+//
+// Until then we keep using GdkPixbufAnimation — it still works, the symbols
+// aren't going away soon, and the current code in AnimatedImagePlayer.swift
+// matches the frame-by-frame extraction model better than GtkMediaFile
+// (which is a video player with a GStreamer/ffmpeg backend dependency and
+// doesn't handle animated GIF/WebP gracefully — see
+// https://discourse.gnome.org/t/help-rendering-paintable-animations-gif-
+// through-mediafile-picture-in-gtk4/7092).
+//
+// See also: Sources/Adwaita/GtkWidgets/AnimatedImagePlayer.swift
+//           notes/1ac7cccb-11d2-4805-8b27-ba595616ec8a
+// ---------------------------------------------------------------------------
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+static inline GdkPixbufAnimation *swiftadw_pixbuf_animation_new_from_file(
+    const char *filename,
+    GError **error
+) {
+    return gdk_pixbuf_animation_new_from_file(filename, error);
+}
+
+static inline gboolean swiftadw_pixbuf_animation_is_static_image(GdkPixbufAnimation *animation) {
+    return gdk_pixbuf_animation_is_static_image(animation);
+}
+
+static inline GdkPixbufAnimationIter *swiftadw_pixbuf_animation_get_iter(
+    GdkPixbufAnimation *animation,
+    const GTimeVal *start_time
+) {
+    return gdk_pixbuf_animation_get_iter(animation, start_time);
+}
+
+static inline int swiftadw_pixbuf_animation_get_width(GdkPixbufAnimation *animation) {
+    return gdk_pixbuf_animation_get_width(animation);
+}
+
+static inline int swiftadw_pixbuf_animation_get_height(GdkPixbufAnimation *animation) {
+    return gdk_pixbuf_animation_get_height(animation);
+}
+
+static inline GdkPixbuf *swiftadw_pixbuf_animation_iter_get_pixbuf(GdkPixbufAnimationIter *iter) {
+    return gdk_pixbuf_animation_iter_get_pixbuf(iter);
+}
+
+static inline int swiftadw_pixbuf_animation_iter_get_delay_time(GdkPixbufAnimationIter *iter) {
+    return gdk_pixbuf_animation_iter_get_delay_time(iter);
+}
+
+static inline gboolean swiftadw_pixbuf_animation_iter_advance(
+    GdkPixbufAnimationIter *iter,
+    const GTimeVal *current_time
+) {
+    return gdk_pixbuf_animation_iter_advance(iter, current_time);
+}
+
+#pragma GCC diagnostic pop
+
+// ---------------------------------------------------------------------------
 // Compile-time stubs for libadwaita 1.6+ / 1.7+ / 1.8+ symbols.
 //
 // When building against older headers (e.g. libadwaita 1.5 on Ubuntu 24.04),

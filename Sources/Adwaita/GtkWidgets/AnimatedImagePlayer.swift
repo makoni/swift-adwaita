@@ -8,6 +8,15 @@ import GObjectSupport
 /// The player owns the animation and its iterator for its lifetime and
 /// releases them on deinit (isolated to the main actor).
 ///
+/// > Note: The underlying `GdkPixbufAnimation` API was soft-deprecated in
+/// > gdk-pixbuf 2.44 (February 2026, Ubuntu 26.04). There's no drop-in
+/// > replacement yet — the upstream story is `libglycin` 2.x shipping
+/// > with GNOME 51 on 2026-09-16 (or whenever distros refresh past the
+/// > current `glycin 2.1~beta` package). This wrapper goes through
+/// > deprecation-suppressed shims in `CAdwaita/shim.h` to keep the Swift
+/// > compiler quiet; no behavioural change. Migrate to glycin's frame
+/// > iterator when the stable C API is broadly available.
+///
 /// ```swift
 /// let picture = Picture()
 /// if let player = try AnimatedImagePlayer(contentsOf: gifURL, displayedBy: picture) {
@@ -56,17 +65,17 @@ public final class AnimatedImagePlayer {
     ///   static loader in that case.
     public init?(contentsOf fileURL: URL, displayedBy picture: Picture) throws {
         var error: UnsafeMutablePointer<GError>?
-        guard let animation = gdk_pixbuf_animation_new_from_file(fileURL.path, &error) else {
+        guard let animation = swiftadw_pixbuf_animation_new_from_file(fileURL.path, &error) else {
             let message = error.map { String(cString: $0.pointee.message) }
                 ?? "gdk_pixbuf_animation_new_from_file returned NULL"
             if let error { g_error_free(error) }
             throw ImageDecodingError.decodeFailed(message)
         }
-        guard gdk_pixbuf_animation_is_static_image(animation) == 0 else {
+        guard swiftadw_pixbuf_animation_is_static_image(animation) == 0 else {
             g_object_unref(UnsafeMutableRawPointer(animation))
             return nil
         }
-        guard let iterator = gdk_pixbuf_animation_get_iter(animation, nil) else {
+        guard let iterator = swiftadw_pixbuf_animation_get_iter(animation, nil) else {
             g_object_unref(UnsafeMutableRawPointer(animation))
             throw ImageDecodingError.invalidData
         }
@@ -75,8 +84,8 @@ public final class AnimatedImagePlayer {
         self.animation = animation
         self.iterator = iterator
         metadata = Metadata(
-            width: Int(gdk_pixbuf_animation_get_width(animation)),
-            height: Int(gdk_pixbuf_animation_get_height(animation))
+            width: Int(swiftadw_pixbuf_animation_get_width(animation)),
+            height: Int(swiftadw_pixbuf_animation_get_height(animation))
         )
 
         renderCurrentFrame()
@@ -120,7 +129,7 @@ public final class AnimatedImagePlayer {
 private extension AnimatedImagePlayer {
     func renderCurrentFrame() {
         guard let iterator,
-              let pixbuf = gdk_pixbuf_animation_iter_get_pixbuf(iterator),
+              let pixbuf = swiftadw_pixbuf_animation_iter_get_pixbuf(iterator),
               let pixels = try? PixbufPixelDecoder.rgbaPixels(from: pixbuf) else {
             return
         }
@@ -130,7 +139,7 @@ private extension AnimatedImagePlayer {
 
     func scheduleNext() {
         guard let iterator, isPlaying else { return }
-        let delay = gdk_pixbuf_animation_iter_get_delay_time(iterator)
+        let delay = swiftadw_pixbuf_animation_iter_get_delay_time(iterator)
         let intervalMs = UInt32(delay > 0 ? delay : 100)
         timerSourceID = MainContext.timeout(intervalMs: intervalMs) { [weak self] in
             guard let self, isPlaying else { return false }
@@ -141,7 +150,7 @@ private extension AnimatedImagePlayer {
 
     func advanceFrame(reschedule: Bool) {
         guard let iterator else { return }
-        _ = gdk_pixbuf_animation_iter_advance(iterator, nil)
+        _ = swiftadw_pixbuf_animation_iter_advance(iterator, nil)
         renderCurrentFrame()
         if reschedule {
             scheduleNext()
