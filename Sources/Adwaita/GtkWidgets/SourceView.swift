@@ -8,6 +8,10 @@ import GObjectSupport
 /// line numbers, current-line highlighting, and indentation helpers.
 @MainActor
 public final class SourceView: Widget {
+    override public class var gtkType: GType {
+        gtk_source_view_get_type()
+    }
+
     /// Creates a new source view with a default ``SourceBuffer``.
     public init() {
         let ptr = gtk_source_view_new()!
