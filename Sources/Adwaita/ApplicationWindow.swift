@@ -67,4 +67,22 @@ public final class ApplicationWindow: GtkWindow {
     public func setContent(_ widget: Widget) {
         adw_application_window_set_content(adwWindowPointer, widget.widgetPointer)
     }
+
+    /// Registers a responsive breakpoint on this window.
+    ///
+    /// When the condition is met, the breakpoint applies its setters
+    /// (see ``Breakpoint/addSetter(_:property:value:)-(_,_,Bool)``) and
+    /// reverts them when it no longer matches. Mirrors the `addBreakpoint`
+    /// method already exposed on ``Window``; `AdwApplicationWindow`
+    /// inherits the same C machinery from `AdwWindow`.
+    ///
+    /// ```swift
+    /// let compact = Breakpoint.maxWidth(600)
+    /// compact.addSetter(saveButton, property: .visible, value: false)
+    /// window.addBreakpoint(compact)
+    /// ```
+    public func addBreakpoint(_ breakpoint: Breakpoint) {
+        g_object_ref(breakpoint.pointer)
+        adw_application_window_add_breakpoint(adwWindowPointer, breakpoint.opaquePointer)
+    }
 }
