@@ -197,6 +197,51 @@ struct SystemTests {
         _ = clipboard // async methods available: readText(), readTexture()
     }
 
+    // MARK: - Texture PNG Encoding
+
+    @Test @MainActor func textureEncodesToPNGData() {
+        ensureAdwInit()
+        // Build a tiny RGBA texture and round-trip it through the new
+        // PNG-encoder. The output should be non-empty and start with
+        // the PNG signature so callers can hand the bytes off to any
+        // PNG-aware decoder (e.g. saving paste-from-clipboard images
+        // to disk).
+        let pixels: [UInt8] = [
+            255, 0, 0, 255, /* */ 0, 255, 0, 255,
+            0, 0, 255, 255, /* */ 255, 255, 0, 255,
+        ]
+        let texture = Texture(rgbaData: pixels, width: 2, height: 2)
+
+        guard let data = texture.encodedPNGData() else {
+            Issue.record("Expected encodedPNGData to return Data")
+            return
+        }
+
+        #expect(data.count > 8)
+        let signature: [UInt8] = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]
+        #expect(Array(data.prefix(8)) == signature)
+    }
+
+    // MARK: - Clipboard Image Probe
+
+    @Test @MainActor func clipboardContainsImageReflectsLastSetContent() {
+        ensureAdwInit()
+        let box = Box(orientation: .vertical, spacing: 0)
+        let clipboard = box.clipboard
+
+        // Plain text on the clipboard must NOT register as an image.
+        clipboard.setText("just text, no image")
+        #expect(clipboard.containsImage == false)
+
+        // Setting a Texture flips the probe to true so the paste
+        // handler can synchronously decide whether to intercept the
+        // signal before kicking off an async texture read.
+        let pixels: [UInt8] = [255, 0, 0, 255]
+        let texture = Texture(rgbaData: pixels, width: 1, height: 1)
+        clipboard.setTexture(texture)
+        #expect(clipboard.containsImage == true)
+    }
+
     // MARK: - Widget.removeController Test
 
     @Test @MainActor func widgetRemoveController() {

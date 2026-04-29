@@ -222,6 +222,26 @@ public final class Texture: GObjectRef {
         Int(gdk_texture_get_height(OpaquePointer(pointer)))
     }
 
+    /// Encodes the texture as PNG and returns the resulting bytes.
+    ///
+    /// Wraps `gdk_texture_save_to_png_bytes`. Useful for piping a
+    /// texture obtained from the clipboard, drag-and-drop, or any
+    /// other in-memory source through any PNG-aware sink (file write,
+    /// network upload, content-import pipelines).
+    ///
+    /// - Returns: PNG-encoded data, or `nil` if the encode fails.
+    public func encodedPNGData() -> Data? {
+        guard let bytesPtr = gdk_texture_save_to_png_bytes(OpaquePointer(pointer)) else {
+            return nil
+        }
+        defer { g_bytes_unref(bytesPtr) }
+        var size: gsize = 0
+        guard let raw = g_bytes_get_data(bytesPtr, &size), size > 0 else {
+            return nil
+        }
+        return Data(bytes: raw, count: Int(size))
+    }
+
     /// Synchronously decodes a raster image on the calling thread and
     /// returns a GPU-resident texture.
     ///

@@ -106,6 +106,20 @@ public final class Clipboard: GObjectRef {
         gdk_clipboard_is_local(opaquePointer) != 0
     }
 
+    /// Synchronously reports whether the clipboard advertises an
+    /// image. Useful for paste-handler fast-paths that need to decide
+    /// whether to intercept the `paste-clipboard` signal before
+    /// kicking off the asynchronous ``readTexture(completion:)`` —
+    /// reading the texture is async, but choosing whether to
+    /// short-circuit the default text-paste behaviour has to happen
+    /// in the same call frame as the signal.
+    public var containsImage: Bool {
+        guard let formats = gdk_clipboard_get_formats(opaquePointer) else {
+            return false
+        }
+        return gdk_content_formats_contain_gtype(formats, gdk_texture_get_type()) != 0
+    }
+
     /// Emitted when the clipboard content changes.
     ///
     /// - Parameter handler: Called when the clipboard content changes.
