@@ -226,7 +226,7 @@ struct SystemTests {
         // to disk).
         let pixels: [UInt8] = [
             255, 0, 0, 255, /* */ 0, 255, 0, 255,
-            0, 0, 255, 255, /* */ 255, 255, 0, 255,
+            0, 0, 255, 255, /* */ 255, 255, 0, 255
         ]
         let texture = Texture(rgbaData: pixels, width: 2, height: 2)
 
