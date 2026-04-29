@@ -197,6 +197,24 @@ struct SystemTests {
         _ = clipboard // async methods available: readText(), readTexture()
     }
 
+    // MARK: - Paste-clipboard hook
+
+    @Test @MainActor func widgetExposesPasteClipboardHookAndStopEmission() {
+        ensureAdwInit()
+        // Both helpers exist on Widget so a `paste-clipboard` signal
+        // handler on a TextView / SourceView can synchronously decide
+        // whether to short-circuit GTK's default text-paste behaviour
+        // and run a custom (e.g. image) paste path instead.
+        let view = TextView()
+        let connection: SignalConnection = view.onPasteClipboard {}
+        connection.disconnect()
+
+        // No-op when called outside an active signal emission, but the
+        // method must exist on every Widget so the handler can call
+        // it without dropping into raw GObject C.
+        view.stopSignalEmission(named: "paste-clipboard")
+    }
+
     // MARK: - Texture PNG Encoding
 
     @Test @MainActor func textureEncodesToPNGData() {

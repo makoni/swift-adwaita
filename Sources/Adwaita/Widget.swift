@@ -518,6 +518,31 @@ open class Widget: GObjectRef {
         SignalHelper.onNotify(self, property: property, handler: handler)
     }
 
+    // MARK: - Signal control
+
+    /// Stops the currently-emitting signal of the given name on this
+    /// widget. Call from inside a signal handler that wants to
+    /// short-circuit GTK's default behaviour — for example, an
+    /// `onPasteClipboard` handler intercepting the
+    /// `paste-clipboard` signal to run a custom paste path before
+    /// the default text-paste implementation runs.
+    public func stopSignalEmission(named name: String) {
+        g_signal_stop_emission_by_name(pointer, name)
+    }
+
+    /// Connects a handler to GtkTextView's `paste-clipboard` signal.
+    /// Only fires on widgets backed by a `GtkTextView` (e.g. ``TextView``
+    /// and ``SourceView``); attaching to other widget types will
+    /// connect successfully but never fire.
+    ///
+    /// To override the default text-paste behaviour from inside the
+    /// handler, call ``stopSignalEmission(named:)`` with
+    /// `"paste-clipboard"` before kicking off the custom paste work.
+    @discardableResult
+    public func onPasteClipboard(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: .custom("paste-clipboard"), handler: handler)
+    }
+
     // MARK: - Focus
 
     /// Requests keyboard focus for this widget.
