@@ -1,4 +1,5 @@
 import CAdwaita
+import Foundation
 import GObjectSupport
 
 /// Provides access to the system clipboard for copy/paste.
@@ -120,6 +121,35 @@ public final class Clipboard: GObjectRef {
         return gdk_content_formats_contain_gtype(formats, gdk_texture_get_type()) != 0
     }
 
+    /// Synchronously reports whether the clipboard advertises a file
+    /// list — for example when the user copies items in a file
+    /// manager (Nautilus, Files, …). Symmetric with ``containsImage``:
+    /// lets a paste-handler decide whether to intercept the
+    /// `paste-clipboard` signal for file-manager copies before
+    /// kicking off the asynchronous ``readFiles(completion:)``.
+    public var containsFiles: Bool {
+        guard let formats = gdk_clipboard_get_formats(opaquePointer) else {
+            return false
+        }
+        return gdk_content_formats_contain_gtype(formats, gdk_file_list_get_type()) != 0
+    }
+
+    /// Reads the file list from the clipboard. Completion gets a
+    /// (possibly empty) array of `file://` URLs.
+    public func readFiles(completion: @escaping @MainActor ([URL]) -> Void) {
+        let box = DialogAsyncSupport.retainBox(completion)
+        gdk_clipboard_read_value_async(
+            opaquePointer,
+            gdk_file_list_get_type(),
+            Int32(G_PRIORITY_DEFAULT),
+            nil,
+            { source, result, userData in
+                Clipboard.finishFilesCallback(userData: userData, source: source, result: result)
+            },
+            box
+        )
+    }
+
     /// Emitted when the clipboard content changes.
     ///
     /// - Parameter handler: Called when the clipboard content changes.
@@ -230,6 +260,53 @@ private extension Clipboard {
         }
         let wrapped = Texture(raw: UnsafeMutableRawPointer(texture))
         MainActor.assumeIsolated { box.closure(wrapped) }
+    }
+
+    static func finishFilesCallback(
+        userData: UnsafeMutableRawPointer?,
+        source: UnsafeMutablePointer<GObject>?,
+        result: OpaquePointer?
+    ) {
+        let box = DialogAsyncSupport.takeBox(
+            userData,
+            as: (@MainActor ([URL]) -> Void).self,
+            context: #function
+        )
+        guard let source, let result else {
+            MainActor.assumeIsolated { box.closure([]) }
+            return
+        }
+        var error: UnsafeMutablePointer<GError>?
+        let valuePtr = gdk_clipboard_read_value_finish(OpaquePointer(source), result, &error)
+        if let error { g_error_free(error) }
+        guard let valuePtr,
+              let fileList = cadw_value_get_file_list(valuePtr) else {
+            MainActor.assumeIsolated { box.closure([]) }
+            return
+        }
+        var urls: [URL] = []
+        let head = gdk_file_list_get_files(fileList)
+        var node = head
+        while let current = node {
+            if let filePtr = current.pointee.data {
+                let cFile = OpaquePointer(filePtr)
+                if let cURI = g_file_get_uri(cFile) {
+                    let uri = String(cString: cURI)
+                    g_free(gpointer(mutating: cURI))
+                    if let url = URL(string: uri) {
+                        urls.append(url)
+                    }
+                }
+            }
+            node = current.pointee.next
+        }
+        // `gdk_file_list_get_files` returns a GSList we own (the
+        // contained `GFile*`s remain owned by the GValue), so free
+        // the container but leave the entries alone.
+        if head != nil {
+            g_slist_free(head)
+        }
+        MainActor.assumeIsolated { box.closure(urls) }
     }
 }
 

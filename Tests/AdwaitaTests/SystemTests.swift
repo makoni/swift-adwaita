@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -238,6 +239,36 @@ struct SystemTests {
         #expect(data.count > 8)
         let signature: [UInt8] = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]
         #expect(Array(data.prefix(8)) == signature)
+    }
+
+    // MARK: - Clipboard File List Probe
+
+    @Test @MainActor func clipboardContainsFilesIsFalseForTextOnlyClipboard() {
+        ensureAdwInit()
+        // Symmetric to `containsImage`: a synchronous probe the paste
+        // handler can use to decide whether to intercept the
+        // `paste-clipboard` signal for file-manager copies. With only
+        // text on the clipboard the probe must be false so the
+        // default text-paste path runs unchanged.
+        let box = Box(orientation: .vertical, spacing: 0)
+        let clipboard = box.clipboard
+        clipboard.setText("just text — not a file list")
+        #expect(clipboard.containsFiles == false)
+    }
+
+    @Test @MainActor func clipboardReadFilesMethodIsAvailable() {
+        ensureAdwInit()
+        // Setting a file list on the clipboard requires `gdk_clipboard_set_value`
+        // with `GDK_TYPE_FILE_LIST`, which isn't exposed yet. The
+        // round-trip behaviour is exercised manually (copying a file
+        // in Nautilus and pasting); here we just pin the read method
+        // signature so callers can rely on its shape.
+        let box = Box(orientation: .vertical, spacing: 0)
+        let clipboard = box.clipboard
+        let _: (Clipboard, @escaping @MainActor ([URL]) -> Void) -> Void = { clipboard, completion in
+            clipboard.readFiles(completion: completion)
+        }
+        _ = clipboard
     }
 
     // MARK: - Clipboard Image Probe
