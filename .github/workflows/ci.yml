@@ -45,6 +45,27 @@ jobs:
             "$TEST_BIN" \
             -ignore-filename-regex=".build|Tests|DemoApp"
 
+  build-and-test-macos:
+    name: Build & Test on macOS
+    runs-on: macos-26
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install GTK stack via Homebrew
+        run: brew install libadwaita gtksourceview5 pkgconf
+
+      - name: Swift version
+        run: swift --version
+
+      - name: Build
+        run: swift build
+
+      - name: Run tests
+        env:
+          XDG_DATA_DIRS: /opt/homebrew/share
+        run: swift test --no-parallel
+
   lint:
     name: SwiftFormat Lint
     runs-on: ubuntu-latest
