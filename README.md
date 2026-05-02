@@ -50,7 +50,7 @@ Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/document
 - Swift 6.2+
 - libadwaita 1.5+ development headers
 - GtkSourceView 5 development headers
-- Linux
+- Linux **or** macOS 13+ (Apple Silicon recommended; Intel best-effort)
 
 ### Ubuntu/Debian
 
@@ -63,6 +63,32 @@ sudo apt install libadwaita-1-dev libgtksourceview-5-dev
 ```bash
 sudo dnf install libadwaita-devel gtksourceview5-devel
 ```
+
+### macOS (Homebrew)
+
+```bash
+brew install libadwaita gtksourceview5 pkgconf
+```
+
+`libadwaita` pulls `gtk4`, `glib`, `cairo`, `pango`, `gdk-pixbuf`,
+`harfbuzz`, `librsvg`, and ~30 more transitive dependencies — about
+1.5–2 GB on disk after install.
+
+**Runtime env var (required).** libadwaita aborts at startup with
+`No GSettings schemas are installed on the system` unless GLib can
+find Homebrew's compiled schemas. Add this to your shell rc, or
+prepend it to any `swift run …` / `swift test …` invocation:
+
+```bash
+export XDG_DATA_DIRS="/opt/homebrew/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+```
+
+Intel Macs: replace `/opt/homebrew` with `/usr/local`.
+
+> macOS targets the GTK4 Quartz backend, so HeaderBar / Toast / native
+> dialog chrome will look like libadwaita on macOS rather than native
+> Cocoa. Build/test cycles are fully supported; Flatpak distribution is
+> Linux-only.
 
 ## Installation
 
@@ -391,11 +417,33 @@ Features sidebar navigation with search, source code viewer, and windowed demos 
 
 ## Building
 
+### Linux
+
 ```bash
-swift build       # Build library
-swift test --no-parallel        # Run the test suite safely for GTK/libadwaita
-swift run DemoApp # Launch demo gallery
+swift build                      # Build library
+xvfb-run swift test --no-parallel   # Run the test suite under a virtual display
+swift run DemoApp                # Launch demo gallery
 ```
+
+### macOS
+
+```bash
+swift build                      # Build library
+
+# Tests need GSettings schemas at runtime.
+XDG_DATA_DIRS=/opt/homebrew/share swift test --no-parallel
+
+# DemoApp likewise:
+XDG_DATA_DIRS=/opt/homebrew/share swift run DemoApp
+```
+
+> Linux runs the test suite via swift-testing; macOS runs an XCTest
+> mirror suite under `Tests/AdwaitaTests/macOS/` because swift-testing's
+> per-test autorelease pool transitions corrupt memory after `gtk_init`
+> registers Cocoa CFRunLoop callbacks. Both paths exercise the same
+> logic. If you add a new test, place the swift-testing version under
+> `Tests/AdwaitaTests/` (gated `#if !os(macOS)`) and an XCTest mirror
+> under `Tests/AdwaitaTests/macOS/` (gated `#if os(macOS)`).
 
 ## Distribution with Flatpak
 

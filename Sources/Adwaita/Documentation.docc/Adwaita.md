@@ -50,9 +50,13 @@ app.run()
 
 ### Requirements
 
-- **Linux** with GTK4 and libadwaita installed
+- **Linux** or **macOS 13+** (Apple Silicon recommended)
 - **Swift 6.2+**
-- System package: `libadwaita-1-dev` (apt) or equivalent
+- System packages: `libadwaita-1-dev` + `libgtksourceview-5-dev` (apt) /
+  `libadwaita gtksourceview5 pkgconf` (Homebrew) / equivalent
+- macOS only: export
+  `XDG_DATA_DIRS=/opt/homebrew/share` so libadwaita finds its
+  GSettings schemas at runtime (Intel: `/usr/local/share`)
 
 ### Installation
 
