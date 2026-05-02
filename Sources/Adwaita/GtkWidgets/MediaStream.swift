@@ -67,12 +67,12 @@ public class MediaStream: GObjectRef {
 
     /// The current playback position in microseconds.
     public var timestamp: Int {
-        gtk_media_stream_get_timestamp(streamPointer)
+        Int(gtk_media_stream_get_timestamp(streamPointer))
     }
 
     /// The total duration in microseconds, or 0 if unknown.
     public var duration: Int {
-        gtk_media_stream_get_duration(streamPointer)
+        Int(gtk_media_stream_get_duration(streamPointer))
     }
 
     /// Whether seeking is supported.
@@ -87,7 +87,7 @@ public class MediaStream: GObjectRef {
 
     /// Seeks to the given position in microseconds.
     public func seek(_ timestamp: Int) {
-        gtk_media_stream_seek(streamPointer, timestamp)
+        gtk_media_stream_seek(streamPointer, gint64(timestamp))
     }
 
     // MARK: - Audio
