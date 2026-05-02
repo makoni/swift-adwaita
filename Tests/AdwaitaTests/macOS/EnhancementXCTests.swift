@@ -172,11 +172,11 @@ final class EnhancementXCTests: XCTestCase {
     }
 
     // MARK: - MainContext delay
+
     //
     // GLib main-loop tests removed on macOS: iterating the loop interleaves
     // with Cocoa CFRunLoop autorelease pool management and corrupts the pool.
     // These tests still run on Linux from EnhancementTests.swift.
-
 
     // MARK: - New enum extensions
 

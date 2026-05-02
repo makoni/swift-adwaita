@@ -3,7 +3,6 @@ import XCTest
 @testable import Adwaita
 import CAdwaita
 
-
 final class DeepCoverageXCTests: XCTestCase {
 
     // MARK: - CairoContext

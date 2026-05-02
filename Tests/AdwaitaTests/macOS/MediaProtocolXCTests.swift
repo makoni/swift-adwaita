@@ -3,7 +3,6 @@ import XCTest
 @testable import Adwaita
 import CAdwaita
 
-
 final class MediaProtocolXCTests: XCTestCase {
     private let missingMediaFilename = "/nonexistent/swift-adwaita-test-media.mp4"
 

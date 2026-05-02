@@ -4,7 +4,6 @@ import XCTest
 import CAdwaita
 import Foundation
 
-
 final class ImageLoadingXCTests: XCTestCase {
 
     // MARK: - Fixtures
