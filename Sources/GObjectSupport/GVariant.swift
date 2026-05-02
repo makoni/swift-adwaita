@@ -88,9 +88,7 @@ public final class Variant {
 
     /// The string value, or `nil` if this variant does not hold a string.
     public var stringValue: String? {
-        guard g_variant_is_of_type(pointer, g_variant_type_checked_("s")) != 0 else {
-            return nil
-        }
+        guard isOfType("s") else { return nil }
         guard let cStr = g_variant_get_string(pointer, nil) else { return nil }
         return String(cString: cStr)
     }

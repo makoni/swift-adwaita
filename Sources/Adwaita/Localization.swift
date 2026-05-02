@@ -16,8 +16,14 @@ private nonisolated(unsafe) var _textDomain: String?
 /// - Parameter msgid: The source string (message ID) to translate.
 /// - Returns: The translated string, or `msgid` if no translation is found.
 public func localized(_ msgid: String) -> String {
-    guard let result = g_dgettext(_textDomain, msgid) else { return msgid }
-    return String(cString: result)
+    msgid.withCString { msgidC in
+        guard let result = g_dgettext(_textDomain, msgidC) else { return msgid }
+        // gettext returns the input pointer untouched when no translation is
+        // available. Reading from msgidC after withCString returns is UB on
+        // Apple platforms — the bridged C-string buffer may already be freed.
+        if result == msgidC { return msgid }
+        return String(cString: result)
+    }
 }
 
 /// Looks up a translated string with context disambiguation.
@@ -31,9 +37,12 @@ public func localized(_ msgid: String) -> String {
 /// ```
 public func localizedWithContext(_ context: String, _ msgid: String) -> String {
     let combined = "\(context)\u{04}\(msgid)"
-    guard let result = g_dgettext(_textDomain, combined) else { return msgid }
-    let translated = String(cString: result)
-    return translated == combined ? msgid : translated
+    return combined.withCString { combinedC in
+        guard let result = g_dgettext(_textDomain, combinedC) else { return msgid }
+        if result == combinedC { return msgid }
+        let translated = String(cString: result)
+        return translated == combined ? msgid : translated
+    }
 }
 
 /// Looks up a pluralized translated string.
@@ -42,8 +51,18 @@ public func localizedWithContext(_ context: String, _ msgid: String) -> String {
 /// let msg = nlocalized("%d file", "%d files", count: fileCount)
 /// ```
 public func nlocalized(_ msgid: String, _ msgidPlural: String, count: UInt) -> String {
-    guard let result = g_dngettext(_textDomain, msgid, msgidPlural, count) else { return msgid }
-    return String(cString: result)
+    msgid.withCString { msgidC in
+        msgidPlural.withCString { pluralC in
+            guard let result = g_dngettext(_textDomain, msgidC, pluralC, count) else { return msgid }
+            // gettext returns msgid (count==1, no translation) or msgidPlural
+            // (count!=1, no translation) by pointer identity — those C-strings
+            // belong to the withCString scope, so we have to materialise our
+            // Swift values rather than read the dangling pointer.
+            if result == msgidC { return msgid }
+            if result == pluralC { return msgidPlural }
+            return String(cString: result)
+        }
+    }
 }
 
 /// Sets the gettext text domain for the application.
@@ -63,7 +82,11 @@ public extension String {
     /// let label = Label("Hello".localized)
     /// ```
     var localized: String {
-        guard let result = g_dgettext(_textDomain, self) else { return self }
-        return String(cString: result)
+        let original = self
+        return withCString { msgidC in
+            guard let result = g_dgettext(_textDomain, msgidC) else { return original }
+            if result == msgidC { return original }
+            return String(cString: result)
+        }
     }
 }
