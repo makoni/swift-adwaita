@@ -163,7 +163,8 @@ We picked option 2 (dual harness): keep swift-testing on Linux, mirror every sui
 
 - [x] Investigate the 10 real failures — done (3 library bugs fixed, 1 cosmetic test relaxation).
 - [ ] Confirm Linux test pass count is unchanged after our `Package.swift`, `MediaStream.swift`, `TestHelpers.swift` (helper rename), `GVariant.swift` (stringValue), `Localization.swift` (gettext lifetimes) edits — push to CI.
-- [ ] Add a `macos-latest` job to `.github/workflows/ci.yml` running `brew install libadwaita gtksourceview5 pkgconf` then `XDG_DATA_DIRS=/opt/homebrew/share swift test --no-parallel`.
+- [x] Add a macOS job to `.github/workflows/ci.yml` (build-only — see below).
+- [ ] Find a way to run the XCTest mirror suite in CI. GitHub-hosted `macos-26` runners are headless (no WindowServer session); GTK4-Quartz installs Cocoa runloop observers at `gtk_init` time that corrupt the autorelease pool on the second XCTest method when there is no display server. Tested with both Xcode 26.2 / Swift 6.2 and Xcode 26.4.1 / Swift 6.3.1 — both abort with SIGABRT after the second test starts. Locally on a real GUI session, the same XCTest mirror passes 1181 / 1181, so the suite is fine — only headless macOS is broken. Workarounds to investigate: a self-hosted Mac runner with a logged-in user, an action that primes a virtual display, or upstream GTK4 fixing Quartz integration to tolerate headless processes.
 - [ ] Update `README.md` and `CONTRIBUTING.md` with the macOS install + run instructions from §1.
 - [ ] (Optional) File swift-testing issue with the minimal repro pattern: `@Suite struct { @Test @MainActor func a() { gtk_init() } ; @Test @MainActor func b() {} }` aborts on test `b` start.
 
