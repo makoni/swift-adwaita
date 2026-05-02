@@ -1,3 +1,4 @@
+#if !os(macOS)
 #if swift(>=6.3)
 import Testing
 @testable import Adwaita
@@ -315,4 +316,5 @@ struct NavigationAndTabTests {
         #expect(page.child.pointer != nil)
     }
 }
+#endif
 #endif

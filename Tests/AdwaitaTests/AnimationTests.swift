@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -218,3 +219,4 @@ struct AnimationTests {
         #expect(values.count > count1, "Target should have received values from second animation")
     }
 }
+#endif

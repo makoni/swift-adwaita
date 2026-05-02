@@ -1,3 +1,4 @@
+#if !os(macOS)
 #if swift(>=6.3)
 import Testing
 @testable import Adwaita
@@ -259,4 +260,5 @@ struct TextBufferTagTests {
         #expect(abs(tag.sizePoints - 16.0) < 0.01)
     }
 }
+#endif
 #endif

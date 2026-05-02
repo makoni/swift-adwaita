@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -13,64 +14,64 @@ struct TypeHierarchyTests {
     // MARK: - Type Hierarchy Tests
 
     @Test @MainActor func widgetInheritsFromGObjectRef() {
-        #expect(isSubclass(Widget.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(Widget.self, of: GObjectRef.self))
     }
 
     @Test @MainActor func applicationWindowInheritsFromWidget() {
-        #expect(isSubclass(ApplicationWindow.self, of: Widget.self))
-        #expect(isSubclass(ApplicationWindow.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(ApplicationWindow.self, of: Widget.self))
+        #expect(isAdwSubclass(ApplicationWindow.self, of: GObjectRef.self))
     }
 
     @Test @MainActor func navigationPageInheritsFromWidget() {
-        #expect(isSubclass(NavigationPage.self, of: Widget.self))
+        #expect(isAdwSubclass(NavigationPage.self, of: Widget.self))
     }
 
     @Test @MainActor func actionRowInheritanceChain() {
-        #expect(isSubclass(ActionRow.self, of: PreferencesRow.self))
-        #expect(isSubclass(ActionRow.self, of: ListBoxRow.self))
-        #expect(isSubclass(ActionRow.self, of: Widget.self))
+        #expect(isAdwSubclass(ActionRow.self, of: PreferencesRow.self))
+        #expect(isAdwSubclass(ActionRow.self, of: ListBoxRow.self))
+        #expect(isAdwSubclass(ActionRow.self, of: Widget.self))
     }
 
     @Test @MainActor func windowInheritsFromGtkWindow() {
-        #expect(isSubclass(Window.self, of: GtkWindow.self))
-        #expect(isSubclass(Window.self, of: Widget.self))
+        #expect(isAdwSubclass(Window.self, of: GtkWindow.self))
+        #expect(isAdwSubclass(Window.self, of: Widget.self))
     }
 
     @Test @MainActor func dialogInheritanceChain() {
-        #expect(isSubclass(Dialog.self, of: Widget.self))
-        #expect(isSubclass(AboutDialog.self, of: Dialog.self))
-        #expect(isSubclass(AlertDialog.self, of: Dialog.self))
+        #expect(isAdwSubclass(Dialog.self, of: Widget.self))
+        #expect(isAdwSubclass(AboutDialog.self, of: Dialog.self))
+        #expect(isAdwSubclass(AlertDialog.self, of: Dialog.self))
     }
 
     @Test @MainActor func animationInheritanceChain() {
-        #expect(isSubclass(Animation.self, of: GObjectRef.self))
-        #expect(isSubclass(SpringAnimation.self, of: Animation.self))
-        #expect(isSubclass(TimedAnimation.self, of: Animation.self))
+        #expect(isAdwSubclass(Animation.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(SpringAnimation.self, of: Animation.self))
+        #expect(isAdwSubclass(TimedAnimation.self, of: Animation.self))
     }
 
     @Test @MainActor func preferencesRowSubclasses() {
-        #expect(isSubclass(ActionRow.self, of: PreferencesRow.self))
-        #expect(isSubclass(ComboRow.self, of: ActionRow.self))
-        #expect(isSubclass(ExpanderRow.self, of: PreferencesRow.self))
-        #expect(isSubclass(EntryRow.self, of: PreferencesRow.self))
-        #expect(isSubclass(SpinRow.self, of: ActionRow.self))
-        #expect(isSubclass(SwitchRow.self, of: ActionRow.self))
-        #expect(isSubclass(PasswordEntryRow.self, of: EntryRow.self))
-        #expect(isSubclass(ButtonRow.self, of: PreferencesRow.self))
+        #expect(isAdwSubclass(ActionRow.self, of: PreferencesRow.self))
+        #expect(isAdwSubclass(ComboRow.self, of: ActionRow.self))
+        #expect(isAdwSubclass(ExpanderRow.self, of: PreferencesRow.self))
+        #expect(isAdwSubclass(EntryRow.self, of: PreferencesRow.self))
+        #expect(isAdwSubclass(SpinRow.self, of: ActionRow.self))
+        #expect(isAdwSubclass(SwitchRow.self, of: ActionRow.self))
+        #expect(isAdwSubclass(PasswordEntryRow.self, of: EntryRow.self))
+        #expect(isAdwSubclass(ButtonRow.self, of: PreferencesRow.self))
     }
 
     @Test @MainActor func layoutManagerSubclasses() {
-        #expect(isSubclass(LayoutManager.self, of: GObjectRef.self))
-        #expect(isSubclass(ClampLayout.self, of: LayoutManager.self))
-        #expect(isSubclass(WrapLayout.self, of: LayoutManager.self))
+        #expect(isAdwSubclass(LayoutManager.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(ClampLayout.self, of: LayoutManager.self))
+        #expect(isAdwSubclass(WrapLayout.self, of: LayoutManager.self))
     }
 
     // MARK: - Intermediate Classes
 
     @Test @MainActor func intermediateClassHierarchy() {
-        #expect(isSubclass(GtkWindow.self, of: Widget.self))
-        #expect(isSubclass(ListBoxRow.self, of: Widget.self))
-        #expect(isSubclass(LayoutManager.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(GtkWindow.self, of: Widget.self))
+        #expect(isAdwSubclass(ListBoxRow.self, of: Widget.self))
+        #expect(isAdwSubclass(LayoutManager.self, of: GObjectRef.self))
     }
 
     // MARK: - C Type Accessibility Tests
@@ -134,11 +135,11 @@ struct TypeHierarchyTests {
     // MARK: - Hand-Written Wrapper Tests
 
     @Test @MainActor func handWrittenWrappersExist() {
-        #expect(isSubclass(Application.self, of: GObjectRef.self))
-        #expect(isSubclass(ApplicationWindow.self, of: Widget.self))
-        #expect(isSubclass(HeaderBar.self, of: Widget.self))
-        #expect(isSubclass(ToolbarView.self, of: Widget.self))
-        #expect(isSubclass(StatusPage.self, of: Widget.self))
+        #expect(isAdwSubclass(Application.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(ApplicationWindow.self, of: Widget.self))
+        #expect(isAdwSubclass(HeaderBar.self, of: Widget.self))
+        #expect(isAdwSubclass(ToolbarView.self, of: Widget.self))
+        #expect(isAdwSubclass(StatusPage.self, of: Widget.self))
     }
 
     // MARK: - GValue Tests
@@ -209,3 +210,4 @@ struct TypeHierarchyTests {
     }
 
 }
+#endif

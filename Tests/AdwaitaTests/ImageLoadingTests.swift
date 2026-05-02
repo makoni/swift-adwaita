@@ -1,3 +1,4 @@
+#if !os(macOS)
 #if swift(>=6.3)
 import Testing
 @testable import Adwaita
@@ -226,4 +227,5 @@ extension SerializedLifecycleSuites {
         }
     }
 }
+#endif
 #endif

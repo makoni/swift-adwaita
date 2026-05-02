@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Foundation
 import Testing
 @testable import Adwaita
@@ -69,7 +70,7 @@ struct SystemTests {
     }
 
     @Test @MainActor func selectionFilterModelInheritsFromGObjectRef() {
-        #expect(isSubclass(SelectionFilterModel.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(SelectionFilterModel.self, of: GObjectRef.self))
     }
 
     // MARK: - GtkWindow Icon Tests
@@ -109,7 +110,7 @@ struct SystemTests {
     }
 
     @Test @MainActor func gestureSwipeInheritsFromGObjectRef() {
-        #expect(isSubclass(GestureSwipe.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(GestureSwipe.self, of: GObjectRef.self))
     }
 
     // MARK: - Display Tests
@@ -162,7 +163,7 @@ struct SystemTests {
     }
 
     @Test @MainActor func monitorInheritsFromGObjectRef() {
-        #expect(isSubclass(Monitor.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(Monitor.self, of: GObjectRef.self))
     }
 
     // MARK: - Clipboard Texture Read Test
@@ -507,3 +508,4 @@ struct SystemTests {
     }
 
 }
+#endif

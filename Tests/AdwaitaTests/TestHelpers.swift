@@ -3,8 +3,11 @@ import Testing
 import CAdwaita
 
 /// Helper to verify subclass relationships at runtime.
+///
+/// Named `isAdwSubclass` rather than the obvious `isSubclass` to avoid
+/// shadowing `NSObject.isSubclass(of:)` inside `XCTestCase` subclasses.
 @MainActor
-func isSubclass<Sub: AnyObject, Super: AnyObject>(_: Sub.Type, of _: Super.Type) -> Bool {
+func isAdwSubclass<Sub: AnyObject, Super: AnyObject>(_: Sub.Type, of _: Super.Type) -> Bool {
     Sub.self is Super.Type
 }
 

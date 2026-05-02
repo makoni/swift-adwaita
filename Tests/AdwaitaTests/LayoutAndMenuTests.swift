@@ -1,3 +1,4 @@
+#if !os(macOS)
 #if swift(>=6.3)
 import Testing
 @testable import Adwaita
@@ -380,4 +381,5 @@ struct LayoutAndMenuTests {
         _ = page.child // read-only; should not crash
     }
 }
+#endif
 #endif

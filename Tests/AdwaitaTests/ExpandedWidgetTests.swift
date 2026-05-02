@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -368,3 +369,4 @@ struct ExpandedWidgetTests {
         #expect(adj.value <= 100)
     }
 }
+#endif

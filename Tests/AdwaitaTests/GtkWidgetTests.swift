@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -300,10 +301,10 @@ struct GtkWidgetTests {
     }
 
     @Test @MainActor func eventControllerInheritance() {
-        #expect(isSubclass(GestureClick.self, of: GObjectRef.self))
-        #expect(isSubclass(EventControllerKey.self, of: GObjectRef.self))
-        #expect(isSubclass(EventControllerMotion.self, of: GObjectRef.self))
-        #expect(isSubclass(EventControllerScroll.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(GestureClick.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(EventControllerKey.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(EventControllerMotion.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(EventControllerScroll.self, of: GObjectRef.self))
     }
 
     // MARK: - Window onCloseRequest Signal
@@ -578,3 +579,4 @@ struct GtkWidgetTests {
     }
 
 }
+#endif

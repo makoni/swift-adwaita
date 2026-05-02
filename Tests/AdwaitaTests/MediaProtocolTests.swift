@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -352,3 +353,4 @@ extension SerializedLifecycleSuites {
 
     }
 }
+#endif

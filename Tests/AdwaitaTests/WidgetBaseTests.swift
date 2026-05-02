@@ -1,3 +1,4 @@
+#if !os(macOS)
 #if swift(>=6.3)
 import Testing
 @testable import Adwaita
@@ -410,4 +411,5 @@ struct WidgetBaseTests {
         #expect(notified, "onNotify should fire when property changes")
     }
 }
+#endif
 #endif

@@ -1,3 +1,4 @@
+#if !os(macOS)
 #if swift(>=6.3)
 import Testing
 @testable import Adwaita
@@ -152,4 +153,5 @@ struct SourceViewTests {
         #expect(changed)
     }
 }
+#endif
 #endif

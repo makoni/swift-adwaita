@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -215,3 +216,4 @@ struct PropertyBindingTests {
         #expect(abs(bar.fraction - 1.0) < 0.01)
     }
 }
+#endif

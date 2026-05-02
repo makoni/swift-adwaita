@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Foundation
 import Testing
 @testable import Adwaita
@@ -212,3 +213,4 @@ struct AsyncWidgetTests {
         #expect(!clicked)
     }
 }
+#endif

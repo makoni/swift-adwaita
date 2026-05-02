@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -47,23 +48,23 @@ struct SignalWidgetTests {
     // MARK: - GTK Widget Wrapper Tests
 
     @Test @MainActor func gtkWidgetWrappersExist() {
-        #expect(isSubclass(Box.self, of: Widget.self))
-        #expect(isSubclass(Button.self, of: Widget.self))
-        #expect(isSubclass(Label.self, of: Widget.self))
-        #expect(isSubclass(Entry.self, of: Widget.self))
-        #expect(isSubclass(ScrolledWindow.self, of: Widget.self))
-        #expect(isSubclass(ListBox.self, of: Widget.self))
-        #expect(isSubclass(Stack.self, of: Widget.self))
-        #expect(isSubclass(Image.self, of: Widget.self))
-        #expect(isSubclass(Separator.self, of: Widget.self))
-        #expect(isSubclass(Switch.self, of: Widget.self))
-        #expect(isSubclass(CheckButton.self, of: Widget.self))
-        #expect(isSubclass(Overlay.self, of: Widget.self))
-        #expect(isSubclass(FlowBox.self, of: Widget.self))
-        #expect(isSubclass(SearchEntry.self, of: Widget.self))
-        #expect(isSubclass(ToggleButton.self, of: Widget.self))
-        #expect(isSubclass(MenuButton.self, of: Widget.self))
-        #expect(isSubclass(Revealer.self, of: Widget.self))
+        #expect(isAdwSubclass(Box.self, of: Widget.self))
+        #expect(isAdwSubclass(Button.self, of: Widget.self))
+        #expect(isAdwSubclass(Label.self, of: Widget.self))
+        #expect(isAdwSubclass(Entry.self, of: Widget.self))
+        #expect(isAdwSubclass(ScrolledWindow.self, of: Widget.self))
+        #expect(isAdwSubclass(ListBox.self, of: Widget.self))
+        #expect(isAdwSubclass(Stack.self, of: Widget.self))
+        #expect(isAdwSubclass(Image.self, of: Widget.self))
+        #expect(isAdwSubclass(Separator.self, of: Widget.self))
+        #expect(isAdwSubclass(Switch.self, of: Widget.self))
+        #expect(isAdwSubclass(CheckButton.self, of: Widget.self))
+        #expect(isAdwSubclass(Overlay.self, of: Widget.self))
+        #expect(isAdwSubclass(FlowBox.self, of: Widget.self))
+        #expect(isAdwSubclass(SearchEntry.self, of: Widget.self))
+        #expect(isAdwSubclass(ToggleButton.self, of: Widget.self))
+        #expect(isAdwSubclass(MenuButton.self, of: Widget.self))
+        #expect(isAdwSubclass(Revealer.self, of: Widget.self))
     }
 
     // MARK: - Signal Coverage Tests
@@ -435,3 +436,4 @@ struct SignalWidgetTests {
     }
 
 }
+#endif

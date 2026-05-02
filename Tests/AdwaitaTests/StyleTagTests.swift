@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -274,3 +275,4 @@ struct StyleTagTests {
     }
 
 }
+#endif

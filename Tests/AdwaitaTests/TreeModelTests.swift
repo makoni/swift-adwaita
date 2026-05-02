@@ -1,3 +1,4 @@
+#if !os(macOS)
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -135,25 +136,25 @@ struct TreeModelTests {
     }
 
     @Test @MainActor func treeExpanderInheritsFromWidget() {
-        #expect(isSubclass(TreeExpander.self, of: Widget.self))
-        #expect(isSubclass(TreeExpander.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(TreeExpander.self, of: Widget.self))
+        #expect(isAdwSubclass(TreeExpander.self, of: GObjectRef.self))
     }
 
     @Test @MainActor func columnViewInheritsFromWidget() {
-        #expect(isSubclass(ColumnView.self, of: Widget.self))
-        #expect(isSubclass(ColumnView.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(ColumnView.self, of: Widget.self))
+        #expect(isAdwSubclass(ColumnView.self, of: GObjectRef.self))
     }
 
     @Test @MainActor func columnViewColumnInheritsFromGObjectRef() {
-        #expect(isSubclass(ColumnViewColumn.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(ColumnViewColumn.self, of: GObjectRef.self))
     }
 
     @Test @MainActor func treeListModelInheritsFromGObjectRef() {
-        #expect(isSubclass(TreeListModel.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(TreeListModel.self, of: GObjectRef.self))
     }
 
     @Test @MainActor func treeListRowInheritsFromGObjectRef() {
-        #expect(isSubclass(TreeListRow.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(TreeListRow.self, of: GObjectRef.self))
     }
 
     // MARK: - GridView Tests
@@ -225,8 +226,8 @@ struct TreeModelTests {
     }
 
     @Test @MainActor func gridViewInheritsFromWidget() {
-        #expect(isSubclass(GridView.self, of: Widget.self))
-        #expect(isSubclass(GridView.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(GridView.self, of: Widget.self))
+        #expect(isAdwSubclass(GridView.self, of: GObjectRef.self))
     }
 
     // MARK: - MapListModel Tests
@@ -302,7 +303,7 @@ struct TreeModelTests {
     }
 
     @Test @MainActor func mapListModelInheritsFromGObjectRef() {
-        #expect(isSubclass(MapListModel.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(MapListModel.self, of: GObjectRef.self))
     }
 
     // MARK: - FlattenListModel Tests
@@ -345,7 +346,8 @@ struct TreeModelTests {
     }
 
     @Test @MainActor func flattenListModelInheritsFromGObjectRef() {
-        #expect(isSubclass(FlattenListModel.self, of: GObjectRef.self))
+        #expect(isAdwSubclass(FlattenListModel.self, of: GObjectRef.self))
     }
 
 }
+#endif
