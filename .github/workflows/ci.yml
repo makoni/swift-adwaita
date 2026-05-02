@@ -52,6 +52,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      # macos-26's default Xcode is 26.2 (Swift 6.2.x). XCTest on 6.2 still
+      # interleaves with Cocoa CFRunLoop pool management after gtk_init runs
+      # and aborts on the second test in a process. 6.3 fixes that — pick
+      # Xcode 26.4.1 explicitly.
+      - name: Select Xcode 26.4.1 (Swift 6.3)
+        run: sudo xcode-select -s /Applications/Xcode_26.4.1.app
+
       - name: Install GTK stack via Homebrew
         run: brew install libadwaita gtksourceview5 pkgconf
 
