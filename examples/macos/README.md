@@ -1,8 +1,10 @@
 # swift-adwaita on macOS — Xcode example
 
-A minimal Xcode project that wires `swift-adwaita` into a regular `.app`
-bundle. Open `DemoApp/DemoApp.xcodeproj` in Xcode (26.4+ recommended), hit
-**⌘R**, and you should get a libadwaita window on macOS.
+An Xcode project that packages the swift-adwaita demo gallery as a regular
+macOS `.app` bundle. Open `DemoApp/DemoApp.xcodeproj` in Xcode (26.4+
+recommended), hit **⌘R**, and you should get the same 78-example gallery
+that `swift run DemoApp` produces on Linux — search box, sidebar, "Show
+Code" button and all.
 
 This is a **developer starter** — it depends on Homebrew at runtime. Shipping
 a self-contained bundle to other machines requires extra steps; see
@@ -26,7 +28,7 @@ in `Project.xcconfig` and `Info.plist`.
 examples/macos/DemoApp/
 ├── DemoApp.xcodeproj/
 ├── DemoApp/
-│   ├── main.swift          ← Adwaita.Application entry point (no @main)
+│   ├── main.swift          ← 5-line shim that calls DemoAppLib.runDemoApp()
 │   └── Assets.xcassets/    ← icon catalog (left empty by default)
 ├── Info.plist              ← bundle metadata + LSEnvironment
 └── Project.xcconfig        ← Homebrew header / library paths
@@ -42,28 +44,37 @@ Files dropped into `DemoApp/` are picked up automatically by Xcode's
    the project- and target-level `XCBuildConfiguration` set
    `baseConfigurationReference` to this file.
 
-2. **`Info.plist` `LSEnvironment`** sets `XDG_DATA_DIRS=/opt/homebrew/share`
-   so that libadwaita can find its compiled GSettings schemas at startup.
-   Launch Services injects `LSEnvironment` when the app is double-clicked,
-   run via `open DemoApp.app`, or launched by Xcode (⌘R). It is **not**
-   applied when the binary is exec'd directly from a terminal — running
-   `DemoApp.app/Contents/MacOS/DemoApp` from your shell will print
-   `GLib-GIO-CRITICAL: g_settings_schema_source_lookup` and may crash
-   later when a widget queries GSettings (e.g. `EmojiChooser`).
+2. **`DemoAppLib.runDemoApp()` is the single entry point.** All gallery
+   setup lives in the `DemoAppLib` library product of swift-adwaita. The
+   Xcode app and `Sources/DemoApp/main.swift` both call into it, so the
+   `swift run DemoApp` executable on Linux and Cmd+R from Xcode share one
+   code path. The library also prepends `/opt/homebrew/share` (or
+   `/usr/local/share` on Intel) to `XDG_DATA_DIRS` programmatically before
+   `gtk_init`, which fixes a launch issue where Launch Services skips
+   Info.plist's `LSEnvironment` if the parent shell already exported
+   `XDG_DATA_DIRS` (Ghostty / iTerm / a customised shell rc do this).
 
-3. **`main.swift` runs `Adwaita.Application.run()` directly** instead of
+3. **`Info.plist` `LSEnvironment`** *also* sets `XDG_DATA_DIRS` for the
+   `open DemoApp.app` path on a clean shell environment. Belt-and-braces
+   with the programmatic prepend in `runDemoApp()`.
+
+4. **`main.swift` runs `Adwaita.Application.run()` directly** instead of
    `NSApplicationMain` / `@main`. GTK4's Quartz backend installs its own
    `NSApplication` and runs GLib's main loop; a second Cocoa runloop
    driving `DispatchQueue.main` would conflict with it. See
    `Sources/GObjectSupport/MainContext.swift` in the parent package for
-   the explanation.
+   the explanation. The Xcode `main.swift` also strips the
+   `-NSDocumentRevisionsDebugMode` / `-ApplePersistenceIgnoreState` flags
+   that Xcode injects under a debug session — GApplication aborts on the
+   first unknown CLI option.
 
-4. **`swift-adwaita` is added as a Local Swift Package Dependency** with
-   relative path `../../..` (the project root). Modify the
+5. **swift-adwaita is added as a Local Swift Package** at relative path
+   `../../..` (the project root) with two product dependencies: `Adwaita`
+   (the wrapper library) and `DemoAppLib` (the gallery). Modify the
    `XCLocalSwiftPackageReference` in `project.pbxproj` if you copy this
    example out of the repo — point it at a checkout or a remote URL.
 
-5. **App Sandbox + Hardened Runtime are disabled** in `Project.xcconfig`.
+6. **App Sandbox + Hardened Runtime are disabled** in `Project.xcconfig`.
    The brew dylibs live at `/opt/homebrew/lib`, which neither the sandbox
    nor library validation will allow without explicit entitlements. Re-
    enable both for App Store / notarized distribution and add:
