@@ -52,4 +52,11 @@ app.onActivate {
     window.present()
 }
 
-app.run()
+// Strip everything but argv[0] before handing the args to GApplication.
+// Xcode injects flags like `-NSDocumentRevisionsDebugMode YES` and
+// `-NSDocumentRevisionsDebugMode -ApplePersistenceIgnoreState` when
+// launching a debug session, and GApplication aborts immediately on the
+// first unknown option ("Unknown option …"). The binary still has to
+// know its own name, so we keep argv[0].
+let executableName = CommandLine.arguments.first ?? "DemoApp"
+_ = app.run(arguments: [executableName])
