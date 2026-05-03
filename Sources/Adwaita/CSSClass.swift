@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 /// Type-safe CSS class names for standard Adwaita/GNOME styles.
 ///
 /// Use these with `Widget.addCSSClass(_:)`,

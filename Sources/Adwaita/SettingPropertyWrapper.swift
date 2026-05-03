@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 import CAdwaita
 
 /// A property wrapper that syncs a value with GSettings.

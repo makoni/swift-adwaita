@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 import CAdwaita
 
 /// Runtime version information for the installed libadwaita library.

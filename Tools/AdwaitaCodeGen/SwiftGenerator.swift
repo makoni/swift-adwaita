@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 import Foundation
 
 // MARK: - Deprecated classes to skip
@@ -261,6 +264,9 @@ class SwiftGenerator {
 
     private func generateIntermediate(_ inter: IntermediateClass) throws {
         let out = """
+        // SPDX-License-Identifier: MIT
+        // SPDX-FileCopyrightText: 2026 Sergey Armodin
+
         // Auto-generated intermediate GTK class wrapper
         import CAdwaita
         import GObjectSupport
@@ -282,6 +288,9 @@ class SwiftGenerator {
         let className = cls.name
 
         var out = """
+        // SPDX-License-Identifier: MIT
+        // SPDX-FileCopyrightText: 2026 Sergey Armodin
+
         // Auto-generated from Adw-1.gir — do not edit
         import CAdwaita
         import GObjectSupport

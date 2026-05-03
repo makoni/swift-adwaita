@@ -1,0 +1,48 @@
+version = 1
+
+# REUSE.toml maps the project's non-source files to their licensing
+# information. Every Swift / C source file already carries an inline SPDX
+# header (see CONTRIBUTING.md); this file covers the rest — Markdown docs,
+# Xcode project metadata, configs, manifests, icons, and so on — which
+# either don't accept comments or are auto-generated and would have any
+# inline header rewritten on the next save.
+#
+# All authored content under this repository is released under MIT, the
+# same license declared in `LICENSE.txt` and `LICENSES/MIT.txt`. If a
+# specific file later gets a different license (e.g. third-party icon
+# upstream under CC0), add a more specific `[[annotations]]` block above
+# the catch-all globs so REUSE picks the narrower match.
+
+[[annotations]]
+path = [
+    "**/*.md",
+    "**/*.json",
+    "**/*.plist",
+    "**/*.xcconfig",
+    "**/*.xcscheme",
+    "**/*.xcworkspacedata",
+    "**/*.pbxproj",
+    "**/*.yml",
+    "**/*.yaml",
+    "**/*.svg",
+    "**/*.xml",
+    "**/*.desktop",
+    "**/*.theme",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Sergey Armodin"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [
+    ".gitignore",
+    ".swift-version",
+    ".swiftformat",
+    "**/.gitignore",
+    "Package.swift",
+    "buildDocs.sh",
+    "test_override",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Sergey Armodin"
+SPDX-License-Identifier = "MIT"

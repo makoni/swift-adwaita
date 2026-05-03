@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 // =============================================================================
 // Xcode entry point for the swift-adwaita demo gallery on macOS.
 // =============================================================================

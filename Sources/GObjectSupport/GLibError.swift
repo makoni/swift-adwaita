@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 import CAdwaita
 
 /// A Swift error wrapping a GLib GError.

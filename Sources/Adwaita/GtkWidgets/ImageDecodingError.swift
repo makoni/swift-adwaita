@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 import Foundation
 
 /// Errors that can surface when decoding raster images through ``Texture/load(from:)``

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 import CAdwaita
 
 /// A lightweight wrapper around a Cairo drawing context (`cairo_t`).

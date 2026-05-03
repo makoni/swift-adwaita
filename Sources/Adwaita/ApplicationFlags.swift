@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 import CAdwaita
 
 /// Flags that control how an ``Application`` is registered and how it

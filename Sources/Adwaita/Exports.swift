@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 // Re-exports the low-level modules so consumers of `Adwaita` get
 // `GObjectSupport` and `CAdwaita` symbols automatically.
 //

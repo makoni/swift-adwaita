@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 /// Type-safe signal names for GObject/GTK/libadwaita signals.
 ///
 /// Eliminates raw string literals from signal connection calls.

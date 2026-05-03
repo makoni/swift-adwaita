@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 /// Type-safe icon names for standard Adwaita/GNOME symbolic icons.
 ///
 /// Use these with ``Image/init(icon:)`` and icon-accepting properties

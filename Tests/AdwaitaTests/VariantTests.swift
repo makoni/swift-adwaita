@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 // On macOS, swift-testing's per-test autorelease-pool transitions corrupt
 // memory after `gtk_init()` runs (Quartz CFRunLoop integration writes into
 // pages that swift-testing has already drained). The XCTest mirror in

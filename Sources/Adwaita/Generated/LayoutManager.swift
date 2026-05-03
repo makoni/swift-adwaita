@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 // Auto-generated intermediate GTK class wrapper
 import CAdwaita
 import GObjectSupport

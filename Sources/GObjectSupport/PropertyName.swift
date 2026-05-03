@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 /// Type-safe GObject property names for `bind()`, `addSetter()`, and `onNotify()`.
 ///
 /// Use `.custom(String)` for properties not covered by the predefined cases.

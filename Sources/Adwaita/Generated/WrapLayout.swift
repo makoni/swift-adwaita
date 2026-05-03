@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 // Auto-generated from Adw-1.gir — do not edit
 import CAdwaita
 import GObjectSupport

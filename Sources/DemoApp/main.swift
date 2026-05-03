@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 import DemoAppLib
 
 // Thin executable wrapper. All the gallery setup lives in DemoAppLib so the

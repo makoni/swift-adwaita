@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// SPDX-FileCopyrightText: 2026 Sergey Armodin
+
 import Foundation
 
 let girPath = "/usr/share/gir-1.0/Adw-1.gir"
