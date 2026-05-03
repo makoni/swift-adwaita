@@ -77,14 +77,21 @@ A working CI config for both is in `.github/workflows/ci.yml`.
 ```
 Sources/
   CAdwaita/          System library bridge (shim.h with version stubs)
+  CGtkSource/        gtksourceview-5 system bridge
   GObjectSupport/    GObject lifecycle, signals, GVariant, GValue
   Adwaita/
     Generated/       74 auto-generated Adwaita widget wrappers
-    GtkWidgets/      Hand-written GTK widget wrappers
+    GtkWidgets/      103 hand-written GTK widget wrappers
     Documentation.docc/  DocC tutorials and guides
-  DemoApp/           Interactive demo gallery (76 examples)
+  DemoAppLib/        Demo gallery library — 78 examples + helpers
+  DemoApp/           Thin executable that calls DemoAppLib.runDemoApp()
 Tests/
-  AdwaitaTests/      Test suite (750+ tests)
+  AdwaitaTests/      swift-testing suite, gated #if !os(macOS) (Linux: 1194 tests)
+  AdwaitaTests/macOS/ XCTest mirror suite, gated #if os(macOS) (macOS: 1181 tests)
+Tools/
+  AdwaitaCodeGen/    GIR parser + Swift generator for the 74 Adwaita wrappers
+examples/
+  macos/DemoApp/     Xcode project that wraps DemoAppLib as a .app bundle
 ```
 
 ## How to Contribute
@@ -105,13 +112,13 @@ Open an issue with:
 4. Expose properties as Swift get/set computed properties
 5. Add signals using `SignalHelper.connect()` methods
 6. Add a swift-testing test in `Tests/AdwaitaTests/<Name>Tests.swift` **and** an XCTest mirror in `Tests/AdwaitaTests/macOS/<Name>XCTests.swift` (see "Why two test harnesses" above)
-7. Optionally add a demo example in `Sources/DemoApp/Examples/`
+7. Optionally add a demo example in `Sources/DemoAppLib/Examples/`
 
 ### Adding a Demo Example
 
-1. Create a struct conforming to `DemoExample` in `Sources/DemoApp/Examples/Widgets/` or `Composite/`
+1. Create a struct conforming to `DemoExample` in `Sources/DemoAppLib/Examples/Widgets/` or `Composite/`
 2. Implement `name`, `id`, `category`, `sourceCode`, and `buildWidget()`
-3. Register it in `allExamples` array in `Sources/DemoApp/DemoExample.swift`
+3. Register it in `allExamples` array in `Sources/DemoAppLib/DemoExample.swift`
 
 ### Version Compatibility
 

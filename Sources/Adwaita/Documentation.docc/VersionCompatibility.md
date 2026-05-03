@@ -4,7 +4,7 @@ Understand which features require specific libadwaita versions.
 
 ## Overview
 
-swift-adwaita supports libadwaita 1.4 and later. Newer libadwaita releases
+swift-adwaita supports libadwaita 1.5 and later. Newer libadwaita releases
 introduce additional widgets and properties. The library uses failable
 initializers and runtime version checks so your app compiles and runs on
 any supported version — newer features simply return `nil` on older systems.
@@ -19,7 +19,7 @@ if AdwaitaVersion.isAtLeast(1, 6) {
 }
 ```
 
-### libadwaita 1.4 (baseline)
+### libadwaita 1.5 (baseline)
 
 All core widgets are available at this version, including:
 

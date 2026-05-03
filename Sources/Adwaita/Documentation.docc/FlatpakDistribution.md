@@ -12,6 +12,10 @@ only its own binary.
 This guide walks you through creating a Flatpak manifest, building your app, and
 preparing it for distribution on Flathub.
 
+> Flatpak is Linux-only. For the macOS workflow — packaging the same app as a
+> regular `.app` bundle via Xcode — see `examples/macos/DemoApp/` in the
+> repository.
+
 ### Prerequisites
 
 Install `flatpak-builder` on your system:
