@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSHumanReadableCopyright</key>
+	<string></string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<!--
+	libadwaita aborts at startup with `No GSettings schemas are installed`
+	unless GLib finds the Homebrew-compiled schemas at runtime. LSEnvironment
+	is read by Launch Services when the .app is double-clicked or run from
+	Xcode (`Cmd+R`); it is NOT consulted when the binary is launched directly
+	from the terminal.
+
+	For a self-contained distribution bundle, copy the brew schemas into
+	`Resources/glib-2.0/schemas/` via a Build Phase and replace this entry
+	with `@executable_path/../Resources/glib-2.0` style paths. See README.
+	-->
+	<key>LSEnvironment</key>
+	<dict>
+		<key>XDG_DATA_DIRS</key>
+		<string>/opt/homebrew/share</string>
+	</dict>
+</dict>
+</plist>

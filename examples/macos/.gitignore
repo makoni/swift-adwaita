@@ -1,0 +1,11 @@
+# Xcode per-user state — never commit
+**/xcuserdata/
+**/*.xcuserstate
+
+# SwiftPM resolved package versions for the example project
+**/Package.resolved
+**/swiftpm/
+
+# DerivedData / build artifacts (defaults are user-specific anyway)
+**/build/
+**/DerivedData/
