@@ -22,7 +22,7 @@ Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/document
 ## Features
 
 - **Imperative API** — no declarative DSL; create and configure widgets directly
-- **176 widget wrappers** — 74 auto-generated Adwaita + 102 hand-written GTK widgets
+- **177 widget wrappers** — 74 auto-generated Adwaita + 103 hand-written GTK widgets
 - **Zero raw pointers in public API** — all `OpaquePointer`/`gpointer` hidden behind Swift types
 - **Type-safe enums** — `SignalName`, `PropertyName`, `CSSClass`, `IconName` instead of raw strings
 - **Fluent setters** — method chaining: `Label("Hi").halign(.center).cssClass(.title1)`
@@ -43,7 +43,7 @@ Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/document
 - **@Setting property wrapper** — type-safe GSettings binding
 - **Adaptive layout** — `Breakpoint.minWidth()`, `Breakpoint.maxWidth()` helpers
 - **Swift 6 concurrency** — full `@MainActor` isolation, `Sendable` types
-- **1139 tests**, **78 demo examples**, **CI with GitHub Actions**
+- **1194 tests on Linux / 1181 on macOS**, **78 demo examples**, **CI on Ubuntu + macOS**
 
 ## Requirements
 
@@ -158,7 +158,7 @@ CAdwaita          System library (pkg-config: libadwaita-1)
   │
 GObjectSupport    GObject lifecycle (ARC), signals, Variant, GValue
   │
-Adwaita           Widget wrappers (74 generated + 90 hand-written)
+Adwaita           Widget wrappers (74 generated + 103 hand-written)
 ```
 
 ### Key Types
@@ -436,6 +436,11 @@ XDG_DATA_DIRS=/opt/homebrew/share swift test --no-parallel
 # DemoApp likewise:
 XDG_DATA_DIRS=/opt/homebrew/share swift run DemoApp
 ```
+
+For an Xcode-driven build that produces a regular macOS `.app` bundle
+(Cmd+R, breakpoints, Archive), see `examples/macos/DemoApp/` — it's
+a working starter project that wraps the demo gallery via the
+`DemoAppLib` library product.
 
 > Linux runs the test suite via swift-testing; macOS runs an XCTest
 > mirror suite under `Tests/AdwaitaTests/macOS/` because swift-testing's
