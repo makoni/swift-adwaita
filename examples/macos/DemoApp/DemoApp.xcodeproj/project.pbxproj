@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EEEE0000000000000000A003 /* Adwaita in Frameworks */ = {isa = PBXBuildFile; productRef = EEEE0000000000000000A002 /* Adwaita */; };
+		EEEE0000000000000000A005 /* DemoAppLib in Frameworks */ = {isa = PBXBuildFile; productRef = EEEE0000000000000000A006 /* DemoAppLib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEEE0000000000000000A003 /* Adwaita in Frameworks */,
+				EEEE0000000000000000A005 /* DemoAppLib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +75,7 @@
 			name = DemoApp;
 			packageProductDependencies = (
 				EEEE0000000000000000A002 /* Adwaita */,
+				EEEE0000000000000000A006 /* DemoAppLib */,
 			);
 			productName = DemoApp;
 			productReference = 249AAA402FA7167D00780A02 /* DemoApp.app */;
@@ -349,6 +352,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EEEE0000000000000000A001 /* XCLocalSwiftPackageReference "../../.." */;
 			productName = Adwaita;
+		};
+		EEEE0000000000000000A006 /* DemoAppLib */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EEEE0000000000000000A001 /* XCLocalSwiftPackageReference "../../.." */;
+			productName = DemoAppLib;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -11,6 +11,10 @@ let package = Package(
         .library(
             name: "Adwaita",
             targets: ["Adwaita"]
+        ),
+        .library(
+            name: "DemoAppLib",
+            targets: ["DemoAppLib"]
         )
     ],
     dependencies: [
@@ -39,13 +43,18 @@ let package = Package(
             name: "Adwaita",
             dependencies: ["GObjectSupport", "CGtkSource"]
         ),
-        .executableTarget(
-            name: "DemoApp",
+        .target(
+            name: "DemoAppLib",
             dependencies: ["Adwaita"],
-            path: "Sources/DemoApp",
+            path: "Sources/DemoAppLib",
             resources: [
                 .copy("Resources")
             ]
+        ),
+        .executableTarget(
+            name: "DemoApp",
+            dependencies: ["DemoAppLib"],
+            path: "Sources/DemoApp"
         ),
         .testTarget(
             name: "AdwaitaTests",
