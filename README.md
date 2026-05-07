@@ -289,7 +289,24 @@ UriLauncher(uri: "https://gnome.org").launch(parent: window) { success in
 }
 ```
 
-The same shape is available on `FileDialog.save/selectFolder`, `ColorDialog.chooseRGBA`, `FontDialog.chooseFont`, `Clipboard.readTexture`, and `Texture.load(from:completion:)`.
+The same shape is available on `FileDialog.save/selectFolder`, `ColorDialog.chooseRGBA`, `FontDialog.chooseFont`, `Clipboard.readTexture`, `Clipboard.readFiles`, and `Texture.load(from:completion:)`.
+
+#### Intercepting paste
+
+`Widget.onPasteClipboard` lets a `TextView`/`SourceView`-backed editor decide what to do with a paste before GTK's default text insertion runs. Pair it with the synchronous probes `Clipboard.containsImage` / `Clipboard.containsFiles`, then either let the default fire or call `Widget.stopSignalEmission(named:)` and handle the payload yourself via `Clipboard.readTexture` / `Clipboard.readFiles`. `Texture.encodedPNGData()` re-encodes a clipboard image as PNG `Data` for content-import pipelines.
+
+```swift
+editor.onPasteClipboard { [weak self] in
+    guard let self else { return }
+    if editor.clipboard.containsImage {
+        editor.stopSignalEmission(named: "paste-clipboard")
+        editor.clipboard.readTexture { texture in
+            guard let pngData = texture?.encodedPNGData() else { return }
+            // ... save the bytes, insert a markdown reference, etc.
+        }
+    }
+}
+```
 
 #### Async form (tests / non-GTK)
 
