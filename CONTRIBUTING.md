@@ -17,8 +17,10 @@ sudo apt install libadwaita-1-dev libgtksourceview-5-dev xvfb
 # Fedora
 sudo dnf install libadwaita-devel gtksourceview5-devel xorg-x11-server-Xvfb
 
-# macOS (Homebrew)
-brew install libadwaita gtksourceview5 pkgconf
+# macOS (Homebrew) — adwaita-icon-theme is required, Homebrew does
+# not pull it in transitively and HeaderBar / Banner / dialog icons
+# render empty without it.
+brew install libadwaita gtksourceview5 adwaita-icon-theme pkgconf
 ```
 
 ### Building

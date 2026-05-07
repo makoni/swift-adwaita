@@ -13,11 +13,15 @@ a self-contained bundle to other machines requires extra steps; see
 ## Prerequisites
 
 ```bash
-brew install libadwaita gtksourceview5 pkgconf
+brew install libadwaita gtksourceview5 adwaita-icon-theme pkgconf
 ```
 
 That pulls in `gtk4`, `glib`, `cairo`, `pango`, `gdk-pixbuf`, `harfbuzz`,
 `librsvg`, and ~30 transitive deps (~1.5–2 GB on disk).
+
+`adwaita-icon-theme` is required — Homebrew does not pull it in
+transitively, and without it HeaderBar buttons, Banner, dialog buttons,
+and most widget icons render empty.
 
 Apple Silicon assumed. For Intel, replace `/opt/homebrew` with `/usr/local`
 in `Project.xcconfig` and `Info.plist`.
@@ -125,12 +129,19 @@ does not have Homebrew installed, you need to:
    `LSEnvironment` `XDG_DATA_DIRS` to
    `@executable_path/../Resources` (which Launch Services expands).
 
-3. **Bundle GdkPixbuf loaders, Pango modules, GTK media backends** — any
+3. **Bundle the Adwaita icon theme.** Copy
+   `/opt/homebrew/share/icons/Adwaita/` into
+   `DemoApp.app/Contents/Resources/icons/Adwaita/`. The same
+   `XDG_DATA_DIRS=@executable_path/../Resources` set in step 2 makes
+   GTK pick it up. Without this, HeaderBar buttons, Banner, dialog
+   buttons, and most widgets render with empty icons.
+
+4. **Bundle GdkPixbuf loaders, Pango modules, GTK media backends** — any
    `*.dylib` `gdk-pixbuf` / `pango` / `gtk-4.0` looks up at runtime via
    their respective `.cache` files. Set `GDK_PIXBUF_MODULE_FILE`,
    `GTK_PATH`, etc. via `LSEnvironment` at the bundle-relative paths.
 
-4. **Re-enable Hardened Runtime, then code-sign and notarize.**
+5. **Re-enable Hardened Runtime, then code-sign and notarize.**
    ```bash
    codesign --deep --options runtime \
      --sign "Developer ID Application: <you>" \
@@ -140,7 +151,7 @@ does not have Homebrew installed, you need to:
    xcrun stapler staple DemoApp.app
    ```
 
-5. **Wrap into a DMG** with `hdiutil create -volname swift-adwaita-demo
+6. **Wrap into a DMG** with `hdiutil create -volname swift-adwaita-demo
    -srcfolder DemoApp.app -ov -format UDZO DemoApp.dmg`.
 
 This list is the rough recipe — every GTK app on macOS does some

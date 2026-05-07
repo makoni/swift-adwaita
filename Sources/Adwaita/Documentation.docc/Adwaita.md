@@ -53,7 +53,10 @@ app.run()
 - **Linux** or **macOS 13+** (Apple Silicon recommended)
 - **Swift 6.2+**
 - System packages: `libadwaita-1-dev` + `libgtksourceview-5-dev` (apt) /
-  `libadwaita gtksourceview5 pkgconf` (Homebrew) / equivalent
+  `libadwaita gtksourceview5 adwaita-icon-theme pkgconf` (Homebrew) /
+  equivalent. `adwaita-icon-theme` is required on macOS — Homebrew
+  does not pull it in transitively and widget icons render empty
+  without it.
 - macOS only: export
   `XDG_DATA_DIRS=/opt/homebrew/share` so libadwaita finds its
   GSettings schemas at runtime (Intel: `/usr/local/share`)

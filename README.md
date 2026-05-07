@@ -67,12 +67,17 @@ sudo dnf install libadwaita-devel gtksourceview5-devel
 ### macOS (Homebrew)
 
 ```bash
-brew install libadwaita gtksourceview5 pkgconf
+brew install libadwaita gtksourceview5 adwaita-icon-theme pkgconf
 ```
 
 `libadwaita` pulls `gtk4`, `glib`, `cairo`, `pango`, `gdk-pixbuf`,
 `harfbuzz`, `librsvg`, and ~30 more transitive dependencies — about
 1.5–2 GB on disk after install.
+
+**Icons.** `adwaita-icon-theme` is the symbolic icon set used by
+HeaderBar buttons, Banner, dialogs, and most widgets. Homebrew does
+not pull it in transitively, so without this package the demo and
+your own apps render with empty / missing icons on macOS.
 
 **Runtime env var (required).** libadwaita aborts at startup with
 `No GSettings schemas are installed on the system` unless GLib can
