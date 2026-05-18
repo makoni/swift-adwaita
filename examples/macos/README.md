@@ -100,63 +100,23 @@ open ~/Library/Developer/Xcode/DerivedData/DemoApp-*/Build/Products/Debug/DemoAp
 (`xcodebuild` plus `open` mirrors what ⌘R does — the latter goes through
 Launch Services, which is what applies `LSEnvironment`.)
 
-## Distributing the bundle
+## A note on distribution
 
-The bundle as built is **not portable** — it links against
-`/opt/homebrew/lib/lib*.dylib` by absolute path and assumes the consumer
-has Homebrew at the same prefix. For a `.app` you can hand to someone who
-does not have Homebrew installed, you need to:
+This example deliberately stops at "Cmd+R works." Turning a brew-linked
+GTK app into a notarized, redistributable `.app` is the consumer's job
+and lives outside the scope of a library example — it depends on **your**
+Developer ID, **your** Apple ID, **your** bundle identifier, and **your**
+release flow. The library doesn't prescribe a specific approach.
 
-1. **Vendor the dylibs.** Copy every `lib*.dylib` the executable links
-   against (and its transitive deps) into
-   `DemoApp.app/Contents/Frameworks/`, then rewrite the install names with
-   `install_name_tool -change /opt/homebrew/lib/lib… @rpath/lib…`. The
-   `dylibbundler` Homebrew formula automates this:
-
-   ```bash
-   brew install dylibbundler
-   dylibbundler -od -b -x DemoApp.app/Contents/MacOS/DemoApp \
-     -d DemoApp.app/Contents/Frameworks/ \
-     -p @rpath/
-   ```
-
-   Add a Run Script build phase to do this on every Release build.
-
-2. **Bundle the GSettings schemas.** Copy
-   `/opt/homebrew/share/glib-2.0/schemas/gschemas.compiled` (and any
-   `.gschema.xml` your app uses) into
-   `DemoApp.app/Contents/Resources/glib-2.0/schemas/` and update
-   `LSEnvironment` `XDG_DATA_DIRS` to
-   `@executable_path/../Resources` (which Launch Services expands).
-
-3. **Bundle the Adwaita icon theme.** Copy
-   `/opt/homebrew/share/icons/Adwaita/` into
-   `DemoApp.app/Contents/Resources/icons/Adwaita/`. The same
-   `XDG_DATA_DIRS=@executable_path/../Resources` set in step 2 makes
-   GTK pick it up. Without this, HeaderBar buttons, Banner, dialog
-   buttons, and most widgets render with empty icons.
-
-4. **Bundle GdkPixbuf loaders, Pango modules, GTK media backends** — any
-   `*.dylib` `gdk-pixbuf` / `pango` / `gtk-4.0` looks up at runtime via
-   their respective `.cache` files. Set `GDK_PIXBUF_MODULE_FILE`,
-   `GTK_PATH`, etc. via `LSEnvironment` at the bundle-relative paths.
-
-5. **Re-enable Hardened Runtime, then code-sign and notarize.**
-   ```bash
-   codesign --deep --options runtime \
-     --sign "Developer ID Application: <you>" \
-     DemoApp.app
-   xcrun notarytool submit DemoApp.zip \
-     --apple-id <you> --team-id <id> --wait
-   xcrun stapler staple DemoApp.app
-   ```
-
-6. **Wrap into a DMG** with `hdiutil create -volname swift-adwaita-demo
-   -srcfolder DemoApp.app -ov -format UDZO DemoApp.dmg`.
-
-This list is the rough recipe — every GTK app on macOS does some
-variation of these steps. The size of a fully-vendored bundle is
-≈80–100 MB (GTK 4 alone is 78 MB).
+For reference, every GTK-on-macOS app does roughly the same shape of
+work: vendor the brew dylibs via `dylibbundler` into
+`Contents/Frameworks/`, copy GSettings schemas + icon themes + GdkPixbuf
+loaders into `Contents/Resources/`, point env vars at bundle-relative
+paths, then code-sign with Developer ID, submit to `xcrun notarytool`,
+and wrap in a DMG with `hdiutil create`. A fully-vendored bundle weighs
+≈80–100 MB (GTK 4 alone is 78 MB). The `swifty-notes-gtk` repo has a
+working end-to-end script at `scripts/bundle-macos-app.sh` if you want
+a concrete reference implementation to adapt.
 
 ## Visual caveats
 
