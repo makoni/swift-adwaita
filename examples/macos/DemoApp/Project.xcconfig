@@ -6,9 +6,20 @@
 // gtksourceview-5` returns on Apple Silicon. For Intel Macs, sed s|/opt/
 // homebrew|/usr/local|g.
 
-// macOS 13 is the minimum that satisfies `Duration.components` and
-// `MainActor.assumeIsolated` used inside swift-adwaita's `MainContext`.
-MACOSX_DEPLOYMENT_TARGET = 13.0
+// macOS deployment target is dictated by the Homebrew GTK4 / glib /
+// libadwaita bottles we link against, not by anything in the Swift code.
+// brew's Apple Silicon bottles are currently compiled with min-os = macOS
+// 26.0 (gtk4, glib, gobject, gio, libadwaita, gtksourceview5, pango,
+// harfbuzz, gdk-pixbuf, graphene, intl) and 15.0 (cairo, cairo-gobject).
+// Declaring anything lower here makes the linker emit a warning per
+// dylib ("building for macOS-13.5, but linking with dylib ... which was
+// built for newer version 26.0") and produces a binary whose declared
+// LC_BUILD_VERSION lies about what it can actually run on — the dylib
+// chain still demands 26.0 at load time. Honest deployment target = the
+// floor of what brew shipped at build time. Bump in lockstep with
+// `brew update && brew upgrade` if those bottles get rebuilt for a
+// different macOS minimum.
+MACOSX_DEPLOYMENT_TARGET = 26.0
 
 // Match the Swift tools-version declared in `Package.swift`.
 SWIFT_VERSION = 6.0
