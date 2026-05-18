@@ -38,4 +38,4 @@ The test suite in `Tests/AdwaitaTests` uses Swift Testing rather than XCTest. Mo
 - When adding a demo example, implement `DemoExample` in `Sources/DemoApp/Examples/...` and register it in the `allExamples` array; the demo UI is driven from that central registry.
 - Tests use Swift Testing syntax: `@Suite(.serialized)`, `@Test`, and `#expect(...)`, not XCTest assertions.
 - Formatting in CI is enforced with the repository’s `.swiftformat` settings: 4-space indentation, 120-column width, and alphabetized import grouping without auto-sorting imports semantically.
-- The package targets `swift-tools-version: 6.2` and CI runs the build/test matrix on Swift 6.2 and 6.3 (the local toolchain pinned in `.swift-version` is 6.3.1); keep changes compatible with both.
+- The package targets `swift-tools-version: 6.2` and CI runs the build/test matrix on Swift 6.2 and 6.3 (the local toolchain pinned in `.swift-version` is 6.3.2); keep changes compatible with both.
