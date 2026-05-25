@@ -22,7 +22,7 @@ Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/document
 ## Features
 
 - **Imperative API** — no declarative DSL; create and configure widgets directly
-- **177 widget wrappers** — 74 auto-generated Adwaita + 103 hand-written GTK widgets
+- **178 widget wrappers** — 74 auto-generated Adwaita + 104 hand-written GTK widgets, including a `WebView` wrapper for WebKitGTK 6.0
 - **Zero raw pointers in public API** — all `OpaquePointer`/`gpointer` hidden behind Swift types
 - **Type-safe enums** — `SignalName`, `PropertyName`, `CSSClass`, `IconName` instead of raw strings
 - **Fluent setters** — method chaining: `Label("Hi").halign(.center).cssClass(.title1)`
@@ -52,22 +52,31 @@ Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/document
 - GtkSourceView 5 development headers
 - Linux **or** macOS 13+ (Apple Silicon recommended; Intel best-effort)
 
+The `WebView` wrapper additionally needs WebKitGTK 6.0; install only if
+your app embeds a web view.
+
 ### Ubuntu/Debian
 
 ```bash
 sudo apt install libadwaita-1-dev libgtksourceview-5-dev
+# Optional, only if you use WebView:
+sudo apt install libwebkitgtk-6.0-dev
 ```
 
 ### Fedora
 
 ```bash
 sudo dnf install libadwaita-devel gtksourceview5-devel
+# Optional, only if you use WebView:
+sudo dnf install webkitgtk6.0-devel
 ```
 
 ### macOS (Homebrew)
 
 ```bash
 brew install libadwaita gtksourceview5 adwaita-icon-theme pkgconf
+# Optional, only if you use WebView:
+brew install webkitgtk
 ```
 
 `libadwaita` pulls `gtk4`, `glib`, `cairo`, `pango`, `gdk-pixbuf`,

@@ -176,6 +176,9 @@ icon, name, and metadata.
 - **File access**: Use the FileDialog portal (already integrated in swift-adwaita)
   rather than `--filesystem=` permissions when possible.
 - **Network access**: Add `--share=network` only if your app needs internet access.
+- **`WebView`**: WebKitGTK 6.0 ships in `org.gnome.Platform>=46` — no extra
+  module is required. If you target an older platform, add a `webkitgtk`
+  module yourself or upgrade the runtime version.
 - **Flathub submission**: See [Flathub's submission guide](https://docs.flathub.org/docs/for-app-authors/submission)
   for requirements on metadata, screenshots, and review process.
 

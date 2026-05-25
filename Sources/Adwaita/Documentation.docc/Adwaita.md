@@ -57,6 +57,8 @@ app.run()
   equivalent. `adwaita-icon-theme` is required on macOS — Homebrew
   does not pull it in transitively and widget icons render empty
   without it.
+- Optional: `libwebkitgtk-6.0-dev` (apt) / `webkitgtk6.0-devel` (dnf) /
+  `webkitgtk` (Homebrew) — only if your app embeds a ``WebView``.
 - macOS only: export
   `XDG_DATA_DIRS=/opt/homebrew/share` so libadwaita finds its
   GSettings schemas at runtime (Intel: `/usr/local/share`)
@@ -274,6 +276,7 @@ automatically.
 - ``MediaStream``
 - ``MediaControls``
 - ``Revealer``
+- ``WebView``
 
 ### Animation
 
