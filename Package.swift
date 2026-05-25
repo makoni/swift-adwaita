@@ -35,13 +35,20 @@ let package = Package(
                 .apt(["libgtksourceview-5-dev"])
             ]
         ),
+        .systemLibrary(
+            name: "CWebKit",
+            pkgConfig: "webkitgtk-6.0",
+            providers: [
+                .apt(["libwebkitgtk-6.0-dev"])
+            ]
+        ),
         .target(
             name: "GObjectSupport",
             dependencies: ["CAdwaita"]
         ),
         .target(
             name: "Adwaita",
-            dependencies: ["GObjectSupport", "CGtkSource"]
+            dependencies: ["GObjectSupport", "CGtkSource", "CWebKit"]
         ),
         .target(
             name: "DemoAppLib",

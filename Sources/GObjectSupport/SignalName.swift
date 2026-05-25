@@ -166,6 +166,11 @@ public enum SignalName: Sendable, Equatable {
     case extraDragDrop
     case extraDragValue
 
+    // MARK: - WebView
+
+    case loadChanged
+    case loadFailed
+
     // MARK: - Other
 
     case emojiPicked
@@ -289,6 +294,9 @@ public enum SignalName: Sendable, Equatable {
         // Extra drag
         case .extraDragDrop: "extra-drag-drop"
         case .extraDragValue: "extra-drag-value"
+        // WebView
+        case .loadChanged: "load-changed"
+        case .loadFailed: "load-failed"
         // Other
         case .emojiPicked: "emoji-picked"
         case .invalidate: "invalidate"
