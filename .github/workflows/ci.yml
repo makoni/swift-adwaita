@@ -65,7 +65,11 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.4.1.app
 
       - name: Install GTK stack via Homebrew
-        run: brew install libadwaita gtksourceview5 webkitgtk pkgconf
+        # WebKitGTK 6.0 is Linux-only on Homebrew (the formula refuses
+        # to install on macOS), so the macOS build skips it. The
+        # ``AdwaitaWebKit`` product is an opt-in target — the default
+        # ``Adwaita`` product builds without it.
+        run: brew install libadwaita gtksourceview5 pkgconf
 
       - name: Swift version
         run: swift --version

@@ -12,6 +12,15 @@ let package = Package(
             name: "Adwaita",
             targets: ["Adwaita"]
         ),
+        // Opt-in WebKitGTK integration. Consumers who want the
+        // ``WebView`` widget add this product to their target's
+        // dependencies; everyone else is not forced to install
+        // `libwebkitgtk-6.0-dev` (which is unavailable on macOS
+        // Homebrew, breaking that platform's build otherwise).
+        .library(
+            name: "AdwaitaWebKit",
+            targets: ["AdwaitaWebKit"]
+        ),
         .library(
             name: "DemoAppLib",
             targets: ["DemoAppLib"]
@@ -48,7 +57,15 @@ let package = Package(
         ),
         .target(
             name: "Adwaita",
-            dependencies: ["GObjectSupport", "CGtkSource", "CWebKit"]
+            dependencies: ["GObjectSupport", "CGtkSource"]
+        ),
+        // WebView lives in its own target so the WebKitGTK system
+        // dependency stays opt-in. Importing this module pulls in
+        // CWebKit (and therefore requires `libwebkitgtk-6.0-dev` on
+        // apt / `webkitgtk-6.0` pkg-config on the system).
+        .target(
+            name: "AdwaitaWebKit",
+            dependencies: ["Adwaita", "CWebKit"]
         ),
         .target(
             name: "DemoAppLib",

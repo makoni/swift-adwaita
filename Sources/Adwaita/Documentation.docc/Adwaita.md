@@ -276,7 +276,14 @@ automatically.
 - ``MediaStream``
 - ``MediaControls``
 - ``Revealer``
-- ``WebView``
+
+### Web Embedding
+
+The ``WebView`` widget lives in a separate opt-in module —
+`AdwaitaWebKit` — so the WebKitGTK 6.0 system dependency is not
+forced on every consumer. Add `.product(name: "AdwaitaWebKit",
+package: "swift-adwaita")` to your target and `import AdwaitaWebKit`
+to use it.
 
 ### Animation
 

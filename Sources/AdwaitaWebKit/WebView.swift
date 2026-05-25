@@ -4,6 +4,7 @@
 import CWebKit
 import CAdwaita
 import GObjectSupport
+import Adwaita
 
 /// A web view backed by WebKitGTK 6.0.
 ///

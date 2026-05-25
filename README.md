@@ -22,7 +22,7 @@ Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/document
 ## Features
 
 - **Imperative API** — no declarative DSL; create and configure widgets directly
-- **178 widget wrappers** — 74 auto-generated Adwaita + 104 hand-written GTK widgets, including a `WebView` wrapper for WebKitGTK 6.0
+- **178 widget wrappers** — 74 auto-generated Adwaita + 104 hand-written GTK widgets, including a `WebView` wrapper for WebKitGTK 6.0 (opt-in via the separate `AdwaitaWebKit` product)
 - **Zero raw pointers in public API** — all `OpaquePointer`/`gpointer` hidden behind Swift types
 - **Type-safe enums** — `SignalName`, `PropertyName`, `CSSClass`, `IconName` instead of raw strings
 - **Fluent setters** — method chaining: `Label("Hi").halign(.center).cssClass(.title1)`
@@ -75,9 +75,12 @@ sudo dnf install webkitgtk6.0-devel
 
 ```bash
 brew install libadwaita gtksourceview5 adwaita-icon-theme pkgconf
-# Optional, only if you use WebView:
-brew install webkitgtk
 ```
+
+> The `AdwaitaWebKit` (WebView) product is Linux-only — the Homebrew
+> `webkitgtk` formula refuses to build on macOS. macOS apps use the
+> system WebKit framework directly via the Apple Cocoa APIs; the
+> Adwaita `WebView` is for GTK4-on-Linux only.
 
 `libadwaita` pulls `gtk4`, `glib`, `cairo`, `pango`, `gdk-pixbuf`,
 `harfbuzz`, `librsvg`, and ~30 more transitive dependencies — about
