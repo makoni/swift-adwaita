@@ -193,6 +193,41 @@ public final class Texture: GObjectRef {
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
+    /// Loads a texture from a file, scaled to fit within
+    /// `maxWidth × maxHeight` while preserving aspect ratio.
+    ///
+    /// Useful for file-manager thumbnails: GtkPicture reports the
+    /// texture's pixel dimensions as its natural size, so for a
+    /// 1920×1080 source image the natural width is 1920. Pre-scaling
+    /// the texture clamps that down to the thumbnail box, preventing
+    /// it from blowing out the layout of any container that respects
+    /// child natural width (e.g. `FlowBox` with `homogeneous = true`).
+    ///
+    /// Returns `nil` if the file cannot be decoded by the
+    /// `GdkPixbuf` loader pipeline (this is the path that supports
+    /// WebP via `webp-pixbuf-loader`, AVIF/HEIF via `heif-gdk-pixbuf`,
+    /// etc).
+    public init?(filename: String, maxWidth: Int, maxHeight: Int) {
+        var error: UnsafeMutablePointer<GError>?
+        guard let pixbuf = gdk_pixbuf_new_from_file_at_scale(
+            filename,
+            Int32(maxWidth),
+            Int32(maxHeight),
+            1, // preserve_aspect_ratio
+            &error
+        ) else {
+            if let error { g_error_free(error) }
+            return nil
+        }
+        let pixbufGeneric = UnsafeMutableRawPointer(pixbuf)
+        guard let ptr = gdk_texture_new_for_pixbuf(pixbuf) else {
+            g_object_unref(pixbufGeneric)
+            return nil
+        }
+        g_object_unref(pixbufGeneric)
+        super.init(raw: UnsafeMutableRawPointer(ptr))
+    }
+
     /// Loads a texture from raw pixel data (RGBA, 8 bits per channel).
     ///
     /// - Parameters:
