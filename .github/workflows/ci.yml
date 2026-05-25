@@ -20,7 +20,7 @@ jobs:
       - name: Install system dependencies
         run: |
           apt-get update
-          apt-get install -y libadwaita-1-dev libgtksourceview-5-dev xvfb
+          apt-get install -y libadwaita-1-dev libgtksourceview-5-dev libwebkitgtk-6.0-dev xvfb
 
       - name: Checkout
         uses: actions/checkout@v5
@@ -65,7 +65,7 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.4.1.app
 
       - name: Install GTK stack via Homebrew
-        run: brew install libadwaita gtksourceview5 pkgconf
+        run: brew install libadwaita gtksourceview5 webkitgtk pkgconf
 
       - name: Swift version
         run: swift --version
@@ -113,7 +113,7 @@ jobs:
       - name: Install system dependencies
         run: |
           apt-get update
-          apt-get install -y libadwaita-1-dev libgtksourceview-5-dev
+          apt-get install -y libadwaita-1-dev libgtksourceview-5-dev libwebkitgtk-6.0-dev
 
       - name: Checkout
         uses: actions/checkout@v5
