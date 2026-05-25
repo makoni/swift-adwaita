@@ -302,6 +302,33 @@ public enum SignalHelper {
         )
     }
 
+    /// Like ``connectPointer(_:signal:handler:)`` but for signals whose
+    /// pointer parameter is nullable in the C ABI — e.g.
+    /// `GtkListBox::row-selected` fires with NULL when the selection is
+    /// cleared after `gtk_list_box_remove_all`. The non-optional variant
+    /// would wrap that NULL as an `OpaquePointer` with address 0 and
+    /// every subsequent dereference (g_object_ref, gtk_list_box_row_get_index)
+    /// would trigger a `G_IS_OBJECT` critical.
+    @discardableResult
+    public static func connectOptionalPointer(
+        _ instance: GObjectRef,
+        signal: SignalName,
+        handler: @escaping @MainActor (OpaquePointer?) -> Void
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineOptionalPointer as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    OpaquePointer?,
+                    UnsafeMutableRawPointer
+                ) -> Void,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
     // MARK: - Two parameters
 
     /// Connects a signal with two `Double` parameters.

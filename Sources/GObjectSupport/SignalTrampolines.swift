@@ -8,6 +8,7 @@ import Foundation
 // These are safe because GTK signals are always emitted on the main thread,
 // and MainActor.assumeIsolated asserts this at runtime.
 struct UncheckedOpaquePointer: @unchecked Sendable { let value: OpaquePointer }
+struct UncheckedOptionalOpaquePointer: @unchecked Sendable { let value: OpaquePointer? }
 struct UncheckedGValuePointer: @unchecked Sendable { let value: UnsafePointer<GValue> }
 
 // MARK: - C-compatible trampoline functions
@@ -121,6 +122,24 @@ func signalTrampolinePointer(
     let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer) -> Void>>.fromOpaque(userData)
         .takeUnretainedValue()
     let wrapped = UncheckedOpaquePointer(value: value)
+    MainActor.assumeIsolated {
+        box.closure(wrapped.value)
+    }
+}
+
+/// Trampoline variant for signals whose pointer parameter is nullable
+/// in the C ABI — e.g. `GtkListBox::row-selected` emits NULL when the
+/// selection is cleared. Using ``signalTrampolinePointer`` for these
+/// signals wraps NULL as a Swift `OpaquePointer` with address 0, which
+/// triggers `G_IS_OBJECT` criticals as soon as the closure touches it.
+func signalTrampolineOptionalPointer(
+    _ instance: UnsafeMutableRawPointer,
+    _ value: OpaquePointer?,
+    _ userData: UnsafeMutableRawPointer
+) {
+    let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer?) -> Void>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    let wrapped = UncheckedOptionalOpaquePointer(value: value)
     MainActor.assumeIsolated {
         box.closure(wrapped.value)
     }

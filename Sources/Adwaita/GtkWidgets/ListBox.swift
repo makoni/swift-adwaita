@@ -109,11 +109,23 @@ public final class ListBox: Widget, Container {
 
     /// Emitted when the selected row changes.
     ///
-    /// - Parameter handler: A closure that receives the newly selected ``ListBoxRow``.
+    /// The handler receives `nil` when the selection is cleared — for
+    /// example after `removeAll()` or `unselectAll()`. Earlier versions
+    /// of this binding passed a non-optional ``ListBoxRow``, which
+    /// wrapped NULL as a Swift `OpaquePointer` with address 0 and
+    /// produced a flood of `G_IS_OBJECT` criticals as soon as the
+    /// handler touched it.
+    ///
+    /// - Parameter handler: A closure that receives the newly selected
+    ///   ``ListBoxRow``, or `nil` if no row is currently selected.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
-    public func onRowSelected(_ handler: @escaping @MainActor (ListBoxRow) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: .rowSelected) { (ptr: OpaquePointer) in
+    public func onRowSelected(_ handler: @escaping @MainActor (ListBoxRow?) -> Void) -> SignalConnection {
+        SignalHelper.connectOptionalPointer(self, signal: .rowSelected) { (ptr: OpaquePointer?) in
+            guard let ptr else {
+                handler(nil)
+                return
+            }
             handler(ListBoxRow(borrowing: UnsafeMutableRawPointer(ptr)))
         }
     }
