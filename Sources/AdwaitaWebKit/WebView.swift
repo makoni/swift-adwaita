@@ -1,6 +1,14 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Sergey Armodin
+//
+// AdwaitaWebKit is a Linux-only module. On macOS the WebKitGTK 6.0
+// pkg-config / `webkit/webkit.h` headers are not available via
+// Homebrew (the formula refuses to install on Darwin), so this entire
+// file is compiled to a no-op on non-Linux platforms. macOS hosts
+// linking against `AdwaitaWebKit` get an empty module — the product
+// still resolves, but no `WebView` type is exposed.
 
+#if os(Linux)
 import CWebKit
 import CAdwaita
 import GObjectSupport
@@ -135,3 +143,5 @@ public final class WebView: Widget {
         }
     }
 }
+
+#endif // os(Linux)
