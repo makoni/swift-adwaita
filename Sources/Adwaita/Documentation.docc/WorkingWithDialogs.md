@@ -173,7 +173,7 @@ filters.append(filter)
 dialog.filters = filters
 
 // Open a file — cancellation returns nil, GTK failures throw GLibError
-Task { @MainActor in
+MainContext.task {
     do {
         if let path = try await dialog.open(parent: window) {
             print("Selected: \(path)")
@@ -184,7 +184,7 @@ Task { @MainActor in
 }
 
 // If you only care about the path (cancel + error both collapse to nil):
-Task { @MainActor in
+MainContext.task {
     if let path = try? await dialog.save(parent: window) {
         print("Save to: \(path)")
     }

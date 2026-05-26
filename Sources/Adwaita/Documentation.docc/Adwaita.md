@@ -97,6 +97,13 @@ automatically.
 
 - <doc:NavigationPatterns>
 - <doc:WorkingWithDialogs>
+- <doc:Lifetime>
+- <doc:ConcurrencyOnGTK>
+- <doc:SearchBarSetup>
+- <doc:MarkupSafety>
+- <doc:ContextMenus>
+- <doc:ClickEvents>
+- <doc:LayoutDebugging>
 - <doc:ListsAndData>
 - <doc:ResponsiveLayouts>
 - <doc:StylingAndTheming>

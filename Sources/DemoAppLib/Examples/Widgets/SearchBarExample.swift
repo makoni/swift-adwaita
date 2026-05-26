@@ -14,6 +14,7 @@ struct SearchBarExample: DemoExample {
     let entry = SearchEntry()
     searchBar.child = entry
     searchBar.connectEntry(entry)
+    searchBar.setKeyCaptureWidget(window)
     searchBar.showCloseButton = true
 
     // Toggle search mode
@@ -43,6 +44,10 @@ struct SearchBarExample: DemoExample {
         searchBar.connectEntry(searchEntry)
         searchBar.showCloseButton = true
         searchBar.setMargins(12)
+        searchBar.onRealize { [weak searchBar] in
+            guard let searchBar else { return }
+            searchBar.setKeyCaptureWidget(searchBar.window)
+        }
         group1.add(searchBar)
 
         let resultLabel = Label("Type to search...")
@@ -61,10 +66,11 @@ struct SearchBarExample: DemoExample {
 
         let toggleRow = ActionRow()
         toggleRow.title = "Search Mode"
-        toggleRow.subtitle = "Toggle the search bar visibility"
+        toggleRow.subtitle = "Toggle the search bar visibility; Ctrl+F also works once key capture is set"
         let toggleSwitch = Switch()
         toggleSwitch.valign = .center
-        toggleSwitch.onActiveChanged { [toggleSwitch, searchBar] in
+        toggleSwitch.onActiveChanged { [toggleSwitch, weak searchBar] in
+            guard let searchBar else { return }
             searchBar.searchModeEnabled = toggleSwitch.active
         }
         toggleRow.addSuffix(toggleSwitch)
@@ -82,7 +88,8 @@ struct SearchBarExample: DemoExample {
         let closeSwitch = Switch()
         closeSwitch.active = true
         closeSwitch.valign = .center
-        closeSwitch.onActiveChanged { [closeSwitch, searchBar] in
+        closeSwitch.onActiveChanged { [closeSwitch, weak searchBar] in
+            guard let searchBar else { return }
             searchBar.showCloseButton = closeSwitch.active
         }
         closeRow.addSuffix(closeSwitch)

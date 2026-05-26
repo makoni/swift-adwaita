@@ -74,6 +74,9 @@ public final class Scale: Widget {
     }
 
     /// Adds a mark at the given value with optional markup text.
+    ///
+    /// Escape external text with ``PangoMarkup/escape(_:)`` before passing it
+    /// as `markup`.
     public func addMark(value: Double, position: GtkPositionType = .top, markup: String? = nil) {
         gtk_scale_add_mark(scalePointer, value, position, markup)
     }

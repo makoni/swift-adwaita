@@ -66,6 +66,9 @@ public final class Expander: Widget {
     }
 
     /// Whether the label uses Pango markup.
+    ///
+    /// Escape external text with ``PangoMarkup/escape(_:)`` before setting the
+    /// label when this is `true`.
     public var useMarkup: Bool {
         get { gtk_expander_get_use_markup(opaquePointer) != 0 }
         set { gtk_expander_set_use_markup(opaquePointer, newValue ? 1 : 0) }

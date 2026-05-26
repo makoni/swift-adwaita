@@ -11,6 +11,13 @@ An imperative Swift 6 wrapper for [GTK4](https://docs.gtk.org/gtk4/) and [libadw
 
 Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita)
 
+Quick guides:
+- [Getting Started](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita/gettingstarted)
+- [Working with Dialogs](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita/workingwithdialogs)
+- [Concurrency on GTK](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita/concurrencyongtk)
+- [Markup Safety](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita/markupsafety)
+- [Layout Debugging](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita/layoutdebugging)
+
 ## Apps built with swift-adwaita
 - [Swifty Notes](https://github.com/makoni/swifty-notes-gtk)
 
@@ -37,7 +44,7 @@ Documentation: [API Reference](https://spaceinbox.me/docs/swift-adwaita/document
 - **CSS support** — `CSSProvider` + type-safe `CSSClass` enum
 - **Animations** — `TimedAnimation`, `SpringAnimation` with callbacks
 - **Drawing** — `DrawingArea` with `CairoContext` wrapper
-- **Text attributes** — `TextAttributes` for styling entry text (bold, italic, color)
+- **Text attributes** — `TextAttributes` for styling `Label`, `Entry`, and `EntryRow` text
 - **Media playback** — `MediaStream`, `Video`, `MediaControls`
 - **Localization** — gettext integration via `localized()` and `String.localized`
 - **@Setting property wrapper** — type-safe GSettings binding
@@ -58,7 +65,7 @@ your app embeds a web view.
 ### Ubuntu/Debian
 
 ```bash
-sudo apt install libadwaita-1-dev libgtksourceview-5-dev
+sudo apt install libadwaita-1-dev libgtksourceview-5-dev xvfb
 # Optional, only if you use WebView:
 sudo apt install libwebkitgtk-6.0-dev
 ```
@@ -66,7 +73,7 @@ sudo apt install libwebkitgtk-6.0-dev
 ### Fedora
 
 ```bash
-sudo dnf install libadwaita-devel gtksourceview5-devel
+sudo dnf install libadwaita-devel gtksourceview5-devel xorg-x11-server-Xvfb
 # Optional, only if you use WebView:
 sudo dnf install webkitgtk6.0-devel
 ```
@@ -256,6 +263,40 @@ let button = Button(icon: .goNext)
     .cssClass(.suggestedAction)
     .cssClass(.circular)
 ```
+
+### Safe markup and range styling
+
+```swift
+let title = PangoMarkup.escape(userVisibleTitle)
+let label = Label("")
+label.markup = "<b>\(title)</b>"
+
+let searchText = "Search results"
+let attrs = TextAttributes()
+attrs.addBackgroundColor(
+    RGBA(red: 1.0, green: 0.93, blue: 0.6),
+    range: searchText.startIndex..<searchText.index(searchText.startIndex, offsetBy: 6),
+    in: searchText
+)
+
+let highlighted = Label(searchText)
+highlighted.attributes = attrs
+```
+
+### GTK-friendly async scheduling
+
+```swift
+MainContext.task {
+    statusLabel.text = "Saved"
+}
+
+MainContext.task(after: .seconds(1)) {
+    toast.dismiss()
+}
+```
+
+Do not use `Task { @MainActor in ... }` from a running GTK app. GLib does not
+drive the dispatch main queue.
 
 ### Type-Safe Icons and CSS
 
