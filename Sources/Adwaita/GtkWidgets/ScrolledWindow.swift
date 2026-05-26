@@ -107,4 +107,115 @@ public final class ScrolledWindow: Widget {
         let ptr = gtk_scrolled_window_get_hadjustment(opaquePointer)!
         return Adjustment(borrowing: UnsafeMutableRawPointer(ptr))
     }
+
+    /// Scrolls vertically so that the given descendant widget becomes visible
+    /// when possible.
+    ///
+    /// If `animate` is `true`, the vertical adjustment is animated with a short
+    /// timed animation. When `preserveFocus` is `false`, the target child is
+    /// asked to grab keyboard focus after scrolling.
+    public func scrollChildIntoView(_ child: Widget, preserveFocus: Bool = true, animate: Bool = false) {
+        guard let content = self.child, !child.isSame(as: content), isDescendant(child, of: content) else { return }
+
+        var bounds = graphene_rect_t()
+        guard gtk_widget_compute_bounds(child.widgetPointer, content.widgetPointer, &bounds) != 0 else { return }
+        guard bounds.size.height > 0 else { return }
+
+        revealVerticalBounds(
+            childTop: Double(bounds.origin.y),
+            childHeight: Double(bounds.size.height),
+            preserveFocus: preserveFocus,
+            animate: animate,
+            focusTarget: child
+        )
+    }
+
+    private func isDescendant(_ child: Widget, of ancestor: Widget) -> Bool {
+        var current: UnsafeMutablePointer<GtkWidget>? = child.widgetPointer
+        let ancestorPointer = ancestor.widgetPointer
+        while let node = current {
+            if node == ancestorPointer {
+                return true
+            }
+            current = gtk_widget_get_parent(node)
+        }
+        return false
+    }
+
+    nonisolated static func targetVerticalOffset(
+        visibleTop: Double,
+        pageSize: Double,
+        childTop: Double,
+        childHeight: Double,
+        lower: Double,
+        upper: Double
+    ) -> Double? {
+        let visibleBottom = visibleTop + pageSize
+        let childBottom = childTop + childHeight
+
+        let unclampedTarget: Double
+        if childTop < visibleTop {
+            unclampedTarget = childTop
+        } else if childBottom > visibleBottom {
+            unclampedTarget = childBottom - pageSize
+        } else {
+            return nil
+        }
+
+        let maxValue = max(lower, upper - pageSize)
+        return min(max(unclampedTarget, lower), maxValue)
+    }
+
+    func revealVerticalBounds(
+        childTop: Double,
+        childHeight: Double,
+        preserveFocus: Bool,
+        animate: Bool,
+        focusTarget: Widget,
+        focusAction: (() -> Bool)? = nil,
+        didQueueAnimation: (() -> Void)? = nil
+    ) {
+        let adjustment = verticalAdjustment
+        let focusAction = focusAction ?? { [weak focusTarget] in
+            focusTarget?.grabFocus() ?? false
+        }
+        func grabFocusIfNeeded() {
+            guard !preserveFocus else { return }
+            _ = focusAction()
+        }
+        guard let clampedTarget = Self.targetVerticalOffset(
+            visibleTop: adjustment.value,
+            pageSize: adjustment.pageSize,
+            childTop: childTop,
+            childHeight: childHeight,
+            lower: adjustment.lower,
+            upper: adjustment.upper
+        ) else {
+            grabFocusIfNeeded()
+            return
+        }
+        let currentValue = adjustment.value
+        if animate, abs(clampedTarget - currentValue) > 0.5 {
+            let target = CallbackAnimationTarget { value in
+                adjustment.value = value
+            }
+            let animation = TimedAnimation(
+                widget: self,
+                from: currentValue,
+                to: clampedTarget,
+                duration: 250,
+                target: target
+            )
+            animation.easing = .easeOutCubic
+            animation.onDone {
+                guard !preserveFocus else { return }
+                _ = focusAction()
+            }
+            didQueueAnimation?()
+            animation.play()
+        } else {
+            adjustment.value = clampedTarget
+            grabFocusIfNeeded()
+        }
+    }
 }
