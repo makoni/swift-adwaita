@@ -56,3 +56,41 @@ actor BoolRecorder {
         value
     }
 }
+
+struct CapturedAttribute {
+    let type: PangoAttrType
+    let start: Int
+    let end: Int
+}
+
+private final class CapturedAttributeBox {
+    var values: [CapturedAttribute] = []
+}
+
+@MainActor
+func capturedAttributes(in attrs: TextAttributes?) -> [CapturedAttribute] {
+    guard let attrs else { return [] }
+
+    let box = Unmanaged.passRetained(CapturedAttributeBox()).toOpaque()
+    let removed = pango_attr_list_filter(
+        attrs.pointer,
+        { attribute, userData in
+            guard let attribute, let userData else { return 0 }
+            let box = Unmanaged<CapturedAttributeBox>.fromOpaque(userData).takeUnretainedValue()
+            let type = attribute.pointee.klass.pointee.type
+            box.values.append(
+                CapturedAttribute(
+                    type: type,
+                    start: Int(attribute.pointee.start_index),
+                    end: Int(attribute.pointee.end_index)
+                )
+            )
+            return 0
+        },
+        box
+    )
+    if let removed {
+        pango_attr_list_unref(removed)
+    }
+    return Unmanaged<CapturedAttributeBox>.fromOpaque(box).takeRetainedValue().values
+}

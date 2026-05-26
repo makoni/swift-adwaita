@@ -15,8 +15,18 @@ struct LabelExample: DemoExample {
 
     // Bold markup
     let bold = Label("")
-    bold.useMarkup = true
-    bold.text = "<b>Bold</b> and <i>italic</i> text"
+    bold.markup = "<b>Bold</b> and <i>italic</i> text"
+
+    // Range-based styling without markup
+    let highlightedText = "Search highlight"
+    let highlighted = Label(highlightedText)
+    let attrs = TextAttributes()
+    attrs.addBackgroundColor(
+        RGBA(red: 1.0, green: 0.93, blue: 0.6),
+        range: highlightedText.startIndex..<highlightedText.index(highlightedText.startIndex, offsetBy: 6),
+        in: highlightedText
+    )
+    highlighted.attributes = attrs
 
     // Wrapping label
     let wrapping = Label(
@@ -115,6 +125,23 @@ struct LabelExample: DemoExample {
         selectable.selectable = true
         selectable.xalign = 0
         featBox.append(selectable)
+
+        let highlightedText = "Highlight matches without markup"
+        let highlighted = Label(highlightedText)
+        highlighted.xalign = 0
+        let attrs = TextAttributes()
+        attrs.addBackgroundColor(
+            RGBA(red: 1.0, green: 0.93, blue: 0.6),
+            range: highlightedText.startIndex ..< highlightedText.index(highlightedText.startIndex, offsetBy: 9),
+            in: highlightedText
+        )
+        attrs.addWeight(
+            .bold,
+            range: highlightedText.startIndex ..< highlightedText.index(highlightedText.startIndex, offsetBy: 9),
+            in: highlightedText
+        )
+        highlighted.attributes = attrs
+        featBox.append(highlighted)
 
         featGroup.add(featBox)
         box.append(featGroup)

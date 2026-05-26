@@ -38,6 +38,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Label: Widget {
+    /// Cache is per Swift wrapper instance. Different wrappers around the same
+    /// underlying GtkLabel keep independent caches.
+    private var cachedAttributes: TextAttributes?
+
     /// Creates a label with the given text.
     public init(_ text: String) {
         let ptr = gtk_label_new(text)!
@@ -65,10 +69,38 @@ public final class Label: Widget {
     ///
     /// Supports tags like `<b>`, `<i>`, `<u>`, `<span>`, etc.
     /// See the [Pango Markup](https://docs.gtk.org/Pango/pango_markup.html)
-    /// documentation for the full syntax.
+    /// documentation for the full syntax. Escape external text with
+    /// ``PangoMarkup/escape(_:)`` before interpolation.
     public var markup: String {
         get { String(cString: gtk_label_get_label(opaquePointer)) }
         set { gtk_label_set_markup(opaquePointer, newValue) }
+    }
+
+    /// Overlay text attributes applied to the label's plain text.
+    ///
+    /// This is the safer alternative to markup when you want to style specific
+    /// ranges without parsing a markup string. Set to `nil` to clear all
+    /// overlays.
+    public var attributes: TextAttributes? {
+        get {
+            guard let pointer = gtk_label_get_attributes(opaquePointer) else {
+                cachedAttributes = nil
+                return nil
+            }
+            if let cachedAttributes, cachedAttributes.pointer == pointer {
+                return cachedAttributes
+            }
+            let wrapped = TextAttributes(borrowing: pointer)
+            cachedAttributes = wrapped
+            return wrapped
+        }
+        set {
+            let current = gtk_label_get_attributes(opaquePointer)
+            guard current != newValue?.pointer else { return }
+            gtk_label_set_attributes(opaquePointer, newValue?.pointer)
+            // Invariant: pointer identity stays stable unless the setter swaps it.
+            cachedAttributes = newValue
+        }
     }
 
     /// Whether the user can select and copy the label text.
@@ -187,6 +219,8 @@ public final class Label: Widget {
     /// Emitted when a link in the label's markup is activated.
     ///
     /// The label must contain Pango markup with `<a href="...">`.
+    /// Consider wrapping the handler with ``URIScheme/allowlist(_:handler:onReject:)``
+    /// before launching arbitrary URIs.
     ///
     /// - Parameter handler: Called with the activated URI.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
