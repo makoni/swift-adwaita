@@ -25,7 +25,7 @@ import GObjectSupport
 /// }
 /// ```
 @MainActor
-open class Widget: GObjectRef {
+open class Widget: GObjectRef, @preconcurrency CustomDebugStringConvertible {
     /// Returns the raw pointer as a `GtkWidget` pointer.
     public var widgetPointer: UnsafeMutablePointer<GtkWidget> {
         castedPointer()
@@ -177,6 +177,9 @@ open class Widget: GObjectRef {
     }
 
     /// The tooltip markup.
+    ///
+    /// Escape external text with ``PangoMarkup/escape(_:)`` before
+    /// interpolation, or use ``tooltipText`` when markup is unnecessary.
     public var tooltipMarkup: String? {
         get { gtk_widget_get_tooltip_markup(widgetPointer).map { String(cString: $0) } }
         set { gtk_widget_set_tooltip_markup(widgetPointer, newValue) }
@@ -785,4 +788,55 @@ open class Widget: GObjectRef {
         gtk_widget_add_controller(widgetPointer, controller)
     }
 
+}
+
+@MainActor
+extension Widget {
+    public var debugDescription: String {
+        var lines: [String] = []
+        var stack: [(widget: UnsafeMutablePointer<GtkWidget>, depth: Int)] = [(widgetPointer, 0)]
+        while let (widget, depth) = stack.popLast() {
+            lines.append(debugLine(for: widget, depth: depth))
+
+            var children: [UnsafeMutablePointer<GtkWidget>] = []
+            var child = gtk_widget_get_first_child(widget)
+            while let currentChild = child {
+                children.append(currentChild)
+                child = gtk_widget_get_next_sibling(currentChild)
+            }
+            for child in children.reversed() {
+                stack.append((child, depth + 1))
+            }
+        }
+        return lines.joined(separator: "\n")
+    }
+
+    @MainActor
+    private func debugLine(for widget: UnsafeMutablePointer<GtkWidget>, depth: Int) -> String {
+        let typeName = g_type_name_from_instance(UnsafeMutableRawPointer(widget)
+            .assumingMemoryBound(to: GTypeInstance.self))
+            .map { String(cString: $0) } ?? "GtkWidget"
+        let cssClasses = Self.cssClasses(for: widget)
+        let cssSuffix = if cssClasses.isEmpty {
+            ""
+        } else {
+            " css=[\(cssClasses.joined(separator: ", "))]"
+        }
+        let indent = String(repeating: "  ", count: depth)
+        return
+            "\(indent)\(typeName) size=\(gtk_widget_get_width(widget))x\(gtk_widget_get_height(widget)) visible=\(gtk_widget_get_visible(widget) != 0) focusable=\(gtk_widget_get_focusable(widget) != 0)\(cssSuffix)"
+    }
+
+    @MainActor
+    private static func cssClasses(for widget: UnsafeMutablePointer<GtkWidget>) -> [String] {
+        guard let cArray = gtk_widget_get_css_classes(widget) else { return [] }
+        defer { g_strfreev(cArray) }
+        var result: [String] = []
+        var index = 0
+        while let cStr = cArray[index] {
+            result.append(String(cString: cStr))
+            index += 1
+        }
+        return result
+    }
 }
