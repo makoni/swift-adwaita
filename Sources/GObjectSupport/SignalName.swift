@@ -55,6 +55,7 @@ public enum SignalName: Sendable, Equatable {
 
     case changed
     case searchChanged
+    case stopSearch
     case apply
     case iconPress
     case modifiedChanged
@@ -214,6 +215,7 @@ public enum SignalName: Sendable, Equatable {
         // Text & Input
         case .changed: "changed"
         case .searchChanged: "search-changed"
+        case .stopSearch: "stop-search"
         case .apply: "apply"
         case .iconPress: "icon-press"
         case .modifiedChanged: "modified-changed"

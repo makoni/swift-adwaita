@@ -74,11 +74,35 @@ public final class SearchEntry: Widget {
         SignalHelper.connect(self, signal: .activate, handler: handler)
     }
 
+    /// Emitted when the user presses Escape with the search entry focused.
+    ///
+    /// `GtkSearchEntry` emits `stop-search` and returns `GDK_EVENT_STOP` when
+    /// Escape is pressed, consuming the event before any shortcut controllers on
+    /// ancestor widgets (such as a parent `Dialog`) can see it.  Connect here to
+    /// dismiss a palette or search overlay when the user presses Escape.
+    ///
+    /// - Parameter handler: Called when the stop-search signal fires.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
+    @discardableResult
+    public func onStopSearch(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
+        SignalHelper.connect(self, signal: .stopSearch, handler: handler)
+    }
+
     /// Programmatically emits the `search-changed` signal.
     ///
     /// Useful for driving UI from debug helpers or tests without actually
     /// typing into the entry.
     public func emitSearchChanged() {
         g_signal_emit_by_name_no_args(UnsafeMutableRawPointer(opaquePointer), "search-changed")
+    }
+
+    /// Programmatically emits the `stop-search` signal.
+    ///
+    /// Mimics what `GtkSearchEntry` does internally when the user presses
+    /// Escape with the entry focused.  Useful in tests to verify that the
+    /// owning container (e.g. a command palette) handles this signal to
+    /// dismiss itself.
+    public func emitStopSearch() {
+        g_signal_emit_by_name_no_args(UnsafeMutableRawPointer(opaquePointer), "stop-search")
     }
 }
