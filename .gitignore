@@ -9,3 +9,4 @@ DerivedData/
 .netrc
 Package.resolved
 docs-html/
+.github/agents/
