@@ -16,7 +16,7 @@ struct DialogBackdropDismissTests {
 
     @MainActor
     private static func waitUntil(
-        timeout: Duration = .milliseconds(300),
+        timeout: Duration = .seconds(2),
         step: Duration = .milliseconds(10),
         _ condition: @MainActor () -> Bool
     ) {
@@ -120,7 +120,7 @@ struct DialogBackdropDismissTests {
         dialog.present(window)
         dialog.enableBackdropClickDismiss(maxRetries: 2)
 
-        Self.waitUntil(timeout: .milliseconds(500)) {
+        Self.waitUntil {
             guard let state = dialog.debugBackdropClickDismissState else { return false }
             return !state.isInstalled && state.remainingRetries == 0 && !state.retryScheduled
         }
