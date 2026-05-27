@@ -15,7 +15,6 @@ private final class DialogBackdropDismissHelper {
     private var isEnabled = false
     private var installedController: GestureClick?
     private var retryScheduled = false
-    private var dismissAction: (@MainActor () -> Void)?
     private var presentationEpoch = 0
     private var didReportRetryExhaustion = false
 
@@ -26,7 +25,7 @@ private final class DialogBackdropDismissHelper {
     }
 
     var isInstalled: Bool {
-        dismissAction != nil
+        installedController != nil
     }
 
     #if DEBUG
@@ -87,13 +86,12 @@ private final class DialogBackdropDismissHelper {
         retryScheduled = false
         didReportRetryExhaustion = false
         removeInstalledGesture()
-        dismissAction = nil
     }
 
     private func attemptInstall(for epoch: Int) {
         guard
             epoch == presentationEpoch,
-            dismissAction == nil,
+            installedController == nil,
             gtk_widget_get_mapped(dialogWidgetPointer) != 0 else {
             return
         }
@@ -127,16 +125,21 @@ private final class DialogBackdropDismissHelper {
 
         let click = GestureClick()
         click.button = 1
-        let dismiss: @MainActor () -> Void = { [dialogPointer] in
-            _ = adw_dialog_close(dialogPointer)
-        }
-        click.onReleased { _, _, _ in
-            dismiss()
+        click.onReleased { [weak self] _, _, _ in
+            self?.dismissDialog()
         }
         backdrop.addController(click)
         installedBackdrop = backdrop
         installedController = click
-        dismissAction = dismiss
+    }
+
+    private func dismissDialog() {
+        let dialogObject = UnsafeMutableRawPointer(dialogPointer).assumingMemoryBound(to: GObject.self)
+        g_object_ref(dialogObject)
+        MainContext.idle { [dialogPointer, dialogObject] in
+            defer { g_object_unref(dialogObject) }
+            _ = adw_dialog_close(dialogPointer)
+        }
     }
 
     private func removeInstalledGesture() {
