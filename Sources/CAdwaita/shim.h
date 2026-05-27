@@ -26,6 +26,15 @@ static inline void g_signal_emit_by_name_no_args(gpointer instance, const gchar 
     g_signal_emit_by_name(instance, signal_name);
 }
 
+static inline void swiftadw_gesture_click_emit_released(
+    GtkGestureClick *gesture,
+    int n_press,
+    double x,
+    double y
+) {
+    g_signal_emit_by_name(gesture, "released", n_press, x, y);
+}
+
 // ---------------------------------------------------------------------------
 // GdkPixbufAnimation shims (gdk-pixbuf >= 2.44).
 //
