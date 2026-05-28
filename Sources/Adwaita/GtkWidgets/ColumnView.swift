@@ -45,7 +45,6 @@ public final class ColumnView: Widget {
         gtk_column_view_get_type()
     }
 
-
     /// Creates a column view with a single-selection model.
     public init(model: SingleSelection) {
         let ptr = gtk_column_view_new(nil)!

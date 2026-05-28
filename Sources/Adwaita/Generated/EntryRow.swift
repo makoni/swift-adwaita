@@ -13,7 +13,6 @@ public class EntryRow: PreferencesRow {
         adw_entry_row_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

@@ -34,7 +34,6 @@ public final class ButtonContent: Widget {
         adw_button_content_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

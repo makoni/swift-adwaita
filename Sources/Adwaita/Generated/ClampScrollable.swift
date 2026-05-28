@@ -23,7 +23,6 @@ public final class ClampScrollable: Widget {
         adw_clamp_scrollable_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

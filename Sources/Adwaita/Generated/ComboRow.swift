@@ -12,7 +12,6 @@ public class ComboRow: ActionRow {
         adw_combo_row_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

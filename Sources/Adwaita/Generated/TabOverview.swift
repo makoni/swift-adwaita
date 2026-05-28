@@ -52,7 +52,6 @@ public final class TabOverview: Widget {
         adw_tab_overview_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

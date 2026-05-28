@@ -13,7 +13,6 @@ public final class OverlaySplitView: Widget, Swipeable {
         adw_overlay_split_view_get_type()
     }
 
-
     // The underlying `AdwSwipeable` pointer.
 
     /// Internal raw-pointer initializer.

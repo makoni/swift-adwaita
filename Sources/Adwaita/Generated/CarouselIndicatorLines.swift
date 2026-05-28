@@ -29,7 +29,6 @@ public final class CarouselIndicatorLines: Widget {
         adw_carousel_indicator_lines_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

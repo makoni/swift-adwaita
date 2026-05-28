@@ -35,7 +35,6 @@ public final class TreeExpander: Widget {
         gtk_tree_expander_get_type()
     }
 
-
     /// Creates a new tree expander widget.
     public init() {
         let ptr = gtk_tree_expander_new()!

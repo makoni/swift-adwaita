@@ -12,7 +12,6 @@ public class PreferencesGroup: Widget {
         adw_preferences_group_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

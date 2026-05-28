@@ -43,7 +43,6 @@ public final class SplitButton: Widget {
         adw_split_button_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

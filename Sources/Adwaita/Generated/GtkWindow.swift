@@ -32,7 +32,6 @@ public class GtkWindow: Widget {
         gtk_window_get_type()
     }
 
-
     private var windowPointer: UnsafeMutablePointer<CAdwaita.GtkWindow> {
         pointer.assumingMemoryBound(to: CAdwaita.GtkWindow.self)
     }

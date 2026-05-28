@@ -40,7 +40,6 @@ public final class GridView: Widget {
         gtk_grid_view_get_type()
     }
 
-
     /// Creates a grid view with a single-selection model and item factory.
     public init(model: SingleSelection, factory: SignalListItemFactory) {
         let ptr = gtk_grid_view_new(nil, nil)!

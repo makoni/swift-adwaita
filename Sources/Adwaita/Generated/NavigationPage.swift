@@ -31,7 +31,6 @@ public class NavigationPage: Widget {
         adw_navigation_page_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

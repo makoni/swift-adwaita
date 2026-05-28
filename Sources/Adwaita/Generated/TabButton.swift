@@ -41,7 +41,6 @@ public final class TabButton: Widget {
         adw_tab_button_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

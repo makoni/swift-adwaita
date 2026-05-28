@@ -45,7 +45,6 @@ public final class TabBar: Widget {
         adw_tab_bar_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

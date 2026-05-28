@@ -49,7 +49,6 @@ public class BreakpointBin: Widget {
         adw_breakpoint_bin_get_type()
     }
 
-
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
         super.init(raw: pointer)

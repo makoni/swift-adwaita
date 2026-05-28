@@ -27,9 +27,13 @@ import GObjectSupport
 @MainActor
 public final class Spinner: Widget {
     override public class var gtkType: GType {
-        adw_spinner_get_type()
+        // adw_spinner_get_type() is a libadwaita 1.6+ symbol absent from the baseline (1.5)
+        // headers, so resolve the type by name at runtime instead of linking
+        // the symbol. Returns G_TYPE_INVALID (0) on older runtimes / before the
+        // first instance registers the type — fine, since a tryCast/isInstance
+        // only matters once an instance of this 1.6+ widget actually exists.
+        g_type_from_name("AdwSpinner")
     }
-
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
