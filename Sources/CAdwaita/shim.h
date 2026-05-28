@@ -10,6 +10,20 @@
 // GTK compatibility helpers.
 // ---------------------------------------------------------------------------
 
+// gtk_widget_get_allocation is deprecated in GTK 4.12 in favour of
+// gtk_widget_compute_bounds, but compute_bounds traverses the widget
+// hierarchy (including viewport clip regions) and can trigger
+// Gtk-CRITICAL assertions in partially-initialised scrolled-window
+// trees. The allocation cache that get_allocation reads is safe and
+// accurate for scroll-into-view queries. Suppress the deprecation here
+// so the call in Widget+Allocation.swift compiles cleanly.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+static inline void swiftadw_widget_get_allocation(GtkWidget *widget, GtkAllocation *alloc) {
+    gtk_widget_get_allocation(widget, alloc);
+}
+#pragma GCC diagnostic pop
+
 static inline void swiftadw_gtk_calendar_set_date_compat(GtkCalendar *calendar, GDateTime *date) {
 #if GTK_CHECK_VERSION(4, 20, 0)
     gtk_calendar_set_date(calendar, date);

@@ -23,7 +23,7 @@ import GObjectSupport
 /// canvas.addController(drag)
 /// ```
 @MainActor
-public final class GestureDrag: Gesture {
+public final class GestureDrag: GObjectRef, GestureProtocol {
     /// Creates a new drag gesture recognizer.
     public init() {
         let ptr = gtk_gesture_drag_new()!

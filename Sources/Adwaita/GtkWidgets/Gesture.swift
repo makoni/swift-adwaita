@@ -33,17 +33,17 @@ public enum EventSequenceState: Sendable, Equatable {
     }
 }
 
-/// Base class for all GTK gesture wrappers.
-///
-/// Extends ``EventController`` with gesture-specific state management.
-/// You do not instantiate `Gesture` directly — use a concrete subclass
-/// such as ``GestureClick``, ``GestureDrag``, or ``GestureLongPress``.
-@MainActor
-open class Gesture: EventController {
-    public required init(raw pointer: UnsafeMutableRawPointer) {
-        super.init(raw: pointer)
-    }
+// MARK: - Protocol
 
+/// Marks types that wrap a `GtkGesture` and provides a default implementation
+/// of ``setState(_:)`` via a protocol extension.
+///
+/// All concrete gesture wrapper classes conform to this protocol. Conform your
+/// own `GObjectRef` subclasses to it if they wrap a `GtkGesture`-derived
+/// GObject.
+public protocol GestureProtocol: EventControllerProtocol {}
+
+public extension GestureProtocol {
     /// Sets the recognition state for the current event sequence.
     ///
     /// Wraps `gtk_gesture_set_state`. Call from inside a signal handler
@@ -55,7 +55,22 @@ open class Gesture: EventController {
     ///   may still receive it.
     ///
     /// Calling this with no active sequence is a GTK no-op.
-    public func setState(_ state: EventSequenceState) {
+    func setState(_ state: EventSequenceState) {
         gtk_gesture_set_state(opaquePointer, state.gtkValue)
+    }
+}
+
+// MARK: - Base class (kept for external subclassing)
+
+/// Base class for building custom GTK gesture wrappers.
+///
+/// Concrete built-in wrappers — ``GestureClick``, ``GestureDrag`` etc. — do
+/// NOT inherit from this class (they inherit from `GObjectRef` directly to
+/// avoid introducing extra levels in the ARC/deinit chain). This class is
+/// provided for external code that needs a typed base when subclassing.
+@MainActor
+open class Gesture: GObjectRef, GestureProtocol {
+    public required init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
     }
 }

@@ -25,7 +25,7 @@ import GObjectSupport
 /// myWidget.addController(scroll)
 /// ```
 @MainActor
-public final class EventControllerScroll: EventController {
+public final class EventControllerScroll: GObjectRef, EventControllerProtocol {
     /// Creates a scroll event controller with the given flags.
     public init(flags: GtkEventControllerScrollFlags = GTK_EVENT_CONTROLLER_SCROLL_BOTH_AXES) {
         let ptr = gtk_event_controller_scroll_new(flags)!

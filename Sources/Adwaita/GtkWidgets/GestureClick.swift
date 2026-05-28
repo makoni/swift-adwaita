@@ -23,7 +23,7 @@ import GObjectSupport
 /// myWidget.addController(click)
 /// ```
 @MainActor
-public final class GestureClick: Gesture {
+public final class GestureClick: GObjectRef, GestureProtocol {
     /// Creates a new click gesture recognizer.
     public init() {
         let ptr = gtk_gesture_click_new()!

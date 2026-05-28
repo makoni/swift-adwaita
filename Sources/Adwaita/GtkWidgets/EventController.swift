@@ -37,18 +37,17 @@ public enum PropagationPhase: Sendable, Equatable {
     }
 }
 
-/// Base class for all GTK event controller wrappers.
-///
-/// Provides the ``propagationPhase`` property shared by all controllers and
-/// gestures. You do not instantiate `EventController` directly — use a
-/// concrete subclass such as ``GestureClick``, ``EventControllerKey``, or
-/// ``EventControllerScroll``.
-@MainActor
-open class EventController: GObjectRef {
-    public required init(raw pointer: UnsafeMutableRawPointer) {
-        super.init(raw: pointer)
-    }
+// MARK: - Protocol
 
+/// Marks types that wrap a `GtkEventController` and provides a default
+/// implementation of ``propagationPhase`` via a protocol extension.
+///
+/// All concrete event-controller and gesture wrapper classes conform to this
+/// protocol. Conform your own `GObjectRef` subclasses to it if they wrap a
+/// `GtkEventController`-derived GObject.
+public protocol EventControllerProtocol: GObjectRef {}
+
+public extension EventControllerProtocol {
     /// Where in the event propagation chain this controller receives events.
     ///
     /// Wraps `gtk_event_controller_get/set_propagation_phase`. The default
@@ -57,8 +56,23 @@ open class EventController: GObjectRef {
     /// Set to `.capture` to intercept events before they reach child widgets —
     /// useful for container-level gesture handling that must run before any
     /// child handles the event.
-    public var propagationPhase: PropagationPhase {
+    var propagationPhase: PropagationPhase {
         get { PropagationPhase(gtk_event_controller_get_propagation_phase(opaquePointer)) }
         set { gtk_event_controller_set_propagation_phase(opaquePointer, newValue.gtkValue) }
+    }
+}
+
+// MARK: - Base class (kept for external subclassing)
+
+/// Base class for building custom GTK event controller wrappers.
+///
+/// Concrete built-in wrappers — ``GestureClick``, ``EventControllerKey`` etc.
+/// — do NOT inherit from this class (they inherit from `GObjectRef` directly
+/// to avoid introducing extra levels in the ARC/deinit chain). This class is
+/// provided for external code that needs a typed base when subclassing.
+@MainActor
+open class EventController: GObjectRef, EventControllerProtocol {
+    public required init(raw pointer: UnsafeMutableRawPointer) {
+        super.init(raw: pointer)
     }
 }

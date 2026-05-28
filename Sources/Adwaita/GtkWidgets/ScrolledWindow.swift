@@ -24,6 +24,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class ScrolledWindow: Widget {
+    override public class var gtkType: GType {
+        gtk_scrolled_window_get_type()
+    }
+
     /// Creates a new scrolled window.
     public init() {
         let ptr = gtk_scrolled_window_new()!

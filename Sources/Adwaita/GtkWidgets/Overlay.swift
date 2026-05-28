@@ -25,6 +25,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Overlay: Widget {
+    override public class var gtkType: GType {
+        gtk_overlay_get_type()
+    }
+
     /// Creates a new overlay.
     public init() {
         let ptr = gtk_overlay_new()!
