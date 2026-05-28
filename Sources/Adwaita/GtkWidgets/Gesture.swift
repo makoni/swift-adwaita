@@ -17,18 +17,18 @@ public enum EventSequenceState: Sendable, Equatable {
 
     init(_ raw: GtkEventSequenceState) {
         switch raw {
-        case GTK_EVENT_SEQUENCE_NONE:    self = .none
+        case GTK_EVENT_SEQUENCE_NONE: self = .none
         case GTK_EVENT_SEQUENCE_CLAIMED: self = .claimed
-        case GTK_EVENT_SEQUENCE_DENIED:  self = .denied
-        default:                         self = .none
+        case GTK_EVENT_SEQUENCE_DENIED: self = .denied
+        default: self = .none
         }
     }
 
     var gtkValue: GtkEventSequenceState {
         switch self {
-        case .none:    return GTK_EVENT_SEQUENCE_NONE
-        case .claimed: return GTK_EVENT_SEQUENCE_CLAIMED
-        case .denied:  return GTK_EVENT_SEQUENCE_DENIED
+        case .none: GTK_EVENT_SEQUENCE_NONE
+        case .claimed: GTK_EVENT_SEQUENCE_CLAIMED
+        case .denied: GTK_EVENT_SEQUENCE_DENIED
         }
     }
 }

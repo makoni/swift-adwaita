@@ -19,20 +19,20 @@ public enum PropagationPhase: Sendable, Equatable {
 
     init(_ raw: GtkPropagationPhase) {
         switch raw {
-        case GTK_PHASE_NONE:    self = .none
+        case GTK_PHASE_NONE: self = .none
         case GTK_PHASE_CAPTURE: self = .capture
-        case GTK_PHASE_BUBBLE:  self = .bubble
-        case GTK_PHASE_TARGET:  self = .target
-        default:                self = .bubble
+        case GTK_PHASE_BUBBLE: self = .bubble
+        case GTK_PHASE_TARGET: self = .target
+        default: self = .bubble
         }
     }
 
     var gtkValue: GtkPropagationPhase {
         switch self {
-        case .none:    return GTK_PHASE_NONE
-        case .capture: return GTK_PHASE_CAPTURE
-        case .bubble:  return GTK_PHASE_BUBBLE
-        case .target:  return GTK_PHASE_TARGET
+        case .none: GTK_PHASE_NONE
+        case .capture: GTK_PHASE_CAPTURE
+        case .bubble: GTK_PHASE_BUBBLE
+        case .target: GTK_PHASE_TARGET
         }
     }
 }
