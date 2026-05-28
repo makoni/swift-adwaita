@@ -196,13 +196,22 @@ struct EnhancementTests {
 
     @Test @MainActor func mainContextDrainPendingRunsScheduledIdles() {
         ensureAdwInit()
+        // Clear any deferred-release idles or GTK teardown sources left
+        // over from earlier suites running in the same process so we
+        // measure work scheduled by this test, not noise from another.
+        _ = MainContext.drainPending()
+
         var hits = 0
         MainContext.idle { hits += 1 }
         MainContext.idle { hits += 1 }
         MainContext.idle { hits += 1 }
         let processed = MainContext.drainPending()
         #expect(hits == 3)
-        #expect(processed >= 3)
+        // g_main_context_iteration can dispatch several same-priority idle
+        // sources in a single iteration, so `processed` is not guaranteed
+        // to equal the number of idles scheduled — we only require that
+        // drainPending did at least one iteration of work.
+        #expect(processed >= 1)
     }
 
     @Test @MainActor func mainContextDrainPendingIsNonBlockingWhenIdle() {
@@ -226,6 +235,11 @@ struct EnhancementTests {
 
     @Test @MainActor func mainContextPumpForDispatchesReadyIdle() {
         ensureAdwInit()
+        // Drain any leftover idles from earlier suites so the 40ms budget
+        // is spent dispatching the idle we schedule below, not whatever
+        // noise drifted in from teardown of a previous suite.
+        _ = MainContext.drainPending()
+
         var called = false
         MainContext.idle { called = true }
         MainContext.pump(for: .milliseconds(40))
