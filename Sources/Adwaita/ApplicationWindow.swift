@@ -23,6 +23,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class ApplicationWindow: GtkWindow {
+    override public class var gtkType: GType {
+        adw_application_window_get_type()
+    }
+
     /// Creates a new application window.
     ///
     /// - Parameter application: The application this window belongs to.

@@ -8,6 +8,10 @@ import GObjectSupport
 /// A [class@Gtk.ListBoxRow] used to choose from a list of items.
 @MainActor
 public class ComboRow: ActionRow {
+    override public class var gtkType: GType {
+        adw_combo_row_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

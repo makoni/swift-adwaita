@@ -23,6 +23,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.4
 @MainActor
 public final class SwitchRow: ActionRow {
+    override public class var gtkType: GType {
+        adw_switch_row_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

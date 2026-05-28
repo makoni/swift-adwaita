@@ -27,6 +27,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.4
 @MainActor
 public class NavigationPage: Widget {
+    override public class var gtkType: GType {
+        adw_navigation_page_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

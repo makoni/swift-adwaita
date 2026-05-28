@@ -43,6 +43,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.4
 @MainActor
 public final class NavigationSplitView: Widget {
+    override public class var gtkType: GType {
+        adw_navigation_split_view_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

@@ -45,6 +45,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.4
 @MainActor
 public class BreakpointBin: Widget {
+    override public class var gtkType: GType {
+        adw_breakpoint_bin_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

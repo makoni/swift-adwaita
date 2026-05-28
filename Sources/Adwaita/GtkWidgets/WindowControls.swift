@@ -18,6 +18,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class WindowControls: Widget {
+    override public class var gtkType: GType {
+        gtk_window_controls_get_type()
+    }
+
     /// Creates new window controls.
     ///
     /// - Parameter side: Which side of the title bar (.start or .end).

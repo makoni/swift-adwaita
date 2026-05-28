@@ -27,6 +27,10 @@ import GObjectSupport
 ///   - ``useUnderline``: Whether an underscore in the title marks a mnemonic.
 @MainActor
 public class PreferencesRow: ListBoxRow {
+    override public class var gtkType: GType {
+        adw_preferences_row_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

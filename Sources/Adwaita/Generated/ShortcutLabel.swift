@@ -21,6 +21,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.8
 @MainActor
 public final class ShortcutLabel: Widget {
+    override public class var gtkType: GType {
+        adw_shortcut_label_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

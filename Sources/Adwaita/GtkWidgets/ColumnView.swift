@@ -41,6 +41,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class ColumnView: Widget {
+    override public class var gtkType: GType {
+        gtk_column_view_get_type()
+    }
+
 
     /// Creates a column view with a single-selection model.
     public init(model: SingleSelection) {

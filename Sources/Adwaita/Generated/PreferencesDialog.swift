@@ -39,6 +39,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.5
 @MainActor
 public class PreferencesDialog: Dialog {
+    override public class var gtkType: GType {
+        adw_preferences_dialog_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

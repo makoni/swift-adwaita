@@ -19,6 +19,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class MediaControls: Widget {
+    override public class var gtkType: GType {
+        gtk_media_controls_get_type()
+    }
+
     /// Creates new media controls, optionally for a media stream.
     public init(stream: MediaStream? = nil) {
         let ptr = gtk_media_controls_new(stream?.streamPointer)!

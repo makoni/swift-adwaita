@@ -28,6 +28,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class FlowBox: Widget, Container {
+    override public class var gtkType: GType {
+        gtk_flow_box_get_type()
+    }
+
     /// Creates a new flow box.
     public init() {
         let ptr = gtk_flow_box_new()!

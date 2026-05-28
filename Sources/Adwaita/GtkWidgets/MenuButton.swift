@@ -28,6 +28,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class MenuButton: Widget {
+    override public class var gtkType: GType {
+        gtk_menu_button_get_type()
+    }
+
     /// Creates a new menu button.
     public init() {
         let ptr = gtk_menu_button_new()!

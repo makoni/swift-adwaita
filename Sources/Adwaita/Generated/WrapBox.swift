@@ -9,6 +9,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.7
 @MainActor
 public final class WrapBox: Widget, Container {
+    override public class var gtkType: GType {
+        adw_wrap_box_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

@@ -23,6 +23,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class FontDialogButton: Widget {
+    override public class var gtkType: GType {
+        gtk_font_dialog_button_get_type()
+    }
+
     /// Creates a new font dialog button.
     public init(dialog: FontDialog? = nil) {
         let dlg: OpaquePointer

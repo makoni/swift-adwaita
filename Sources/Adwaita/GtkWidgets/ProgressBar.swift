@@ -24,6 +24,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class ProgressBar: Widget {
+    override public class var gtkType: GType {
+        gtk_progress_bar_get_type()
+    }
+
     /// Creates a new progress bar.
     public init() {
         let ptr = gtk_progress_bar_new()!

@@ -36,6 +36,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class GridView: Widget {
+    override public class var gtkType: GType {
+        gtk_grid_view_get_type()
+    }
+
 
     /// Creates a grid view with a single-selection model and item factory.
     public init(model: SingleSelection, factory: SignalListItemFactory) {

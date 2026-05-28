@@ -22,6 +22,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Image: Widget {
+    override public class var gtkType: GType {
+        gtk_image_get_type()
+    }
+
     /// Creates an empty image.
     public init() {
         let ptr = gtk_image_new()!

@@ -22,6 +22,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Fixed: Widget {
+    override public class var gtkType: GType {
+        gtk_fixed_get_type()
+    }
+
     /// Creates a new fixed container.
     public init() {
         let ptr = gtk_fixed_new()!

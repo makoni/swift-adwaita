@@ -24,6 +24,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Avatar: Widget {
+    override public class var gtkType: GType {
+        adw_avatar_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

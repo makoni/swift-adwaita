@@ -16,6 +16,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Switch: Widget {
+    override public class var gtkType: GType {
+        gtk_switch_get_type()
+    }
+
     /// Creates a new switch.
     public init() {
         let ptr = gtk_switch_new()!

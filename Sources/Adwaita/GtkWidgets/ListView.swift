@@ -34,6 +34,9 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class ListView: Widget {
+    override public class var gtkType: GType {
+        gtk_list_view_get_type()
+    }
 
     /// Creates a list view with a selection model and item factory.
     public init(model: SingleSelection, factory: SignalListItemFactory) {

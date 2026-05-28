@@ -23,6 +23,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class StackSwitcher: Widget {
+    override public class var gtkType: GType {
+        gtk_stack_switcher_get_type()
+    }
+
     /// Creates a new stack switcher.
     public init() {
         let ptr = gtk_stack_switcher_new()!

@@ -37,6 +37,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.3
 @MainActor
 public final class TabButton: Widget {
+    override public class var gtkType: GType {
+        adw_tab_button_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

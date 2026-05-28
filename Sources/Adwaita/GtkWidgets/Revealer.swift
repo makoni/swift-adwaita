@@ -25,6 +25,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Revealer: Widget {
+    override public class var gtkType: GType {
+        gtk_revealer_get_type()
+    }
+
     /// Creates a new revealer.
     public init() {
         let ptr = gtk_revealer_new()!

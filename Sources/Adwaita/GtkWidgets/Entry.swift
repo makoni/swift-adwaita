@@ -40,6 +40,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Entry: Widget {
+    override public class var gtkType: GType {
+        gtk_entry_get_type()
+    }
+
     /// Creates a new entry.
     public init() {
         let ptr = gtk_entry_new()!

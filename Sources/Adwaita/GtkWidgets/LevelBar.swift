@@ -27,6 +27,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class LevelBar: Widget {
+    override public class var gtkType: GType {
+        gtk_level_bar_get_type()
+    }
+
     /// Creates a new level bar.
     public init() {
         let ptr = gtk_level_bar_new()!

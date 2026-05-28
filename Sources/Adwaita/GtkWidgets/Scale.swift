@@ -9,6 +9,10 @@ import GObjectSupport
 /// Wraps `GtkScale`.
 @MainActor
 public final class Scale: Widget {
+    override public class var gtkType: GType {
+        gtk_scale_get_type()
+    }
+
     /// Creates a new scale.
     public init(
         orientation: GtkOrientation = GTK_ORIENTATION_HORIZONTAL,

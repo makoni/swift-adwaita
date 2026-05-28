@@ -28,6 +28,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public class GtkWindow: Widget {
+    override public class var gtkType: GType {
+        gtk_window_get_type()
+    }
+
 
     private var windowPointer: UnsafeMutablePointer<CAdwaita.GtkWindow> {
         pointer.assumingMemoryBound(to: CAdwaita.GtkWindow.self)

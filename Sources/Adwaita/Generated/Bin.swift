@@ -25,6 +25,10 @@ import GObjectSupport
 ///   - ``child``: The single child widget held by the bin.
 @MainActor
 public class Bin: Widget {
+    override public class var gtkType: GType {
+        adw_bin_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

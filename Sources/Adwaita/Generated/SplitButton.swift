@@ -39,6 +39,10 @@ import GObjectSupport
 ///   - ``onActivate(_:)``: Connects a handler for keyboard activation.
 @MainActor
 public final class SplitButton: Widget {
+    override public class var gtkType: GType {
+        adw_split_button_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

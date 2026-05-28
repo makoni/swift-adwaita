@@ -19,6 +19,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.6
 @MainActor
 public final class MultiLayoutView: Widget {
+    override public class var gtkType: GType {
+        adw_multi_layout_view_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

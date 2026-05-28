@@ -25,6 +25,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class SearchEntry: Widget {
+    override public class var gtkType: GType {
+        gtk_search_entry_get_type()
+    }
+
     /// Creates a new search entry.
     public init() {
         let ptr = gtk_search_entry_new()!

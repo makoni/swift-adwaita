@@ -9,6 +9,10 @@ import GObjectSupport
 /// Wraps `GtkTextView`.
 @MainActor
 public final class TextView: Widget {
+    override public class var gtkType: GType {
+        gtk_text_view_get_type()
+    }
+
     /// Creates a new text view.
     public init() {
         let ptr = gtk_text_view_new()!

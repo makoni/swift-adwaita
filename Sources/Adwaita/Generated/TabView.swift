@@ -46,6 +46,10 @@ import GObjectSupport
 /// - ``getNthPage(_:)``: Retrieve a page by its index.
 @MainActor
 public final class TabView: Widget {
+    override public class var gtkType: GType {
+        adw_tab_view_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

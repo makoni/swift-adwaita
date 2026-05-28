@@ -23,6 +23,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Paned: Widget {
+    override public class var gtkType: GType {
+        gtk_paned_get_type()
+    }
+
     /// Creates a new paned widget.
     public init(orientation: GtkOrientation = GTK_ORIENTATION_HORIZONTAL) {
         let ptr = gtk_paned_new(orientation)!

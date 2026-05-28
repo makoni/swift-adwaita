@@ -25,6 +25,10 @@ import GObjectSupport
 /// Use with ``ToolbarView`` as the top bar of your window.
 @MainActor
 public final class HeaderBar: Widget {
+    override public class var gtkType: GType {
+        adw_header_bar_get_type()
+    }
+
     /// Creates a new header bar.
     public init() {
         let ptr = adw_header_bar_new()!

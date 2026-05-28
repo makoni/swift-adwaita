@@ -25,6 +25,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class StatusPage: Widget {
+    override public class var gtkType: GType {
+        adw_status_page_get_type()
+    }
+
     /// Creates a new status page.
     public init() {
         let ptr = adw_status_page_new()!

@@ -25,6 +25,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Video: Widget {
+    override public class var gtkType: GType {
+        gtk_video_get_type()
+    }
+
     /// Creates a new empty video widget.
     public init() {
         let ptr = gtk_video_new()!

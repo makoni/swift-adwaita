@@ -31,6 +31,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class TreeExpander: Widget {
+    override public class var gtkType: GType {
+        gtk_tree_expander_get_type()
+    }
+
 
     /// Creates a new tree expander widget.
     public init() {

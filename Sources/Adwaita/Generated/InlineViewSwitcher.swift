@@ -19,6 +19,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.7
 @MainActor
 public final class InlineViewSwitcher: Widget {
+    override public class var gtkType: GType {
+        adw_inline_view_switcher_get_type()
+    }
+
 
     /// Display mode constants for ``InlineViewSwitcher``.
     public enum DisplayMode: Int32 {

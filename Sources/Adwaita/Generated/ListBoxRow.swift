@@ -33,6 +33,10 @@ import GObjectSupport
 ///   - ``changed()``: Marks the row as changed to trigger filter/sort re-evaluation.
 @MainActor
 public class ListBoxRow: Widget {
+    override public class var gtkType: GType {
+        gtk_list_box_row_get_type()
+    }
+
     /// Creates a new list box row.
     public init() {
         let ptr = gtk_list_box_row_new()!

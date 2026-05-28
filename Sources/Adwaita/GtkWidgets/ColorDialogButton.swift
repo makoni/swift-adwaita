@@ -22,6 +22,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class ColorDialogButton: Widget {
+    override public class var gtkType: GType {
+        gtk_color_dialog_button_get_type()
+    }
+
     /// Creates a new color dialog button.
     public init(dialog: ColorDialog? = nil) {
         let dlg: OpaquePointer

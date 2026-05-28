@@ -23,6 +23,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class ListBox: Widget, Container {
+    override public class var gtkType: GType {
+        gtk_list_box_get_type()
+    }
+
     /// Creates a new list box.
     public init() {
         let ptr = gtk_list_box_new()!

@@ -27,6 +27,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class PopoverMenuBar: Widget {
+    override public class var gtkType: GType {
+        gtk_popover_menu_bar_get_type()
+    }
+
     /// Creates a new menu bar from a menu model.
     public init(model: GMenuRef) {
         let ptr = gtk_popover_menu_bar_new_from_model(model.menuModelPointer)!

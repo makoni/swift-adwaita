@@ -23,6 +23,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Calendar: Widget {
+    override public class var gtkType: GType {
+        gtk_calendar_get_type()
+    }
+
     /// Creates a new calendar widget showing today's date.
     public init() {
         let ptr = gtk_calendar_new()!

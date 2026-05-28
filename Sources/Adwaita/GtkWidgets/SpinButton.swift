@@ -9,6 +9,10 @@ import GObjectSupport
 /// Wraps `GtkSpinButton`. For Adwaita-styled spin inputs, prefer `SpinRow`.
 @MainActor
 public final class SpinButton: Widget {
+    override public class var gtkType: GType {
+        gtk_spin_button_get_type()
+    }
+
     /// Creates a spin button with a range.
     public init(min: Double = 0, max: Double = 100, step: Double = 1) {
         let ptr = gtk_spin_button_new_with_range(min, max, step)!

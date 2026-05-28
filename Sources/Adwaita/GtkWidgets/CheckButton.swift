@@ -26,6 +26,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class CheckButton: Widget {
+    override public class var gtkType: GType {
+        gtk_check_button_get_type()
+    }
+
     /// Creates a new check button.
     public init() {
         let ptr = gtk_check_button_new()!

@@ -32,6 +32,10 @@ import GObjectSupport
 /// - ``policy``: The layout policy (wide or narrow) for the switcher buttons.
 @MainActor
 public final class ViewSwitcher: Widget {
+    override public class var gtkType: GType {
+        adw_view_switcher_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

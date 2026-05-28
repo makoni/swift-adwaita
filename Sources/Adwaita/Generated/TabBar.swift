@@ -41,6 +41,10 @@ import GObjectSupport
 /// - ``isOverflowing`` / ``tabsRevealed``: Read-only overflow and visibility state.
 @MainActor
 public final class TabBar: Widget {
+    override public class var gtkType: GType {
+        adw_tab_bar_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

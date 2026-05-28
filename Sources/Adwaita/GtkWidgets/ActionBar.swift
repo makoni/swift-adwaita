@@ -20,6 +20,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class ActionBar: Widget {
+    override public class var gtkType: GType {
+        gtk_action_bar_get_type()
+    }
+
     /// Creates a new action bar.
     public init() {
         let ptr = gtk_action_bar_new()!

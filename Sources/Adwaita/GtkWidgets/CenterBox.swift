@@ -17,6 +17,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class CenterBox: Widget {
+    override public class var gtkType: GType {
+        gtk_center_box_get_type()
+    }
+
     /// Creates a new center box.
     public init() {
         let ptr = gtk_center_box_new()!

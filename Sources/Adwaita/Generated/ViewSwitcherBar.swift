@@ -36,6 +36,10 @@ import GObjectSupport
 /// - ``reveal``: Whether the bottom bar is visible.
 @MainActor
 public final class ViewSwitcherBar: Widget {
+    override public class var gtkType: GType {
+        adw_view_switcher_bar_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

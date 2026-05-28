@@ -22,6 +22,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public class ActionRow: PreferencesRow {
+    override public class var gtkType: GType {
+        adw_action_row_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

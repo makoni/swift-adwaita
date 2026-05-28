@@ -44,6 +44,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.7
 @MainActor
 public final class ToggleGroup: Widget {
+    override public class var gtkType: GType {
+        adw_toggle_group_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

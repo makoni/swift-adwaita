@@ -39,13 +39,23 @@ public enum PropagationPhase: Sendable, Equatable {
 
 // MARK: - Protocol
 
-/// Marks types that wrap a `GtkEventController` and provides a default
-/// implementation of ``propagationPhase`` via a protocol extension.
+/// Marks types that wrap a `GtkEventController` and exposes
+/// ``propagationPhase``.
 ///
 /// All concrete event-controller and gesture wrapper classes conform to this
 /// protocol. Conform your own `GObjectRef` subclasses to it if they wrap a
 /// `GtkEventController`-derived GObject.
-public protocol EventControllerProtocol: GObjectRef {}
+///
+/// ``propagationPhase`` is a protocol *requirement* with a default
+/// implementation, so a conformer that supplies its own implementation has it
+/// honoured even when called through an `EventControllerProtocol` existential
+/// (witness-table dispatch, not the static dispatch a bare extension method
+/// would get).
+@MainActor
+public protocol EventControllerProtocol: GObjectRef {
+    /// Where in the event propagation chain this controller receives events.
+    var propagationPhase: PropagationPhase { get set }
+}
 
 public extension EventControllerProtocol {
     /// Where in the event propagation chain this controller receives events.

@@ -26,6 +26,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Popover: Widget {
+    override public class var gtkType: GType {
+        gtk_popover_get_type()
+    }
+
     /// Creates a new popover.
     public init() {
         let ptr = gtk_popover_new()!

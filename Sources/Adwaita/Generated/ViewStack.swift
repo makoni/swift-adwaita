@@ -43,6 +43,10 @@ import GObjectSupport
 /// - ``getPage(_:)`` / ``getChildByName(_:)``: Look up pages or children.
 @MainActor
 public final class ViewStack: Widget {
+    override public class var gtkType: GType {
+        adw_view_stack_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

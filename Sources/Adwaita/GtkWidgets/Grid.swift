@@ -9,6 +9,10 @@ import GObjectSupport
 /// Wraps `GtkGrid`.
 @MainActor
 public final class Grid: Widget {
+    override public class var gtkType: GType {
+        gtk_grid_get_type()
+    }
+
     /// Creates a new grid.
     public init() {
         let ptr = gtk_grid_new()!

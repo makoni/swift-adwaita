@@ -25,6 +25,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class ToggleButton: Widget {
+    override public class var gtkType: GType {
+        gtk_toggle_button_get_type()
+    }
+
     /// Creates a new toggle button.
     public init() {
         let ptr = gtk_toggle_button_new()!

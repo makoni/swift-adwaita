@@ -45,6 +45,9 @@ public extension Widget {
         // realised (e.g. during initial layout). The allocation cache that
         // get_allocation reads is safe and accurate for scroll-into-view
         // queries; no hierarchy traversal is involved.
+        // swiftadw_widget_get_allocation wraps gtk_widget_get_allocation (see
+        // the doc comment above and CAdwaita/shim.h for why we avoid
+        // gtk_widget_compute_bounds here).
         var a = GtkAllocation()
         swiftadw_widget_get_allocation(widgetPointer, &a)
         return WidgetAllocation(x: Int(a.x), y: Int(a.y), width: Int(a.width), height: Int(a.height))

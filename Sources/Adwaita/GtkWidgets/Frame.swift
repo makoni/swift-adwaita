@@ -18,6 +18,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Frame: Widget {
+    override public class var gtkType: GType {
+        gtk_frame_get_type()
+    }
+
     /// Creates a new frame with an optional label.
     public init(label: String? = nil) {
         let ptr = gtk_frame_new(label)!

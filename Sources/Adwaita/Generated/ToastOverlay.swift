@@ -31,6 +31,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class ToastOverlay: Widget {
+    override public class var gtkType: GType {
+        adw_toast_overlay_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

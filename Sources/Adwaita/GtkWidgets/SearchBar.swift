@@ -24,6 +24,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class SearchBar: Widget {
+    override public class var gtkType: GType {
+        gtk_search_bar_get_type()
+    }
+
     /// Creates a new search bar.
     public init() {
         let ptr = gtk_search_bar_new()!

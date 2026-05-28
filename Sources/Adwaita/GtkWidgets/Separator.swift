@@ -23,6 +23,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Separator: Widget {
+    override public class var gtkType: GType {
+        gtk_separator_get_type()
+    }
+
     /// Creates a new separator.
     ///
     /// - Parameter orientation: The direction of the separator line.

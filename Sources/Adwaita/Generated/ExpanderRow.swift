@@ -8,6 +8,10 @@ import GObjectSupport
 /// A [class@Gtk.ListBoxRow] used to reveal widgets.
 @MainActor
 public class ExpanderRow: PreferencesRow {
+    override public class var gtkType: GType {
+        adw_expander_row_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

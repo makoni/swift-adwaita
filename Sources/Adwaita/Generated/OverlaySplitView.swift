@@ -9,6 +9,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.4
 @MainActor
 public final class OverlaySplitView: Widget, Swipeable {
+    override public class var gtkType: GType {
+        adw_overlay_split_view_get_type()
+    }
+
 
     // The underlying `AdwSwipeable` pointer.
 

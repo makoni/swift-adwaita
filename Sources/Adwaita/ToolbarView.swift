@@ -30,6 +30,10 @@ import GObjectSupport
 /// Controls bar visibility with ``revealTopBars`` and ``revealBottomBars``.
 @MainActor
 public final class ToolbarView: Widget {
+    override public class var gtkType: GType {
+        adw_toolbar_view_get_type()
+    }
+
     /// Creates a new toolbar view.
     public init() {
         let ptr = adw_toolbar_view_new()!

@@ -21,6 +21,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Expander: Widget {
+    override public class var gtkType: GType {
+        gtk_expander_get_type()
+    }
+
     /// Creates a new expander with the given label.
     public init(label: String? = nil) {
         let ptr = gtk_expander_new(label)!

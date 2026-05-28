@@ -22,6 +22,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class WindowTitle: Widget {
+    override public class var gtkType: GType {
+        adw_window_title_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

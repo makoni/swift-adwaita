@@ -8,6 +8,10 @@ import GObjectSupport
 /// A group of preference rows.
 @MainActor
 public class PreferencesGroup: Widget {
+    override public class var gtkType: GType {
+        adw_preferences_group_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

@@ -20,6 +20,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class EmojiChooser: Widget {
+    override public class var gtkType: GType {
+        gtk_emoji_chooser_get_type()
+    }
+
     /// Creates a new emoji chooser.
     public init() {
         let ptr = gtk_emoji_chooser_new()!

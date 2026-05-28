@@ -25,6 +25,10 @@ import GObjectSupport
 ///
 @MainActor
 public final class CarouselIndicatorLines: Widget {
+    override public class var gtkType: GType {
+        adw_carousel_indicator_lines_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

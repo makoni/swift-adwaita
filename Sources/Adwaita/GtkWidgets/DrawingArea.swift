@@ -9,6 +9,10 @@ import GObjectSupport
 /// Wraps `GtkDrawingArea`. Uses a Cairo context for rendering.
 @MainActor
 public final class DrawingArea: Widget {
+    override public class var gtkType: GType {
+        gtk_drawing_area_get_type()
+    }
+
     /// Creates a new drawing area.
     public init() {
         let ptr = gtk_drawing_area_new()!

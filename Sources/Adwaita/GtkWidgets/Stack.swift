@@ -29,6 +29,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Stack: Widget {
+    override public class var gtkType: GType {
+        gtk_stack_get_type()
+    }
+
     /// Creates a new stack.
     public init() {
         let ptr = gtk_stack_new()!

@@ -23,6 +23,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class Notebook: Widget {
+    override public class var gtkType: GType {
+        gtk_notebook_get_type()
+    }
+
     /// Creates a new notebook.
     public init() {
         let ptr = gtk_notebook_new()!

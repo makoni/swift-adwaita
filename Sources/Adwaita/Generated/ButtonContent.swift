@@ -30,6 +30,10 @@ import GObjectSupport
 ///   - ``canShrink``: Whether the button can shrink below its natural size (since libadwaita 1.4).
 @MainActor
 public final class ButtonContent: Widget {
+    override public class var gtkType: GType {
+        adw_button_content_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

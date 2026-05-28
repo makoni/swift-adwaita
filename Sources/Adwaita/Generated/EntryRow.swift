@@ -9,6 +9,10 @@ import GObjectSupport
 /// - Since: libadwaita 1.2
 @MainActor
 public class EntryRow: PreferencesRow {
+    override public class var gtkType: GType {
+        adw_entry_row_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {

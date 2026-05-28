@@ -35,13 +35,21 @@ public enum EventSequenceState: Sendable, Equatable {
 
 // MARK: - Protocol
 
-/// Marks types that wrap a `GtkGesture` and provides a default implementation
-/// of ``setState(_:)`` via a protocol extension.
+/// Marks types that wrap a `GtkGesture` and exposes ``setState(_:)``.
 ///
 /// All concrete gesture wrapper classes conform to this protocol. Conform your
 /// own `GObjectRef` subclasses to it if they wrap a `GtkGesture`-derived
 /// GObject.
-public protocol GestureProtocol: EventControllerProtocol {}
+///
+/// ``setState(_:)`` is a protocol *requirement* with a default implementation,
+/// so a conformer that supplies its own implementation has it honoured even
+/// when called through a `GestureProtocol` existential (witness-table
+/// dispatch, not the static dispatch a bare extension method would get).
+@MainActor
+public protocol GestureProtocol: EventControllerProtocol {
+    /// Sets the recognition state for the current event sequence.
+    func setState(_ state: EventSequenceState)
+}
 
 public extension GestureProtocol {
     /// Sets the recognition state for the current event sequence.

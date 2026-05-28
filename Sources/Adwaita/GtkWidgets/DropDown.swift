@@ -20,6 +20,10 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class DropDown: Widget {
+    override public class var gtkType: GType {
+        gtk_drop_down_get_type()
+    }
+
     /// Creates a new drop-down from a string list.
     ///
     /// - Parameter strings: The strings to populate the drop-down with.

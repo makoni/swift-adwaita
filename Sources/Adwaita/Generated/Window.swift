@@ -30,6 +30,10 @@ import GObjectSupport
 /// Use ``addBreakpoint(_:)`` to adapt the layout at different window sizes.
 @MainActor
 public class Window: GtkWindow {
+    override public class var gtkType: GType {
+        adw_window_get_type()
+    }
+
 
     /// Internal raw-pointer initializer.
     required init(raw pointer: UnsafeMutableRawPointer) {
