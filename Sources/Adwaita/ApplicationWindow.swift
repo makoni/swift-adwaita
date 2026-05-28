@@ -88,4 +88,17 @@ public final class ApplicationWindow: GtkWindow {
         g_object_ref(breakpoint.pointer)
         adw_application_window_add_breakpoint(adwWindowPointer, breakpoint.opaquePointer)
     }
+
+    /// The currently presented dialog, if any.
+    ///
+    /// Wraps `adw_application_window_get_visible_dialog`. Returns `nil` when
+    /// no `AdwDialog` is presented on this window. Each call creates a new
+    /// Swift wrapper around the same underlying `AdwDialog` object, so use
+    /// `isSame(as:)` rather than `===` when comparing two returned values.
+    public var visibleDialog: Dialog? {
+        guard let ptr = adw_application_window_get_visible_dialog(adwWindowPointer) else {
+            return nil
+        }
+        return Dialog(borrowing: UnsafeMutableRawPointer(ptr))
+    }
 }

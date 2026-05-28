@@ -25,7 +25,7 @@ import GObjectSupport
 /// }
 /// ```
 @MainActor
-public final class EventControllerFocus: GObjectRef {
+public final class EventControllerFocus: EventController {
     /// Creates a new focus event controller.
     public init() {
         let ptr = gtk_event_controller_focus_new()!

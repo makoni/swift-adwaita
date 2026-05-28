@@ -25,7 +25,7 @@ import GObjectSupport
 /// entry.addController(keyController)
 /// ```
 @MainActor
-public final class EventControllerKey: GObjectRef {
+public final class EventControllerKey: EventController {
     /// Creates a new keyboard event controller.
     public init() {
         let ptr = gtk_event_controller_key_new()!

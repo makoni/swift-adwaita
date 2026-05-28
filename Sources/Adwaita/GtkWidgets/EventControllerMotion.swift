@@ -23,7 +23,7 @@ import GObjectSupport
 /// drawingArea.addController(motion)
 /// ```
 @MainActor
-public final class EventControllerMotion: GObjectRef {
+public final class EventControllerMotion: EventController {
     /// Creates a new motion event controller.
     public init() {
         let ptr = gtk_event_controller_motion_new()!

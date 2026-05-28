@@ -21,7 +21,7 @@ import GObjectSupport
 /// myWidget.addController(swipe)
 /// ```
 @MainActor
-public final class GestureSwipe: GObjectRef {
+public final class GestureSwipe: Gesture {
     /// Creates a new swipe gesture recognizer.
     public init() {
         let ptr = gtk_gesture_swipe_new()!

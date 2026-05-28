@@ -21,7 +21,7 @@ import GObjectSupport
 /// myWidget.addController(longPress)
 /// ```
 @MainActor
-public final class GestureLongPress: GObjectRef {
+public final class GestureLongPress: Gesture {
     /// Creates a new long press gesture recognizer.
     public init() {
         let ptr = gtk_gesture_long_press_new()!
