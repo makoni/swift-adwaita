@@ -7,16 +7,7 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-private let dialogBackdropDismissTestsShouldSkipOnCI =
-    ProcessInfo.processInfo.environment["CI"] == "true"
-
-@Suite(
-    .serialized,
-    .disabled(
-        if: dialogBackdropDismissTestsShouldSkipOnCI,
-        "GitHub Ubuntu/Xvfb runners crash while presenting AdwDialog in this suite; app-level regression coverage remains in swifty-notes-gtk."
-    )
-)
+@Suite(.serialized)
 struct DialogBackdropDismissTests {
     @MainActor
     private static func waitUntil(
