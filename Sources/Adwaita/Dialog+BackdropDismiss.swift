@@ -15,6 +15,7 @@ private final class DialogBackdropDismissHelper {
     private var isEnabled = false
     private var installedController: GestureClick?
     private var retryScheduled = false
+    private var pendingRetrySourceID: SourceID?
     private var presentationEpoch = 0
     private var didReportRetryExhaustion = false
 
@@ -31,6 +32,10 @@ private final class DialogBackdropDismissHelper {
     #if DEBUG
     var debugState: (remainingRetries: Int, retryScheduled: Bool, isEnabled: Bool) {
         (remainingRetries, retryScheduled, isEnabled)
+    }
+
+    var debugHasPendingRetrySource: Bool {
+        pendingRetrySourceID != nil
     }
     #endif
 
@@ -85,6 +90,15 @@ private final class DialogBackdropDismissHelper {
         remainingRetries = maxRetries
         retryScheduled = false
         didReportRetryExhaustion = false
+        // Cancel any retry idle that was scheduled for the previous
+        // presentation. Without this, the epoch-guarded no-op callback still
+        // runs and counts as "pending work" inside g_main_context, which
+        // leaks into subsequent tests' MainContext.drainPending() measurements
+        // and breaks suite isolation.
+        if let pendingRetrySourceID {
+            MainContext.cancel(sourceId: pendingRetrySourceID)
+            self.pendingRetrySourceID = nil
+        }
         removeInstalledGesture()
     }
 
@@ -109,8 +123,10 @@ private final class DialogBackdropDismissHelper {
         }
         retryScheduled = true
         remainingRetries -= 1
-        MainContext.idle { [weak self] in
-            guard let self, epoch == presentationEpoch else { return }
+        pendingRetrySourceID = MainContext.idle { [weak self] in
+            guard let self else { return }
+            pendingRetrySourceID = nil
+            guard epoch == presentationEpoch else { return }
             retryScheduled = false
             attemptInstall(for: epoch)
         }
@@ -248,6 +264,12 @@ public extension Dialog {
         guard let pointer = g_object_get_data(gobjectPointer, dialogBackdropDismissHelperKey) else { return }
         let helper = Unmanaged<DialogBackdropDismissHelper>.fromOpaque(pointer).takeUnretainedValue()
         helper.simulateBackdropClick()
+    }
+
+    var debugBackdropClickDismissHasPendingRetrySource: Bool {
+        guard let pointer = g_object_get_data(gobjectPointer, dialogBackdropDismissHelperKey) else { return false }
+        let helper = Unmanaged<DialogBackdropDismissHelper>.fromOpaque(pointer).takeUnretainedValue()
+        return helper.debugHasPendingRetrySource
     }
 }
 #endif

@@ -181,8 +181,12 @@ public enum MainContext {
     /// `@MainActor`-isolated.
     ///
     /// - Parameter closure: The work to perform on the main thread.
-    public nonisolated static func idle(_ closure: @escaping @MainActor () -> Void) {
-        _ = idleSource(priority: G_PRIORITY_DEFAULT_IDLE, closure)
+    /// - Returns: A `SourceID` that can be passed to `cancel(sourceId:)` if
+    ///   the scheduled work needs to be removed before it fires. Callers
+    ///   that fire-and-forget can ignore the return value.
+    @discardableResult
+    public nonisolated static func idle(_ closure: @escaping @MainActor () -> Void) -> SourceID {
+        idleSource(priority: G_PRIORITY_DEFAULT_IDLE, closure)
     }
 
     /// Schedules a one-shot delayed closure on the GLib main loop.

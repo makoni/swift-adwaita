@@ -7,16 +7,7 @@ import Testing
 @testable import Adwaita
 import CAdwaita
 
-private let dialogBackdropDismissTestsShouldSkipOnCI =
-    ProcessInfo.processInfo.environment["CI"] == "true"
-
-@Suite(
-    .serialized,
-    .disabled(
-        if: dialogBackdropDismissTestsShouldSkipOnCI,
-        "GitHub Ubuntu/Xvfb runners crash while presenting AdwDialog in this suite; app-level regression coverage remains in swifty-notes-gtk."
-    )
-)
+@Suite(.serialized)
 struct DialogBackdropDismissTests {
     @MainActor
     private static func waitUntil(
@@ -147,6 +138,41 @@ struct DialogBackdropDismissTests {
         #expect(state.remainingRetries == 0)
         #expect(!state.retryScheduled)
         #expect(state.isEnabled)
+    }
+
+    @Test @MainActor
+    func enableBackdropClickDismissCancelsPendingRetryWhenDialogUnmaps() throws {
+        ensureAdwInit()
+
+        let window = Window()
+        window.present()
+
+        let dialog = Dialog()
+        defer {
+            window.close()
+            MainContext.drainPending()
+            MainContext.drainPending()
+        }
+        dialog.presentationMode = .bottomSheet
+        dialog.child = Box()
+        dialog.present(window)
+
+        // bottom-sheet has no floating backdrop, so the helper schedules a
+        // retry idle on the GLib main context. We deliberately do NOT drain
+        // it — we want to verify that closing the dialog mid-flight cancels
+        // the pending source instead of letting it execute as a no-op.
+        dialog.enableBackdropClickDismiss(maxRetries: 8)
+        #expect(dialog.debugBackdropClickDismissHasPendingRetrySource)
+
+        dialog.forceClose()
+        Self.waitUntil {
+            !dialog.debugBackdropClickDismissHasPendingRetrySource
+        }
+
+        #expect(!dialog.debugBackdropClickDismissHasPendingRetrySource)
+
+        let state = try #require(dialog.debugBackdropClickDismissState)
+        #expect(!state.retryScheduled)
     }
 
     @Test @MainActor
