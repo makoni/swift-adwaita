@@ -167,6 +167,31 @@ public enum SignalHelper {
         )
     }
 
+    /// Connects a `String`-parameter signal whose default handler must be
+    /// suppressed: the trampoline returns `gboolean` TRUE (handled) after
+    /// invoking the Swift handler. Use for `activate-link` so the GTK default
+    /// (`gtk_show_uri` on any scheme) does not also fire — the Swift handler
+    /// becomes the sole place that decides whether/how to open the URI.
+    @discardableResult
+    public static func connectStringHandled(
+        _ instance: GObjectRef,
+        signal: SignalName,
+        handler: @escaping @MainActor (String) -> Void
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineStringReturnTrue as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UnsafePointer<CChar>,
+                    UnsafeMutableRawPointer
+                ) -> gboolean,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
     /// Connects a signal with a single `UInt32` parameter.
     @discardableResult
     public static func connectUInt(

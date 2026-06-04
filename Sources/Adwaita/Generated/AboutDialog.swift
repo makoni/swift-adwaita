@@ -218,10 +218,13 @@ public final class AboutDialog: Dialog {
 
     /// Emitted when a URL link in the dialog is activated.
     ///
+    /// Attaching a handler suppresses the default `activate-link` behaviour
+    /// (open via `gtk_show_uri`), so the handler is the sole decision point.
+    ///
     /// - Parameter handler: Called with the URL string that was clicked.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onActivateLink(_ handler: @escaping @MainActor (String) -> Void) -> SignalConnection {
-        SignalHelper.connectString(self, signal: .activateLink, handler: handler)
+        SignalHelper.connectStringHandled(self, signal: .activateLink, handler: handler)
     }
 }

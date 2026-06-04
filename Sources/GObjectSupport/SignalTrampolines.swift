@@ -66,6 +66,26 @@ func signalTrampolineString(
     }
 }
 
+/// Like ``signalTrampolineString`` but returns `gboolean` TRUE so the
+/// signal is reported as handled. Used for signals whose default handler
+/// must be suppressed once a Swift handler is attached — notably
+/// `activate-link` on `GtkLabel` / `AdwAboutDialog`, whose default opens
+/// the URI via `gtk_show_uri` regardless of scheme. Returning TRUE stops
+/// that default so the Swift handler is the sole decision point.
+func signalTrampolineStringReturnTrue(
+    _ instance: UnsafeMutableRawPointer,
+    _ value: UnsafePointer<CChar>,
+    _ userData: UnsafeMutableRawPointer
+) -> gboolean {
+    let box = Unmanaged<ClosureBox<@MainActor (String) -> Void>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    let string = String(cString: value)
+    MainActor.assumeIsolated {
+        box.closure(string)
+    }
+    return 1
+}
+
 func signalTrampolineUInt(
     _ instance: UnsafeMutableRawPointer,
     _ value: UInt32,

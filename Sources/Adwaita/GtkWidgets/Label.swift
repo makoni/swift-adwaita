@@ -218,14 +218,17 @@ public final class Label: Widget {
 
     /// Emitted when a link in the label's markup is activated.
     ///
-    /// The label must contain Pango markup with `<a href="...">`.
-    /// Consider wrapping the handler with ``URIScheme/allowlist(_:handler:onReject:)``
-    /// before launching arbitrary URIs.
+    /// The label must contain Pango markup with `<a href="...">`. Attaching a
+    /// handler suppresses GtkLabel's default `activate-link` behaviour (which
+    /// opens the URI via `gtk_show_uri` for ANY scheme) — your handler is the
+    /// sole decision point, so wrap it with
+    /// ``URIScheme/allowlist(_:handler:onReject:)`` when the markup may carry
+    /// untrusted/externally-authored links.
     ///
     /// - Parameter handler: Called with the activated URI.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onActivateLink(_ handler: @escaping @MainActor (String) -> Void) -> SignalConnection {
-        SignalHelper.connectString(self, signal: .activateLink, handler: handler)
+        SignalHelper.connectStringHandled(self, signal: .activateLink, handler: handler)
     }
 }
