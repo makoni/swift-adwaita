@@ -11,9 +11,6 @@ public enum URIScheme {
         case file
     }
 
-    @available(*, deprecated, renamed: "Scheme")
-    public typealias Predefined = Scheme
-
     /// Wraps a URI handler and only forwards URIs whose scheme is explicitly
     /// allowed.
     ///
