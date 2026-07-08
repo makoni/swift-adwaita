@@ -89,6 +89,17 @@ struct SystemTests {
         #expect(win.iconName == nil)
     }
 
+    @Test @MainActor func gtkWindowIsActiveReflectsUnpresentedState() throws {
+        ensureAdwInit()
+        let app = Application(id: "com.test.windowactive\(UInt32.random(in: 0 ..< UInt32.max))")
+        try app.register()
+        let win = ApplicationWindow(application: app)
+        // A window that was never presented cannot be the focused toplevel.
+        // (Asserting `true` would require a real window manager, so the
+        // test pins the readable-and-false half of the contract.)
+        #expect(win.isActive == false)
+    }
+
     // MARK: - GestureSwipe Tests
 
     @Test @MainActor func gestureSwipeCreation() {

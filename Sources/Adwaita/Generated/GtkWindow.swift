@@ -96,6 +96,15 @@ public class GtkWindow: Widget {
         set { gtk_window_set_modal(windowPointer, newValue ? 1 : 0) }
     }
 
+    /// Whether this window is the currently active (focused) toplevel.
+    ///
+    /// Mirrors `gtk_window_is_active`. Useful for routing application-level
+    /// actions (accelerators shared across several windows) to the window
+    /// the user is actually working in.
+    public var isActive: Bool {
+        gtk_window_is_active(windowPointer) != 0
+    }
+
     /// Closes the window.
     public func close() {
         gtk_window_close(windowPointer)
