@@ -106,10 +106,9 @@ struct LocalizationTests {
     @Test func selectingALanguageRecordsItAndFollowingTheSessionClearsIt() {
         let previous = ProcessInfo.processInfo.environment["LANGUAGE"]
         defer {
-            LocalizationState.resetForTesting(sessionLanguage: previous)
-            setLanguage(nil)
+            restoreSessionLanguage(previous)
         }
-        LocalizationState.resetForTesting(sessionLanguage: previous)
+        applySessionLanguage(previous)
 
         setLanguage("ru")
         #expect(currentLanguage == "ru")
@@ -126,11 +125,10 @@ struct LocalizationTests {
     @Test func followingTheSessionRestoresTheCapturedLanguage() {
         let previous = ProcessInfo.processInfo.environment["LANGUAGE"]
         defer {
-            LocalizationState.resetForTesting(sessionLanguage: previous)
-            setLanguage(nil)
+            restoreSessionLanguage(previous)
         }
 
-        LocalizationState.resetForTesting(sessionLanguage: "de")
+        applySessionLanguage("de")
         setLanguage("ru")
         #expect(ProcessInfo.processInfo.environment["LANGUAGE"] == "ru")
         setLanguage(nil)
@@ -141,10 +139,9 @@ struct LocalizationTests {
     @Test func anEmptyLanguageIsTreatedAsFollowingTheSession() {
         let previous = ProcessInfo.processInfo.environment["LANGUAGE"]
         defer {
-            LocalizationState.resetForTesting(sessionLanguage: previous)
-            setLanguage(nil)
+            restoreSessionLanguage(previous)
         }
-        LocalizationState.resetForTesting(sessionLanguage: nil)
+        applySessionLanguage(nil)
 
         setLanguage("")
         #expect(currentLanguage == nil)
@@ -157,8 +154,7 @@ struct LocalizationTests {
     @Test func configureLocalizationBindsACatalogueThatLookupsCanFind() throws {
         let previousLanguage = ProcessInfo.processInfo.environment["LANGUAGE"]
         defer {
-            LocalizationState.resetForTesting(sessionLanguage: previousLanguage)
-            setLanguage(nil)
+            restoreSessionLanguage(previousLanguage)
             setTextDomain("")
         }
 
@@ -196,7 +192,7 @@ struct LocalizationTests {
         try #require(compile.terminationStatus == 0, "msgfmt failed")
 
         configureLocalization(domain: domain, localeDirectory: root.path)
-        LocalizationState.resetForTesting(sessionLanguage: previousLanguage)
+        applySessionLanguage(previousLanguage)
 
         // A real base locale first: gettext ignores LANGUAGE under C.
         try #require(
@@ -210,6 +206,22 @@ struct LocalizationTests {
 
         setLanguage(nil)
         #expect(localized("Notes") == "Notes")
+    }
+
+    /// Installs `language` as the session's own LANGUAGE, through the public
+    /// API rather than a testing back door.
+    private func applySessionLanguage(_ language: String?) {
+        if let language {
+            setenv("LANGUAGE", language, 1)
+        } else {
+            unsetenv("LANGUAGE")
+        }
+        recaptureSessionLanguage()
+    }
+
+    private func restoreSessionLanguage(_ language: String?) {
+        applySessionLanguage(language)
+        setLanguage(nil)
     }
 
     private static func toolURL(named name: String) -> URL? {

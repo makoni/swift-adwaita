@@ -299,26 +299,43 @@ private func isCLocaleName(_ locale: String) -> Bool {
     return name == "C" || name == "POSIX"
 }
 
+/// The `LANGUAGE` the session was started with, as captured by
+/// ``configureLocalization(domain:localeDirectory:codeset:)``.
+///
+/// `nil` when the session asked for no particular language. This is what
+/// ``setLanguage(_:)`` puts back when handed `nil`.
+public var sessionLanguage: String? {
+    LocalizationState.sessionLanguage
+}
+
+/// Re-reads `LANGUAGE` from the environment as the session's own value.
+///
+/// The capture during ``configureLocalization(domain:localeDirectory:codeset:)``
+/// is one-shot, so that a later selection cannot be mistaken for what the
+/// session asked for. Call this when the app has changed `LANGUAGE` itself and
+/// wants the new value treated as the baseline that "follow the session"
+/// returns to.
+public func recaptureSessionLanguage() {
+    LocalizationState.recaptureSessionLanguage()
+}
+
 /// Session-scoped localization state.
 ///
 /// The session's own `LANGUAGE` has to be captured before anything overrides
 /// it: restoring "follow the session" is otherwise impossible.
 enum LocalizationState {
-    nonisolated(unsafe) private(set) static var sessionLanguage: String?
+    nonisolated(unsafe) fileprivate(set) static var sessionLanguage: String?
     nonisolated(unsafe) static var selectedLanguage: String?
     nonisolated(unsafe) private static var didCapture = false
 
     static func captureSessionLanguage() {
         guard !didCapture else { return }
-        didCapture = true
-        sessionLanguage = ProcessInfo.processInfo.environment["LANGUAGE"]
+        recaptureSessionLanguage()
     }
 
-    /// Lets a test start from a known session, since the capture is
-    /// deliberately one-shot.
-    static func resetForTesting(sessionLanguage: String?) {
+    static func recaptureSessionLanguage() {
         didCapture = true
-        self.sessionLanguage = sessionLanguage
+        sessionLanguage = ProcessInfo.processInfo.environment["LANGUAGE"]
         selectedLanguage = nil
     }
 }
