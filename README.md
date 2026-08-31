@@ -46,7 +46,7 @@ Quick guides:
 - **Drawing** — `DrawingArea` with `CairoContext` wrapper
 - **Text attributes** — `TextAttributes` for styling `Label`, `Entry`, and `EntryRow` text
 - **Media playback** — `MediaStream`, `Video`, `MediaControls`
-- **Localization** — gettext integration via `localized()` and `String.localized`
+- **Localization** — gettext setup, plural and context lookups, runtime language switching, and right-to-left layout
 - **@Setting property wrapper** — type-safe GSettings binding
 - **Adaptive layout** — `Breakpoint.minWidth()`, `Breakpoint.maxWidth()` helpers
 - **Swift 6 concurrency** — full `@MainActor` isolation, `Sendable` types
@@ -428,10 +428,21 @@ window.addAction(action)
 ### Localization
 
 ```swift
-setTextDomain("myapp")
+// One call binds the domain, pins the codeset and activates the locale.
+configureLocalization(domain: "com.example.MyApp", localeDirectory: "/app/share/locale")
+
 let greeting = localized("Hello")
 let label = Label("Welcome".localized)
+let count = String(format: nlocalized("%d note", "%d notes", count: UInt(n)), n)
+
+// Let the user pick a language without restarting — and move the layout
+// with it, which GTK will not do for a language your app chose.
+setLanguage("ar")
+applyTextDirection(forLanguage: "ar")   // → .rtl, re-lays-out live widgets
 ```
+
+See <doc:Localization> for catalogue layout, plural and context lookups, and
+a right-to-left review checklist.
 
 ### Virtualized Lists
 

@@ -101,6 +101,7 @@ automatically.
 - <doc:ConcurrencyOnGTK>
 - <doc:SearchBarSetup>
 - <doc:MarkupSafety>
+- <doc:Localization>
 - <doc:ContextMenus>
 - <doc:ClickEvents>
 - <doc:LayoutDebugging>

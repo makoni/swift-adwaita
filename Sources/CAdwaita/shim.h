@@ -731,3 +731,51 @@ static inline void cadw_inline_view_switcher_set_stack(gpointer self, gpointer s
     Fn fn = (Fn)dlsym(RTLD_DEFAULT, "adw_inline_view_switcher_set_stack");
     if (fn) fn(self, stack);
 }
+
+// ---------------------------------------------------------------------------
+// Localization: gettext setup and runtime language changes.
+// ---------------------------------------------------------------------------
+//
+// `<libintl.h>` is not part of the Glibc/Darwin module, so bindtextdomain and
+// friends are unreachable from Swift without this include. Every app using
+// `localized(_:)` needs them — the domain has to be bound to a directory
+// before a lookup can find anything — so they belong here rather than in each
+// app's own C shim.
+
+#include <libintl.h>
+#include <locale.h>
+
+// glibc and GNU libintl resolve a domain's catalogue once and cache it, so
+// assigning LANGUAGE mid-process changes nothing until this counter moves.
+// Bumping it is the mechanism the GNU gettext manual documents for changing
+// the language at runtime; glibc has exported it since 2.2.
+//
+// Declared weak so a libintl without the symbol still links — the capability
+// probe then reports false and the app keeps the language it started with.
+extern int _nl_msg_cat_cntr __attribute__((weak));
+
+static inline int cadw_can_change_language_at_runtime(void) {
+    return (&_nl_msg_cat_cntr) != NULL;
+}
+
+static inline void cadw_invalidate_translation_cache(void) {
+    if (&_nl_msg_cat_cntr) {
+        ++_nl_msg_cat_cntr;
+    }
+}
+
+// gettext ignores LANGUAGE entirely while LC_MESSAGES names the C or POSIX
+// locale — and "C.UTF-8" counts as C. Escaping that needs any *generated*
+// locale, not the one belonging to the language being requested, which is why
+// the caller passes candidates and keeps whichever this returns non-NULL for.
+static inline const char *cadw_set_messages_locale(const char *locale) {
+    return setlocale(LC_MESSAGES, locale);
+}
+
+static inline const char *cadw_current_messages_locale(void) {
+    return setlocale(LC_MESSAGES, NULL);
+}
+
+static inline const char *cadw_activate_locale_from_environment(void) {
+    return setlocale(LC_ALL, "");
+}
