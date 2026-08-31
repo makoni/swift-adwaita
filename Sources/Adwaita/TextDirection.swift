@@ -48,6 +48,12 @@ public var defaultTextDirection: GtkTextDirection {
 /// applyTextDirection(forLanguage: "ar")   // → .rtl
 /// ```
 ///
+/// - Important: GTK sets the default direction from its own catalogue during
+///   initialization and **overwrites whatever was set before**, so a call made
+///   ahead of `Application.run()` is discarded. Apply the direction once the
+///   application is running — from the activation handler, before the first
+///   window is built — and again whenever the language changes.
+///
 /// - Parameter language: A language code such as `"ar"`, `"he"` or `"en"`, or
 ///   `nil` to follow the session locale's own language.
 /// - Returns: The direction that was applied.

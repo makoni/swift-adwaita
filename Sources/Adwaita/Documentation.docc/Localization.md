@@ -141,6 +141,18 @@ applyTextDirection(forLanguage: code)
 it re-lays-out widgets that are already realized, so a live switch to Arabic
 mirrors the open window without rebuilding it.
 
+Mind the ordering: GTK sets the default direction during initialization and
+overwrites whatever was there, so a call made before `Application.run()` is
+thrown away. Apply it from the activation handler, before the first window is
+built, and again on every language change:
+
+```swift
+app.onActivate {
+    applyTextDirection(forLanguage: selectedLanguageCode)
+    // ... build the window
+}
+```
+
 Keep a subtree unmirrored — a code view, a file path, an LTR-only diagram —
 with an explicit `Widget.textDirection`:
 
