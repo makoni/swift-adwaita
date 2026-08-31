@@ -153,15 +153,21 @@ app.onActivate {
 }
 ```
 
-Keep a subtree unmirrored — a code view, a file path, an LTR-only diagram —
-with an explicit `Widget.textDirection`:
+Keep a subtree unmirrored — a code view, a file path, an LTR-only diagram:
 
 ```swift
-pathLabel.textDirection = .ltr
+pathLabel.forceLeftToRight()
+codeBlock.forceLeftToRight()
 ```
 
-Leave everything else at ``GtkTextDirection/none``, the default, so it
-inherits.
+Leave everything else inheriting, which is the default;
+``Widget/followDefaultTextDirection()`` puts a subtree back.
+
+Prefer these methods over assigning ``Widget/textDirection`` directly. An app
+that imports a second C module pulling in `gtk/gtk.h` — GtkSourceView and
+libspelling both do — sees two distinct Swift types named `GtkTextDirection`
+and cannot name the enum case at all, so the argument-free methods are the
+only form it can call.
 
 ### Reviewing an app for RTL
 
@@ -207,3 +213,6 @@ left/right variants of the first two, and mirrors the third.
 - ``defaultTextDirection``
 - ``applyTextDirection(forLanguage:)``
 - ``isRightToLeft(language:)``
+- ``Widget/forceLeftToRight()``
+- ``Widget/forceRightToLeft()``
+- ``Widget/followDefaultTextDirection()``

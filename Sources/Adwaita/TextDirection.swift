@@ -156,4 +156,28 @@ public extension Widget {
         }
         return direction == GTK_TEXT_DIR_RTL
     }
+
+    /// Pins this subtree left-to-right whatever the interface direction is.
+    ///
+    /// For content that is not prose in the user's language: a code view, a
+    /// file path, a URL, a diagram whose axes have a fixed order.
+    ///
+    /// Prefer these over assigning ``textDirection`` directly. An app that
+    /// imports a second C module pulling in `gtk/gtk.h` — GtkSourceView and
+    /// libspelling both do — sees two distinct Swift types named
+    /// `GtkTextDirection` and cannot name the enum case at all, so a method
+    /// that takes no argument is the only form it can call.
+    func forceLeftToRight() {
+        textDirection = GTK_TEXT_DIR_LTR
+    }
+
+    /// Pins this subtree right-to-left whatever the interface direction is.
+    func forceRightToLeft() {
+        textDirection = GTK_TEXT_DIR_RTL
+    }
+
+    /// Returns this subtree to inheriting ``defaultTextDirection``.
+    func followDefaultTextDirection() {
+        textDirection = GTK_TEXT_DIR_NONE
+    }
 }

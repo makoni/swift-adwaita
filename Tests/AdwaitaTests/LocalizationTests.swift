@@ -88,9 +88,16 @@ struct LocalizationTests {
 
         defaultTextDirection = GTK_TEXT_DIR_RTL
         let label = Label("/usr/share/locale")
-        label.textDirection = GTK_TEXT_DIR_LTR
+        label.forceLeftToRight()
         #expect(label.textDirection == GTK_TEXT_DIR_LTR)
         #expect(label.isRightToLeft == false, "an explicit direction wins over the process default")
+
+        label.followDefaultTextDirection()
+        #expect(label.isRightToLeft, "back to inheriting the mirrored default")
+
+        label.forceRightToLeft()
+        defaultTextDirection = GTK_TEXT_DIR_LTR
+        #expect(label.isRightToLeft, "an explicit direction survives a default that disagrees")
     }
 
     // MARK: - Runtime language changes
