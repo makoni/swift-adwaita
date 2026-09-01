@@ -315,7 +315,6 @@ struct GtkWidgetTests {
     @Test @MainActor func windowOnCloseRequestSignalConnection() {
         ensureAdwInit()
         let window = Window()
-        defer { window.destroy() }
         let conn = window.onCloseRequest { true }
         conn.disconnect()
     }
