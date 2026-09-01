@@ -100,7 +100,7 @@ private let rightToLeftLanguages: Set<String> = [
     // N'Ko
     "nqo",
     // Adlam
-    "ff_adlm",
+    "ff_adlm"
 ]
 
 /// Extracts the part of a locale or language identifier that names the

@@ -82,7 +82,7 @@ public func nlocalizedWithContext(
     _ context: String,
     _ msgid: String,
     _ msgidPlural: String,
-    count: UInt,
+    count: UInt
 ) -> String {
     let combinedSingular = "\(context)\u{04}\(msgid)"
     let combinedPlural = "\(context)\u{04}\(msgidPlural)"
@@ -160,7 +160,7 @@ public extension String {
 public func configureLocalization(
     domain: String,
     localeDirectory: String? = nil,
-    codeset: String = "UTF-8",
+    codeset: String = "UTF-8"
 ) {
     _ = cadw_activate_locale_from_environment()
     LocalizationState.captureSessionLanguage()
@@ -179,7 +179,7 @@ public func configureLocalization(
 public func bindTextDomain(_ domain: String, to directory: String) {
     domain.withCString { domainC in
         directory.withCString { directoryC in
-            _ = bindtextdomain(domainC, directoryC)
+            cadw_bindtextdomain(domainC, directoryC)
         }
     }
 }
@@ -188,7 +188,7 @@ public func bindTextDomain(_ domain: String, to directory: String) {
 public func bindTextDomainCodeset(_ domain: String, to codeset: String) {
     domain.withCString { domainC in
         codeset.withCString { codesetC in
-            _ = bind_textdomain_codeset(domainC, codesetC)
+            cadw_bind_textdomain_codeset(domainC, codesetC)
         }
     }
 }
@@ -199,7 +199,7 @@ public func bindTextDomainCodeset(_ domain: String, to codeset: String) {
 /// domain to pass to `g_dgettext`. Both are set by ``configureLocalization``.
 public func setDefaultTextDomain(_ domain: String) {
     domain.withCString { domainC in
-        _ = textdomain(domainC)
+        cadw_textdomain(domainC)
     }
 }
 
@@ -245,7 +245,7 @@ public var currentLanguage: String? {
 @discardableResult
 public func setLanguage(
     _ language: String?,
-    localeCandidates: [String]? = nil,
+    localeCandidates: [String]? = nil
 ) -> Bool {
     guard let language, !language.isEmpty else {
         LocalizationState.selectedLanguage = nil
@@ -324,9 +324,9 @@ public func recaptureSessionLanguage() {
 /// The session's own `LANGUAGE` has to be captured before anything overrides
 /// it: restoring "follow the session" is otherwise impossible.
 enum LocalizationState {
-    nonisolated(unsafe) fileprivate(set) static var sessionLanguage: String?
+    fileprivate(set) nonisolated(unsafe) static var sessionLanguage: String?
     nonisolated(unsafe) static var selectedLanguage: String?
-    nonisolated(unsafe) private static var didCapture = false
+    private nonisolated(unsafe) static var didCapture = false
 
     static func captureSessionLanguage() {
         guard !didCapture else { return }

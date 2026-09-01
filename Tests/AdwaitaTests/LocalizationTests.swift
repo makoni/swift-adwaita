@@ -56,6 +56,20 @@ struct LocalizationTests {
         let original = defaultTextDirection
         defer { defaultTextDirection = original }
 
+        // Assigning the default direction makes GTK walk its list of live
+        // toplevels. A window finalized while still on that list makes the walk
+        // read freed memory and takes the whole run down with a SIGSEGV, which
+        // is a miserable way to learn that some earlier test leaked a window.
+        // Fail legibly instead.
+        #expect(
+            Self.danglingToplevelCount() == 0,
+            """
+            GTK's toplevel list holds finalized windows, so changing the \
+            default direction would crash. Some test created a window and let \
+            its wrapper go without calling destroy().
+            """
+        )
+
         #expect(applyTextDirection(forLanguage: "ar") == GTK_TEXT_DIR_RTL)
         #expect(defaultTextDirection == GTK_TEXT_DIR_RTL)
 
@@ -70,6 +84,7 @@ struct LocalizationTests {
         ensureAdwInit()
         let original = defaultTextDirection
         defer { defaultTextDirection = original }
+        #expect(Self.danglingToplevelCount() == 0, "a leaked window would make this crash, not fail")
 
         defaultTextDirection = GTK_TEXT_DIR_LTR
         let label = Label("abc")
@@ -167,7 +182,7 @@ struct LocalizationTests {
 
         let msgfmt = try #require(
             Self.toolURL(named: "msgfmt"),
-            "msgfmt not found — install gettext",
+            "msgfmt not found — install gettext"
         )
         let root = FileManager.default.temporaryDirectory
             .appendingPathComponent("adwaita-l10n-\(UUID().uuidString)", isDirectory: true)
@@ -192,7 +207,7 @@ struct LocalizationTests {
         compile.executableURL = msgfmt
         compile.arguments = [
             "-o", messages.appendingPathComponent("\(domain).mo", isDirectory: false).path,
-            po.path,
+            po.path
         ]
         try compile.run()
         compile.waitUntilExit()
@@ -204,15 +219,35 @@ struct LocalizationTests {
         // A real base locale first: gettext ignores LANGUAGE under C.
         try #require(
             setLanguage("xh", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"]),
-            "no usable locale on this host — gettext ignores LANGUAGE under C",
+            "no usable locale on this host — gettext ignores LANGUAGE under C"
         )
         #expect(
             localized("Notes") == "IZINTO",
-            "configureLocalization must leave the domain bound so lookups resolve",
+            "configureLocalization must leave the domain bound so lookups resolve"
         )
 
         setLanguage(nil)
         #expect(localized("Notes") == "Notes")
+    }
+
+    /// Entries in GTK's toplevel list that are no longer valid objects.
+    ///
+    /// Cheap canary: `gtk_window_destroy` unregisters a window, dropping its
+    /// Swift wrapper alone does not reliably do so.
+    private static func danglingToplevelCount() -> Int {
+        var dangling = 0
+        var node = gtk_window_list_toplevels()
+        while let current = node {
+            if let raw = current.pointee.data,
+               g_type_check_instance_is_a(
+                   raw.assumingMemoryBound(to: GTypeInstance.self),
+                   gtk_widget_get_type()
+               ) == 0 {
+                dangling += 1
+            }
+            node = current.pointee.next
+        }
+        return dangling
     }
 
     /// Installs `language` as the session's own LANGUAGE, through the public

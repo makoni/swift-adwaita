@@ -752,6 +752,25 @@ static inline void cadw_inline_view_switcher_set_stack(gpointer self, gpointer s
 //
 // Declared weak so a libintl without the symbol still links — the capability
 // probe then reports false and the app keeps the language it started with.
+// GNU libintl (which is what macOS uses, via Homebrew) renames these through
+// preprocessor macros — `#define bindtextdomain libintl_bindtextdomain` and so
+// on. Swift does not follow object-like macro renames, so importing
+// <libintl.h> is not enough there: the names resolve on glibc and fail to
+// resolve on macOS. Wrapping them in C lets the macros expand where they are
+// understood.
+
+static inline void cadw_textdomain(const char *domainname) {
+    textdomain(domainname);
+}
+
+static inline void cadw_bindtextdomain(const char *domainname, const char *dirname) {
+    bindtextdomain(domainname, dirname);
+}
+
+static inline void cadw_bind_textdomain_codeset(const char *domainname, const char *codeset) {
+    bind_textdomain_codeset(domainname, codeset);
+}
+
 extern int _nl_msg_cat_cntr __attribute__((weak));
 
 static inline int cadw_can_change_language_at_runtime(void) {
