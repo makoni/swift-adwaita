@@ -140,21 +140,25 @@ private func sessionLanguageIdentifier() -> String? {
 public extension Widget {
     /// This widget's reading direction.
     ///
-    /// Leave it at ``GtkTextDirection/none`` — the default — to inherit
-    /// ``defaultTextDirection``. Set it only for a subtree that must not
-    /// mirror: a code view, a file path, an LTR-only diagram.
+    /// Assign ``GtkTextDirection/none`` to inherit ``defaultTextDirection``,
+    /// which is how widgets start. Set an explicit direction only for a subtree
+    /// that must not mirror: a code view, a file path, an LTR-only diagram.
+    ///
+    /// Note the asymmetry — reading never returns `none`. GTK resolves an
+    /// inherited direction before handing it back, so the getter always names
+    /// a real direction and cannot be used to ask whether one was set.
     var textDirection: GtkTextDirection {
         get { gtk_widget_get_direction(castedPointer()) }
         set { gtk_widget_set_direction(castedPointer(), newValue) }
     }
 
     /// Whether this widget currently lays out right-to-left.
+    ///
+    /// Reflects the effective direction: `gtk_widget_get_direction` resolves an
+    /// inherited direction to whatever ``defaultTextDirection`` is, so this
+    /// never has to consult the default itself.
     var isRightToLeft: Bool {
-        let direction = textDirection
-        if direction == GTK_TEXT_DIR_NONE {
-            return defaultTextDirection == GTK_TEXT_DIR_RTL
-        }
-        return direction == GTK_TEXT_DIR_RTL
+        textDirection == GTK_TEXT_DIR_RTL
     }
 
     /// Pins this subtree left-to-right whatever the interface direction is.

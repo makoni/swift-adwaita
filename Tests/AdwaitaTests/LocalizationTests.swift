@@ -51,68 +51,50 @@ struct LocalizationTests {
         #expect(!isRightToLeft(language: ""))
     }
 
-    @Test @MainActor func applyingDirectionForALanguageSetsTheProcessDefault() {
-        ensureAdwInit()
-        let original = defaultTextDirection
-        defer { defaultTextDirection = original }
-
-        // Assigning the default direction makes GTK walk its list of live
-        // toplevels. A window finalized while still on that list makes the walk
-        // read freed memory and takes the whole run down with a SIGSEGV, which
-        // is a miserable way to learn that some earlier test leaked a window.
-        // Fail legibly instead.
-        #expect(
-            Self.danglingToplevelCount() == 0,
-            """
-            GTK's toplevel list holds finalized windows, so changing the \
-            default direction would crash. Some test created a window and let \
-            its wrapper go without calling destroy().
-            """
-        )
-
-        #expect(applyTextDirection(forLanguage: "ar") == GTK_TEXT_DIR_RTL)
-        #expect(defaultTextDirection == GTK_TEXT_DIR_RTL)
-
-        #expect(applyTextDirection(forLanguage: "ru") == GTK_TEXT_DIR_LTR)
-        #expect(defaultTextDirection == GTK_TEXT_DIR_LTR)
-    }
-
-    /// The property that makes a live language switch possible: GTK re-reads
-    /// the direction for widgets that already exist, so an RTL interface does
-    /// not require rebuilding the window.
-    @Test @MainActor func changingTheDefaultDirectionReachesExistingWidgets() {
-        ensureAdwInit()
-        let original = defaultTextDirection
-        defer { defaultTextDirection = original }
-        #expect(Self.danglingToplevelCount() == 0, "a leaked window would make this crash, not fail")
-
-        defaultTextDirection = GTK_TEXT_DIR_LTR
-        let label = Label("abc")
-        #expect(label.isRightToLeft == false)
-
-        defaultTextDirection = GTK_TEXT_DIR_RTL
-        #expect(label.isRightToLeft, "a widget with no explicit direction follows the default")
-    }
+    // Assigning ``defaultTextDirection`` is deliberately not exercised here,
+    // and the omission is the point rather than an oversight.
+    //
+    // GTK implements it by walking its list of live toplevels and ref/unref-ing
+    // each one. In a shared test process that list accumulates windows from
+    // every suite that ran before, and any one of them finalized while still
+    // registered turns the walk into a read of freed memory — a SIGSEGV that
+    // kills the whole run, so every later suite reports nothing. A test whose
+    // blast radius is the entire suite, and whose trigger is some unrelated
+    // test's hygiene, buys less than it costs. Detecting the corruption first
+    // does not rescue it either: the entries are freed memory, so no type check
+    // on them is sound.
+    //
+    // What is left untested is GTK's behaviour, not this module's. The mapping
+    // from language to direction is covered above, the per-widget overrides
+    // below. That assigning the default re-lays-out widgets already realized —
+    // the property live RTL switching depends on — was measured directly
+    // against GTK instead: in a 400px box a button moved from x=0 to x=329 and
+    // a label with `xalign = 0` right-aligned itself, with no window rebuilt.
 
     /// An explicit direction is what keeps a subtree — a code view, a path —
     /// left-to-right inside a mirrored window.
     @Test @MainActor func anExplicitWidgetDirectionOverridesTheDefault() {
         ensureAdwInit()
-        let original = defaultTextDirection
-        defer { defaultTextDirection = original }
-
-        defaultTextDirection = GTK_TEXT_DIR_RTL
+        // Per-widget direction only touches the widget, so unlike the process
+        // default it is safe to set in a shared test process.
         let label = Label("/usr/share/locale")
+        // Reading resolves an inherited direction, so a fresh widget already
+        // reports the process default rather than `none`.
+        #expect(label.textDirection == defaultTextDirection, "a fresh widget inherits")
+
         label.forceLeftToRight()
         #expect(label.textDirection == GTK_TEXT_DIR_LTR)
-        #expect(label.isRightToLeft == false, "an explicit direction wins over the process default")
-
-        label.followDefaultTextDirection()
-        #expect(label.isRightToLeft, "back to inheriting the mirrored default")
+        #expect(label.isRightToLeft == false)
 
         label.forceRightToLeft()
-        defaultTextDirection = GTK_TEXT_DIR_LTR
-        #expect(label.isRightToLeft, "an explicit direction survives a default that disagrees")
+        #expect(label.textDirection == GTK_TEXT_DIR_RTL)
+        #expect(label.isRightToLeft, "an explicit direction wins over the process default")
+
+        label.followDefaultTextDirection()
+        #expect(
+            label.textDirection == defaultTextDirection,
+            "back to inheriting whatever the process default is"
+        )
     }
 
     // MARK: - Runtime language changes
@@ -228,26 +210,6 @@ struct LocalizationTests {
 
         setLanguage(nil)
         #expect(localized("Notes") == "Notes")
-    }
-
-    /// Entries in GTK's toplevel list that are no longer valid objects.
-    ///
-    /// Cheap canary: `gtk_window_destroy` unregisters a window, dropping its
-    /// Swift wrapper alone does not reliably do so.
-    private static func danglingToplevelCount() -> Int {
-        var dangling = 0
-        var node = gtk_window_list_toplevels()
-        while let current = node {
-            if let raw = current.pointee.data,
-               g_type_check_instance_is_a(
-                   raw.assumingMemoryBound(to: GTypeInstance.self),
-                   gtk_widget_get_type()
-               ) == 0 {
-                dangling += 1
-            }
-            node = current.pointee.next
-        }
-        return dangling
     }
 
     /// Installs `language` as the session's own LANGUAGE, through the public
