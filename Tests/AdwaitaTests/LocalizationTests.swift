@@ -201,7 +201,12 @@ struct LocalizationTests {
         // A real base locale first: gettext ignores LANGUAGE under C.
         try #require(
             setLanguage("xh", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"]),
-            "no usable locale on this host — gettext ignores LANGUAGE under C"
+            """
+            no generated locale on this host, so gettext ignores LANGUAGE and \
+            no catalogue can be selected. Generate one — `locale-gen \
+            en_US.UTF-8` on Debian — or pass one that exists here as \
+            localeCandidates.
+            """
         )
         #expect(
             localized("Notes") == "IZINTO",

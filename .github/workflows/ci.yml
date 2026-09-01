@@ -20,7 +20,11 @@ jobs:
       - name: Install system dependencies
         run: |
           apt-get update
-          apt-get install -y libadwaita-1-dev libgtksourceview-5-dev libwebkitgtk-6.0-dev xvfb gettext
+          apt-get install -y libadwaita-1-dev libgtksourceview-5-dev libwebkitgtk-6.0-dev xvfb gettext locales
+          # gettext ignores LANGUAGE while LC_MESSAGES names the C locale, and
+          # the image generates none other, so the localization tests cannot
+          # select a catalogue without this.
+          locale-gen en_US.UTF-8
 
       - name: Checkout
         uses: actions/checkout@v5
