@@ -35,6 +35,19 @@ layout on disk has to be exactly that. A `.mo` sitting directly in
 `localeDirectory` is never found — a resource-bundling rule that flattens
 directories will silently ship an untranslated app.
 
+Which is why the call reports back. It returns `false` when no catalogue for
+the domain is reachable, and that is worth acting on rather than discarding:
+
+```swift
+if !configureLocalization(domain: appID, localeDirectory: localeDirectory()) {
+    FileHandle.standardError.write(Data("no catalogue found — running untranslated\n".utf8))
+}
+```
+
+``catalogueLanguages(in:domain:)`` answers the same question in more detail,
+and is the honest way to build a language picker: it lists what the build
+actually installed rather than what you meant to install.
+
 The directory differs by packaging, so resolve it at runtime rather than
 hard-coding one:
 
@@ -49,6 +62,14 @@ func localeDirectory() -> String? {
     return "/usr/share/locale"              // system install
 }
 ```
+
+### Building the catalogues
+
+`msgfmt` compiles `.po` into the `.mo` the app ships. On macOS, Homebrew's
+gettext is keg-only, so `brew install gettext` leaves `msgfmt` off `PATH`
+entirely — a build script that assumes otherwise fails on a developer's Mac
+and in macOS CI while working everywhere else. Look under
+`brew --prefix gettext`/bin before giving up.
 
 ## Looking strings up
 
@@ -98,6 +119,20 @@ the chrome you set once at construction (titles, tooltips, accessible labels,
 menu models, combo-row models) and assign it again. Dialogs, toasts and
 context menus built at the moment they are shown need nothing.
 
+Accessible labels are the ones that get forgotten, because nothing on screen
+shows the omission — the interface looks fully translated while a screen
+reader still reads the old language. GTK4 has no getter for an accessible
+property, so ``Widget/accessibleLabel`` returns a copy this module keeps: set
+it through ``Widget/setAccessibleLabel(_:)`` and a test can assert the
+retranslation happened.
+
+One trap worth knowing before you wire a picker up: a language change often
+arrives from inside a widget's own signal emission — a combo row emits
+`notify::selected` synchronously — and retranslating rebuilds that widget.
+GTK keeps using the old model as it unwinds, which is a use-after-free. Defer
+the retranslation to the next main-loop turn rather than running it inside the
+handler.
+
 Two limits worth designing around:
 
 - gettext ignores `LANGUAGE` entirely while `LC_MESSAGES` names the `C` or
@@ -106,6 +141,16 @@ Two limits worth designing around:
   could not: on such a session nothing is translated with or without a
   picker. Record the preference anyway; it will apply on a launch that has a
   locale.
+
+  Do not put `C.UTF-8` in `localeCandidates` hoping it will do as a fallback.
+  It is generated nearly everywhere, which makes it tempting, but gettext
+  treats it as the C locale — so it can never satisfy the check. Such
+  candidates are skipped rather than attempted, precisely so a doomed try does
+  not move `LC_MESSAGES` off whatever it was on before failing.
+
+  ``currentMessagesLocale()`` and ``setMessagesLocale(_:)`` are there for
+  callers that need the process locale put back the way they found it — test
+  suites above all, since this is process-global state.
 - ``canChangeLanguageAtRuntime`` is `false` where libintl does not export the
   catalogue-cache counter. Say "takes effect at the next launch" rather than
   promising an instant switch.
@@ -197,6 +242,8 @@ left/right variants of the first two, and mirrors the third.
 ### Setting up
 
 - ``configureLocalization(domain:localeDirectory:codeset:)``
+- ``catalogueLanguages(in:domain:)``
+- ``systemLocaleDirectory``
 - ``bindTextDomain(_:to:)``
 - ``bindTextDomainCodeset(_:to:)``
 - ``setTextDomain(_:)``
@@ -207,12 +254,15 @@ left/right variants of the first two, and mirrors the third.
 - ``setLanguage(_:localeCandidates:)``
 - ``currentLanguage``
 - ``canChangeLanguageAtRuntime``
+- ``currentMessagesLocale()``
+- ``setMessagesLocale(_:)``
 
 ### Reading direction
 
 - ``defaultTextDirection``
 - ``applyTextDirection(forLanguage:)``
 - ``isRightToLeft(language:)``
+- ``Widget/accessibleLabel``
 - ``Widget/forceLeftToRight()``
 - ``Widget/forceRightToLeft()``
 - ``Widget/followDefaultTextDirection()``

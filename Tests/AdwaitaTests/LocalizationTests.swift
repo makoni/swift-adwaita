@@ -151,6 +151,105 @@ struct LocalizationTests {
         #expect(currentLanguage == nil)
     }
 
+    // MARK: - Accessible labels
+
+    /// A write-only label is untestable, and that is what GTK4 gives you: an
+    /// app retranslating its interface has no way to assert it re-applied the
+    /// labels a screen-reader user depends on. Keeping a copy makes the gap
+    /// visible to a test instead of only to somebody running a screen reader
+    /// in another language.
+    @Test @MainActor func theAccessibleLabelCanBeReadBack() {
+        ensureAdwInit()
+        let label = Label("body text")
+        #expect(label.accessibleLabel == nil, "nothing set yet")
+
+        label.setAccessibleLabel("Note body")
+        #expect(label.accessibleLabel == "Note body")
+
+        label.setAccessibleLabel("Тело заметки")
+        #expect(label.accessibleLabel == "Тело заметки", "a retranslation is observable")
+    }
+
+    // MARK: - Process locale
+
+    /// `setLanguage` mutates LC_MESSAGES to escape the C locale, so a caller
+    /// needs a way to put the process back — a test suite most of all.
+    @Test func theMessagesLocaleCanBeReadBackAndRestored() {
+        let original = currentMessagesLocale()
+        defer { if let original { setMessagesLocale(original) } }
+
+        #expect(original != nil, "the C library always reports some LC_MESSAGES")
+        // A locale nobody generates: the call must fail and leave LC_MESSAGES alone.
+        #expect(setMessagesLocale("zz_ZZ.UTF-8") == false)
+        #expect(currentMessagesLocale() == original, "a failed selection changes nothing")
+    }
+
+    /// `C.UTF-8` looks like a safe fallback and is generated nearly everywhere,
+    /// but gettext treats it as the C locale, so offering it as an escape from
+    /// the C locale can only fail — and trying it would still move the process
+    /// off whatever it was on.
+    @Test func cLocaleCandidatesAreSkippedRatherThanTried() {
+        let previousLanguage = ProcessInfo.processInfo.environment["LANGUAGE"]
+        let previousMessages = currentMessagesLocale()
+        defer {
+            restoreSessionLanguage(previousLanguage)
+            if let previousMessages { setMessagesLocale(previousMessages) }
+        }
+
+        applySessionLanguage(nil)
+        #expect(setMessagesLocale("C") == true, "the C locale itself is always available")
+        #expect(setLanguage("xh", localeCandidates: ["C.UTF-8", "C", "POSIX"]) == false)
+        #expect(
+            currentMessagesLocale().map(isCLocale) == true,
+            "a rejected candidate must not have been installed on the way to failing"
+        )
+    }
+
+    private func isCLocale(_ locale: String) -> Bool {
+        let name = locale.split(separator: ".").first.map(String.init) ?? locale
+        return name == "C" || name == "POSIX"
+    }
+
+    // MARK: - Catalogue discovery
+
+    /// The failure this catches is silent: a resource rule that flattens
+    /// `<lang>/LC_MESSAGES/` away leaves every lookup returning its msgid, and
+    /// the app looks fine until someone runs it in another language.
+    @Test func catalogueDiscoveryLooksForWhatGettextResolves() throws {
+        let root = FileManager.default.temporaryDirectory
+            .appendingPathComponent("adwaita-catalogues-\(UUID().uuidString)", isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+
+        let domain = "com.example.discovery"
+        let proper = root
+            .appendingPathComponent("xh", isDirectory: true)
+            .appendingPathComponent("LC_MESSAGES", isDirectory: true)
+        try FileManager.default.createDirectory(at: proper, withIntermediateDirectories: true)
+        try Data().write(to: proper.appendingPathComponent("\(domain).mo", isDirectory: false))
+
+        // A catalogue sitting directly in the bound directory — the flattened
+        // layout — must not count.
+        try Data().write(to: root.appendingPathComponent("zu.mo", isDirectory: false))
+        // Nor one for a different domain.
+        let otherDomain = root
+            .appendingPathComponent("ts", isDirectory: true)
+            .appendingPathComponent("LC_MESSAGES", isDirectory: true)
+        try FileManager.default.createDirectory(at: otherDomain, withIntermediateDirectories: true)
+        try Data().write(to: otherDomain.appendingPathComponent("com.example.other.mo", isDirectory: false))
+
+        #expect(catalogueLanguages(in: root.path, domain: domain) == ["xh"])
+        #expect(catalogueLanguages(in: "/nonexistent-\(UUID().uuidString)", domain: domain).isEmpty)
+    }
+
+    @Test func configureLocalizationReportsAnUnreachableCatalogue() {
+        defer { setTextDomain("") }
+        let missing = "/nonexistent-\(UUID().uuidString)"
+        #expect(
+            configureLocalization(domain: "com.example.missing", localeDirectory: missing) == false,
+            "binding a directory with no catalogue has to be detectable"
+        )
+    }
+
     // MARK: - Setup
 
     /// `configureLocalization` has to leave a real catalogue reachable, which

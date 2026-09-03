@@ -733,6 +733,21 @@ static inline void cadw_inline_view_switcher_set_stack(gpointer self, gpointer s
 }
 
 // ---------------------------------------------------------------------------
+// Object-associated strings.
+//
+// Used to remember values GTK accepts but never hands back — an accessible
+// label is write-only in GTK4, so a binding that wants it readable has to keep
+// its own copy. Stored on the object, so it dies with the widget.
+
+static inline void cadw_set_object_string(gpointer object, const char *key, const char *value) {
+    g_object_set_data_full(G_OBJECT(object), key, value ? g_strdup(value) : NULL, g_free);
+}
+
+static inline const char *cadw_get_object_string(gpointer object, const char *key) {
+    return (const char *)g_object_get_data(G_OBJECT(object), key);
+}
+
+// ---------------------------------------------------------------------------
 // Localization: gettext setup and runtime language changes.
 // ---------------------------------------------------------------------------
 //

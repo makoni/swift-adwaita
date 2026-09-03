@@ -429,6 +429,7 @@ window.addAction(action)
 
 ```swift
 // One call binds the domain, pins the codeset and activates the locale.
+// Returns false when no catalogue is reachable — the silent failure mode.
 configureLocalization(domain: "com.example.MyApp", localeDirectory: "/app/share/locale")
 
 let greeting = localized("Hello")

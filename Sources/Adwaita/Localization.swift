@@ -148,6 +148,12 @@ public extension String {
 /// )
 /// ```
 ///
+/// - Returns: `false` when no catalogue for `domain` is reachable, meaning
+///   every lookup will return its msgid. Worth acting on rather than
+///   discarding: the usual cause is a resource-bundling rule that flattened
+///   `<lang>/LC_MESSAGES/` away, which otherwise ships a silently English-only
+///   app that looked fine in development.
+///
 /// Call it before any lookup, and before `Application.run()` — GTK decides the
 /// default text direction from its own catalogue during initialization, so the
 /// language has to be settled first for an RTL interface to come up mirrored.
@@ -157,11 +163,12 @@ public extension String {
 ///   - localeDirectory: Directory holding `<lang>/LC_MESSAGES/<domain>.mo`.
 ///     Pass `nil` to leave the domain bound to the system default.
 ///   - codeset: Catalogue encoding. Leave at `"UTF-8"` unless you know better.
+@discardableResult
 public func configureLocalization(
     domain: String,
     localeDirectory: String? = nil,
     codeset: String = "UTF-8"
-) {
+) -> Bool {
     _ = cadw_activate_locale_from_environment()
     LocalizationState.captureSessionLanguage()
     if let localeDirectory {
@@ -170,7 +177,39 @@ public func configureLocalization(
     bindTextDomainCodeset(domain, to: codeset)
     setDefaultTextDomain(domain)
     setTextDomain(domain)
+    return !catalogueLanguages(in: localeDirectory ?? systemLocaleDirectory, domain: domain).isEmpty
 }
+
+/// Languages with a compiled catalogue for `domain` under `directory`.
+///
+/// Looks for exactly what gettext resolves —
+/// `<directory>/<lang>/LC_MESSAGES/<domain>.mo` — so it answers the question
+/// that matters rather than "is there a directory here". Use it to build a
+/// language picker from what the build actually installed, or to check a
+/// packaging change before shipping it.
+public func catalogueLanguages(in directory: String, domain: String) -> Set<String> {
+    let fileManager = FileManager.default
+    guard let entries = try? fileManager.contentsOfDirectory(
+        at: URL(fileURLWithPath: directory, isDirectory: true),
+        includingPropertiesForKeys: nil
+    ) else {
+        return []
+    }
+
+    return Set(
+        entries.filter { entry in
+            fileManager.fileExists(
+                atPath: entry
+                    .appendingPathComponent("LC_MESSAGES", isDirectory: true)
+                    .appendingPathComponent("\(domain).mo", isDirectory: false)
+                    .path
+            )
+        }.map(\.lastPathComponent)
+    )
+}
+
+/// Where gettext looks when a domain has not been bound to a directory.
+public let systemLocaleDirectory = "/usr/share/locale"
 
 /// Binds a gettext domain to the directory holding its catalogues.
 ///
@@ -230,9 +269,12 @@ public var currentLanguage: String? {
 ///
 /// The catch is that gettext ignores `LANGUAGE` completely while `LC_MESSAGES`
 /// is `C`, `POSIX` or `C.UTF-8`, so a session started without a locale needs
-/// one installed first. Any generated locale lifts the block — it does not
-/// have to belong to `language` — so pass `localeCandidates` if the default
-/// guesses are wrong for your deployment.
+/// one installed first. Any generated locale *other than those* lifts the
+/// block, and it does not have to belong to `language` — so pass
+/// `localeCandidates` if the default guesses are wrong for your deployment.
+/// `C.UTF-8` is not a usable candidate however widely it is generated: it is
+/// the C locale as far as gettext is concerned, and such candidates are
+/// skipped rather than tried.
 ///
 /// - Parameters:
 ///   - language: A language code such as `"ru"` or `"pt_BR"`, or `nil` to
@@ -283,7 +325,12 @@ private func ensureMessagesLocaleIsNotC(candidates: [String]) -> Bool {
        !isCLocaleName(String(cString: current)) {
         return true
     }
-    for candidate in candidates {
+    // Skip candidates that are themselves C-locale names. `C.UTF-8` is
+    // generated on nearly every system and looks like a safe fallback, but
+    // gettext treats it exactly as bare `C`, so it can never satisfy this —
+    // and trying it would still leave the process on a useless LC_MESSAGES
+    // before the rejection.
+    for candidate in candidates where !isCLocaleName(candidate) {
         if let applied = candidate.withCString({ cadw_set_messages_locale($0) }),
            !isCLocaleName(String(cString: applied)) {
             return true
@@ -317,6 +364,26 @@ public var sessionLanguage: String? {
 /// returns to.
 public func recaptureSessionLanguage() {
     LocalizationState.recaptureSessionLanguage()
+}
+
+/// The locale currently selected for `LC_MESSAGES`, as the C library reports
+/// it.
+///
+/// ``setLanguage(_:localeCandidates:)`` may change this — installing a real
+/// locale is how it escapes the `C` locale — so a caller that needs the
+/// process put back the way it found it, a test suite most of all, should read
+/// this first and hand it to ``setMessagesLocale(_:)`` afterwards.
+public func currentMessagesLocale() -> String? {
+    cadw_current_messages_locale().map { String(cString: $0) }
+}
+
+/// Selects the locale used for `LC_MESSAGES`.
+///
+/// - Returns: `true` when the locale was installed. `false` means the system
+///   has not generated it, and `LC_MESSAGES` is left as it was.
+@discardableResult
+public func setMessagesLocale(_ locale: String) -> Bool {
+    locale.withCString { cadw_set_messages_locale($0) } != nil
 }
 
 /// Session-scoped localization state.

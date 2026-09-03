@@ -711,8 +711,29 @@ open class Widget: GObjectRef, @preconcurrency CustomDebugStringConvertible {
         gtk_accessible_get_accessible_role(OpaquePointer(pointer))
     }
 
+    /// The accessible label most recently set through
+    /// ``setAccessibleLabel(_:)``, or `nil` if none was.
+    ///
+    /// GTK4 has no getter for an accessible property — they go in through
+    /// `gtk_accessible_update_property` and are only readable from inside the
+    /// widget's `GtkATContext`. So this returns a copy kept alongside the
+    /// widget rather than asking GTK.
+    ///
+    /// It exists because a write-only label is untestable: an app that
+    /// retranslates its interface has no way to assert that it re-applied the
+    /// labels a screen-reader user depends on, and that gap is invisible until
+    /// somebody runs the app with a screen reader in another language.
+    public var accessibleLabel: String? {
+        cadw_get_object_string(pointer, Self.accessibleLabelKey).map { String(cString: $0) }
+    }
+
+    private static let accessibleLabelKey = "swiftadwaita-accessible-label"
+
     /// Sets the accessible label for the widget.
+    ///
+    /// The value is also remembered so ``accessibleLabel`` can return it.
     public func setAccessibleLabel(_ label: String) {
+        cadw_set_object_string(pointer, Self.accessibleLabelKey, label)
         var prop = GTK_ACCESSIBLE_PROPERTY_LABEL
         var value = GValue()
         g_value_init(&value, cadw_type_string())
