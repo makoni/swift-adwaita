@@ -103,6 +103,19 @@ localizedWithContext("adjective", "Open")   // the state
 Extract these with `xgettext --keyword=localizedWithContext:1c,2
 --keyword=nlocalizedWithContext:1c,2,3` so the context reaches the catalogue.
 
+The lookup key is the context, `U+0004`, then the msgid — which is why adding a
+context to a string that already had a translation makes it a *new* entry.
+`msgmerge` then pairs it with the old bare entry, copies the translation over
+and flags the guess `#, fuzzy`; `msgfmt` leaves fuzzy entries out of the
+compiled catalogue. So the string that had a translation a moment ago comes out
+English, in the language it was already translated into, with every tool
+reporting success. Review the flagged entry and delete the flag.
+
+A missing context is not an error, either: gettext returns the bare msgid, so a
+context nobody translated shows English rather than leaking the `U+0004` key.
+Convenient in production, invisible in review — a test is the only thing that
+notices.
+
 ## Letting the user pick a language
 
 ``setLanguage(_:localeCandidates:)`` selects the catalogue at runtime; `nil`
