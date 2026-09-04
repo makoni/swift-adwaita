@@ -388,6 +388,11 @@ struct LocalizationTests {
             setenv("LC_ALL", "C", 1)
             setenv("LANG", "ar_EG.UTF-8", 1)
             unsetenv("LC_TIME")
+            unsetenv("LC_NUMERIC")
+            // LANGUAGE is read live and returns before the categories are
+            // consulted at all, so leaving the session's own value in place
+            // would make the direction assertion below assert nothing.
+            unsetenv("LANGUAGE")
             recaptureSessionLanguage()
 
             #expect(sessionLocaleIdentifier(for: .time) == nil, "LC_ALL=C is an answer, not a gap")
@@ -449,6 +454,7 @@ struct LocalizationTests {
         try withRestoredLocaleEnvironment {
             unsetenv("LC_ALL")
             unsetenv("LC_TIME")
+            unsetenv("LANGUAGE")
             recaptureSessionLanguage()
 
             for (name, expected) in [
@@ -464,15 +470,73 @@ struct LocalizationTests {
                 #expect(sessionLocaleIdentifier(for: .time) == expected, "\(name)")
             }
 
-            // Stripping the script would resolve `sr_RS` to Cyrillic and
-            // `ks_IN` to Arabic — the latter also reading as right-to-left.
+            // Through the accessor, not on a hardcoded string: stripping the
+            // script would resolve `sr_RS` to Cyrillic, and asserting that
+            // ICU knows `sr_Latn_RS` would pass with the mapping deleted.
             setenv("LANG", "sr_RS@latin", 1)
             recaptureSessionLanguage()
-            #expect(Locale(identifier: "sr_Latn_RS").language.script?.identifier == "Latn")
+            let serbian = try #require(sessionLocaleIdentifier(for: .time))
+            #expect(Locale(identifier: serbian).language.script?.identifier == "Latn")
+
             setenv("LANG", "ks_IN@devanagari", 1)
             recaptureSessionLanguage()
             #expect(isRightToLeft(language: nil) == false, "a Devanagari session is not right-to-left")
         }
+    }
+
+    /// Direction follows the script when one is named, and the script list is
+    /// what makes that general.
+    @Test func directionFollowsANamedScriptForEveryArabicScriptLanguage() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            unsetenv("LANGUAGE")
+            recaptureSessionLanguage()
+
+            // Adding `@arabic` to the modifier map made these reachable for
+            // the first time, and a `language_script` pair list had entries
+            // for three of them — so the rest read left-to-right.
+            for name in ["ar_EG@arabic", "fa_IR@arabic", "ur_PK@arabic", "ps_AF@arabic", "sd_PK@arabic"] {
+                setenv("LANG", name, 1)
+                recaptureSessionLanguage()
+                #expect(isRightToLeft(language: nil), "\(name) is right-to-left")
+            }
+
+            // The redundant spelling of a default script agrees with the
+            // bare name, which it did not before.
+            setenv("LANG", "ks_IN@arabic", 1)
+            recaptureSessionLanguage()
+            #expect(isRightToLeft(language: nil))
+            setenv("LANG", "ks_IN.UTF-8", 1)
+            recaptureSessionLanguage()
+            #expect(isRightToLeft(language: nil))
+        }
+    }
+
+    /// A BCP-47 identifier from a caller, not from the environment.
+    @Test func directionFollowsAScriptInACallerSuppliedIdentifier() {
+        #expect(isRightToLeft(language: "ur-Arab-PK"))
+        #expect(isRightToLeft(language: "sr-Latn-RS") == false)
+        #expect(isRightToLeft(language: "uz-Arab-UZ"))
+        #expect(isRightToLeft(language: "uz-Latn-UZ") == false)
+    }
+
+    /// Two entries claimed to be right-to-left that CLDR resolves to Latin.
+    @Test func latinScriptLanguagesAreNotRightToLeft() {
+        // `ha` → ha_Latn_NG and `ku` → ku_Latn_TR (Kurmanji); glibc ships
+        // both as Latin locales, so listing them mirrored the window around
+        // left-to-right text. Sorani, the Arabic-script variety, is `ckb`.
+        #expect(isRightToLeft(language: "ha") == false)
+        #expect(isRightToLeft(language: "ha_NG") == false)
+        #expect(isRightToLeft(language: "ku") == false)
+        #expect(isRightToLeft(language: "ku_TR") == false)
+        #expect(isRightToLeft(language: "ckb"), "Sorani Kurdish is Arabic script")
+    }
+
+    /// A name that already carries a script does not get a second one.
+    @Test func aNameWithAScriptDoesNotGetAnother() {
+        #expect(normalizedLocaleName("sr_Latn_RS@latin") == "sr_Latn_RS")
+        #expect(normalizedLocaleName("uz_Cyrl_UZ@cyrillic") == "uz_Cyrl_UZ")
     }
 
     /// A value that is nothing but a codeset or a modifier names no language.

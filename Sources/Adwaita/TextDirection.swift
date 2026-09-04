@@ -79,7 +79,20 @@ public func applyTextDirection(forLanguage language: String?) -> GtkTextDirectio
 /// in CLDR.
 public func isRightToLeft(language: String?) -> Bool {
     guard let subtag = languageSubtag(from: language) else { return false }
-    return rightToLeftLanguages.contains(subtag)
+    // A named script settles it, whatever the language's default would be:
+    // `ks_IN@devanagari` and `sr_Latn_RS` are left-to-right, `uz_UZ@arabic`
+    // and `ur-Arab-PK` are not. Matching the script rather than enumerating
+    // language_script pairs is what makes that general — the pair list had
+    // three entries and the first `@arabic` name to arrive read as
+    // left-to-right because it was not one of them.
+    let parts = subtag.split(separator: "_").map(String.init)
+    if parts.count > 1, rightToLeftScripts.contains(parts[1]) {
+        return true
+    }
+    if parts.count > 1, leftToRightScripts.contains(parts[1]) {
+        return false
+    }
+    return rightToLeftLanguages.contains(parts[0])
 }
 
 /// Language subtags written in a right-to-left script.
@@ -88,9 +101,13 @@ public func isRightToLeft(language: String?) -> Bool {
 /// trusted: Arabic (and the languages that adopted it), Hebrew, Thaana,
 /// Syriac, N'Ko, Adlam.
 private let rightToLeftLanguages: Set<String> = [
-    // Arabic script
-    "ar", "arc", "ckb", "fa", "glk", "ha", "kk_arab", "khw", "ks", "ku", "lrc",
-    "mzn", "pnb", "ps", "sd", "skr", "ug", "ur", "uz_arab",
+    // Arabic script. `ha` and `ku` are deliberately absent: CLDR resolves
+    // both to Latin (`ha_Latn_NG`, `ku_Latn_TR` — Kurmanji), and glibc ships
+    // `ha_NG.UTF-8` and `ku_TR.UTF-8` as Latin locales, so listing them
+    // mirrored the window around left-to-right text. Sorani Kurdish, which
+    // is the Arabic-script variety, is `ckb`.
+    "ar", "arc", "ckb", "fa", "glk", "khw", "ks", "lrc",
+    "mzn", "pnb", "ps", "sd", "skr", "ug", "ur",
     // Hebrew script
     "he", "iw", "jrb", "jpr", "yi",
     // Thaana
@@ -98,9 +115,23 @@ private let rightToLeftLanguages: Set<String> = [
     // Syriac
     "syr", "aii", "cld",
     // N'Ko
-    "nqo",
-    // Adlam
-    "ff_adlm"
+    "nqo"
+]
+
+/// Scripts written right to left, lowercased as ``languageSubtag`` reports
+/// them. A name that carries one of these — `uz_UZ@arabic`, `ur-Arab-PK`,
+/// `ff_Adlm_GN` — is right to left whatever its language's default is, which
+/// is why the language list above needs no `language_script` entries.
+private let rightToLeftScripts: Set<String> = [
+    "arab", "hebr", "thaa", "syrc", "nkoo", "adlm", "mand", "samr", "yezi"
+]
+
+/// Scripts written left to right that belong to languages the list above
+/// treats as right to left. Naming one flips the answer back: Kashmiri is
+/// right to left in its default Arabic script and left to right in
+/// Devanagari, and only the script says which.
+private let leftToRightScripts: Set<String> = [
+    "latn", "deva", "cyrl", "guru", "beng"
 ]
 
 /// Extracts the part of a locale or language identifier that names the

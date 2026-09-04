@@ -554,18 +554,43 @@ public enum LocaleCategory: String, Sendable, CaseIterable {
 /// rather than "what did the user's session ask for". Anything deciding how
 /// to *format* — a date in a list, a number in a label — wants the latter.
 ///
-/// Precedence is POSIX's: `LC_ALL` overrides everything, then the category's
-/// own variable, then `LANG`. The codeset and modifier are stripped
-/// (`de_DE.UTF-8@euro` → `de_DE`), and a C locale answers `nil` rather than
-/// an identifier Foundation would read as a real language.
+/// Precedence is POSIX's, and the first variable that is *set* decides:
+/// `LC_ALL` overrides everything, then the category's own variable, then
+/// `LANG`. An empty value counts as unset, as POSIX says.
+///
+/// The codeset is stripped, and so is the modifier — except when it names a
+/// script, which becomes a script subtag: `de_DE.UTF-8@euro` → `de_DE`, but
+/// `sr_RS@latin` → `sr_Latn_RS`, because `sr_RS` alone resolves to Cyrillic.
+/// A C locale answers `nil` rather than an identifier Foundation would read
+/// as a real language. ``normalizedLocaleName(_:)`` is the same treatment for
+/// a value you hold yourself — `LANGUAGE`, say, which is not a locale
+/// category and so is not covered here.
+///
+/// The whole chain, since a partial transcription of it is how an app ends up
+/// with translated labels beside English dates:
 ///
 /// ```swift
-/// // A date in the interface language when one is pinned, and in the
-/// // session's own otherwise.
-/// formatter.locale = currentLanguage.map(Locale.init(identifier:))
-///     ?? sessionLocaleIdentifier(for: .time).map(Locale.init(identifier:))
-///     ?? .current
+/// func formattingLocale() -> Locale {
+///     if let pinned = currentLanguage {
+///         return Locale(identifier: pinned)                 // the user's choice
+///     }
+///     if let session = sessionLocaleIdentifier(for: .time) {
+///         return Locale(identifier: session)                // LC_ALL / LC_TIME / LANG
+///     }
+///     // Last, and normalised like any other raw value: a session on
+///     // `LANG=C.UTF-8` — the Flatpak sandbox, most containers — asks for its
+///     // language through `LANGUAGE` alone.
+///     if let language = sessionLanguage?.split(separator: ":").first,
+///        let normalized = normalizedLocaleName(String(language)) {
+///         return Locale(identifier: normalized)
+///     }
+///     return .current
+/// }
 /// ```
+///
+/// `LANGUAGE` comes *after* the categories, not before: a session that sets
+/// `LANGUAGE=en_GB:en` with `LC_TIME=de_DE.UTF-8` — GNOME writes exactly that
+/// for "language English (UK), formats Germany" — has asked for German dates.
 public func sessionLocaleIdentifier(for category: LocaleCategory = .messages) -> String? {
     for name in ["LC_ALL", category.rawValue, "LANG"] {
         guard let raw = LocalizationState.sessionValue(name), !raw.isEmpty else { continue }
@@ -579,8 +604,15 @@ public func sessionLocaleIdentifier(for category: LocaleCategory = .messages) ->
     return nil
 }
 
-/// A POSIX locale name as an identifier `Locale(identifier:)` reads correctly,
-/// or `nil` when it names no language.
+/// A POSIX locale name — or any raw locale-ish string, `LANGUAGE` included —
+/// as an identifier `Locale(identifier:)` reads correctly, or `nil` when it
+/// names no language.
+///
+/// Public because the chain above needs it for `LANGUAGE`, which is not a
+/// locale category and so is not covered by
+/// ``sessionLocaleIdentifier(for:)``. Handing a raw `LANGUAGE` to
+/// `Locale(identifier:)` is how `LANGUAGE=C` — the standard idiom for forcing
+/// English tool output — becomes a locale that formats from CLDR's root data.
 ///
 /// `nil` for the C locale, because `Locale(identifier: "C")` is not an error —
 /// which is the problem: it reads as a language and formats like one.
@@ -595,7 +627,7 @@ public func sessionLocaleIdentifier(for category: LocaleCategory = .messages) ->
 /// Splits keep empty pieces on purpose: `LANG="@euro"` with them omitted
 /// parses inside-out and answers `euro`, which `Locale(identifier:)` accepts
 /// as a language and formats from CLDR's root data.
-func normalizedLocaleName(_ raw: String) -> String? {
+public func normalizedLocaleName(_ raw: String) -> String? {
     let modifier = raw.split(separator: "@", maxSplits: 1, omittingEmptySubsequences: false)
     let base = String(modifier[0])
     let scriptSuffix = modifier.count > 1 ? scriptSubtag(forModifier: String(modifier[1])) : nil
@@ -608,6 +640,12 @@ func normalizedLocaleName(_ raw: String) -> String? {
     // `sr_RS` + `Latn` → `sr_Latn_RS`, the order Locale expects.
     let parts = name.split(separator: "_").map(String.init)
     guard let language = parts.first else { return name }
+    // A name that already carries a script keeps it: `sr_Latn_RS@latin` is
+    // redundant rather than a request for `sr_Latn_Latn_RS`, which
+    // `Locale(identifier:)` accepts and resolves unpredictably.
+    if parts.count > 1, parts[1].count == 4 {
+        return name
+    }
     return ([language, scriptSuffix] + parts.dropFirst()).joined(separator: "_")
 }
 
