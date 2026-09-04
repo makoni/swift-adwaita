@@ -320,6 +320,27 @@ private func defaultLocaleCandidates(for language: String) -> [String] {
     return candidates
 }
 
+/// Moves `LC_MESSAGES` off the C locale, and makes the move stick.
+///
+/// Installing the locale with `setlocale` is not enough on its own, because
+/// `gtk_init` calls `setlocale(LC_ALL, "")` while it starts up and that reads
+/// the *environment* — so a locale this function only installed is reverted
+/// to whatever `LANG` says, and in a container or the Flatpak sandbox that is
+/// `C.UTF-8`. The chosen locale is therefore exported as well.
+///
+/// The consequence of not exporting it is worse than an untranslated moment,
+/// and it is why this is done here rather than left to the caller: GLib
+/// decides **once per process** whether the program is translated at all
+/// (`_g_dgettext_should_translate`), and it decides "no" when the first
+/// `g_dgettext` runs under a locale that neither equals `C` nor begins with
+/// `en_` while no catalogue is loaded. `C.UTF-8` is exactly that gap. GTK
+/// itself looks up its own strings during initialization, so the decision is
+/// latched before an app gets to make its first lookup — and once latched,
+/// every later `g_dgettext` returns its msgid however correct the locale,
+/// the language and the binding have since become. Measured: with the locale
+/// exported, an Arabic or Russian interface comes up translated under
+/// `LANG=C.UTF-8`; without, it comes up English while its dates, which
+/// Foundation formats, come up translated.
 private func ensureMessagesLocaleIsNotC(candidates: [String]) -> Bool {
     if let current = cadw_current_messages_locale(),
        !isCLocaleName(String(cString: current)) {
@@ -333,6 +354,7 @@ private func ensureMessagesLocaleIsNotC(candidates: [String]) -> Bool {
     for candidate in candidates where !isCLocaleName(candidate) {
         if let applied = candidate.withCString({ cadw_set_messages_locale($0) }),
            !isCLocaleName(String(cString: applied)) {
+            setEnvironmentVariable("LC_MESSAGES", candidate)
             return true
         }
     }

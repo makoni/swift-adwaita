@@ -205,6 +205,49 @@ struct LocalizationTests {
         )
     }
 
+    /// The escape has to survive `gtk_init`, which calls
+    /// `setlocale(LC_ALL, "")` and so reads the environment back.
+    ///
+    /// What rides on it is not a cosmetic moment: GLib decides once per
+    /// process whether the program is translated at all, and decides "no"
+    /// when the first `g_dgettext` runs under a locale that is neither `C`
+    /// nor `en_*` with no catalogue loaded — which `C.UTF-8` is. GTK looks up
+    /// its own strings while initializing, so that decision is latched before
+    /// an app makes its first lookup, and no later correction reaches it.
+    @Test func escapingTheCLocaleExportsItSoGtkInitKeepsIt() {
+        let previousLanguage = ProcessInfo.processInfo.environment["LANGUAGE"]
+        let previousMessages = currentMessagesLocale()
+        let previousExported = ProcessInfo.processInfo.environment["LC_MESSAGES"]
+        defer {
+            restoreSessionLanguage(previousLanguage)
+            if let previousMessages { setMessagesLocale(previousMessages) }
+            if let previousExported {
+                setenv("LC_MESSAGES", previousExported, 1)
+            } else {
+                unsetenv("LC_MESSAGES")
+            }
+        }
+
+        applySessionLanguage(nil)
+        unsetenv("LC_MESSAGES")
+        #expect(setMessagesLocale("C") == true, "the C locale itself is always available")
+
+        let escaped = setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"])
+        try? #require(escaped, "no generated locale on this host to escape to")
+        guard escaped else { return }
+
+        let exported = ProcessInfo.processInfo.environment["LC_MESSAGES"]
+        #expect(
+            exported.map(isCLocale) == false,
+            """
+            LC_MESSAGES was installed but not exported (\(exported ?? "unset")), so \
+            gtk_init's setlocale(LC_ALL, "") would revert it to LANG and GLib would \
+            latch this process as untranslated
+            """
+        )
+        #expect(exported == currentMessagesLocale(), "the exported value must be the installed one")
+    }
+
     private func isCLocale(_ locale: String) -> Bool {
         let name = locale.split(separator: ".").first.map(String.init) ?? locale
         return name == "C" || name == "POSIX"
