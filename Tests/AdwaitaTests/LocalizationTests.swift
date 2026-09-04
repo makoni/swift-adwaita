@@ -300,9 +300,10 @@ struct LocalizationTests {
         }
     }
 
-    /// Following the session again undoes the escape, so neither the process
-    /// nor anything it spawns is left on a locale the app chose.
-    @Test func followingTheSessionAgainRestoresTheLocaleEnvironment() throws {
+    /// Following the session again keeps the escape, because undoing it would
+    /// put the process back where GLib latches it as untranslated — and then
+    /// even the session's own language would stop being translated.
+    @Test func followingTheSessionAgainKeepsTheEscape() throws {
         try withRestoredLocaleEnvironment {
             setenv("LANG", "C.UTF-8", 1)
             unsetenv("LC_ALL")
@@ -312,17 +313,19 @@ struct LocalizationTests {
             #expect(setMessagesLocale("C.UTF-8") == true)
 
             guard setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"]) else { return }
-            #expect(ProcessInfo.processInfo.environment["LC_MESSAGES"] != nil, "the escape exports")
-
             _ = setLanguage(nil)
+
+            _ = cadw_activate_locale_from_environment()   // what gtk_init does
             #expect(
-                ProcessInfo.processInfo.environment["LC_MESSAGES"] == nil,
+                messagesLocaleSupportsTranslation,
                 """
-                LC_MESSAGES stayed exported as \
-                \(ProcessInfo.processInfo.environment["LC_MESSAGES"] ?? "nil") after returning \
-                to the session language, so the process and its children keep running under a \
-                locale the app picked
+                returning to the session language put the process back on \
+                \(currentMessagesLocale() ?? "nil"), where nothing can be translated at all
                 """
+            )
+            #expect(
+                ProcessInfo.processInfo.environment["LANGUAGE"] == nil,
+                "the language itself must follow the session again"
             )
         }
     }

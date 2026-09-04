@@ -308,10 +308,13 @@ public func setLanguage(
         } else {
             unsetEnvironmentVariable("LANGUAGE")
         }
-        // Including the escape: leaving `LC_MESSAGES` exported would keep the
-        // process — and every child it spawns — on a locale the app chose,
-        // after the user asked to follow the system again.
-        restoreSessionLocaleEnvironment()
+        // The escape is deliberately left in place. Putting `LC_MESSAGES`
+        // back to a session value of `C` would return the process to the
+        // locale where GLib latches it as untranslated — so "follow the
+        // system language" would break translation for the rest of the
+        // session, including for the language the session itself asks for.
+        // What `.system` means is decided from the values captured before
+        // the escape, not from the environment as it now reads.
         cadw_invalidate_translation_cache()
         return true
     }
@@ -406,22 +409,6 @@ private func exportMessagesLocale(_ locale: String) {
     if let all = ProcessInfo.processInfo.environment["LC_ALL"], isCLocaleName(all) {
         unsetEnvironmentVariable("LC_ALL")
     }
-}
-
-/// Puts the locale environment back the way the session had it.
-///
-/// The inverse of the escape, so "follow the system language again" really
-/// does — and so the process, and every child it spawns, stops running under
-/// a locale the app picked for itself.
-private func restoreSessionLocaleEnvironment() {
-    for name in ["LC_ALL", "LC_MESSAGES"] {
-        if let value = LocalizationState.sessionValue(name) {
-            setEnvironmentVariable(name, value)
-        } else {
-            unsetEnvironmentVariable(name)
-        }
-    }
-    _ = cadw_activate_locale_from_environment()
 }
 
 /// `C.UTF-8` suppresses `LANGUAGE` exactly as bare `C` does, so the encoding
