@@ -490,7 +490,7 @@ enum LocalizationState {
         sessionLocaleEnvironment = [
             "LC_ALL": environment["LC_ALL"],
             "LC_MESSAGES": environment["LC_MESSAGES"],
-            "LANG": environment["LANG"],
+            "LANG": environment["LANG"]
         ]
         selectedLanguage = nil
     }

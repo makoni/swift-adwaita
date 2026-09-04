@@ -122,8 +122,8 @@ struct LocalizationTests {
             setLanguage(nil)
             #expect(currentLanguage == nil)
             #expect(ProcessInfo.processInfo.environment["LANGUAGE"] == previous)
-            }
-}
+        }
+    }
 
     /// The whole point of capturing the session language: "follow the session"
     /// has to restore what the user's environment asked for, which is
@@ -140,8 +140,8 @@ struct LocalizationTests {
             #expect(ProcessInfo.processInfo.environment["LANGUAGE"] == "ru")
             setLanguage(nil)
             #expect(ProcessInfo.processInfo.environment["LANGUAGE"] == "de")
-            }
-}
+        }
+    }
 
     /// An empty language string means "no selection", not a language named "".
     @Test func anEmptyLanguageIsTreatedAsFollowingTheSession() {
@@ -208,8 +208,8 @@ struct LocalizationTests {
                 currentMessagesLocale().map(isCLocale) == true,
                 "a rejected candidate must not have been installed on the way to failing"
             )
-            }
-}
+        }
+    }
 
     /// The escape has to survive `gtk_init`, which calls
     /// `setlocale(LC_ALL, "")` and so reads the environment back.
@@ -230,9 +230,9 @@ struct LocalizationTests {
             #expect(setMessagesLocale("C.UTF-8") == true, "C.UTF-8 is generated everywhere")
 
             let escaped = setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"])
-            guard escaped else { return }  // no generated locale to escape to
+            guard escaped else { return } // no generated locale to escape to
 
-            _ = cadw_activate_locale_from_environment()   // what gtk_init does
+            _ = cadw_activate_locale_from_environment() // what gtk_init does
             #expect(
                 messagesLocaleSupportsTranslation,
                 """
@@ -260,7 +260,7 @@ struct LocalizationTests {
             let escaped = setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"])
             guard escaped else { return }
 
-            _ = cadw_activate_locale_from_environment()   // what gtk_init does
+            _ = cadw_activate_locale_from_environment() // what gtk_init does
             #expect(
                 messagesLocaleSupportsTranslation,
                 "LC_ALL=C.UTF-8 outranked the exported LC_MESSAGES: \(currentMessagesLocale() ?? "nil")"
@@ -288,7 +288,7 @@ struct LocalizationTests {
             #expect(setMessagesLocale("C.UTF-8") == true)
 
             _ = configureLocalization(domain: "adwaita.tests.clocale")
-            _ = cadw_activate_locale_from_environment()   // what gtk_init does
+            _ = cadw_activate_locale_from_environment() // what gtk_init does
             #expect(
                 messagesLocaleSupportsTranslation,
                 """
@@ -315,7 +315,7 @@ struct LocalizationTests {
             guard setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"]) else { return }
             _ = setLanguage(nil)
 
-            _ = cadw_activate_locale_from_environment()   // what gtk_init does
+            _ = cadw_activate_locale_from_environment() // what gtk_init does
             #expect(
                 messagesLocaleSupportsTranslation,
                 """
@@ -456,8 +456,8 @@ struct LocalizationTests {
 
             setLanguage(nil)
             #expect(localized("Notes") == "Notes")
-            }
-}
+        }
+    }
 
     /// Installs `language` as the session's own LANGUAGE, through the public
     /// API rather than a testing back door.
