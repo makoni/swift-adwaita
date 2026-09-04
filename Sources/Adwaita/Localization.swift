@@ -470,12 +470,11 @@ enum LocalizationState {
     /// The locale variables as the session set them, before any escape from
     /// the C locale rewrote them.
     ///
-    /// Escaping exports `LC_MESSAGES`, which means the environment no longer
-    /// answers "what did the session ask for" — and that question has two
-    /// consumers that would otherwise read the app's own escape back as the
-    /// user's intent: ``sessionLanguageIdentifier()``, which decides the
-    /// reading direction for a system-language interface, and
-    /// ``setLanguage(nil)``, which has to put the environment back.
+    /// Escaping exports `LC_MESSAGES` and clears a C-valued `LC_ALL`, which
+    /// means the environment no longer answers "what did the session ask
+    /// for". ``sessionLocaleIdentifier(for:)`` is what reads this instead —
+    /// and through it the reading direction for a system-language interface,
+    /// which would otherwise take the app's own escape for the user's intent.
     fileprivate(set) nonisolated(unsafe) static var sessionLocaleEnvironment: [String: String?] = [:]
 
     static func captureSessionLanguage() {
@@ -487,11 +486,14 @@ enum LocalizationState {
         didCapture = true
         let environment = ProcessInfo.processInfo.environment
         sessionLanguage = environment["LANGUAGE"]
-        sessionLocaleEnvironment = [
-            "LC_ALL": environment["LC_ALL"],
-            "LC_MESSAGES": environment["LC_MESSAGES"],
-            "LANG": environment["LANG"]
-        ]
+        // Uniquing rather than `uniqueKeysWithValues:`, which traps on a
+        // duplicate — and the list is assembled from a category enum a
+        // maintainer can extend with `LC_ALL` or `LANG` by accident, inside
+        // the call every app makes at startup.
+        sessionLocaleEnvironment = Dictionary(
+            LocaleCategory.capturedVariables.map { ($0, environment[$0]) },
+            uniquingKeysWith: { first, _ in first }
+        )
         selectedLanguage = nil
     }
 
@@ -513,5 +515,148 @@ private func setEnvironmentVariable(_ name: String, _ value: String) {
 private func unsetEnvironmentVariable(_ name: String) {
     name.withCString { nameC in
         _ = unsetenv(nameC)
+    }
+}
+
+// MARK: - What the session asked for
+
+/// A locale category, as POSIX names it in the environment.
+///
+/// Only the categories this module has a use for. The session's values are
+/// snapshotted once rather than read live, and ``capturedVariables`` derives
+/// the list from `allCases` — so adding a case is enough, as long as it does
+/// not name `LC_ALL` or `LANG`, which are the shared fallbacks.
+public enum LocaleCategory: String, Sendable, CaseIterable {
+    /// Translations. What gettext consults.
+    case messages = "LC_MESSAGES"
+    /// Dates and times.
+    case time = "LC_TIME"
+    /// Decimal separators and digit grouping.
+    case numeric = "LC_NUMERIC"
+    /// Sort order.
+    case collate = "LC_COLLATE"
+
+    /// The environment variables whose session values are captured: every
+    /// category, plus the `LC_ALL` and `LANG` fallbacks they share. Derived
+    /// from `allCases`, so adding a category needs no edit here.
+    static var capturedVariables: [String] {
+        ["LC_ALL", "LANG"] + allCases.map(\.rawValue)
+    }
+}
+
+/// The locale the session asked for in `category`, as an identifier
+/// `Locale(identifier:)` understands — or `nil` when the session asked for
+/// nothing usable.
+///
+/// Reads the values captured before this module touched anything, which is
+/// the point: escaping the C locale exports `LC_MESSAGES` and clears a
+/// C-valued `LC_ALL`, so the live environment answers "what did *we* do"
+/// rather than "what did the user's session ask for". Anything deciding how
+/// to *format* — a date in a list, a number in a label — wants the latter.
+///
+/// Precedence is POSIX's, and the first variable that is *set* decides:
+/// `LC_ALL` overrides everything, then the category's own variable, then
+/// `LANG`. An empty value counts as unset, as POSIX says.
+///
+/// The codeset is stripped, and so is the modifier — except when it names a
+/// script, which becomes a script subtag: `de_DE.UTF-8@euro` → `de_DE`, but
+/// `sr_RS@latin` → `sr_Latn_RS`, because `sr_RS` alone resolves to Cyrillic.
+/// A C locale answers `nil` rather than an identifier Foundation would read
+/// as a real language. ``normalizedLocaleName(_:)`` is the same treatment for
+/// a value you hold yourself — `LANGUAGE`, say, which is not a locale
+/// category and so is not covered here.
+///
+/// The whole chain, since a partial transcription of it is how an app ends up
+/// with translated labels beside English dates:
+///
+/// ```swift
+/// func formattingLocale() -> Locale {
+///     if let pinned = currentLanguage {
+///         return Locale(identifier: pinned)                 // the user's choice
+///     }
+///     if let session = sessionLocaleIdentifier(for: .time) {
+///         return Locale(identifier: session)                // LC_ALL / LC_TIME / LANG
+///     }
+///     // Last, and normalised like any other raw value: a session on
+///     // `LANG=C.UTF-8` — the Flatpak sandbox, most containers — asks for its
+///     // language through `LANGUAGE` alone.
+///     if let language = sessionLanguage?.split(separator: ":").first,
+///        let normalized = normalizedLocaleName(String(language)) {
+///         return Locale(identifier: normalized)
+///     }
+///     return .current
+/// }
+/// ```
+///
+/// `LANGUAGE` comes *after* the categories, not before: a session that sets
+/// `LANGUAGE=en_GB:en` with `LC_TIME=de_DE.UTF-8` — GNOME writes exactly that
+/// for "language English (UK), formats Germany" — has asked for German dates.
+public func sessionLocaleIdentifier(for category: LocaleCategory = .messages) -> String? {
+    for name in ["LC_ALL", category.rawValue, "LANG"] {
+        guard let raw = LocalizationState.sessionValue(name), !raw.isEmpty else { continue }
+        // The first variable that is set *decides*, including when what it
+        // says is the C locale. Falling through to the next one instead would
+        // read `LC_ALL=C` beside a leftover `LANG=ar_EG.UTF-8` — a build
+        // shell, an ssh-forwarded environment — as a request for Arabic, and
+        // lay the window out right-to-left around an English interface.
+        return normalizedLocaleName(raw)
+    }
+    return nil
+}
+
+/// A POSIX locale name — or any raw locale-ish string, `LANGUAGE` included —
+/// as an identifier `Locale(identifier:)` reads correctly, or `nil` when it
+/// names no language.
+///
+/// Public because the chain above needs it for `LANGUAGE`, which is not a
+/// locale category and so is not covered by
+/// ``sessionLocaleIdentifier(for:)``. Handing a raw `LANGUAGE` to
+/// `Locale(identifier:)` is how `LANGUAGE=C` — the standard idiom for forcing
+/// English tool output — becomes a locale that formats from CLDR's root data.
+///
+/// `nil` for the C locale, because `Locale(identifier: "C")` is not an error —
+/// which is the problem: it reads as a language and formats like one.
+///
+/// The codeset goes. The modifier mostly goes too, but not when it names a
+/// **script**: `sr_RS@latin` stripped to `sr_RS` resolves to Cyrillic, so a
+/// Latin-script Serbian session would get Cyrillic month names, and
+/// `ks_IN@devanagari` stripped to `ks_IN` resolves to Arabic script — which
+/// this module also reads as right-to-left, so the window would come up
+/// mirrored. Those become a script subtag instead.
+///
+/// Splits keep empty pieces on purpose: `LANG="@euro"` with them omitted
+/// parses inside-out and answers `euro`, which `Locale(identifier:)` accepts
+/// as a language and formats from CLDR's root data.
+public func normalizedLocaleName(_ raw: String) -> String? {
+    let modifier = raw.split(separator: "@", maxSplits: 1, omittingEmptySubsequences: false)
+    let base = String(modifier[0])
+    let scriptSuffix = modifier.count > 1 ? scriptSubtag(forModifier: String(modifier[1])) : nil
+
+    let codeset = base.split(separator: ".", maxSplits: 1, omittingEmptySubsequences: false)
+    let name = String(codeset[0]).replacingOccurrences(of: "-", with: "_")
+    guard !name.isEmpty, !isCLocaleName(name) else { return nil }
+
+    guard let scriptSuffix else { return name }
+    // `sr_RS` + `Latn` → `sr_Latn_RS`, the order Locale expects.
+    let parts = name.split(separator: "_").map(String.init)
+    guard let language = parts.first else { return name }
+    // A name that already carries a script keeps it: `sr_Latn_RS@latin` is
+    // redundant rather than a request for `sr_Latn_Latn_RS`, which
+    // `Locale(identifier:)` accepts and resolves unpredictably.
+    if parts.count > 1, parts[1].count == 4 {
+        return name
+    }
+    return ([language, scriptSuffix] + parts.dropFirst()).joined(separator: "_")
+}
+
+/// The script a POSIX locale modifier names, or `nil` when it names something
+/// else — a currency (`@euro`), an orthography (`@valencia`), a collation.
+private func scriptSubtag(forModifier modifier: String) -> String? {
+    switch modifier.lowercased() {
+    case "latin", "latn": "Latn"
+    case "cyrillic", "cyrl": "Cyrl"
+    case "devanagari", "deva": "Deva"
+    case "arabic", "arab": "Arab"
+    default: nil
     }
 }

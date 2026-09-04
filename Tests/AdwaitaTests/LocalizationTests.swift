@@ -330,9 +330,304 @@ struct LocalizationTests {
         }
     }
 
+    // MARK: - What the session asked for
+
+    /// POSIX precedence, and the category actually asked about.
+    @Test func theSessionLocaleFollowsPosixPrecedence() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            setenv("LANG", "de_DE.UTF-8", 1)
+            setenv("LC_TIME", "en_GB.UTF-8", 1)
+            recaptureSessionLanguage()
+
+            #expect(sessionLocaleIdentifier(for: .time) == "en_GB", "the category's own variable beats LANG")
+            #expect(sessionLocaleIdentifier(for: .numeric) == "de_DE", "a category with no variable falls back to LANG")
+
+            setenv("LC_ALL", "fr_FR.UTF-8", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == "fr_FR", "LC_ALL overrides every category")
+        }
+    }
+
+    /// The codeset and modifier are not part of a locale identifier.
+    @Test func theSessionLocaleStripsCodesetAndModifier() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            setenv("LANG", "de_DE.UTF-8@euro", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == "de_DE")
+
+            setenv("LANG", "pt-BR", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == "pt_BR", "a hyphen is normalised")
+        }
+    }
+
+    /// A C locale is not a language, and answering with one would format like
+    /// a language — which is exactly the mistake this exists to avoid.
+    @Test func theCLocaleIsNotASessionLanguage() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            setenv("LANG", "C.UTF-8", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == nil)
+
+            setenv("LANG", "POSIX", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == nil)
+        }
+    }
+
+    /// A variable that is set decides, even when what it says is the C
+    /// locale — falling through would read `LC_ALL=C` beside a leftover
+    /// `LANG=ar_EG.UTF-8` as a request for Arabic.
+    @Test func aCValuedHigherPriorityVariableDecidesRatherThanFallingThrough() throws {
+        try withRestoredLocaleEnvironment {
+            setenv("LC_ALL", "C", 1)
+            setenv("LANG", "ar_EG.UTF-8", 1)
+            unsetenv("LC_TIME")
+            unsetenv("LC_NUMERIC")
+            // LANGUAGE is read live and returns before the categories are
+            // consulted at all, so leaving the session's own value in place
+            // would make the direction assertion below assert nothing.
+            unsetenv("LANGUAGE")
+            recaptureSessionLanguage()
+
+            #expect(sessionLocaleIdentifier(for: .time) == nil, "LC_ALL=C is an answer, not a gap")
+            #expect(sessionLocaleIdentifier(for: .messages) == nil)
+            // Which is what keeps the window from being mirrored around an
+            // English interface.
+            #expect(isRightToLeft(language: nil) == false)
+
+            // The category's own variable behaves the same way.
+            unsetenv("LC_ALL")
+            setenv("LC_TIME", "POSIX", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == nil)
+            #expect(sessionLocaleIdentifier(for: .numeric) == "ar_EG", "another category still reads LANG")
+        }
+    }
+
+    /// An empty value is unset, which POSIX says and the app's smoke tests
+    /// rely on: they empty `LC_ALL` and `LC_MESSAGES` rather than unsetting
+    /// them, because the harness can override a variable but not remove it.
+    @Test func anEmptyValueIsTreatedAsUnsetRatherThanAsAnAnswer() throws {
+        try withRestoredLocaleEnvironment {
+            setenv("LC_ALL", "", 1)
+            setenv("LC_TIME", "", 1)
+            setenv("LANG", "de_DE.UTF-8", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == "de_DE")
+        }
+    }
+
+    /// The script subtag has to survive the direction matcher, which
+    /// lowercases and looks for a four-letter second subtag.
+    @Test func aScriptSubtagReachesTheDirectionMatcher() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            unsetenv("LANGUAGE")
+            recaptureSessionLanguage()
+
+            // Kashmiri is right-to-left in Arabic script — its default — and
+            // left-to-right in Devanagari. Both have to come out right, and
+            // the difference is only in the modifier.
+            for (name, expected) in [
+                ("ks_IN.UTF-8", true),
+                ("ks_IN@devanagari", false),
+                ("uz_UZ@arabic", true),
+                ("uz_UZ", false),
+                ("sr_RS@latin", false)
+            ] {
+                setenv("LANG", name, 1)
+                recaptureSessionLanguage()
+                #expect(isRightToLeft(language: nil) == expected, "\(name)")
+            }
+        }
+    }
+
+    /// A modifier that names a script is not decoration.
+    @Test func aScriptModifierBecomesAScriptSubtag() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            unsetenv("LANGUAGE")
+            recaptureSessionLanguage()
+
+            for (name, expected) in [
+                ("sr_RS@latin", "sr_Latn_RS"),
+                ("uz_UZ@cyrillic", "uz_Cyrl_UZ"),
+                ("ks_IN@devanagari", "ks_Deva_IN"),
+                // Not a script: a currency, and an orthography.
+                ("de_DE.UTF-8@euro", "de_DE"),
+                ("ca_ES@valencia", "ca_ES")
+            ] {
+                setenv("LANG", name, 1)
+                recaptureSessionLanguage()
+                #expect(sessionLocaleIdentifier(for: .time) == expected, "\(name)")
+            }
+
+            // Through the accessor, not on a hardcoded string: stripping the
+            // script would resolve `sr_RS` to Cyrillic, and asserting that
+            // ICU knows `sr_Latn_RS` would pass with the mapping deleted.
+            setenv("LANG", "sr_RS@latin", 1)
+            recaptureSessionLanguage()
+            let serbian = try #require(sessionLocaleIdentifier(for: .time))
+            #expect(Locale(identifier: serbian).language.script?.identifier == "Latn")
+
+            setenv("LANG", "ks_IN@devanagari", 1)
+            recaptureSessionLanguage()
+            #expect(isRightToLeft(language: nil) == false, "a Devanagari session is not right-to-left")
+        }
+    }
+
+    /// Direction follows the script when one is named, and the script list is
+    /// what makes that general.
+    @Test func directionFollowsANamedScriptForEveryArabicScriptLanguage() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            unsetenv("LANGUAGE")
+            recaptureSessionLanguage()
+
+            // Adding `@arabic` to the modifier map made these reachable for
+            // the first time, and a `language_script` pair list had entries
+            // for three of them — so the rest read left-to-right.
+            for name in ["ar_EG@arabic", "fa_IR@arabic", "ur_PK@arabic", "ps_AF@arabic", "sd_PK@arabic"] {
+                setenv("LANG", name, 1)
+                recaptureSessionLanguage()
+                #expect(isRightToLeft(language: nil), "\(name) is right-to-left")
+            }
+
+            // The redundant spelling of a default script agrees with the
+            // bare name, which it did not before.
+            setenv("LANG", "ks_IN@arabic", 1)
+            recaptureSessionLanguage()
+            #expect(isRightToLeft(language: nil))
+            setenv("LANG", "ks_IN.UTF-8", 1)
+            recaptureSessionLanguage()
+            #expect(isRightToLeft(language: nil))
+        }
+    }
+
+    /// A BCP-47 identifier from a caller, not from the environment.
+    @Test func directionFollowsAScriptInACallerSuppliedIdentifier() {
+        #expect(isRightToLeft(language: "ur-Arab-PK"))
+        #expect(isRightToLeft(language: "sr-Latn-RS") == false)
+        #expect(isRightToLeft(language: "uz-Arab-UZ"))
+        #expect(isRightToLeft(language: "uz-Latn-UZ") == false)
+    }
+
+    /// Two entries claimed to be right-to-left that CLDR resolves to Latin.
+    @Test func latinScriptLanguagesAreNotRightToLeft() {
+        // `ha` → ha_Latn_NG and `ku` → ku_Latn_TR (Kurmanji); glibc ships
+        // both as Latin locales, so listing them mirrored the window around
+        // left-to-right text. Sorani, the Arabic-script variety, is `ckb`.
+        #expect(isRightToLeft(language: "ha") == false)
+        #expect(isRightToLeft(language: "ha_NG") == false)
+        #expect(isRightToLeft(language: "ku") == false)
+        #expect(isRightToLeft(language: "ku_TR") == false)
+        #expect(isRightToLeft(language: "ckb"), "Sorani Kurdish is Arabic script")
+    }
+
+    /// A name that already carries a script does not get a second one.
+    @Test func aNameWithAScriptDoesNotGetAnother() {
+        #expect(normalizedLocaleName("sr_Latn_RS@latin") == "sr_Latn_RS")
+        #expect(normalizedLocaleName("uz_Cyrl_UZ@cyrillic") == "uz_Cyrl_UZ")
+    }
+
+    /// The direction data, against the locale names glibc actually ships.
+    ///
+    /// The sets are data, not logic, and an error in them is invisible until
+    /// someone runs the app in that locale. This is the whole right-to-left
+    /// side of glibc's locale list plus the Latin-script look-alikes that
+    /// have been mistaken for it.
+    @Test func everyRightToLeftLocaleGlibcShipsAnswersCorrectly() {
+        let expected: [(String, Bool)] = [
+            // Arabic script
+            ("ar_EG.UTF-8", true), ("fa_IR.UTF-8", true), ("ur_PK.UTF-8", true),
+            ("ps_AF.UTF-8", true), ("sd_PK.UTF-8", true), ("ug_CN.UTF-8", true),
+            ("ckb_IQ.UTF-8", true), ("lrc_IQ.UTF-8", true),
+            // Hebrew, Thaana, Syriac, N'Ko
+            ("he_IL.UTF-8", true), ("yi_US.UTF-8", true), ("dv_MV.UTF-8", true),
+            ("syr_SY.UTF-8", true), ("aii_ET.UTF-8", true),
+            // The script decides where a language has more than one
+            ("ks_IN.UTF-8", true), ("ks_IN@devanagari", false),
+            ("uz_UZ@arabic", true), ("uz_UZ.UTF-8", false),
+            ("sr_RS@latin", false), ("sr_RS.UTF-8", false),
+            // Latin-script languages that have been listed as right-to-left
+            ("ha_NG.UTF-8", false), ("ku_TR.UTF-8", false),
+            // Ordinary left-to-right, including two non-Latin scripts
+            ("de_DE.UTF-8", false), ("ja_JP.UTF-8", false), ("zh_CN.UTF-8", false),
+            ("el_GR.UTF-8", false), ("ru_RU.UTF-8", false), ("hi_IN.UTF-8", false)
+        ]
+        let wrong = expected.filter { isRightToLeft(language: $0.0) != $0.1 }
+        #expect(
+            wrong.isEmpty,
+            "wrong direction for: \(wrong.map { "\($0.0) (expected \($0.1))" }.joined(separator: ", "))"
+        )
+    }
+
+    /// A value that is nothing but a codeset or a modifier names no language.
+    @Test func aValueWithNoLanguagePartIsRejected() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            recaptureSessionLanguage()
+            for name in ["@euro", ".UTF-8", "", "@latin"] {
+                setenv("LANG", name, 1)
+                recaptureSessionLanguage()
+                #expect(
+                    sessionLocaleIdentifier(for: .time) == nil,
+                    "\(name.debugDescription) parsed as a language"
+                )
+            }
+        }
+    }
+
+    /// The values are the session's, not the ones the C-locale escape wrote.
+    ///
+    /// The escape exports `LC_MESSAGES` and clears a C-valued `LC_ALL`, so a
+    /// live read answers "what did this module do" instead of "what did the
+    /// user ask for" — and anything deciding how to format wants the latter.
+    @Test func theSessionLocaleIgnoresWhatTheEscapeExported() throws {
+        try withRestoredLocaleEnvironment {
+            setenv("LANG", "de_DE.UTF-8", 1)
+            unsetenv("LC_ALL")
+            unsetenv("LC_MESSAGES")
+            unsetenv("LC_TIME")
+            applySessionLanguage(nil)
+            recaptureSessionLanguage()
+            #expect(setMessagesLocale("C.UTF-8") == true)
+
+            try #require(
+                setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"]),
+                """
+                no generated locale to escape to on this host, so the invariant this test \
+                exists for cannot be exercised — CI generates one for exactly this reason
+                """
+            )
+            #expect(
+                ProcessInfo.processInfo.environment["LC_MESSAGES"] != nil,
+                "precondition: the escape exports the locale it installed"
+            )
+            #expect(
+                sessionLocaleIdentifier(for: .messages) == "de_DE",
+                """
+                the session locale came back as \
+                \(sessionLocaleIdentifier(for: .messages) ?? "nil") — the escape's own \
+                export was read back as the user's intent
+                """
+            )
+        }
+    }
+
     /// Runs `body` and puts every locale variable back, whatever it did.
     private func withRestoredLocaleEnvironment(_ body: () throws -> Void) throws {
-        let names = ["LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG"]
+        let names = ["LANGUAGE", "LC_ALL", "LC_MESSAGES", "LC_TIME", "LC_NUMERIC", "LANG"]
         let previous = names.map { ($0, ProcessInfo.processInfo.environment[$0]) }
         let previousLocale = currentMessagesLocale()
         defer {

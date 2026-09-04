@@ -211,6 +211,72 @@ Two limits worth designing around:
   catalogue-cache counter. Say "takes effect at the next launch" rather than
   promising an instant switch.
 
+## Formatting: what the session asked for
+
+gettext answers "which translation"; Foundation answers "how to write a date,
+a number, a sort order" — and the two read different variables. A pinned
+interface language is `LANGUAGE`, which Foundation ignores entirely, so a
+formatter left alone prints an English date beside a Russian label.
+
+``sessionLocaleIdentifier(for:)`` is the other half: the locale the *session*
+asked for, per category, with POSIX precedence, where the first variable that is
+*set* decides (`LC_ALL`, then the category's own variable, then `LANG`, with
+an empty value counting as unset). The codeset is stripped and so is the
+modifier — except when it names a script, which becomes a subtag, since
+`sr_RS@latin` reduced to `sr_RS` resolves to Cyrillic. A C locale answers
+`nil` rather than an identifier `Locale(identifier: "C")` would accept and
+format like a language.
+
+```swift
+// The whole chain. Transcribing part of it is how an app ends up with
+// translated labels beside English dates.
+func formattingLocale() -> Locale {
+    if let pinned = currentLanguage {
+        return Locale(identifier: pinned)                 // the user's own choice
+    }
+    if let session = sessionLocaleIdentifier(for: .time) {
+        return Locale(identifier: session)                // LC_ALL / LC_TIME / LANG
+    }
+    // Last, and normalised like any other raw value: a session on
+    // `LANG=C.UTF-8` — the Flatpak sandbox, most containers — asks for its
+    // language through `LANGUAGE` alone.
+    if let language = sessionLanguage?.split(separator: ":").first,
+       let normalized = normalizedLocaleName(String(language)) {
+        return Locale(identifier: normalized)
+    }
+    return .current
+}
+```
+
+Two things about that order are worth stating, because getting either wrong
+looks fine until it does not:
+
+- **`LANGUAGE` comes after the categories.** A session that sets
+  `LANGUAGE=en_GB:en` with `LC_TIME=de_DE.UTF-8` — which is what GNOME writes
+  for "language English (UK), formats Germany" — has asked for German dates.
+  Reading `LANGUAGE` first also discards the region: `LANGUAGE=de` beside
+  `LANG=de_AT.UTF-8` prints *Januar* where the session asked for *Jänner*.
+- **`LANGUAGE` is normalised, not passed through.** `LANGUAGE=C` is the
+  standard idiom for forcing English tool output, and
+  `Locale(identifier: "C")` is not an error — it formats from CLDR's root
+  data. ``normalizedLocaleName(_:)`` rejects it, and gives a script modifier
+  the same treatment the locale categories get.
+
+On Darwin, put `Locale.current` **second** rather than last: it is the user's
+region from System Settings there and outranks a `LANG` a terminal happened to
+export. The order above is for Linux, where it answers `en_001` regardless.
+
+It reads values captured **before** this module touched anything, and that is
+the point: escaping the C locale exports `LC_MESSAGES` and clears a C-valued
+`LC_ALL`, so a live read answers "what did we do" instead of "what did the
+user ask for". `isRightToLeft(language:)` uses the same source for the
+system-language case.
+
+- Note: `Locale.current` does not follow the environment in corelibs
+  Foundation — it answers `en_001` whatever `LANG`, `LC_ALL` or `LC_MESSAGES`
+  say, while an explicit `Locale(identifier:)` formats correctly. So on Linux
+  it cannot stand in for the session's locale, which is what this exists for.
+
 ## Right-to-left languages
 
 GTK mirrors most of a window on its own once the direction is right: box and
@@ -304,6 +370,12 @@ left/right variants of the first two, and mirrors the third.
 - ``bindTextDomainCodeset(_:to:)``
 - ``setTextDomain(_:)``
 - ``setDefaultTextDomain(_:)``
+
+### Formatting in the session's locale
+
+- ``sessionLocaleIdentifier(for:)``
+- ``LocaleCategory``
+- ``normalizedLocaleName(_:)``
 
 ### Changing language at runtime
 
