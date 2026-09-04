@@ -330,9 +330,90 @@ struct LocalizationTests {
         }
     }
 
+    // MARK: - What the session asked for
+
+    /// POSIX precedence, and the category actually asked about.
+    @Test func theSessionLocaleFollowsPosixPrecedence() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            setenv("LANG", "de_DE.UTF-8", 1)
+            setenv("LC_TIME", "en_GB.UTF-8", 1)
+            recaptureSessionLanguage()
+
+            #expect(sessionLocaleIdentifier(for: .time) == "en_GB", "the category's own variable beats LANG")
+            #expect(sessionLocaleIdentifier(for: .numeric) == "de_DE", "a category with no variable falls back to LANG")
+
+            setenv("LC_ALL", "fr_FR.UTF-8", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == "fr_FR", "LC_ALL overrides every category")
+        }
+    }
+
+    /// The codeset and modifier are not part of a locale identifier.
+    @Test func theSessionLocaleStripsCodesetAndModifier() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            setenv("LANG", "de_DE.UTF-8@euro", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == "de_DE")
+
+            setenv("LANG", "pt-BR", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == "pt_BR", "a hyphen is normalised")
+        }
+    }
+
+    /// A C locale is not a language, and answering with one would format like
+    /// a language — which is exactly the mistake this exists to avoid.
+    @Test func theCLocaleIsNotASessionLanguage() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            setenv("LANG", "C.UTF-8", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == nil)
+
+            setenv("LANG", "POSIX", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == nil)
+        }
+    }
+
+    /// The values are the session's, not the ones the C-locale escape wrote.
+    ///
+    /// The escape exports `LC_MESSAGES` and clears a C-valued `LC_ALL`, so a
+    /// live read answers "what did this module do" instead of "what did the
+    /// user ask for" — and anything deciding how to format wants the latter.
+    @Test func theSessionLocaleIgnoresWhatTheEscapeExported() throws {
+        try withRestoredLocaleEnvironment {
+            setenv("LANG", "de_DE.UTF-8", 1)
+            unsetenv("LC_ALL")
+            unsetenv("LC_MESSAGES")
+            unsetenv("LC_TIME")
+            applySessionLanguage(nil)
+            recaptureSessionLanguage()
+            #expect(setMessagesLocale("C.UTF-8") == true)
+
+            guard setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"]) else { return }
+            #expect(
+                ProcessInfo.processInfo.environment["LC_MESSAGES"] != nil,
+                "precondition: the escape exports the locale it installed"
+            )
+            #expect(
+                sessionLocaleIdentifier(for: .messages) == "de_DE",
+                """
+                the session locale came back as \
+                \(sessionLocaleIdentifier(for: .messages) ?? "nil") — the escape's own \
+                export was read back as the user's intent
+                """
+            )
+        }
+    }
+
     /// Runs `body` and puts every locale variable back, whatever it did.
     private func withRestoredLocaleEnvironment(_ body: () throws -> Void) throws {
-        let names = ["LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG"]
+        let names = ["LANGUAGE", "LC_ALL", "LC_MESSAGES", "LC_TIME", "LC_NUMERIC", "LANG"]
         let previous = names.map { ($0, ProcessInfo.processInfo.environment[$0]) }
         let previousLocale = currentMessagesLocale()
         defer {

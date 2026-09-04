@@ -211,6 +211,36 @@ Two limits worth designing around:
   catalogue-cache counter. Say "takes effect at the next launch" rather than
   promising an instant switch.
 
+## Formatting: what the session asked for
+
+gettext answers "which translation"; Foundation answers "how to write a date,
+a number, a sort order" — and the two read different variables. A pinned
+interface language is `LANGUAGE`, which Foundation ignores entirely, so a
+formatter left alone prints an English date beside a Russian label.
+
+``sessionLocaleIdentifier(for:)`` is the other half: the locale the *session*
+asked for, per category, with POSIX precedence (`LC_ALL`, then the category's
+own variable, then `LANG`), the codeset and modifier stripped, and `nil` for a
+C locale — which `Locale(identifier: "C")` would otherwise accept and format
+like a language.
+
+```swift
+formatter.locale = currentLanguage.map(Locale.init(identifier:))
+    ?? sessionLocaleIdentifier(for: .time).map(Locale.init(identifier:))
+    ?? .current
+```
+
+It reads values captured **before** this module touched anything, and that is
+the point: escaping the C locale exports `LC_MESSAGES` and clears a C-valued
+`LC_ALL`, so a live read answers "what did we do" instead of "what did the
+user ask for". `isRightToLeft(language:)` uses the same source for the
+system-language case.
+
+- Note: `Locale.current` does not follow the environment in corelibs
+  Foundation — it answers `en_001` whatever `LANG`, `LC_ALL` or `LC_MESSAGES`
+  say, while an explicit `Locale(identifier:)` formats correctly. So on Linux
+  it cannot stand in for the session's locale, which is what this exists for.
+
 ## Right-to-left languages
 
 GTK mirrors most of a window on its own once the direction is right: box and

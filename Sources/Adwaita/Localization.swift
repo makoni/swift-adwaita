@@ -487,11 +487,9 @@ enum LocalizationState {
         didCapture = true
         let environment = ProcessInfo.processInfo.environment
         sessionLanguage = environment["LANGUAGE"]
-        sessionLocaleEnvironment = [
-            "LC_ALL": environment["LC_ALL"],
-            "LC_MESSAGES": environment["LC_MESSAGES"],
-            "LANG": environment["LANG"]
-        ]
+        sessionLocaleEnvironment = Dictionary(
+            uniqueKeysWithValues: LocaleCategory.capturedVariables.map { ($0, environment[$0]) }
+        )
         selectedLanguage = nil
     }
 
@@ -514,4 +512,72 @@ private func unsetEnvironmentVariable(_ name: String) {
     name.withCString { nameC in
         _ = unsetenv(nameC)
     }
+}
+
+// MARK: - What the session asked for
+
+/// A locale category, as POSIX names it in the environment.
+///
+/// Only the categories this module has a use for; adding one means adding it
+/// to ``capturedVariables`` too, since the session's values are snapshotted
+/// once rather than read live.
+public enum LocaleCategory: String, Sendable, CaseIterable {
+    /// Translations. What gettext consults.
+    case messages = "LC_MESSAGES"
+    /// Dates and times.
+    case time = "LC_TIME"
+    /// Decimal separators and digit grouping.
+    case numeric = "LC_NUMERIC"
+    /// Sort order.
+    case collate = "LC_COLLATE"
+
+    /// The environment variables whose session values are captured, in the
+    /// order nothing depends on: `LC_ALL` and `LANG` are the fallbacks every
+    /// category shares.
+    static var capturedVariables: [String] {
+        ["LC_ALL", "LANG"] + allCases.map(\.rawValue)
+    }
+}
+
+/// The locale the session asked for in `category`, as an identifier
+/// `Locale(identifier:)` understands — or `nil` when the session asked for
+/// nothing usable.
+///
+/// Reads the values captured before this module touched anything, which is
+/// the point: escaping the C locale exports `LC_MESSAGES` and clears a
+/// C-valued `LC_ALL`, so the live environment answers "what did *we* do"
+/// rather than "what did the user's session ask for". Anything deciding how
+/// to *format* — a date in a list, a number in a label — wants the latter.
+///
+/// Precedence is POSIX's: `LC_ALL` overrides everything, then the category's
+/// own variable, then `LANG`. The codeset and modifier are stripped
+/// (`de_DE.UTF-8@euro` → `de_DE`), and a C locale answers `nil` rather than
+/// an identifier Foundation would read as a real language.
+///
+/// ```swift
+/// // A date in the interface language when one is pinned, and in the
+/// // session's own otherwise.
+/// formatter.locale = currentLanguage.map(Locale.init(identifier:))
+///     ?? sessionLocaleIdentifier(for: .time).map(Locale.init(identifier:))
+///     ?? .current
+/// ```
+public func sessionLocaleIdentifier(for category: LocaleCategory = .messages) -> String? {
+    for name in ["LC_ALL", category.rawValue, "LANG"] {
+        guard let raw = LocalizationState.sessionValue(name), !raw.isEmpty else { continue }
+        guard let identifier = localeIdentifier(from: raw) else { continue }
+        return identifier
+    }
+    return nil
+}
+
+/// Strips what a locale name carries beyond the language and region.
+///
+/// `nil` for the C locale: `Locale(identifier: "C")` is not an error, which
+/// is the problem — it reads as a language and formats like one.
+private func localeIdentifier(from raw: String) -> String? {
+    let withoutModifier = raw.split(separator: "@").first.map(String.init) ?? raw
+    let withoutCodeset = withoutModifier.split(separator: ".").first.map(String.init) ?? withoutModifier
+    let normalized = withoutCodeset.replacingOccurrences(of: "-", with: "_")
+    guard !normalized.isEmpty, !isCLocaleName(normalized) else { return nil }
+    return normalized
 }
