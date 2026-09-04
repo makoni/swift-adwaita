@@ -164,6 +164,21 @@ Two limits worth designing around:
   ``currentMessagesLocale()`` and ``setMessagesLocale(_:)`` are there for
   callers that need the process locale put back the way they found it — test
   suites above all, since this is process-global state.
+
+  The locale is **exported** as well as installed, and that matters more than
+  it looks. `gtk_init` calls `setlocale(LC_ALL, "")`, which reads the
+  environment — so a locale that was only installed reverts to whatever `LANG`
+  says, and in a container or the Flatpak sandbox that is `C.UTF-8`. GLib then
+  decides **once per process** whether the program is translated at all, and
+  decides "no" when the first `g_dgettext` runs under a locale that neither
+  equals `C` nor begins with `en_` while no catalogue is loaded — `C.UTF-8` is
+  exactly that gap. GTK looks up its own strings while initializing, so the
+  decision is latched before an app makes its first lookup; afterwards every
+  `g_dgettext` returns its msgid however correct the locale, the language and
+  the binding have since become, while plain `dgettext` returns the
+  translation. An interface that comes up in English with translated *dates* —
+  Foundation formats those without going through GLib — is this and nothing
+  else.
 - ``canChangeLanguageAtRuntime`` is `false` where libintl does not export the
   catalogue-cache counter. Say "takes effect at the next launch" rather than
   promising an instant switch.
