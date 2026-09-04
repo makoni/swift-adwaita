@@ -129,7 +129,12 @@ private func languageSubtag(from language: String?) -> String? {
 private func sessionLanguageIdentifier() -> String? {
     let environment = ProcessInfo.processInfo.environment
     for key in ["LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG"] {
-        if let value = environment[key], !value.isEmpty {
+        // The session's own value for the locale categories, not whatever the
+        // C-locale escape has since exported: reading the escape back would
+        // decide an Arabic session's reading direction from the `en_US` locale
+        // the app installed for itself, and lay the window out left-to-right.
+        let value = key == "LANGUAGE" ? environment[key] : LocalizationState.sessionValue(key)
+        if let value, !value.isEmpty {
             // LANGUAGE is a colon-separated priority list.
             return value.split(separator: ":").first.map(String.init)
         }

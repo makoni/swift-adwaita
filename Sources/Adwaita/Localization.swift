@@ -171,6 +171,18 @@ public func configureLocalization(
 ) -> Bool {
     _ = cadw_activate_locale_from_environment()
     LocalizationState.captureSessionLanguage()
+    // Before anything can look a string up, and whether or not a language is
+    // ever pinned. GLib decides once per process whether the program is
+    // translated at all, and decides "no" when the first `g_dgettext` runs
+    // under a locale that neither equals `C` nor begins with `en_` while no
+    // catalogue is loaded — `C.UTF-8` exactly. GTK makes that first lookup
+    // itself while initializing, so a session on `C.UTF-8` that had not
+    // pinned a language could never translate afterwards, no matter what the
+    // user then picked. Escaping here covers the default configuration; on a
+    // session that already has a real locale this changes nothing.
+    _ = ensureMessagesLocaleIsNotC(
+        candidates: defaultLocaleCandidates(for: LocalizationState.sessionLanguage ?? "en")
+    )
     if let localeDirectory {
         bindTextDomain(domain, to: localeDirectory)
     }
@@ -296,6 +308,10 @@ public func setLanguage(
         } else {
             unsetEnvironmentVariable("LANGUAGE")
         }
+        // Including the escape: leaving `LC_MESSAGES` exported would keep the
+        // process — and every child it spawns — on a locale the app chose,
+        // after the user asked to follow the system again.
+        restoreSessionLocaleEnvironment()
         cadw_invalidate_translation_cache()
         return true
     }
@@ -354,11 +370,58 @@ private func ensureMessagesLocaleIsNotC(candidates: [String]) -> Bool {
     for candidate in candidates where !isCLocaleName(candidate) {
         if let applied = candidate.withCString({ cadw_set_messages_locale($0) }),
            !isCLocaleName(String(cString: applied)) {
-            setEnvironmentVariable("LC_MESSAGES", candidate)
+            exportMessagesLocale(String(cString: applied))
             return true
         }
     }
     return false
+}
+
+/// Whether the process's `LC_MESSAGES` allows any translation at all.
+///
+/// `false` means the process sits on the `C` locale — `C.UTF-8` counts — where
+/// gettext ignores `LANGUAGE` and every lookup returns its msgid. That happens
+/// when no locale beyond `C` is generated on the machine, which a minimal
+/// container image is, and it is worth saying out loud: the interface comes up
+/// in English with no other sign of why.
+public var messagesLocaleSupportsTranslation: Bool {
+    guard let current = cadw_current_messages_locale() else { return false }
+    return !isCLocaleName(String(cString: current))
+}
+
+/// Exports `locale` for `LC_MESSAGES` so `setlocale(LC_ALL, "")` keeps it.
+///
+/// `LC_ALL` is cleared when it names a C locale, because `setlocale(LC_ALL, "")`
+/// gives `LC_ALL` precedence over the per-category variable — so exporting
+/// `LC_MESSAGES` alone changes nothing on a session that sets
+/// `LC_ALL=C.UTF-8`, which Debian and Python container images and plenty of
+/// build shells do. Measured: without clearing it, `gtk_init` puts the
+/// process back on `C.UTF-8` and GLib latches it untranslated.
+///
+/// The name written is the one `setlocale` reported rather than the candidate
+/// asked for, so the environment and the process cannot disagree about an
+/// aliased or non-canonical name.
+private func exportMessagesLocale(_ locale: String) {
+    setEnvironmentVariable("LC_MESSAGES", locale)
+    if let all = ProcessInfo.processInfo.environment["LC_ALL"], isCLocaleName(all) {
+        unsetEnvironmentVariable("LC_ALL")
+    }
+}
+
+/// Puts the locale environment back the way the session had it.
+///
+/// The inverse of the escape, so "follow the system language again" really
+/// does — and so the process, and every child it spawns, stops running under
+/// a locale the app picked for itself.
+private func restoreSessionLocaleEnvironment() {
+    for name in ["LC_ALL", "LC_MESSAGES"] {
+        if let value = LocalizationState.sessionValue(name) {
+            setEnvironmentVariable(name, value)
+        } else {
+            unsetEnvironmentVariable(name)
+        }
+    }
+    _ = cadw_activate_locale_from_environment()
 }
 
 /// `C.UTF-8` suppresses `LANGUAGE` exactly as bare `C` does, so the encoding
@@ -417,6 +480,17 @@ enum LocalizationState {
     nonisolated(unsafe) static var selectedLanguage: String?
     private nonisolated(unsafe) static var didCapture = false
 
+    /// The locale variables as the session set them, before any escape from
+    /// the C locale rewrote them.
+    ///
+    /// Escaping exports `LC_MESSAGES`, which means the environment no longer
+    /// answers "what did the session ask for" — and that question has two
+    /// consumers that would otherwise read the app's own escape back as the
+    /// user's intent: ``sessionLanguageIdentifier()``, which decides the
+    /// reading direction for a system-language interface, and
+    /// ``setLanguage(nil)``, which has to put the environment back.
+    fileprivate(set) nonisolated(unsafe) static var sessionLocaleEnvironment: [String: String?] = [:]
+
     static func captureSessionLanguage() {
         guard !didCapture else { return }
         recaptureSessionLanguage()
@@ -424,8 +498,20 @@ enum LocalizationState {
 
     static func recaptureSessionLanguage() {
         didCapture = true
-        sessionLanguage = ProcessInfo.processInfo.environment["LANGUAGE"]
+        let environment = ProcessInfo.processInfo.environment
+        sessionLanguage = environment["LANGUAGE"]
+        sessionLocaleEnvironment = [
+            "LC_ALL": environment["LC_ALL"],
+            "LC_MESSAGES": environment["LC_MESSAGES"],
+            "LANG": environment["LANG"],
+        ]
         selectedLanguage = nil
+    }
+
+    /// What the session set for `name`, whatever the app has since exported.
+    static func sessionValue(_ name: String) -> String? {
+        guard didCapture else { return ProcessInfo.processInfo.environment[name] }
+        return sessionLocaleEnvironment[name] ?? nil
     }
 }
 

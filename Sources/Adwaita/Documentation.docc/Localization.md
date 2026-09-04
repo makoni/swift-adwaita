@@ -179,6 +179,32 @@ Two limits worth designing around:
   translation. An interface that comes up in English with translated *dates* —
   Foundation formats those without going through GLib — is this and nothing
   else.
+
+  Three consequences worth knowing, all of them handled rather than left to
+  the caller:
+
+  - ``configureLocalization(domain:localeDirectory:codeset:)`` escapes the C
+    locale too, not just ``setLanguage(_:localeCandidates:)``. An app whose
+    user has *not* pinned a language would otherwise be latched by GTK's own
+    initialization, and a language picked later in that session could never
+    take effect — the picker would appear to do nothing.
+  - `LC_ALL` is cleared when it names a C locale, because
+    `setlocale(LC_ALL, "")` gives it precedence over `LC_MESSAGES`; exporting
+    the per-category variable alone changes nothing on a session that sets
+    `LC_ALL=C.UTF-8`, which Debian and Python container images do.
+  - ``setLanguage(nil)`` puts the locale environment back as the session had
+    it, so "follow the system language" leaves neither the process nor the
+    children it spawns on a locale the app chose. The session's own values are
+    captured once, before the first escape, which is also what
+    ``isRightToLeft(language:)`` reads for the system-language case — reading
+    the escape back would decide an Arabic session's direction from the
+    `en_US` locale the app installed for itself.
+
+  ``messagesLocaleSupportsTranslation`` answers the remaining question: `false`
+  means the process is stuck on the C locale because nothing else is generated
+  on the machine, and nothing will be translated with or without a picker.
+  Worth saying out loud to the user — the interface comes up English with no
+  other sign of why.
 - ``canChangeLanguageAtRuntime`` is `false` where libintl does not export the
   catalogue-cache counter. Say "takes effect at the next launch" rather than
   promising an instant switch.
