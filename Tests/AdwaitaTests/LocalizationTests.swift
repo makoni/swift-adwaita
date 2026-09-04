@@ -380,6 +380,79 @@ struct LocalizationTests {
         }
     }
 
+    /// A variable that is set decides, even when what it says is the C
+    /// locale — falling through would read `LC_ALL=C` beside a leftover
+    /// `LANG=ar_EG.UTF-8` as a request for Arabic.
+    @Test func aCValuedHigherPriorityVariableDecidesRatherThanFallingThrough() throws {
+        try withRestoredLocaleEnvironment {
+            setenv("LC_ALL", "C", 1)
+            setenv("LANG", "ar_EG.UTF-8", 1)
+            unsetenv("LC_TIME")
+            recaptureSessionLanguage()
+
+            #expect(sessionLocaleIdentifier(for: .time) == nil, "LC_ALL=C is an answer, not a gap")
+            #expect(sessionLocaleIdentifier(for: .messages) == nil)
+            // Which is what keeps the window from being mirrored around an
+            // English interface.
+            #expect(isRightToLeft(language: nil) == false)
+
+            // The category's own variable behaves the same way.
+            unsetenv("LC_ALL")
+            setenv("LC_TIME", "POSIX", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == nil)
+            #expect(sessionLocaleIdentifier(for: .numeric) == "ar_EG", "another category still reads LANG")
+        }
+    }
+
+    /// A modifier that names a script is not decoration.
+    @Test func aScriptModifierBecomesAScriptSubtag() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            recaptureSessionLanguage()
+
+            for (name, expected) in [
+                ("sr_RS@latin", "sr_Latn_RS"),
+                ("uz_UZ@cyrillic", "uz_Cyrl_UZ"),
+                ("ks_IN@devanagari", "ks_Deva_IN"),
+                // Not a script: a currency, and an orthography.
+                ("de_DE.UTF-8@euro", "de_DE"),
+                ("ca_ES@valencia", "ca_ES")
+            ] {
+                setenv("LANG", name, 1)
+                recaptureSessionLanguage()
+                #expect(sessionLocaleIdentifier(for: .time) == expected, "\(name)")
+            }
+
+            // Stripping the script would resolve `sr_RS` to Cyrillic and
+            // `ks_IN` to Arabic — the latter also reading as right-to-left.
+            setenv("LANG", "sr_RS@latin", 1)
+            recaptureSessionLanguage()
+            #expect(Locale(identifier: "sr_Latn_RS").language.script?.identifier == "Latn")
+            setenv("LANG", "ks_IN@devanagari", 1)
+            recaptureSessionLanguage()
+            #expect(isRightToLeft(language: nil) == false, "a Devanagari session is not right-to-left")
+        }
+    }
+
+    /// A value that is nothing but a codeset or a modifier names no language.
+    @Test func aValueWithNoLanguagePartIsRejected() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            recaptureSessionLanguage()
+            for name in ["@euro", ".UTF-8", "", "@latin"] {
+                setenv("LANG", name, 1)
+                recaptureSessionLanguage()
+                #expect(
+                    sessionLocaleIdentifier(for: .time) == nil,
+                    "\(name.debugDescription) parsed as a language"
+                )
+            }
+        }
+    }
+
     /// The values are the session's, not the ones the C-locale escape wrote.
     ///
     /// The escape exports `LC_MESSAGES` and clears a C-valued `LC_ALL`, so a
@@ -395,7 +468,13 @@ struct LocalizationTests {
             recaptureSessionLanguage()
             #expect(setMessagesLocale("C.UTF-8") == true)
 
-            guard setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"]) else { return }
+            try #require(
+                setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"]),
+                """
+                no generated locale to escape to on this host, so the invariant this test \
+                exists for cannot be exercised — CI generates one for exactly this reason
+                """
+            )
             #expect(
                 ProcessInfo.processInfo.environment["LC_MESSAGES"] != nil,
                 "precondition: the escape exports the locale it installed"

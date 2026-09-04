@@ -225,10 +225,27 @@ C locale — which `Locale(identifier: "C")` would otherwise accept and format
 like a language.
 
 ```swift
-formatter.locale = currentLanguage.map(Locale.init(identifier:))
-    ?? sessionLocaleIdentifier(for: .time).map(Locale.init(identifier:))
-    ?? .current
+// The whole chain. Transcribing part of it is how an app ends up with
+// translated labels beside English dates — dropping the LANGUAGE step
+// leaves that exact bug on any session whose LANG is `C.UTF-8`, which the
+// Flatpak sandbox and most containers are.
+func formattingLocale() -> Locale {
+    if let pinned = currentLanguage {
+        return Locale(identifier: pinned)              // the user's own choice
+    }
+    if let language = sessionLanguage?.split(separator: ":").first {
+        return Locale(identifier: String(language))    // the session's LANGUAGE
+    }
+    if let session = sessionLocaleIdentifier(for: .time) {
+        return Locale(identifier: session)             // LC_ALL / LC_TIME / LANG
+    }
+    return .current
+}
 ```
+
+On Darwin, put `Locale.current` **second** rather than last: it is the user's
+region from System Settings there and outranks a `LANG` a terminal happened to
+export. The order above is for Linux, where it answers `en_001` regardless.
 
 It reads values captured **before** this module touched anything, and that is
 the point: escaping the C locale exports `LC_MESSAGES` and clears a C-valued
@@ -334,6 +351,11 @@ left/right variants of the first two, and mirrors the third.
 - ``bindTextDomainCodeset(_:to:)``
 - ``setTextDomain(_:)``
 - ``setDefaultTextDomain(_:)``
+
+### Formatting in the session's locale
+
+- ``sessionLocaleIdentifier(for:)``
+- ``LocaleCategory``
 
 ### Changing language at runtime
 

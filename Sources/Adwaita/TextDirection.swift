@@ -110,10 +110,11 @@ private func languageSubtag(from language: String?) -> String? {
     let raw = language ?? sessionLanguageIdentifier()
     guard let raw, !raw.isEmpty else { return nil }
 
-    // Strip the encoding and modifier: ar_EG.UTF-8@calendar=islamic → ar_EG
-    let withoutModifier = raw.split(separator: "@").first.map(String.init) ?? raw
-    let withoutCodeset = withoutModifier.split(separator: ".").first.map(String.init) ?? withoutModifier
-    let normalized = withoutCodeset.replacingOccurrences(of: "-", with: "_").lowercased()
+    // One normaliser, shared with `sessionLocaleIdentifier(for:)`: it strips
+    // the codeset, keeps a script the modifier names, and rejects the C
+    // locale. A second copy here meant a fix to either — the script mapping,
+    // say — silently missed the other path.
+    guard let normalized = normalizedLocaleName(raw)?.lowercased() else { return nil }
 
     let parts = normalized.split(separator: "_").map(String.init)
     guard let base = parts.first else { return nil }
