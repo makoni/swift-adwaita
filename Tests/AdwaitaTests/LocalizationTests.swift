@@ -539,6 +539,38 @@ struct LocalizationTests {
         #expect(normalizedLocaleName("uz_Cyrl_UZ@cyrillic") == "uz_Cyrl_UZ")
     }
 
+    /// The direction data, against the locale names glibc actually ships.
+    ///
+    /// The sets are data, not logic, and an error in them is invisible until
+    /// someone runs the app in that locale. This is the whole right-to-left
+    /// side of glibc's locale list plus the Latin-script look-alikes that
+    /// have been mistaken for it.
+    @Test func everyRightToLeftLocaleGlibcShipsAnswersCorrectly() {
+        let expected: [(String, Bool)] = [
+            // Arabic script
+            ("ar_EG.UTF-8", true), ("fa_IR.UTF-8", true), ("ur_PK.UTF-8", true),
+            ("ps_AF.UTF-8", true), ("sd_PK.UTF-8", true), ("ug_CN.UTF-8", true),
+            ("ckb_IQ.UTF-8", true), ("lrc_IQ.UTF-8", true),
+            // Hebrew, Thaana, Syriac, N'Ko
+            ("he_IL.UTF-8", true), ("yi_US.UTF-8", true), ("dv_MV.UTF-8", true),
+            ("syr_SY.UTF-8", true), ("aii_ET.UTF-8", true),
+            // The script decides where a language has more than one
+            ("ks_IN.UTF-8", true), ("ks_IN@devanagari", false),
+            ("uz_UZ@arabic", true), ("uz_UZ.UTF-8", false),
+            ("sr_RS@latin", false), ("sr_RS.UTF-8", false),
+            // Latin-script languages that have been listed as right-to-left
+            ("ha_NG.UTF-8", false), ("ku_TR.UTF-8", false),
+            // Ordinary left-to-right, including two non-Latin scripts
+            ("de_DE.UTF-8", false), ("ja_JP.UTF-8", false), ("zh_CN.UTF-8", false),
+            ("el_GR.UTF-8", false), ("ru_RU.UTF-8", false), ("hi_IN.UTF-8", false)
+        ]
+        let wrong = expected.filter { isRightToLeft(language: $0.0) != $0.1 }
+        #expect(
+            wrong.isEmpty,
+            "wrong direction for: \(wrong.map { "\($0.0) (expected \($0.1))" }.joined(separator: ", "))"
+        )
+    }
+
     /// A value that is nothing but a codeset or a modifier names no language.
     @Test func aValueWithNoLanguagePartIsRejected() throws {
         try withRestoredLocaleEnvironment {
