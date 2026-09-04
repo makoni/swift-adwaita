@@ -405,6 +405,45 @@ struct LocalizationTests {
         }
     }
 
+    /// An empty value is unset, which POSIX says and the app's smoke tests
+    /// rely on: they empty `LC_ALL` and `LC_MESSAGES` rather than unsetting
+    /// them, because the harness can override a variable but not remove it.
+    @Test func anEmptyValueIsTreatedAsUnsetRatherThanAsAnAnswer() throws {
+        try withRestoredLocaleEnvironment {
+            setenv("LC_ALL", "", 1)
+            setenv("LC_TIME", "", 1)
+            setenv("LANG", "de_DE.UTF-8", 1)
+            recaptureSessionLanguage()
+            #expect(sessionLocaleIdentifier(for: .time) == "de_DE")
+        }
+    }
+
+    /// The script subtag has to survive the direction matcher, which
+    /// lowercases and looks for a four-letter second subtag.
+    @Test func aScriptSubtagReachesTheDirectionMatcher() throws {
+        try withRestoredLocaleEnvironment {
+            unsetenv("LC_ALL")
+            unsetenv("LC_TIME")
+            unsetenv("LANGUAGE")
+            recaptureSessionLanguage()
+
+            // Kashmiri is right-to-left in Arabic script — its default — and
+            // left-to-right in Devanagari. Both have to come out right, and
+            // the difference is only in the modifier.
+            for (name, expected) in [
+                ("ks_IN.UTF-8", true),
+                ("ks_IN@devanagari", false),
+                ("uz_UZ@arabic", true),
+                ("uz_UZ", false),
+                ("sr_RS@latin", false)
+            ] {
+                setenv("LANG", name, 1)
+                recaptureSessionLanguage()
+                #expect(isRightToLeft(language: nil) == expected, "\(name)")
+            }
+        }
+    }
+
     /// A modifier that names a script is not decoration.
     @Test func aScriptModifierBecomesAScriptSubtag() throws {
         try withRestoredLocaleEnvironment {
