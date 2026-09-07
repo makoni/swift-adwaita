@@ -42,8 +42,18 @@ extension SerializedLifecycleSuites {
         }
 
         @MainActor
-        private static func writePNGFixture(width: Int32 = 8, height: Int32 = 6) -> URL? {
-            guard let pixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, 1, 8, width, height) else {
+        private static func writePNGFixture(
+            width: Int32 = 8,
+            height: Int32 = 6,
+            hasAlpha: Bool = true
+        ) -> URL? {
+            guard let pixbuf = gdk_pixbuf_new(
+                GDK_COLORSPACE_RGB,
+                hasAlpha ? 1 : 0,
+                8,
+                width,
+                height
+            ) else {
                 return nil
             }
             defer { g_object_unref(UnsafeMutableRawPointer(pixbuf)) }
@@ -144,6 +154,59 @@ extension SerializedLifecycleSuites {
             picture.setPaintable(texture)
 
             #expect(picture.intrinsicSize == Picture.IntrinsicSize(width: 12, height: 9))
+        }
+
+        // MARK: - Scaled texture loading
+
+        /// `Texture(filename:maxWidth:maxHeight:)` decodes through the
+        /// GdkPixbuf loader pipeline — the path that picks up WebP and
+        /// AVIF/HEIF loaders — and then hands the pixels to a memory texture.
+        /// The handover is the part worth testing: it replaced the deprecated
+        /// `gdk_texture_new_for_pixbuf`, and it has to keep the pixbuf's
+        /// buffer alive for as long as the texture reads from it.
+        @Test @MainActor func scaledTextureClampsToTheRequestedBox() throws {
+            ensureAdwInit()
+            guard let url = Self.writePNGFixture(width: 40, height: 20) else {
+                Issue.record("Failed to write PNG fixture")
+                return
+            }
+            defer { try? FileManager.default.removeItem(at: url) }
+
+            let texture = try #require(Texture(filename: url.path, maxWidth: 10, maxHeight: 10))
+            // Aspect ratio preserved, so the wider side is what binds.
+            #expect(texture.width == 10)
+            #expect(texture.height == 5)
+        }
+
+        /// GdkPixbuf gives three channels without alpha and four with it, so
+        /// the initializer picks the memory format from the pixbuf rather than
+        /// assuming RGBA. Assuming it would misread every opaque image: the
+        /// rows are 25% shorter than the format claims, so the texture would
+        /// read past the buffer and skew.
+        @Test @MainActor func scaledTextureLoadsBothWithAndWithoutAlpha() throws {
+            ensureAdwInit()
+            for hasAlpha in [true, false] {
+                guard let url = Self.writePNGFixture(width: 8, height: 8, hasAlpha: hasAlpha) else {
+                    Issue.record("Failed to write PNG fixture (hasAlpha: \(hasAlpha))")
+                    continue
+                }
+                defer { try? FileManager.default.removeItem(at: url) }
+
+                let texture = try #require(
+                    Texture(filename: url.path, maxWidth: 8, maxHeight: 8),
+                    "no texture for a PNG with hasAlpha: \(hasAlpha)"
+                )
+                #expect(texture.width == 8)
+                #expect(texture.height == 8)
+            }
+        }
+
+        @Test @MainActor func scaledTextureReturnsNilForSomethingThatIsNotAnImage() {
+            ensureAdwInit()
+            let url = Self.writeFixture(Array("not an image".utf8), suffix: ".png")
+            defer { try? FileManager.default.removeItem(at: url) }
+
+            #expect(Texture(filename: url.path, maxWidth: 10, maxHeight: 10) == nil)
         }
 
         // MARK: - AnimatedImagePlayer

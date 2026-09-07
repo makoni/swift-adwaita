@@ -220,11 +220,40 @@ public final class Texture: GObjectRef {
             return nil
         }
         let pixbufGeneric = UnsafeMutableRawPointer(pixbuf)
-        guard let ptr = gdk_texture_new_for_pixbuf(pixbuf) else {
+        // `gdk_texture_new_for_pixbuf` is deprecated as of GTK 4.12, so the
+        // texture is built from the pixbuf's own buffer instead. The pixbuf's
+        // reference is handed to the `GBytes`, which keeps the pixels alive
+        // for as long as the texture needs them without copying them.
+        //
+        // `gdk_pixbuf_get_byte_length` rather than `rowstride * height`: the
+        // last row is only as long as the pixels in it, and reading a full
+        // stride past it would run off the buffer.
+        guard let pixels = gdk_pixbuf_read_pixels(pixbuf),
+              let bytes = g_bytes_new_with_free_func(
+                  pixels,
+                  gdk_pixbuf_get_byte_length(pixbuf),
+                  { pixbufGeneric in g_object_unref(pixbufGeneric) },
+                  pixbufGeneric
+              ) else {
             g_object_unref(pixbufGeneric)
             return nil
         }
-        g_object_unref(pixbufGeneric)
+        // GdkPixbuf stores straight (non-premultiplied) 8-bit channels, which
+        // is what these two formats name.
+        let format = gdk_pixbuf_get_has_alpha(pixbuf) != 0
+            ? GDK_MEMORY_R8G8B8A8
+            : GDK_MEMORY_R8G8B8
+        let ptr = gdk_memory_texture_new(
+            gdk_pixbuf_get_width(pixbuf),
+            gdk_pixbuf_get_height(pixbuf),
+            format,
+            bytes,
+            gsize(gdk_pixbuf_get_rowstride(pixbuf))
+        )
+        // The bytes now belong to the texture; this drops our own reference,
+        // and with it the pixbuf once the texture is done.
+        g_bytes_unref(bytes)
+        guard let ptr else { return nil }
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
