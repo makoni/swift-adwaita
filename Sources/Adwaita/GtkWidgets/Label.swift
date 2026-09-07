@@ -222,7 +222,7 @@ public final class Label: Widget {
     /// handler suppresses GtkLabel's default `activate-link` behaviour (which
     /// opens the URI via `gtk_show_uri` for ANY scheme) — your handler is the
     /// sole decision point, so wrap it with
-    /// ``URIScheme/allowlist(_:handler:onReject:)`` when the markup may carry
+    /// `URIScheme.allowlist(_:handler:onReject:)` when the markup may carry
     /// untrusted/externally-authored links.
     ///
     /// - Parameter handler: Called with the activated URI.

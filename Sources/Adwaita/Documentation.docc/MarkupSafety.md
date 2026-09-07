@@ -36,8 +36,8 @@ label.attributes = attrs
 ```
 
 Range-based APIs use Pango's UTF-8 byte offsets internally. If you need those
-offsets directly, use ``String/pangoByteOffset(of:)`` and
-``String/pangoByteRange(for:)``.
+offsets directly, use `String.pangoByteOffset(of:)` and
+`String.pangoByteRange(for:)`.
 
 ## Guard activated links
 
@@ -57,7 +57,7 @@ The same escaping rule applies to other APIs that parse markup:
 
 - ``Widget/tooltipMarkup``
 - ``Expander/useMarkup``
-- ``Scale/addMark(_:position:markup:)``
+- ``Scale/addMark(value:position:markup:)``
 
 ## Avoid
 

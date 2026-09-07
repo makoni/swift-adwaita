@@ -247,7 +247,7 @@ public func bindTextDomainCodeset(_ domain: String, to codeset: String) {
 /// Makes `domain` the process-wide default for bare `gettext` lookups.
 ///
 /// Distinct from ``setTextDomain(_:)``, which only tells *this module* which
-/// domain to pass to `g_dgettext`. Both are set by ``configureLocalization``.
+/// domain to pass to `g_dgettext`. Both are set by ``configureLocalization(domain:localeDirectory:codeset:)``.
 public func setDefaultTextDomain(_ domain: String) {
     domain.withCString { domainC in
         cadw_textdomain(domainC)
@@ -259,7 +259,7 @@ public func setDefaultTextDomain(_ domain: String) {
 /// Whether this build can change the interface language without a restart.
 ///
 /// `false` only where libintl does not export the catalogue-cache counter, in
-/// which case ``setLanguage(_:)`` has no effect until the next launch.
+/// which case ``setLanguage(_:localeCandidates:)`` has no effect until the next launch.
 public var canChangeLanguageAtRuntime: Bool {
     cadw_can_change_language_at_runtime() != 0
 }
@@ -422,7 +422,7 @@ private func isCLocaleName(_ locale: String) -> Bool {
 /// ``configureLocalization(domain:localeDirectory:codeset:)``.
 ///
 /// `nil` when the session asked for no particular language. This is what
-/// ``setLanguage(_:)`` puts back when handed `nil`.
+/// ``setLanguage(_:localeCandidates:)`` puts back when handed `nil`.
 public var sessionLanguage: String? {
     LocalizationState.sessionLanguage
 }
@@ -523,7 +523,7 @@ private func unsetEnvironmentVariable(_ name: String) {
 /// A locale category, as POSIX names it in the environment.
 ///
 /// Only the categories this module has a use for. The session's values are
-/// snapshotted once rather than read live, and ``capturedVariables`` derives
+/// snapshotted once rather than read live, and `capturedVariables` derives
 /// the list from `allCases` — so adding a case is enough, as long as it does
 /// not name `LC_ALL` or `LANG`, which are the shared fallbacks.
 public enum LocaleCategory: String, Sendable, CaseIterable {

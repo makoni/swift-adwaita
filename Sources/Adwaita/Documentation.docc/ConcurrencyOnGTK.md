@@ -8,7 +8,7 @@ Do **not** schedule GTK work with `Task { @MainActor in ... }` inside a running
 GTK application. Swift's default main-actor executor uses the dispatch main
 queue, which GLib does not drain.
 
-Use ``MainContext`` instead.
+Use `MainContext` instead.
 
 ## One-shot UI work
 
@@ -47,7 +47,7 @@ Return `true` to keep the task scheduled, `false` to stop it.
 ## Dialogs and async APIs
 
 Many wrappers expose both callback-based and `async` APIs. In GTK apps, run
-`async` dialog calls from ``MainContext/task(priority:operation:)`` so resumptions
+`async` dialog calls from `MainContext.task(priority:operation:)` so resumptions
 stay on the GLib-driven main loop.
 
 See <doc:WorkingWithDialogs> for concrete file-dialog patterns.

@@ -86,6 +86,28 @@ window.insertActionGroup("win", actionGroup)
 The action prefix (e.g., `"win"`) in `insertActionGroup` must match the
 prefix used in menu item action strings (e.g., `"win.new"`).
 
+### Routing an app-level action to the window in front
+
+An action attached to a window with `insertActionGroup("win", …)` is that
+window's own: two windows each get their own copy, and each menu item
+activates the one it belongs to. An action registered on the ``Application``
+is shared, so an accelerator bound to it fires once no matter how many windows
+are open — and then something has to decide which window it meant.
+
+``GtkWindow/isActive`` answers that. It mirrors `gtk_window_is_active`, so it is
+true for the toplevel the window manager currently focuses:
+
+```swift
+let action = SimpleAction(name: "find")
+action.onActivate {
+    guard let target = openWindows.first(where: \.isActive) else { return }
+    target.presentFindBar()
+}
+```
+
+A window that was never presented reports `false`, so the property is safe to
+read before anything is on screen — it will simply not match.
+
 ### Menu button with popover
 
 ``MenuButton`` shows a popover menu when clicked. This is the standard

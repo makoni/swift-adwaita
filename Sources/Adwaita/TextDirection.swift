@@ -40,7 +40,7 @@ public var defaultTextDirection: GtkTextDirection {
 /// Sets the process-wide reading direction to the one `language` is written
 /// in, and reports which direction that was.
 ///
-/// Pair it with ``setLanguage(_:)`` — one moves the text, the other moves the
+/// Pair it with ``setLanguage(_:localeCandidates:)`` — one moves the text, the other moves the
 /// layout, and a language change needs both:
 ///
 /// ```swift
@@ -157,7 +157,7 @@ private func languageSubtag(from language: String?) -> String? {
 }
 
 /// The language the session asks for, preferring `LANGUAGE` (which is what
-/// gettext honours, and what ``setLanguage(_:)`` writes) over the locale.
+/// gettext honours, and what ``setLanguage(_:localeCandidates:)`` writes) over the locale.
 private func sessionLanguageIdentifier() -> String? {
     // LANGUAGE first and read live, because that is the one this module sets
     // when a language is pinned — and a pinned language decides the
@@ -176,7 +176,7 @@ private func sessionLanguageIdentifier() -> String? {
 public extension Widget {
     /// This widget's reading direction.
     ///
-    /// Assign ``GtkTextDirection/none`` to inherit ``defaultTextDirection``,
+    /// Assign `GtkTextDirection.none` to inherit ``defaultTextDirection``,
     /// which is how widgets start. Set an explicit direction only for a subtree
     /// that must not mirror: a code view, a file path, an LTR-only diagram.
     ///

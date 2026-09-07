@@ -58,7 +58,7 @@ app.run()
   does not pull it in transitively and widget icons render empty
   without it.
 - Optional: `libwebkitgtk-6.0-dev` (apt) / `webkitgtk6.0-devel` (dnf) /
-  `webkitgtk` (Homebrew) — only if your app embeds a ``WebView``.
+  `webkitgtk` (Homebrew) — only if your app embeds a `WebView`.
 - macOS only: export
   `XDG_DATA_DIRS=/opt/homebrew/share` so libadwaita finds its
   GSettings schemas at runtime (Intel: `/usr/local/share`)
@@ -287,7 +287,7 @@ automatically.
 
 ### Web Embedding
 
-The ``WebView`` widget lives in a separate opt-in module —
+The `WebView` widget lives in a separate opt-in module —
 `AdwaitaWebKit` — so the WebKitGTK 6.0 system dependency is not
 forced on every consumer. Add `.product(name: "AdwaitaWebKit",
 package: "swift-adwaita")` to your target and `import AdwaitaWebKit`

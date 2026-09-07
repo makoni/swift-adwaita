@@ -45,6 +45,36 @@ box.append(status)
 
 You can still keep Swift references around, but you do not need to.
 
+## Closing a window is a request; destroying it is not
+
+``GtkWindow/close()`` asks GTK to close the window. A `close-request` handler
+can veto it, it completes asynchronously, and on a window that was never
+presented it does nothing at all. That is the right behaviour for anything the
+user initiates — a Cancel button, a keyboard shortcut — because handlers that
+prompt to save unsaved work still get their say.
+
+``GtkWindow/destroy()`` tears the window down instead, with no veto and no
+wait:
+
+```swift
+let window = ApplicationWindow(application: app)
+// ... use it
+window.destroy()
+```
+
+Use it when the code, not the user, is done with a window — most often at the
+end of a test.
+
+The reason the distinction is worth knowing is what destroying also does: it
+unregisters the window from the list GTK keeps of live toplevels. GTK walks
+that list whenever something process-wide changes — the reading direction
+(``defaultTextDirection``), the theme, the inspector. A window released only by
+dropping its Swift wrapper is not guaranteed to have left the list by the time
+it is finalized, and a stale entry turns the next such walk into a read of
+freed memory. In a long-lived process that is a rare crash; in a shared test
+process, where windows accumulate from every earlier suite, it is a reliable
+one.
+
 ## Signal closures should capture intentionally
 
 Prefer capturing the widgets you actually need:
@@ -70,5 +100,11 @@ controllers.
   ``Widget/retainUntilClose()``
 - callback never fires after the widget closes: the signal owner may already be
   destroyed
+- ``GtkWindow/close()`` appears to do nothing: the window was never presented,
+  or a `close-request` handler vetoed it. ``GtkWindow/destroy()`` is
+  unconditional
+- a crash when the theme or the reading direction changes: a window was
+  released without being destroyed, leaving a stale entry in GTK's toplevel
+  list
 - widget tree looks wrong: inspect ``Widget/debugDescription`` and confirm the
   parent-child chain you expected actually exists

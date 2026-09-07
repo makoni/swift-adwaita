@@ -126,6 +126,13 @@ setLanguage("ru")   // pinned
 setLanguage(nil)    // follow LANGUAGE / LC_ALL / LANG again
 ```
 
+What "following the session" means is captured once, during
+``configureLocalization(domain:localeDirectory:codeset:)``, and
+``sessionLanguage`` reads it back. The capture is deliberately one-shot, so a
+language the app selects later cannot be mistaken for what the session asked
+for. If your app changes `LANGUAGE` itself and wants the new value treated as
+the baseline that `nil` returns to, call ``recaptureSessionLanguage()``.
+
 It takes effect immediately for *new* lookups. Widgets already on screen keep
 the strings they were built with, so a picker also has to re-read them — walk
 the chrome you set once at construction (titles, tooltips, accessible labels,
@@ -192,7 +199,7 @@ Two limits worth designing around:
     `setlocale(LC_ALL, "")` gives it precedence over `LC_MESSAGES`; exporting
     the per-category variable alone changes nothing on a session that sets
     `LC_ALL=C.UTF-8`, which Debian and Python container images do.
-  - ``setLanguage(nil)`` does **not** undo the escape, and that is deliberate:
+  - `setLanguage(nil)` does **not** undo the escape, and that is deliberate:
     putting `LC_MESSAGES` back to a session value of `C` returns the process to
     the locale where GLib latches it, so "follow the system language" would
     break translation for the rest of the session — including for the language
@@ -382,6 +389,8 @@ left/right variants of the first two, and mirrors the third.
 - ``setLanguage(_:localeCandidates:)``
 - ``currentLanguage``
 - ``canChangeLanguageAtRuntime``
+- ``sessionLanguage``
+- ``recaptureSessionLanguage()``
 - ``currentMessagesLocale()``
 - ``setMessagesLocale(_:)``
 
