@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Sergey Armodin
 
+import Foundation
 import Testing
 @testable import Adwaita
 import CAdwaita
@@ -19,6 +20,29 @@ func isAdwSubclass<Sub: AnyObject, Super: AnyObject>(_: Sub.Type, of _: Super.Ty
 func ensureAdwInit() {
     struct Once { nonisolated(unsafe) static var done = false }
     guard !Once.done else { return }
+
+    // Keep GStreamer out of the test process.
+    //
+    // `GtkMediaFile` is backed by GStreamer on Linux, and `GstPlay` runs its
+    // pipeline on a thread of its own with its own main loop. Creating and
+    // dropping several short-lived media files — which the media tests do,
+    // against a path that does not exist — races that thread's teardown: it
+    // aborts inside `g_mutex_clear`, reached from `gst_bus_post` →
+    // `g_object_unref`, while posting to a bus whose owner is already being
+    // finalized. The whole test binary dies with it, taking unrelated suites
+    // down at whatever point they had reached.
+    //
+    // `GTK_MEDIA=none` selects GTK's do-nothing media backend, which honours
+    // the `GtkMediaStream` properties the wrapper tests assert (playing,
+    // ended, muted, volume, loop, duration) without starting a pipeline.
+    // Nothing here tests decoding; the file is deliberately missing.
+    //
+    // Set before `adw_init()`, and only when the environment has no opinion,
+    // so a run that genuinely wants a backend can still ask for one.
+    if ProcessInfo.processInfo.environment["GTK_MEDIA"] == nil {
+        setenv("GTK_MEDIA", "none", 1)
+    }
+
     adw_init()
     Once.done = true
 }

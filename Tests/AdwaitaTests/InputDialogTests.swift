@@ -398,6 +398,7 @@ struct InputDialogTests {
         let app = Application(id: "com.test.windowmodal")
         try app.register()
         let win = ApplicationWindow(application: app)
+        defer { win.destroy() }
         #expect(win.modal == false)
         win.modal = true
         #expect(win.modal == true)
@@ -408,6 +409,7 @@ struct InputDialogTests {
         let app = Application(id: "com.test.windowresizable")
         try app.register()
         let win = ApplicationWindow(application: app)
+        defer { win.destroy() }
         #expect(win.resizable == true)
         win.resizable = false
         #expect(win.resizable == false)
@@ -418,6 +420,7 @@ struct InputDialogTests {
         let app = Application(id: "com.test.windowdecorated")
         try app.register()
         let win = ApplicationWindow(application: app)
+        defer { win.destroy() }
         #expect(win.decorated == true)
         win.decorated = false
         #expect(win.decorated == false)

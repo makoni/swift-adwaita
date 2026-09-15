@@ -202,6 +202,7 @@ struct WidgetBaseTests {
     @Test @MainActor func widgetWindowUsesContainingParentChain() {
         ensureAdwInit()
         let window = Window()
+        defer { window.destroy() }
         let box = Box(orientation: GTK_ORIENTATION_VERTICAL)
         let button = Button(label: "Anchor")
         let popover = Popover()

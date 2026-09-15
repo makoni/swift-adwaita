@@ -35,7 +35,7 @@ struct DialogBackdropDismissTests {
         let dialog = Dialog()
         defer {
             dialog.forceClose()
-            window.close()
+            window.destroy()
             MainContext.drainPending()
             MainContext.drainPending()
         }
@@ -72,7 +72,7 @@ struct DialogBackdropDismissTests {
         let dialog = Dialog()
         defer {
             dialog.forceClose()
-            window.close()
+            window.destroy()
             MainContext.drainPending()
             MainContext.drainPending()
         }
@@ -119,7 +119,7 @@ struct DialogBackdropDismissTests {
         let dialog = Dialog()
         defer {
             dialog.forceClose()
-            window.close()
+            window.destroy()
             MainContext.drainPending()
             MainContext.drainPending()
         }
@@ -149,7 +149,7 @@ struct DialogBackdropDismissTests {
 
         let dialog = Dialog()
         defer {
-            window.close()
+            window.destroy()
             MainContext.drainPending()
             MainContext.drainPending()
         }
@@ -186,7 +186,7 @@ struct DialogBackdropDismissTests {
         let dialog = Dialog()
         defer {
             dialog.forceClose()
-            window.close()
+            window.destroy()
             MainContext.drainPending()
             MainContext.drainPending()
         }

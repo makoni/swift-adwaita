@@ -83,6 +83,7 @@ struct SystemTests {
         let app = Application(id: "com.test.windowicon\(UInt32.random(in: 0 ..< UInt32.max))")
         try app.register()
         let win = ApplicationWindow(application: app)
+        defer { win.destroy() }
         win.iconName = "dialog-information-symbolic"
         #expect(win.iconName == "dialog-information-symbolic")
         win.iconName = nil
@@ -94,6 +95,7 @@ struct SystemTests {
         let app = Application(id: "com.test.windowactive\(UInt32.random(in: 0 ..< UInt32.max))")
         try app.register()
         let win = ApplicationWindow(application: app)
+        defer { win.destroy() }
         // A window that was never presented cannot be the focused toplevel.
         // (Asserting `true` would require a real window manager, so the
         // test pins the readable-and-false half of the contract.)
@@ -324,6 +326,7 @@ struct SystemTests {
         let app = Application(id: "com.test.closereq\(UInt32.random(in: 0 ..< UInt32.max))")
         try app.register()
         let win = ApplicationWindow(application: app)
+        defer { win.destroy() }
         var called = false
         win.onCloseRequest {
             called = true

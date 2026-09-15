@@ -232,6 +232,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func windowResizable() {
             ensureAdwInit()
             let win = Window()
+            defer { win.destroy() }
             #expect(win.resizable == true)
             win.resizable = false
             #expect(win.resizable == false)
@@ -240,6 +241,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func windowDecorated() {
             ensureAdwInit()
             let win = Window()
+            defer { win.destroy() }
             #expect(win.decorated == true)
             win.decorated = false
             #expect(win.decorated == false)
@@ -248,6 +250,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func windowDestroyWithParent() {
             ensureAdwInit()
             let win = Window()
+            defer { win.destroy() }
             #expect(win.destroyWithParent == false)
             win.destroyWithParent = true
             #expect(win.destroyWithParent == true)
@@ -256,19 +259,23 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func windowIsFullscreenDefault() {
             ensureAdwInit()
             let win = Window()
+            defer { win.destroy() }
             #expect(win.isFullscreen == false)
         }
 
         @Test @MainActor func windowIsMaximizedDefault() {
             ensureAdwInit()
             let win = Window()
+            defer { win.destroy() }
             #expect(win.isMaximized == false)
         }
 
         @Test @MainActor func windowTransientFor() {
             ensureAdwInit()
             let parent = Window()
+            defer { parent.destroy() }
             let child = Window()
+            defer { child.destroy() }
             child.transientFor = parent
             #expect(child.transientFor != nil)
             child.transientFor = nil
@@ -278,6 +285,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func windowIconName() {
             ensureAdwInit()
             let win = Window()
+            defer { win.destroy() }
             win.iconName = "accessories-text-editor-symbolic"
             #expect(win.iconName == "accessories-text-editor-symbolic")
             win.iconName = nil
@@ -287,6 +295,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func windowOnCloseRequest() {
             ensureAdwInit()
             let win = Window()
+            defer { win.destroy() }
             let conn = win.onCloseRequest { false }
             conn.disconnect()
         }
@@ -296,6 +305,7 @@ extension SerializedLifecycleSuites {
             let app = Application(id: "com.test.deepcoverage.window.\(UInt32.random(in: 0 ..< UInt32.max))")
             try app.register()
             let win = ApplicationWindow(application: app)
+            defer { win.destroy() }
             win.title = "Transient"
             win.present()
             win.close()
@@ -304,6 +314,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func windowContent() {
             ensureAdwInit()
             let win = Window()
+            defer { win.destroy() }
             let label = Label("Content")
             win.content = label
             #expect(win.content != nil)
@@ -314,6 +325,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func windowDefaultSizeBothAxes() {
             ensureAdwInit()
             let win = Window()
+            defer { win.destroy() }
             win.defaultWidth = 1024
             win.defaultHeight = 768
             #expect(win.defaultWidth == 1024)

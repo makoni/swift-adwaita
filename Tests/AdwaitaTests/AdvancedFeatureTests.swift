@@ -199,6 +199,7 @@ struct AdvancedFeatureTests {
     @Test @MainActor func windowProperties() {
         ensureAdwInit()
         let win = Window()
+        defer { win.destroy() }
         win.title = "Test"
         #expect(win.title == "Test")
         win.defaultWidth = 400
@@ -210,6 +211,7 @@ struct AdvancedFeatureTests {
     @Test @MainActor func windowModal() {
         ensureAdwInit()
         let win = Window()
+        defer { win.destroy() }
         win.modal = true
         #expect(win.modal == true)
         win.modal = false

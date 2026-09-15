@@ -37,6 +37,26 @@ public class MediaStream: GObjectRef {
         pointer.assumingMemoryBound(to: GtkMediaStream.self)
     }
 
+    /// Releases the stream's media resources, leaving an empty stream behind.
+    ///
+    /// On Linux a `GtkMediaFile` is backed by GStreamer, which runs a pipeline
+    /// on its own thread with its own main loop. Dropping the last Swift
+    /// reference schedules that pipeline's teardown, but does not wait for it —
+    /// so a short-lived stream can still be disposing on the GStreamer thread
+    /// while the program moves on, and a process that exits in that window
+    /// aborts inside `g_mutex_clear`. Calling `clear()` while the main loop is
+    /// still running makes the teardown happen at a point you choose.
+    ///
+    /// Worth doing at the end of a test, and whenever a stream outlives the
+    /// thing that was playing it. A no-op on a stream that is not a media file.
+    public func clear() {
+        guard g_type_check_instance_is_a(
+            pointer.assumingMemoryBound(to: GTypeInstance.self),
+            gtk_media_file_get_type()
+        ) != 0 else { return }
+        gtk_media_file_clear(pointer.assumingMemoryBound(to: GtkMediaFile.self))
+    }
+
     // MARK: - Playback
 
     /// Starts playback.

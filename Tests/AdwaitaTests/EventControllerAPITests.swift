@@ -49,6 +49,7 @@ struct EventControllerAPITests {
     @Test @MainActor func gestureSetStateDeniedDoesNotCrash() {
         ensureAdwInit()
         let window = Window()
+        defer { window.destroy() }
         window.setDefaultSize(width: 400, height: 300)
         window.present()
         defer {
@@ -65,6 +66,7 @@ struct EventControllerAPITests {
     @Test @MainActor func gestureSetStateClaimedDoesNotCrash() {
         ensureAdwInit()
         let window = Window()
+        defer { window.destroy() }
         window.present()
         defer {
             window.close()
@@ -91,6 +93,7 @@ struct EventControllerAPITests {
     @Test @MainActor func widgetAllocationIsNonZeroWhenMapped() {
         ensureAdwInit()
         let window = Window()
+        defer { window.destroy() }
         window.setDefaultSize(width: 400, height: 300)
         let label = Label("Hello World")
         window.content = label
@@ -146,6 +149,7 @@ struct EventControllerAPITests {
         let app = Application(id: "me.test.EventControllerAPITests.VisDlg.t\(UInt32.random(in: 0 ..< UInt32.max))")
         try app.register()
         let window = ApplicationWindow(application: app)
+        defer { window.destroy() }
         window.setDefaultSize(width: 400, height: 300)
         window.present()
         defer {
@@ -161,6 +165,7 @@ struct EventControllerAPITests {
         let app = Application(id: "me.test.EventControllerAPITests.VisDlg2.t\(UInt32.random(in: 0 ..< UInt32.max))")
         try app.register()
         let window = ApplicationWindow(application: app)
+        defer { window.destroy() }
         window.setDefaultSize(width: 800, height: 600)
         window.present()
         let dialog = Dialog()

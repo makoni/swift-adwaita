@@ -17,6 +17,7 @@ extension SerializedLifecycleSuites {
             ensureAdwInit()
             // Creating from a non-existent file should still create the object
             let stream = MediaStream(filename: missingMediaFilename)
+            defer { stream.clear() }
             #expect(stream.isPlaying == false)
             #expect(stream.ended == false)
             #expect(stream.isMuted == false)
@@ -25,6 +26,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func mediaStreamVolume() {
             ensureAdwInit()
             let stream = MediaStream(filename: missingMediaFilename)
+            defer { stream.clear() }
             stream.volume = 0.5
             #expect(stream.volume > 0.49 && stream.volume < 0.51)
             stream.isMuted = true
@@ -34,6 +36,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func mediaStreamLoop() {
             ensureAdwInit()
             let stream = MediaStream(filename: missingMediaFilename)
+            defer { stream.clear() }
             stream.loop = true
             #expect(stream.loop == true)
             stream.loop = false
@@ -43,6 +46,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func mediaStreamInfo() {
             ensureAdwInit()
             let stream = MediaStream(filename: missingMediaFilename)
+            defer { stream.clear() }
             // Duration and timestamp default to 0 for an unprepared stream
             #expect(stream.duration == 0)
             #expect(stream.timestamp == 0)
@@ -61,6 +65,7 @@ extension SerializedLifecycleSuites {
             ensureAdwInit()
             let video = Video()
             let stream = MediaStream(filename: missingMediaFilename)
+            defer { stream.clear() }
             video.mediaStream = stream
             #expect(video.mediaStream != nil)
             video.mediaStream = nil
@@ -71,6 +76,7 @@ extension SerializedLifecycleSuites {
         @Test @MainActor func mediaControlsWithStream() {
             ensureAdwInit()
             let stream = MediaStream(filename: missingMediaFilename)
+            defer { stream.clear() }
             let controls = MediaControls(stream: stream)
             #expect(controls.mediaStream != nil)
             controls.mediaStream = nil
@@ -81,6 +87,7 @@ extension SerializedLifecycleSuites {
             let controls = MediaControls()
             #expect(controls.mediaStream == nil)
             let stream = MediaStream(filename: missingMediaFilename)
+            defer { stream.clear() }
             controls.mediaStream = stream
             #expect(controls.mediaStream != nil)
             controls.mediaStream = nil
