@@ -58,7 +58,9 @@ bottomSheet.open = true
 
 **New widgets:**
 - ``BottomSheet`` — sliding sheet from the bottom edge
-- ``Spinner`` — animated loading indicator (replaces GtkSpinner)
+- ``Spinner`` — animated loading indicator, styled to match Adwaita. On the
+  1.5 baseline use ``GtkSpinner``, which wraps GTK's own spinner and is
+  always available.
 - ``SpinnerPaintable`` — paintable version for use in images
 - ``ButtonRow`` — action row with a clickable button style
 

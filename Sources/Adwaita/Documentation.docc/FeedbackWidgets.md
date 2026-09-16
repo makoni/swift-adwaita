@@ -5,9 +5,9 @@ Show progress, notifications, and status information to users.
 ## Overview
 
 Good applications keep users informed about what's happening. swift-adwaita
-provides ``Toast`` and ``Banner`` for in-app notifications, ``ProgressBar``
-and ``Spinner`` for loading states, ``StatusPage`` for empty or error states,
-and ``Revealer`` for animated visibility transitions.
+provides ``Toast`` and ``Banner`` for in-app notifications, ``ProgressBar``,
+``GtkSpinner`` and ``Spinner`` for loading states, ``StatusPage`` for empty
+or error states, and ``Revealer`` for animated visibility transitions.
 
 ### Toast notifications
 
@@ -112,14 +112,28 @@ progress.showText = true       // Show percentage text
 progress.text = "Uploading..."
 ```
 
-**Spinner** shows an indeterminate loading state:
+``GtkSpinner`` shows an indeterminate loading state. It wraps GTK's own
+spinner, so it is there on every supported runtime, and it runs only once you
+start it:
 
 ```swift
-let spinner = Spinner()
+let spinner = GtkSpinner()
 spinner.spinning = true
 
 // Stop when done
 spinner.spinning = false
+```
+
+``Spinner`` wraps `AdwSpinner` instead. It follows the Adwaita style more
+closely and animates as soon as it is visible, so it has no `spinning`
+property — and because it arrived in libadwaita 1.6, its initialiser is
+failable:
+
+```swift
+guard let spinner = Spinner() else {
+    // libadwaita 1.5: use GtkSpinner instead
+    return
+}
 ```
 
 Combine with a status page for loading screens:
@@ -128,9 +142,9 @@ Combine with a status page for loading screens:
 let loadingPage = StatusPage()
 loadingPage.title = "Loading..."
 loadingPage.description = "Please wait while data is fetched"
-let spinner = Spinner()
+let spinner = GtkSpinner()
 spinner.spinning = true
-spinner.setSize(32)
+spinner.setSizeRequest(width: 32, height: 32)
 loadingPage.child = spinner
 ```
 
@@ -221,7 +235,7 @@ stack.transitionType = .crossfade
 let loadingBox = Box(orientation: .vertical, spacing: 12)
 loadingBox.halign = .center
 loadingBox.valign = .center
-let spinner = Spinner()
+let spinner = GtkSpinner()
 spinner.spinning = true
 loadingBox.append(spinner)
 loadingBox.append(Label("Loading..."))

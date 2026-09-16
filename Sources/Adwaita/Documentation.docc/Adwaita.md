@@ -268,6 +268,7 @@ automatically.
 - ``Picture``
 - ``Texture``
 - ``Avatar``
+- ``GtkSpinner``
 - ``Spinner``
 - ``SpinnerPaintable``
 - ``StatusPage``
