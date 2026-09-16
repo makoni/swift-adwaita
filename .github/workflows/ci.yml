@@ -128,14 +128,19 @@ jobs:
 
       - name: Build documentation
         run: |
-          # pipefail, or the exit status is tail's and a failed documentation
-          # build passes this job.
-          set -o pipefail
-          swift package generate-documentation --target Adwaita --disable-indexing 2>&1 \
-            | tee docs-build.log | tail -20
+          # The exit status has to come from the build. Piping into tail made
+          # it tail's, so a documentation build that failed outright passed
+          # this job. Written without pipefail on purpose: the step runs in a
+          # container, where the default shell is dash, which has no such
+          # option.
+          status=0
+          swift package generate-documentation --target Adwaita --disable-indexing \
+            > docs-build.log 2>&1 || status=$?
+          tail -20 docs-build.log
           # The build noise is long and constant, so the tail above is where
           # the log gets cut. DocC's own diagnostics are what this job is for:
           # pull them back out, minus the flags SwiftPM always complains about.
           if grep -E '^(warning|error): ' docs-build.log | grep -vE 'prohibited flag|webkitgtk'; then
             echo "::warning::DocC reported the diagnostics above"
           fi
+          exit $status
