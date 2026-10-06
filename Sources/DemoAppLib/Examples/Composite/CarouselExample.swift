@@ -31,9 +31,11 @@ struct CarouselExample: DemoExample {
     page3.iconName = "emblem-ok-symbolic"
     carousel.append(page3)
 
-    // Indicator dots
+    // Indicator dots, or line-style indicators
     let dots = CarouselIndicatorDots()
     dots.carousel = carousel
+    let lines = CarouselIndicatorLines()
+    lines.carousel = carousel
     """
 
     func buildWidget() -> Widget {
@@ -69,9 +71,12 @@ struct CarouselExample: DemoExample {
         page4.description = "You are all set!"
         carousel.append(page4)
 
-        // Indicator dots
+        // Indicator dots, plus an alternative line-style indicator
         let dots = CarouselIndicatorDots()
         dots.carousel = carousel
+        let lines = CarouselIndicatorLines()
+        lines.carousel = carousel
+        lines.hide()
 
         // Navigation buttons
         let prevBtn = Button(iconName: "go-previous-symbolic")
@@ -101,13 +106,29 @@ struct CarouselExample: DemoExample {
         navBox.halign = .center
         navBox.append(prevBtn)
         navBox.append(dots)
+        navBox.append(lines)
         navBox.append(nextBtn)
+
+        // Toggle between dot and line indicators
+        let styleRow = Box(orientation: .horizontal, spacing: 8)
+        styleRow.halign = .center
+        let styleLabel = Label("Line indicators")
+        let lineSwitch = Switch()
+        lineSwitch.valign = .center
+        lineSwitch.onActiveChanged { [dots, lines, lineSwitch] in
+            dots.visible = !lineSwitch.active
+            lines.visible = lineSwitch.active
+        }
+        styleRow.append(styleLabel)
+        styleRow.append(lineSwitch)
 
         let outerBox = Box(orientation: .vertical, spacing: 0)
         carousel.vexpand = true
         outerBox.append(carousel)
         navBox.setMargins(12)
         outerBox.append(navBox)
+        styleRow.setMargins(12)
+        outerBox.append(styleRow)
 
         return outerBox
     }

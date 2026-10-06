@@ -83,6 +83,10 @@ let package = Package(
         .testTarget(
             name: "AdwaitaTests",
             dependencies: ["Adwaita"]
+        ),
+        .testTarget(
+            name: "DemoAppLibTests",
+            dependencies: ["DemoAppLib", "Adwaita"]
         )
     ]
 )
