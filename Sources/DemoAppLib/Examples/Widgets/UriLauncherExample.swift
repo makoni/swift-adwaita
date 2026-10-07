@@ -43,6 +43,9 @@ struct UriLauncherExample: DemoExample {
         launchBtn.addCSSClass("suggested-action")
         launchBtn.valign = .center
         launchBtn.onClicked { [entry, status] in
+            // Here the URI is always user-typed (local-user threat model), so no
+            // scheme allowlist is needed. If this pattern ever launches a URI from
+            // untrusted data (document links, clipboard, a network source), add one.
             let uri = entry.text
             status.text = "Launching \(uri) …"
             let launcher = UriLauncher(uri: uri)

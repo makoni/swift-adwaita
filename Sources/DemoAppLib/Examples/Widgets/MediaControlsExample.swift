@@ -38,36 +38,41 @@ struct MediaControlsExample: DemoExample {
         placeholder.title = "No video loaded"
         placeholder.description = "Pick a file below to see the controls in action."
 
+        // One video + controls pair, reused across opens: each "Open Video…"
+        // just swaps the shared stream, so live pipelines don't pile up.
+        let video = Video()
+        video.autoplay = false
+        video.setSizeRequest(width: -1, height: 280)
+        let controls = MediaControls()
+        let playerBox = Box(orientation: .vertical, spacing: 0)
+        playerBox.append(video)
+        playerBox.append(controls)
+        playerBox.hide()
+
         let openBtn = Button(label: "Open Video…")
         openBtn.addCSSClass("suggested-action")
         openBtn.addCSSClass("pill")
         openBtn.halign = .center
         openBtn.setMargins(12)
-        openBtn.onClicked { [box, placeholder, group] in
+        openBtn.onClicked { [box, placeholder, video, controls, playerBox] in
             let dialog = FileDialog()
             dialog.title = "Open Video"
             dialog.setFilters([
                 FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi", "mov", "ogv"]),
                 FileFilter(name: "All files", patterns: ["*"])
             ])
-            dialog.open(parent: box.root) { [group, placeholder] result in
+            dialog.open(parent: box.root) { [placeholder, video, controls, playerBox] result in
                 guard case let .success(path?) = result else { return }
-                placeholder.hide()
                 let stream = MediaStream(filename: path)
-                let video = Video()
                 video.mediaStream = stream
-                video.autoplay = false
-                video.setSizeRequest(width: -1, height: 280)
-                let controls = MediaControls(stream: stream)
-
-                let playerBox = Box(orientation: .vertical, spacing: 0)
-                playerBox.append(video)
-                playerBox.append(controls)
-                group.add(playerBox)
+                controls.mediaStream = stream
+                placeholder.hide()
+                playerBox.show()
             }
         }
         group.add(placeholder)
         group.add(openBtn)
+        group.add(playerBox)
 
         box.append(group)
 
