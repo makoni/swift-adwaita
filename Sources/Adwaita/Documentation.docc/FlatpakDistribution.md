@@ -31,11 +31,16 @@ sudo dnf install flatpak-builder
 Install the GNOME SDK and Swift extension from Flathub:
 
 ```bash
+# The swift6 extension must provide Swift 6.3+ — the 24.08 branch shown provides
+# 6.2 (below this package's floor), so substitute a newer branch that ships 6.3+.
 flatpak install flathub org.gnome.Sdk//48 org.freedesktop.Sdk.Extension.swift6//24.08
 ```
 
 The GNOME 48 runtime includes libadwaita 1.7. The Swift SDK extension (based on
-freedesktop 24.08) provides Swift 6.2.
+freedesktop 24.08) provides Swift 6.2. This package targets
+`swift-tools-version: 6.3`, so build the Flatpak with a `swift6` SDK extension
+that provides Swift 6.3 or newer — the 24.08 extension above is now below the
+manifest floor and will reject it.
 
 ### Project structure
 

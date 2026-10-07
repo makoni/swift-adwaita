@@ -74,6 +74,14 @@ struct AnimatedImagePlayerExample: DemoExample {
                         let meta = player.metadata
                         status.text = "Playing \(meta.width)×\(meta.height)"
                     } else {
+                        // A static file: stop the previously-playing animation,
+                        // whose timer would otherwise keep repainting the picture
+                        // on top of the static frame. It is still retained on the
+                        // picture (see the animated branch), so borrow it without
+                        // taking ownership just to stop the timer.
+                        if let oldPtr = g_object_get_data(picture.gobjectPointer, animatedImagePlayerKey) {
+                            Unmanaged<AnimatedImagePlayer>.fromOpaque(oldPtr).takeUnretainedValue().stop()
+                        }
                         picture.setFilename(path)
                         status.text = "Static image (single frame, no animation)"
                     }

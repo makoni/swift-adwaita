@@ -1,7 +1,7 @@
 # swift-adwaita
 
 [![CI](https://github.com/makoni/swift-adwaita/actions/workflows/ci.yml/badge.svg)](https://github.com/makoni/swift-adwaita/actions/workflows/ci.yml)
-[![Swift 6.2+](https://img.shields.io/badge/Swift-6.2+-F05138.svg)](https://swift.org)
+[![Swift 6.3+](https://img.shields.io/badge/Swift-6.3+-F05138.svg)](https://swift.org)
 [![Documentation](https://img.shields.io/badge/Documentation-Online-0A84FF.svg)](https://spaceinbox.me/docs/swift-adwaita/documentation/adwaita)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.txt)
 
@@ -54,7 +54,7 @@ Quick guides:
 
 ## Requirements
 
-- Swift 6.2+
+- Swift 6.3+
 - libadwaita 1.5+ development headers
 - GtkSourceView 5 development headers
 - Linux **or** macOS 13+ (Apple Silicon recommended; Intel best-effort)

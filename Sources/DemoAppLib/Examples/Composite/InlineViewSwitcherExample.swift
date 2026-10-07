@@ -71,7 +71,9 @@ struct InlineViewSwitcherExample: DemoExample {
         let contentGroup = PreferencesGroup()
         contentGroup.title = "Content"
 
+        var switcherAvailable = false
         if let switcher = InlineViewSwitcher() {
+            switcherAvailable = true
             let contentBox = Box(orientation: .vertical, spacing: 12)
             contentBox.addCSSClass("card")
 
@@ -106,7 +108,11 @@ struct InlineViewSwitcherExample: DemoExample {
             contentGroup.add(fallback)
         }
 
-        box.append(controlGroup)
+        // On <1.7 runtimes the switcher is unavailable, so the Display controls
+        // have nothing to drive — keep them out of the fallback.
+        if switcherAvailable {
+            box.append(controlGroup)
+        }
         box.append(contentGroup)
 
         return box.scrollableClamped()

@@ -64,6 +64,10 @@ struct MediaControlsExample: DemoExample {
             dialog.open(parent: box.root) { [placeholder, video, controls, playerBox] result in
                 guard case let .success(path?) = result else { return }
                 let stream = MediaStream(filename: path)
+                // Tear the previous stream's GStreamer pipeline down now, while
+                // the main loop is still running, instead of letting it dispose
+                // on the GStreamer thread at process exit — see MediaStream.clear().
+                video.mediaStream?.clear()
                 video.mediaStream = stream
                 controls.mediaStream = stream
                 placeholder.hide()

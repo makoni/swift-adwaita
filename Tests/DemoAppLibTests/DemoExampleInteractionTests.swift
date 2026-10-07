@@ -61,6 +61,8 @@ struct DemoExampleInteractionTests {
 
         restoreBtn?.emitClicked()
         #expect(centerBox?.centerWidget != nil, "Restore should set the centre widget back")
+        #expect((centerBox?.centerWidget?.tryCast(Label.self))?.text == "Page Title",
+                "Restore should restore the titled centre widget, not just a non-nil one")
     }
 
     @Test @MainActor
@@ -73,6 +75,9 @@ struct DemoExampleInteractionTests {
         let switch_ = widgetOfType(root, Switch.self)
         #expect(centerBox != nil)
         #expect(switch_ != nil)
+        // Pin the initial state (GTK4 default is true, switch starts active) so
+        // a future refactor that desyncs the switch from the property is caught.
+        #expect(centerBox?.shrinkCenterLast == true, "shrinkCenterLast should start true")
 
         switch_?.active = false
         #expect(centerBox?.shrinkCenterLast == false)
@@ -110,16 +115,29 @@ struct DemoExampleInteractionTests {
 
         switch_?.active = true
         #expect(frame?.obeyChild == true)
+        switch_?.active = false
+        #expect(frame?.obeyChild == false)
     }
 
     @Test @MainActor
     func inlineViewSwitcherDisplayMode() {
         ensureDemoAdwInit()
-        // InlineViewSwitcher needs libadwaita 1.7+; older runtimes render the
-        // example's fallback, so there is nothing to drive. Skip gracefully.
-        guard AdwaitaVersion.isAtLeast(1, 7) else { return }
         let (root, window) = Self.setUp(InlineViewSwitcherExample())
         defer { Self.tearDown(window) }
+
+        guard AdwaitaVersion.isAtLeast(1, 7) else {
+            // On <1.7 runtimes the example renders its fallback instead of the
+            // switcher. Assert that, so this test checks something real on CI
+            // (libadwaita 1.5) rather than returning before any assertion.
+            #expect(widgetOfType(root, InlineViewSwitcher.self) == nil,
+                    "fallback runtime should not have an InlineViewSwitcher")
+            let showsFallback = allWidgets(root).contains { widget in
+                guard let label = widget.tryCast(Label.self) else { return false }
+                return label.text.contains("Requires libadwaita 1.7+")
+            }
+            #expect(showsFallback, "expected the 1.7+ fallback label on an older runtime")
+            return
+        }
 
         let switcher = widgetOfType(root, InlineViewSwitcher.self)
         #expect(switcher != nil, "InlineViewSwitcher should exist on a 1.7+ runtime")
@@ -197,18 +215,22 @@ struct DemoExampleInteractionTests {
     }
 
     @Test @MainActor
-    func shortcutsDialogPresentOnDemand() {
+    func shortcutsDialogButtonEmitsWithoutCrashing() {
         ensureDemoAdwInit()
         let (root, window) = Self.setUp(ShortcutsDialogExample())
         defer { Self.tearDown(window) }
 
         let button = buttonLabeled(root, "Show Shortcuts…")
         #expect(button != nil)
-        // Presenting an AdwShortcutsDialog (libadwaita 1.8+) must not crash.
-        // The example builds the dialog inside the button closure and keeps no
-        // handle, so the presented dialog outlives this window's destroy() —
-        // a separate top-level, harmless here but flagged for any future test
-        // that enumerates top-levels.
+        // The example enables the button only on 1.8+ runtimes; assert that
+        // contract on both sides (insensitive on 1.5, sensitive on 1.8+).
+        #expect(button?.sensitive == ShortcutsDialog.isAvailable)
+        // Clicking must not crash. On 1.8+ this presents a modal
+        // AdwShortcutsDialog built inside the closure (no handle kept), so it
+        // outlives window.destroy() — a separate top-level. It is safe only
+        // while this test is the last one to run: a test added after it that
+        // enumerates top-levels would see the stale modal. Expose a handle if
+        // that ever becomes a problem.
         button?.emitClicked()
         drainMainLoop()
     }

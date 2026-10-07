@@ -98,7 +98,7 @@ public func runDemoApp(arguments: [String] = CommandLine.arguments) -> Int {
         let welcomePage = StatusPage()
         welcomePage.iconName = "applications-science-symbolic"
         welcomePage.title = "swift-adwaita Demo"
-        welcomePage.description = "An imperative Swift 6.2 wrapper for GTK4 and libadwaita.\nSelect an example from the sidebar to get started."
+        welcomePage.description = "An imperative Swift 6.3 wrapper for GTK4 and libadwaita.\nSelect an example from the sidebar to get started."
         contentStack.addNamed(welcomePage, name: "welcome")
 
         for example in allExamples {

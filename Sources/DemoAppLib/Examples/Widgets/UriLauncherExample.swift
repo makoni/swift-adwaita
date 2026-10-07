@@ -22,6 +22,12 @@ struct UriLauncherExample: DemoExample {
     // Change URI and launch again
     launcher.uri = "https://gtk.org"
     launcher.launch()
+
+    // When the URI comes from untrusted input, allowlist the scheme first:
+    let uri = "https://gnome.org"
+    if uri.lowercased().hasPrefix("http://") || uri.lowercased().hasPrefix("https://") || uri.lowercased().hasPrefix("file://") {
+        UriLauncher(uri: uri).launch()
+    }
     """
 
     func buildWidget() -> Widget {
@@ -43,10 +49,17 @@ struct UriLauncherExample: DemoExample {
         launchBtn.addCSSClass("suggested-action")
         launchBtn.valign = .center
         launchBtn.onClicked { [entry, status] in
-            // Here the URI is always user-typed (local-user threat model), so no
-            // scheme allowlist is needed. If this pattern ever launches a URI from
-            // untrusted data (document links, clipboard, a network source), add one.
+            // Launch only the schemes this demo intends to open. The text here is
+            // user-typed (local-user threat model), but this is the pattern that
+            // gets copy-pasted — so show the safe form: an allowlist is what you
+            // need before this ever launches a URI from untrusted data (document
+            // links, clipboard, a network source).
             let uri = entry.text
+            let lower = uri.lowercased()
+            guard lower.hasPrefix("http://") || lower.hasPrefix("https://") || lower.hasPrefix("file://") else {
+                status.text = "Only http(s)/file URIs are launched here"
+                return
+            }
             status.text = "Launching \(uri) …"
             let launcher = UriLauncher(uri: uri)
             launcher.launch(parent: launchBtn.root) { ok in

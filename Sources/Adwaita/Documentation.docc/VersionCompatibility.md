@@ -35,7 +35,7 @@ All core widgets are available at this version, including:
 - ``Breakpoint``, ``BreakpointBin``
 - ``TimedAnimation``, ``SpringAnimation``
 - ``Clamp``, ``Bin``, ``MultiLayoutView``
-- ``StyleManager``, ``InlineViewSwitcher``
+- ``StyleManager``
 
 All GTK4 widgets (``Box``, ``Button``, ``Label``, ``Entry``, ``ListBox``,
 ``ListView``, ``GridView``, ``ColumnView``, etc.) are available regardless
@@ -79,6 +79,7 @@ row.title = "Delete"
 - ``Toggle`` — individual toggle within a ``ToggleGroup``
 - ``ToggleGroup`` — mutually exclusive toggle group
 - ``WrapBox`` — flow-layout container that wraps children to new lines
+- ``InlineViewSwitcher`` — compact view switcher sized to sit inline in a ``HeaderBar``
 
 ```swift
 guard let group = ToggleGroup() else { return }
@@ -135,6 +136,6 @@ See <doc:FlatpakDistribution> for details on Flatpak packaging.
 
 ### CI testing across versions
 
-The CI matrix tests against Ubuntu (libadwaita 1.5) with Swift 6.2
-and 6.3. C stubs in `Sources/CAdwaita/shim.h` ensure compilation succeeds
+The CI matrix tests against Ubuntu (libadwaita 1.5) with Swift 6.3
+and 6.4. C stubs in `Sources/CAdwaita/shim.h` ensure compilation succeeds
 even when newer API symbols are missing from the system headers.

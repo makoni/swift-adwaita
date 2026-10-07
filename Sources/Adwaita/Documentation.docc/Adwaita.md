@@ -51,7 +51,7 @@ app.run()
 ### Requirements
 
 - **Linux** or **macOS 13+** (Apple Silicon recommended)
-- **Swift 6.2+**
+- **Swift 6.3+**
 - System packages: `libadwaita-1-dev` + `libgtksourceview-5-dev` (apt) /
   `libadwaita gtksourceview5 adwaita-icon-theme pkgconf` (Homebrew) /
   equivalent. `adwaita-icon-theme` is required on macOS — Homebrew

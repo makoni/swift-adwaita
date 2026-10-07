@@ -17,7 +17,7 @@ swift package init --type executable
 Edit `Package.swift`:
 
 ```swift
-// swift-tools-version: 6.2
+// swift-tools-version: 6.3
 import PackageDescription
 
 let package = Package(

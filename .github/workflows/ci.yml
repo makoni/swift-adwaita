@@ -140,7 +140,7 @@ jobs:
           # The build noise is long and constant, so the tail above is where
           # the log gets cut. DocC's own diagnostics are what this job is for:
           # pull them back out, minus the flags SwiftPM always complains about.
-          if grep -E '^(warning|error): ' docs-build.log | grep -vE 'prohibited flag|webkitgtk'; then
+          if grep -E '(warning|error): ' docs-build.log | grep -vE 'prohibited flag|webkitgtk'; then
             echo "::warning::DocC reported the diagnostics above"
           fi
           exit $status
