@@ -5,8 +5,8 @@
 import Foundation
 import Adwaita
 
-/// Shared helpers for the demo-app smoke and interaction tests (both live in
-/// this module and drive the real `buildWidget()` output).
+// Shared helpers for the demo-app smoke and interaction tests (both live in
+// this module and drive the real `buildWidget()` output).
 
 /// One-time GTK/Adw init for tests that instantiate widgets. Mirrors the
 /// library test harness: keep GStreamer out of the process so media-backed
@@ -29,7 +29,7 @@ func ensureDemoAdwInit() {
 /// few passes to let queued work cascade.
 @MainActor
 func drainMainLoop(_ passes: Int = 4) {
-    for _ in 0..<passes {
+    for _ in 0 ..< passes {
         _ = MainContext.drainPending()
     }
 }

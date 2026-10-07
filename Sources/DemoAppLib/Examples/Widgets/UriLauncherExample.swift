@@ -71,7 +71,11 @@ struct UriLauncherExample: DemoExample {
         presetGroup.title = "Presets"
 
         let presetsBox = Box(orientation: .horizontal, spacing: 8)
-        for (name, uri) in [("GNOME", "https://gnome.org"), ("GTK", "https://gtk.org"), ("GitHub", "https://github.com")] {
+        for (name, uri) in [
+            ("GNOME", "https://gnome.org"),
+            ("GTK", "https://gtk.org"),
+            ("GitHub", "https://github.com")
+        ] {
             let btn = Button(label: name)
             btn.addCSSClass("pill")
             btn.onClicked { [entry] in

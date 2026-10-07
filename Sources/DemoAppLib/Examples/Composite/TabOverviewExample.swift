@@ -27,7 +27,7 @@ struct TabOverviewExample: DemoExample {
 
     func buildWidget() -> Widget {
         let tabView = TabView()
-        for i in 1...3 {
+        for i in 1 ... 3 {
             let label = Label("Content of tab \(i)")
             label.setMargins(24)
             let page = tabView.append(label)

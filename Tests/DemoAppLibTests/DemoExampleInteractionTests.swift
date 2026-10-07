@@ -115,11 +115,14 @@ struct DemoExampleInteractionTests {
     @Test @MainActor
     func inlineViewSwitcherDisplayMode() {
         ensureDemoAdwInit()
+        // InlineViewSwitcher needs libadwaita 1.7+; older runtimes render the
+        // example's fallback, so there is nothing to drive. Skip gracefully.
+        guard AdwaitaVersion.isAtLeast(1, 7) else { return }
         let (root, window) = Self.setUp(InlineViewSwitcherExample())
         defer { Self.tearDown(window) }
 
         let switcher = widgetOfType(root, InlineViewSwitcher.self)
-        #expect(switcher != nil, "InlineViewSwitcher requires libadwaita 1.7+")
+        #expect(switcher != nil, "InlineViewSwitcher should exist on a 1.7+ runtime")
 
         buttonLabeled(root, "Icons")?.emitClicked()
         #expect(switcher?.displayMode == .icons)
