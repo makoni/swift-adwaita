@@ -90,11 +90,11 @@ static inline gboolean cadw_signal_emit_close_page(gpointer tab_view, gpointer p
 }
 
 // Emit `get-next-page` on an AdwNavigationView and return the page the signal
-// produced. This is the transfer-full case: the trampoline's `g_object_ref`
-// (+1) is exactly the reference the C marshaller hands back to the caller, and
-// `g_value_unset` below releases it — balancing that +1. The caller therefore
-// does not hold an extra reference; a test that copied the page keeps its own
-// reference, which is the one that must be dropped to reach refcount zero.
+// produced. This is the transfer-full case: the Swift handler takes a `+1`
+// reference (while its wrapper is still alive) and this shim returns that
+// pointer verbatim through a plain slot. There is no `g_value_unset` here to
+// release it, so the caller owns the `+1` reference and must drop it (the test
+// calls `g_object_unref` to reach refcount zero and finalize the page).
 // This is the mirror image of `cadw_signal_emit_no_args`, which is correct for
 // the transfer-ownership="none" signals (create-tab, create-window) where the
 // marshaller borrows and releases nothing.
@@ -106,6 +106,34 @@ static inline gpointer cadw_signal_emit_get_next_page(GObject *instance) {
     gpointer page = NULL;
     g_signal_emit(instance, signal_id, 0, &page);
     return page;
+}
+
+// Emit `create-window` on an AdwTabView and return the view the signal
+// produced. Transfer-ownership="none": the handler returns a borrowed pointer
+// (no reference is added), so this shim hands that pointer back verbatim and the
+// caller must not drop a reference to it (it is borrowed, not owned).
+static inline gpointer cadw_signal_emit_create_window(GObject *instance) {
+    guint signal_id = g_signal_lookup("create-window", G_TYPE_FROM_INSTANCE(instance));
+    if (signal_id == 0) {
+        return NULL;
+    }
+    gpointer view = NULL;
+    g_signal_emit(instance, signal_id, 0, &view);
+    return view;
+}
+
+// Emit `GtkDragSource::drag-cancel` (two in-parameters: a `GdkDrag*` and a
+// `GdkDragCancelReason`, returning a `gboolean`) so an observer handler fires.
+// The values are ignored by the observer; they only need to be present to
+// match the signal's signature.
+static inline gboolean cadw_signal_emit_drag_cancel(gpointer instance, gpointer drag, guint reason) {
+    guint signal_id = g_signal_lookup("drag-cancel", G_TYPE_FROM_INSTANCE(instance));
+    if (signal_id == 0) {
+        return FALSE;
+    }
+    gboolean ret = FALSE;
+    g_signal_emit(instance, signal_id, 0, drag, reason, &ret);
+    return ret;
 }
 
 // Emit AdwSpinRow::input with its `double *new_value` out-parameter. The value

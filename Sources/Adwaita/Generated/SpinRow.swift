@@ -105,39 +105,29 @@ public final class SpinRow: ActionRow {
         adw_spin_row_update(opaquePointer)
     }
 
-    /// The current text in the spin row's entry.
+    /// The current text in the spin row.
     ///
-    /// Reads the text the user has typed. Returns an empty string if the
-    /// internal entry has not been realized yet.
+    /// Reads the text the user has typed. `AdwSpinRow` is itself a
+    /// `GtkEditable`, so the text is read directly from the instance rather
+    /// than from a child entry.
     public var text: String {
-        SpinRow.entryText(in: self) ?? ""
-    }
-
-    private static func entryText(in widget: Widget) -> String? {
-        if let entry = widget.tryCast(Entry.self) {
-            return entry.text
-        }
-        for child in widget.children() {
-            if let t = entryText(in: child) {
-                return t
-            }
-        }
-        return nil
+        spinRowEditableText(opaquePointer)
     }
 
     /// Called to convert the user's text input into a numeric value.
     ///
     /// The handler receives the text currently in the spin row's entry and
-    /// decides how to react: store the parsed value, keep the current value,
-    /// or mark the input as invalid. See ``SpinRowInputResult``.
+    /// decides how to react: store the parsed value, let GTK apply its standard
+    /// conversion, or mark the input as invalid. See ``SpinRowInputResult``.
     ///
     /// - Parameter handler: Called with the text being entered; returns a
     ///   ``SpinRowInputResult``.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onInput(_ handler: @escaping @MainActor (String) -> SpinRowInputResult) -> SignalConnection {
-        SignalHelper.connectInput(self, signal: .input) { (newValue: UnsafeMutablePointer<Double>) in
-            let result = handler(self.text)
+        SignalHelper.connectInput(self, signal: .input) { instance, newValue in
+            let text = spinRowEditableText(instance)
+            let result = handler(text)
             switch result {
             // swiftformat:disable:next hoistPatternLet
             case .value(let v):
@@ -168,4 +158,12 @@ public final class SpinRow: ActionRow {
     public func onWrapped(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
         SignalHelper.connect(self, signal: .wrapped, handler: handler)
     }
+}
+
+/// Reads the text of a `GtkEditable` (which `AdwSpinRow` is) from its instance
+/// pointer. Kept at file scope so the `input` signal closure can read the
+/// entry's text without capturing the `SpinRow` wrapper, which would keep the
+/// wrapper alive forever.
+private func spinRowEditableText(_ ptr: OpaquePointer) -> String {
+    String(cString: gtk_editable_get_text(ptr))
 }

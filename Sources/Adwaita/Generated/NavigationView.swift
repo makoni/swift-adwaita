@@ -158,8 +158,13 @@ public final class NavigationView: Widget, Swipeable {
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onGetNextPage(_ handler: @escaping @MainActor () -> NavigationPage?) -> SignalConnection {
-        SignalHelper.connectReturnObjectRef(self, signal: .getNextPage) {
-            handler()?.pointer
+        SignalHelper.connectReturnObjectRef(self, signal: .getNextPage) { () -> UnsafeMutableRawPointer? in
+            guard let page = handler() else { return nil }
+            // Transfer-full: the caller receives a `+1` reference. Take it here,
+            // while `page` (the only other owner) is still alive; the trampoline
+            // is a pass-through and runs after `page` has been released.
+            g_object_ref(page.pointer)
+            return page.pointer
         }
     }
 

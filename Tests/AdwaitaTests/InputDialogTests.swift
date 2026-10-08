@@ -68,6 +68,10 @@ struct InputDialogTests {
             fired = true
         }
         #expect(!fired, "onDragCancelled should not fire before a drag is cancelled")
+        // Real `GtkDragSource::drag-cancel` is `(GdkDrag*, GdkDragCancelReason) ->
+        // gboolean` (see Gtk-4.0.gir); the emit shim and the C trampoline match it.
+        _ = cadw_signal_emit_drag_cancel(source.pointer, nil, 0)
+        #expect(fired, "onDragCancelled must fire when the drag-cancel signal is emitted")
         conn.disconnect()
     }
 

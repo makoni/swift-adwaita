@@ -361,11 +361,11 @@ func signalTrampolineReturnObjectNullable(
 /// GObject returned with a full reference (GIR `transfer-ownership="full"`),
 /// e.g. `AdwNavigationView::get-next-page`.
 ///
-/// With `transfer full` the returned object is owned by the emitter side, which
-/// releases it once the signal returns. The Swift handler's wrapper only holds
-/// a temporary reference, so we take an extra reference here — before that
-/// wrapper is released — to balance the release the emitter performs. Omitting
-/// it would leave a dangling pointer (use-after-free).
+/// The `+1` reference is taken by the Swift handler while its wrapper is still
+/// alive (see the `onGetNextPage` closure), so this trampoline is a plain
+/// pass-through: by the time it runs the handler's temporary wrapper has already
+/// been released, so it must not touch the reference (a `g_object_ref` here
+/// would be a use-after-free).
 func signalTrampolineReturnObjectRef(
     _ instance: UnsafeMutableRawPointer,
     _ userData: UnsafeMutableRawPointer
@@ -373,11 +373,7 @@ func signalTrampolineReturnObjectRef(
     let box = Unmanaged<ClosureBox<@MainActor () -> UnsafeMutableRawPointer?>>.fromOpaque(userData)
         .takeUnretainedValue()
     let result = MainActor.assumeIsolated {
-        guard let pointer = box.closure() else {
-            return UncheckedOptionalRawPointer(value: nil)
-        }
-        g_object_ref(pointer)
-        return UncheckedOptionalRawPointer(value: pointer)
+        UncheckedOptionalRawPointer(value: box.closure())
     }
     return result.value
 }
@@ -402,15 +398,16 @@ func signalTrampolinePointerReturnBool(
 /// `double *new_value` the handler may write, and the return is a `gint`
 /// (TRUE = value written, FALSE = default conversion, -1 = GTK_INPUT_ERROR).
 func signalTrampolineInput(
-    _ instance: UnsafeMutableRawPointer,
+    _ instance: OpaquePointer,
     _ newValue: UnsafeMutablePointer<Double>,
     _ userData: UnsafeMutableRawPointer
 ) -> Int32 {
-    let box = Unmanaged<ClosureBox<@MainActor (UnsafeMutablePointer<Double>) -> Int32>>.fromOpaque(userData)
-        .takeUnretainedValue()
+    let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer, UnsafeMutablePointer<Double>) -> Int32>>
+        .fromOpaque(userData).takeUnretainedValue()
+    let instancePtr = UncheckedOpaquePointer(value: instance)
     let wrapped = UncheckedDoublePointer(value: newValue)
     return MainActor.assumeIsolated {
-        box.closure(wrapped.value)
+        box.closure(instancePtr.value, wrapped.value)
     }
 }
 

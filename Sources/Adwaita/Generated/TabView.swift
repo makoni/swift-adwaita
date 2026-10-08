@@ -31,6 +31,7 @@ import GObjectSupport
 /// // React to tab close requests
 /// tabView.onClosePage { page in
 ///     tabView.closePageFinish(page, confirm: true)
+///     return true
 /// }
 /// ```
 ///

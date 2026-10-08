@@ -176,10 +176,43 @@ struct NavigationAndTabTests {
         let conn = tabView.onClosePage { p in
             fired = true
             _ = p
-            return false
+            return true
         }
-        _ = cadw_signal_emit_close_page(tabView.pointer, page.pointer)
+        let ret = cadw_signal_emit_close_page(tabView.pointer, page.pointer)
         #expect(fired, "onClosePage handler should fire")
+        #expect(ret != 0, "the handler's return value must reach the signal's return")
+        conn.disconnect()
+    }
+
+    @Test @MainActor func tabViewOnClosePageCancelKeepsPage() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let page = tabView.append(Label("x"))
+        var fired = false
+        let conn = tabView.onClosePage { p in
+            fired = true
+            tabView.closePageFinish(p, confirm: false)
+            return true
+        }
+        tabView.closePage(page)
+        #expect(fired, "onClosePage handler should fire")
+        #expect(tabView.nPages == 1, "cancelling the close must keep the page")
+        conn.disconnect()
+    }
+
+    @Test @MainActor func tabViewOnClosePageConfirmClosesPage() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let page = tabView.append(Label("x"))
+        var fired = false
+        let conn = tabView.onClosePage { p in
+            fired = true
+            tabView.closePageFinish(p, confirm: true)
+            return true
+        }
+        tabView.closePage(page)
+        #expect(fired, "onClosePage handler should fire")
+        #expect(tabView.nPages == 0, "confirming the close must remove the page")
         conn.disconnect()
     }
 
@@ -205,8 +238,10 @@ struct NavigationAndTabTests {
             fired = true
             return dest
         }
-        cadw_signal_emit_no_args(tabView.pointer, "create-window")
+        let raw = cadw_signal_emit_create_window(tabView.gobjectPointer)
         #expect(fired, "onCreateWindow handler should fire and return the destination view")
+        #expect(raw != nil, "the signal must hand back the destination view")
+        #expect(raw == dest.pointer, "the returned pointer must reach the caller (transfer-none borrow)")
         conn.disconnect()
     }
 
@@ -218,38 +253,42 @@ struct NavigationAndTabTests {
             fired = true
             return NavigationPage(child: Label("next"), title: "next")
         }
-        cadw_signal_emit_no_args(navView.pointer, "get-next-page")
+        let raw = cadw_signal_emit_get_next_page(navView.gobjectPointer)
         #expect(fired, "onGetNextPage handler should fire")
+        #expect(raw != nil, "the signal must hand back the created page")
+        if let raw {
+            g_object_unref(raw.assumingMemoryBound(to: GObject.self))
+        }
         conn.disconnect()
     }
 
     @Test @MainActor func navigationViewOnGetNextPageFinalizesOnce() {
         ensureAdwInit()
         let navView = NavigationView()
-        var createdPage: NavigationPage?
+        var created = false
+        var weakSlot: UnsafeMutableRawPointer?
+        // The handler keeps NO reference to the page it creates. This is the
+        // case that would use-after-free if the return-object trampoline failed
+        // to add its `g_object_ref` before the caller's temporary `NavigationPage`
+        // was deallocated: the page would finalize early and the weak pointer
+        // below would already be cleared. A weak pointer is registered inside the
+        // handler so the test can observe the page finalizing exactly once.
         navView.onGetNextPage {
+            created = true
             let p = NavigationPage(child: Label("next"), title: "next")
-            createdPage = p
+            weakSlot = p.pointer
+            g_object_add_weak_pointer(p.gobjectPointer, &weakSlot)
             return p
         }
-        // Transfer-full: the marshaller hands the caller the trampoline's
-        // `g_object_ref` (+1). If the trampoline omitted that ref, `createdPage`
-        // would be the sole owner, so dropping it would finalize the page early
-        // and the `g_object_unref` below would be a double-free (crash).
         let raw = cadw_signal_emit_get_next_page(navView.gobjectPointer)
-        #expect(createdPage != nil, "the handler must create and return a page")
+        #expect(created, "onGetNextPage handler should fire")
         #expect(raw != nil, "the signal must hand back a live reference to the page")
-        var weakSlot: UnsafeMutableRawPointer?
-        if let page = createdPage {
-            weakSlot = page.pointer
-            g_object_add_weak_pointer(page.gobjectPointer, &weakSlot)
-        }
-        createdPage = nil
+        #expect(weakSlot != nil, "the page must still be alive once handed to the caller (transfer-full ref)")
         if let raw {
             g_object_unref(raw.assumingMemoryBound(to: GObject.self))
         }
         spinMainLoop()
-        #expect(weakSlot == nil, "the returned page must finalize exactly once (balanced transfer-full ref)")
+        #expect(weakSlot == nil, "the page must finalize exactly once after the caller releases it")
     }
 
     @Test @MainActor func tabViewTransferPage() {

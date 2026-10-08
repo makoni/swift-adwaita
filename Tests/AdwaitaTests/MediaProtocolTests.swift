@@ -311,6 +311,24 @@ extension SerializedLifecycleSuites {
             conn.disconnect()
         }
 
+        @Test @MainActor func spinRowOnInputReceivesEditableText() {
+            ensureAdwInit()
+            let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)
+            row.value = 42
+            var received: String?
+            let conn = row.onInput { text in
+                received = text
+                return .value(Double(text) ?? 0)
+            }
+            var outValue: Double = -1
+            _ = cadw_signal_emit_spin_row_input(row.pointer, &outValue)
+            let editableText = String(cString: gtk_editable_get_text(row.opaquePointer))
+            #expect(received != nil, "onInput handler should fire")
+            #expect(received == editableText, "onInput must receive the row's current editable text")
+            #expect(outValue == 42.0, "the handler must parse the text back to the row's value")
+            conn.disconnect()
+        }
+
         @Test @MainActor func spinRowOnInputSignalInvalid() {
             ensureAdwInit()
             let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)

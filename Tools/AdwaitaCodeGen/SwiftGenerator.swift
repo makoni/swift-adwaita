@@ -734,16 +734,27 @@ class SwiftGenerator {
         } else {
             helper = "connectReturnObject"
         }
-        let body = optional.isEmpty ? "handler().pointer" : "handler()?.pointer"
         var out = "\n    /// Emitted when the `\(signal.name)` signal is fired.\n"
         out += "    ///\n"
         out += "    /// - Parameter handler: Called when the signal is emitted; returns a `\(clsName)\(optional)`.\n"
         out += "    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.\n"
         out += "    @discardableResult\n"
         out += "    public func \(swiftName)(_ handler: @escaping @MainActor () -> \(clsName)\(optional)) -> SignalConnection {\n"
-        out += "        SignalHelper.\(helper)(self, signal: .\(signalCase)) {\n"
-        out += "            \(body)\n"
-        out += "        }\n"
+        if transfer == "full" {
+            out += "        SignalHelper.\(helper)(self, signal: .\(signalCase)) { () -> UnsafeMutableRawPointer? in\n"
+            out += "            guard let page = handler() else { return nil }\n"
+            out += "            // Transfer-full: the caller receives a `+1` reference. Take it here,\n"
+            out += "            // while `page` (the only other owner) is still alive; the trampoline\n"
+            out += "            // is a pass-through and runs after `page` has been released.\n"
+            out += "            g_object_ref(page.pointer)\n"
+            out += "            return page.pointer\n"
+            out += "        }\n"
+        } else {
+            let body = optional.isEmpty ? "handler().pointer" : "handler()?.pointer"
+            out += "        SignalHelper.\(helper)(self, signal: .\(signalCase)) {\n"
+            out += "            \(body)\n"
+            out += "        }\n"
+        }
         out += "    }\n"
         return out
     }
@@ -776,15 +787,22 @@ class SwiftGenerator {
     }
 
     private func generateInputSignal(_ signal: GIRSignal, swiftName: String, signalCase: String) -> String {
-        var out = "\n    /// Emitted when the `\(signal.name)` signal is fired.\n"
+        var out = "\n    /// Called to convert the user's text input into a numeric value.\n"
         out += "    ///\n"
-        out += "    /// - Parameter handler: Called with the text; returns a `SpinRowInputResult`.\n"
+        out += "    /// The handler receives the text currently in the spin row's entry and\n"
+        out += "    /// decides how to react: store the parsed value, let GTK apply its standard\n"
+        out += "    /// conversion, or mark the input as invalid. See ``SpinRowInputResult``.\n"
+        out += "    ///\n"
+        out += "    /// - Parameter handler: Called with the text being entered; returns a\n"
+        out += "    ///   ``SpinRowInputResult``.\n"
         out += "    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.\n"
         out += "    @discardableResult\n"
         out += "    public func \(swiftName)(_ handler: @escaping @MainActor (String) -> SpinRowInputResult) -> SignalConnection {\n"
-        out += "        SignalHelper.connectInput(self, signal: .\(signalCase)) { (newValue: UnsafeMutablePointer<Double>) in\n"
-        out += "            let result = handler(self.text)\n"
+        out += "        SignalHelper.connectInput(self, signal: .\(signalCase)) { instance, newValue in\n"
+        out += "            let text = spinRowEditableText(instance)\n"
+        out += "            let result = handler(text)\n"
         out += "            switch result {\n"
+        out += "            // swiftformat:disable:next hoistPatternLet\n"
         out += "            case .value(let v):\n                newValue.pointee = v\n                return 1\n"
         out += "            case .useDefault:\n                return 0\n"
         out += "            case .invalid:\n                return -1\n"

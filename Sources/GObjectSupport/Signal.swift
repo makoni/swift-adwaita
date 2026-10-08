@@ -569,8 +569,9 @@ public enum SignalHelper {
     /// Connects a no-parameter signal whose C return value is a **nullable**
     /// GObject returned with a full reference (GIR `transfer-ownership="full"`),
     /// e.g. `AdwNavigationView::get-next-page`. The handler may return `nil`;
-    /// for a non-`nil` object the trampoline takes an extra reference to
-    /// balance the release the emitter performs after the signal returns.
+    /// for a non-`nil` object it must return a pointer that already carries the
+    /// caller's `+1` reference (taken while the handler's wrapper is still
+    /// alive). The trampoline is a pass-through and must not add a reference.
     @discardableResult
     public static func connectReturnObjectRef(
         _ instance: GObjectRef,
@@ -616,19 +617,21 @@ public enum SignalHelper {
     }
 
     /// Connects a signal with a single out-parameter `double *` (e.g.
-    /// `AdwSpinRow::input`). The closure may write through the pointer and
-    /// returns the `gint` status (1 = handled, 0 = default, -1 = error).
+    /// `AdwSpinRow::input`). The closure receives the emitting instance's raw
+    /// pointer (so it can read state without retaining the wrapper) plus the
+    /// out-pointer it may write, and returns the `gint` status (1 = handled,
+    /// 0 = default, -1 = error).
     @discardableResult
     public static func connectInput(
         _ instance: GObjectRef,
         signal: SignalName,
-        handler: @escaping @MainActor (UnsafeMutablePointer<Double>) -> Int32
+        handler: @escaping @MainActor (OpaquePointer, UnsafeMutablePointer<Double>) -> Int32
     ) -> SignalConnection {
         connectRaw(
             instance, signal: signal,
             trampoline: unsafeBitCast(
                 signalTrampolineInput as @convention(c) (
-                    UnsafeMutableRawPointer,
+                    OpaquePointer,
                     UnsafeMutablePointer<Double>,
                     UnsafeMutableRawPointer
                 ) -> Int32,
