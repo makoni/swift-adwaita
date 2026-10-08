@@ -116,8 +116,13 @@ final class ExpandedWidgetXCTests: XCTestCase {
     @MainActor func test_tabOverviewCreateTabSignal() {
         ensureAdwInit()
         let overview = TabOverview()
+        let tabView = TabView()
+        overview.view = tabView
         var created = false
-        let conn = overview.onCreateTab { created = true }
+        let conn = overview.onCreateTab {
+            created = true
+            return tabView.append(Label("Tab"))
+        }
         XCTAssertFalse(created)
         conn.disconnect()
     }
