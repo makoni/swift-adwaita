@@ -16,12 +16,16 @@ struct TabOverviewExample: DemoExample {
 
     let overview = TabOverview()
     overview.view = tabView
-    overview.child = mainContent
+    overview.child = Label("Main content")
     overview.enableNewTab = true
     overview.enableSearch = true
+    // The handler must append a page to the TabView and return it; the
+    // overview selects it and closes, and does not re-add it.
     overview.onCreateTab {
-        let page = tabView.append(newPage)
+        let label = Label("A new tab")
+        let page = tabView.append(label)
         page.title = "New Tab"
+        return page
     }
     """
 
@@ -45,12 +49,18 @@ struct TabOverviewExample: DemoExample {
         overview.child = contentBox
         overview.enableNewTab = true
         overview.enableSearch = true
+        // Embedded in the demo window (not a top-level), so suppress the
+        // overview's own start/end window title buttons — the GIR default is
+        // TRUE, which would duplicate the real window controls.
+        overview.showStartTitleButtons = false
+        overview.showEndTitleButtons = false
         overview.vexpand = true
         overview.onCreateTab {
             let label = Label("A new tab")
             label.setMargins(24)
             let page = tabView.append(label)
             page.title = "New Tab"
+            return page
         }
 
         let controlBox = Box(orientation: .horizontal, spacing: 12)

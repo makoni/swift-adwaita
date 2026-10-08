@@ -114,11 +114,16 @@ struct ExpandedWidgetTests {
         #expect(overview.child != nil)
     }
 
-    @Test @MainActor func tabOverviewCreateTabSignal() {
+    @Test @MainActor func tabOverviewCreateTabSignalConnect() {
         ensureAdwInit()
+        let tabView = TabView()
         let overview = TabOverview()
+        overview.view = tabView
         var created = false
-        let conn = overview.onCreateTab { created = true }
+        let conn = overview.onCreateTab {
+            created = true
+            return tabView.append(Label("Tab"))
+        }
         #expect(!created)
         conn.disconnect()
     }

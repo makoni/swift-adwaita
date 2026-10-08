@@ -617,6 +617,68 @@ class SwiftGenerator {
     private func generateSignalMethod(_ signal: GIRSignal, cls: GIRClass) -> String {
         let swiftName = "on" + snakeToPascal(signal.name.replacingOccurrences(of: "-", with: "_"))
 
+        // Helper closures are chosen by both the signal's parameters AND its
+        // return type / out-parameters (the original bug was choosing by
+        // parameters only, so return-valued signals got Void trampolines).
+        let inParams = signal.parameters.filter { $0.direction != "out" && $0.direction != "inout" }
+        let outParams = signal.parameters.filter { $0.direction == "out" || $0.direction == "inout" }
+        let retName = signal.returnType.name
+        let signalCase = snakeToCamel(signal.name.replacingOccurrences(of: "-", with: "_"))
+
+        // (1) No-parameter signal that returns a GObject (create-tab, create-
+        //     window, get-next-page). The handler produces the object and
+        //     returns it; the GIR `transfer-ownership` annotation on the
+        //     return value decides whether a reference is added.
+        if inParams.isEmpty,
+           retName != "none",
+           namespace.classes.contains(where: { $0.name == retName }) {
+            return generateObjectReturnSignal(signal, swiftName: swiftName, signalCase: signalCase)
+        }
+
+        // (2) SpinRow::input — a `gint` return with a single out-parameter
+        //     `double *new_value`. Mapped to a bespoke handler, never
+        //     connectDouble (the value is written through the out-pointer).
+        if outParams.count == 1,
+           retName == "gint" || retName == "int",
+           outParams[0].type.name == "gdouble" {
+            return generateInputSignal(signal, swiftName: swiftName, signalCase: signalCase)
+        }
+
+        // (3) Out-parameters without a dedicated handler cannot be mapped.
+        if !outParams.isEmpty {
+            return "\n    // TODO: Signal `\(signal.name)` — out-parameter not supported\n\n"
+        }
+
+        // (4) Object-returning signal with parameters is not supported.
+        if retName != "none",
+           namespace.classes.contains(where: { $0.name == retName }) {
+            return "\n    // TODO: Signal `\(signal.name)` — object-returning signal with parameters not supported\n\n"
+        }
+
+        // (5) Boolean-returning signals: (Object) -> Bool (close-page) and
+        //     () -> Bool (output).
+        if retName == "gboolean" {
+            if inParams.count == 1,
+               namespace.classes.contains(where: { $0.name == inParams[0].type.name }) {
+                return generatePointerReturnBoolSignal(signal, swiftName: swiftName, signalCase: signalCase)
+            }
+            if inParams.isEmpty {
+                return generateReturnBoolSignal(signal, swiftName: swiftName, signalCase: signalCase)
+            }
+        }
+
+        // (6) (Pointer, GObject.Value) signals with return values (extra-drag-*).
+        if inParams.count == 2,
+           isPointerTypeParam(inParams[0]),
+           inParams[1].type.name == "GObject.Value" {
+            return generatePointerGValueSignal(signal, swiftName: swiftName)
+        }
+
+        // (7) Any remaining signal with a return value has no matching helper.
+        guard retName == "none" else {
+            return "\n    // TODO: Signal `\(signal.name)` — unsupported return type `\(retName)`\n\n"
+        }
+
         guard let connectMethod = signalConnectMethod(signal.parameters) else {
             return "\n    // TODO: Signal `\(signal.name)` — unsupported parameter types\n\n"
         }
@@ -651,6 +713,84 @@ class SwiftGenerator {
         out += "        SignalHelper.\(connectMethod)(self, signal: \"\(signal.name)\", handler: handler)\n"
         out += "    }\n"
 
+        return out
+    }
+
+    private func isPointerTypeParam(_ param: GIRParameter) -> Bool {
+        if param.type.cType.hasSuffix("*") { return true }
+        if namespace.classes.contains(where: { $0.name == param.type.name }) { return true }
+        return false
+    }
+
+    private func generateObjectReturnSignal(_ signal: GIRSignal, swiftName: String, signalCase: String) -> String {
+        let clsName = signal.returnType.name
+        let transfer = signal.returnTransfer
+        let optional = signal.returnNullable ? "?" : ""
+        let helper: String
+        if transfer == "full" {
+            helper = "connectReturnObjectRef"
+        } else if signal.returnNullable {
+            helper = "connectReturnObjectNullable"
+        } else {
+            helper = "connectReturnObject"
+        }
+        let body = optional.isEmpty ? "handler().pointer" : "handler()?.pointer"
+        var out = "\n    /// Emitted when the `\(signal.name)` signal is fired.\n"
+        out += "    ///\n"
+        out += "    /// - Parameter handler: Called when the signal is emitted; returns a `\(clsName)\(optional)`.\n"
+        out += "    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.\n"
+        out += "    @discardableResult\n"
+        out += "    public func \(swiftName)(_ handler: @escaping @MainActor () -> \(clsName)\(optional)) -> SignalConnection {\n"
+        out += "        SignalHelper.\(helper)(self, signal: .\(signalCase)) {\n"
+        out += "            \(body)\n"
+        out += "        }\n"
+        out += "    }\n"
+        return out
+    }
+
+    private func generateReturnBoolSignal(_ signal: GIRSignal, swiftName: String, signalCase: String) -> String {
+        var out = "\n    /// Emitted when the `\(signal.name)` signal is fired.\n"
+        out += "    ///\n"
+        out += "    /// - Parameter handler: Invoked when the signal is emitted; returns a `Bool`.\n"
+        out += "    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.\n"
+        out += "    @discardableResult\n"
+        out += "    public func \(swiftName)(_ handler: @escaping @MainActor () -> Bool) -> SignalConnection {\n"
+        out += "        SignalHelper.connectReturnBool(self, signal: .\(signalCase), handler: handler)\n"
+        out += "    }\n"
+        return out
+    }
+
+    private func generatePointerReturnBoolSignal(_ signal: GIRSignal, swiftName: String, signalCase: String) -> String {
+        let clsName = signal.parameters.first!.type.name
+        var out = "\n    /// Emitted when the `\(signal.name)` signal is fired.\n"
+        out += "    ///\n"
+        out += "    /// - Parameter handler: Called with the `\(clsName)`; returns a `Bool`.\n"
+        out += "    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.\n"
+        out += "    @discardableResult\n"
+        out += "    public func \(swiftName)(_ handler: @escaping @MainActor (\(clsName)) -> Bool) -> SignalConnection {\n"
+        out += "        SignalHelper.connectPointerReturnBool(self, signal: .\(signalCase)) { (ptr: OpaquePointer) in\n"
+        out += "            handler(\(clsName)(borrowing: UnsafeMutableRawPointer(ptr)))\n"
+        out += "        }\n"
+        out += "    }\n"
+        return out
+    }
+
+    private func generateInputSignal(_ signal: GIRSignal, swiftName: String, signalCase: String) -> String {
+        var out = "\n    /// Emitted when the `\(signal.name)` signal is fired.\n"
+        out += "    ///\n"
+        out += "    /// - Parameter handler: Called with the text; returns a `SpinRowInputResult`.\n"
+        out += "    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.\n"
+        out += "    @discardableResult\n"
+        out += "    public func \(swiftName)(_ handler: @escaping @MainActor (String) -> SpinRowInputResult) -> SignalConnection {\n"
+        out += "        SignalHelper.connectInput(self, signal: .\(signalCase)) { (newValue: UnsafeMutablePointer<Double>) in\n"
+        out += "            let result = handler(self.text)\n"
+        out += "            switch result {\n"
+        out += "            case .value(let v):\n                newValue.pointee = v\n                return 1\n"
+        out += "            case .useDefault:\n                return 0\n"
+        out += "            case .invalid:\n                return -1\n"
+        out += "            }\n"
+        out += "        }\n"
+        out += "    }\n"
         return out
     }
 

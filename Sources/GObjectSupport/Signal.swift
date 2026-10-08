@@ -517,6 +517,152 @@ public enum SignalHelper {
         )
     }
 
+    // MARK: - No-parameter signal returning a GObject
+
+    /// Connects a no-parameter signal whose C return value is a GObject that is
+    /// returned **without** a reference (GIR `transfer-ownership="none"`) and is
+    /// never `NULL` (e.g. `AdwTabOverview::create-tab`, which returns the new
+    /// `AdwTabPage`). The handler produces the object and returns its raw
+    /// pointer; no reference is added. See `signalTrampolineReturnObject`.
+    @discardableResult
+    public static func connectReturnObject(
+        _ instance: GObjectRef,
+        signal: SignalName,
+        handler: @escaping @MainActor () -> UnsafeMutableRawPointer
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineReturnObject as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UnsafeMutableRawPointer
+                ) -> UnsafeMutableRawPointer,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
+    /// Connects a no-parameter signal whose C return value is a **nullable**
+    /// GObject returned without a reference (GIR `transfer-ownership="none"`),
+    /// e.g. `AdwTabView::create-window`. The handler may return `nil` (passed
+    /// to the marshaller as `NULL`). No reference is added.
+    @discardableResult
+    public static func connectReturnObjectNullable(
+        _ instance: GObjectRef,
+        signal: SignalName,
+        handler: @escaping @MainActor () -> UnsafeMutableRawPointer?
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineReturnObjectNullable as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UnsafeMutableRawPointer
+                ) -> UnsafeMutableRawPointer?,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
+    /// Connects a no-parameter signal whose C return value is a **nullable**
+    /// GObject returned with a full reference (GIR `transfer-ownership="full"`),
+    /// e.g. `AdwNavigationView::get-next-page`. The handler may return `nil`;
+    /// for a non-`nil` object the trampoline takes an extra reference to
+    /// balance the release the emitter performs after the signal returns.
+    @discardableResult
+    public static func connectReturnObjectRef(
+        _ instance: GObjectRef,
+        signal: SignalName,
+        handler: @escaping @MainActor () -> UnsafeMutableRawPointer?
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineReturnObjectRef as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UnsafeMutableRawPointer
+                ) -> UnsafeMutableRawPointer?,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
+    // MARK: - Pointer-parameter signal returning Bool
+
+    /// Connects a signal with a single pointer parameter that returns a
+    /// `gboolean` (e.g. `AdwTabView::close-page`). Return `true` to stop
+    /// propagation; `false` to run the default handler.
+    @discardableResult
+    public static func connectPointerReturnBool(
+        _ instance: GObjectRef,
+        signal: SignalName,
+        handler: @escaping @MainActor (OpaquePointer) -> Bool
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolinePointerReturnBool as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    OpaquePointer,
+                    UnsafeMutableRawPointer
+                ) -> gboolean,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
+    /// Connects a signal with a single out-parameter `double *` (e.g.
+    /// `AdwSpinRow::input`). The closure may write through the pointer and
+    /// returns the `gint` status (1 = handled, 0 = default, -1 = error).
+    @discardableResult
+    public static func connectInput(
+        _ instance: GObjectRef,
+        signal: SignalName,
+        handler: @escaping @MainActor (UnsafeMutablePointer<Double>) -> Int32
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineInput as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    UnsafeMutablePointer<Double>,
+                    UnsafeMutableRawPointer
+                ) -> Int32,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
+    /// Connects the `GtkDragSource::drag-cancel` observer. The C signal carries
+    /// `(GdkDrag*, GdkDragCancelReason)` and returns a `gboolean`, but the
+    /// Swift handler is a plain observer. The trampoline always returns
+    /// `FALSE` so the standard "drag operation failed" animation still runs.
+    @discardableResult
+    public static func connectDragCancel(
+        _ instance: GObjectRef,
+        signal: SignalName,
+        handler: @escaping @MainActor () -> Void
+    ) -> SignalConnection {
+        connectRaw(
+            instance, signal: signal,
+            trampoline: unsafeBitCast(
+                signalTrampolineDragCancel as @convention(c) (
+                    UnsafeMutableRawPointer,
+                    OpaquePointer,
+                    UInt32,
+                    UnsafeMutableRawPointer
+                ) -> gboolean,
+                to: GCallback.self
+            ),
+            box: ClosureBox(handler)
+        )
+    }
+
     // MARK: - Signals returning Bool
 
     /// Connects a signal with two `Double` parameters returning `GdkDragAction`.

@@ -40,6 +40,90 @@ static inline void g_signal_emit_by_name_no_args(gpointer instance, const gchar 
     g_signal_emit_by_name(instance, signal_name);
 }
 
+// ---------------------------------------------------------------------------
+// Emit a no-argument signal by name through g_signal_emit.
+//
+// g_signal_emit is variadic and, for a signal that has a return value, expects
+// a pointer to the caller's return slot as the first variadic argument. A
+// signal with no return value ignores the extra argument. Providing the slot
+// is REQUIRED for object-returning signals such as
+// AdwTabOverview::create-tab: without it the marshaller writes the returned
+// AdwTabPage* into an uninitialised slot and the process crashes.
+//
+// create-tab's return is `transfer-ownership="none"`: the slot receives a
+// borrowed pointer and no reference is added, so the slot here is only the
+// marshaller's write target. It is deliberately discarded without an unref —
+// the object is still owned by its container.
+// ---------------------------------------------------------------------------
+static inline void cadw_signal_emit_no_args(gpointer instance, const gchar *signal_name) {
+    guint signal_id = g_signal_lookup(signal_name, G_TYPE_FROM_INSTANCE(instance));
+    if (signal_id == 0) {
+        return;
+    }
+    gpointer returned_object = NULL;
+    g_signal_emit(instance, signal_id, 0, &returned_object);
+}
+
+// Emit a no-argument signal that returns a gboolean, and return the value the
+// handlers produced. Used for AdwSpinRow::output.
+static inline gboolean cadw_signal_emit_bool_return(gpointer instance, const gchar *signal_name) {
+    guint signal_id = g_signal_lookup(signal_name, G_TYPE_FROM_INSTANCE(instance));
+    if (signal_id == 0) {
+        return FALSE;
+    }
+    gboolean ret = FALSE;
+    g_signal_emit(instance, signal_id, 0, &ret);
+    return ret;
+}
+
+// Emit AdwTabView::close-page with a page argument; returns the gboolean the
+// handlers produced (TRUE = handled / default close skipped, FALSE = run the
+// default close).
+static inline gboolean cadw_signal_emit_close_page(gpointer tab_view, gpointer page) {
+    guint signal_id = g_signal_lookup("close-page", G_TYPE_FROM_INSTANCE(tab_view));
+    if (signal_id == 0) {
+        return FALSE;
+    }
+    gboolean ret = FALSE;
+    g_signal_emit(tab_view, signal_id, 0, page, &ret);
+    return ret;
+}
+
+// Emit `get-next-page` on an AdwNavigationView and return the page the signal
+// produced. This is the transfer-full case: the trampoline's `g_object_ref`
+// (+1) is exactly the reference the C marshaller hands back to the caller, and
+// `g_value_unset` below releases it — balancing that +1. The caller therefore
+// does not hold an extra reference; a test that copied the page keeps its own
+// reference, which is the one that must be dropped to reach refcount zero.
+// This is the mirror image of `cadw_signal_emit_no_args`, which is correct for
+// the transfer-ownership="none" signals (create-tab, create-window) where the
+// marshaller borrows and releases nothing.
+static inline gpointer cadw_signal_emit_get_next_page(GObject *instance) {
+    guint signal_id = g_signal_lookup("get-next-page", G_TYPE_FROM_INSTANCE(instance));
+    if (signal_id == 0) {
+        return NULL;
+    }
+    gpointer page = NULL;
+    g_signal_emit(instance, signal_id, 0, &page);
+    return page;
+}
+
+// Emit AdwSpinRow::input with its `double *new_value` out-parameter. The value
+// the handler writes is copied to *out_value; the gint status is returned.
+static inline gint cadw_signal_emit_spin_row_input(gpointer spin_row, double *out_value) {
+    guint signal_id = g_signal_lookup("input", G_TYPE_FROM_INSTANCE(spin_row));
+    if (signal_id == 0) {
+        return 0;
+    }
+    double new_value = 0.0;
+    gint ret = 0;
+    g_signal_emit(spin_row, signal_id, 0, &new_value, &ret);
+    if (out_value) {
+        *out_value = new_value;
+    }
+    return ret;
+}
+
 static inline void swiftadw_gesture_click_emit_released(
     GtkGestureClick *gesture,
     int n_press,

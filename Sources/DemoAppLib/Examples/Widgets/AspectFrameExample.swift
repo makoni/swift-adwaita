@@ -47,6 +47,12 @@ struct AspectFrameExample: DemoExample {
         let controlGroup = PreferencesGroup()
         controlGroup.title = "Ratio"
 
+        let obeySwitch = Switch()
+        obeySwitch.valign = .center
+        obeySwitch.onActiveChanged { [frame, obeySwitch] in
+            frame.obeyChild = obeySwitch.active
+        }
+
         let ratioRow = ActionRow()
         ratioRow.title = "Aspect ratio"
         ratioRow.subtitle = "Width : height of the preserved box"
@@ -55,9 +61,11 @@ struct AspectFrameExample: DemoExample {
         for (name, value) in [("16:9", 16.0 / 9.0), ("4:3", 4.0 / 3.0), ("1:1", 1.0), ("1:2", 0.5)] {
             let btn = Button(label: name)
             btn.addCSSClass("pill")
-            btn.onClicked { [frame] in
+            btn.onClicked { [frame, obeySwitch] in
                 frame.ratio = Float(value)
                 frame.obeyChild = false
+                // A preset forces ratio mode; keep the switch in sync.
+                obeySwitch.active = false
             }
             ratioBox.append(btn)
         }
@@ -68,11 +76,6 @@ struct AspectFrameExample: DemoExample {
         let obeyRow = ActionRow()
         obeyRow.title = "Obey child"
         obeyRow.subtitle = "Use the child's own ratio instead of the preset"
-        let obeySwitch = Switch()
-        obeySwitch.valign = .center
-        obeySwitch.onActiveChanged { [frame, obeySwitch] in
-            frame.obeyChild = obeySwitch.active
-        }
         obeyRow.addSuffix(obeySwitch)
         obeyRow.activatableWidget = obeySwitch
         controlGroup.add(obeyRow)

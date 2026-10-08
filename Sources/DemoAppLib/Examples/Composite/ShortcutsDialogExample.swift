@@ -12,10 +12,15 @@ struct ShortcutsDialogExample: DemoExample {
     let sourceCode = """
     let dialog = ShortcutsDialog()
 
-    let section = ShortcutsSection(title: "General")
-    section.add(ShortcutsItem(title: "Go Back", accelerator: "<Primary>Left"))
-    section.add(ShortcutsItem(title: "Find", accelerator: "<Primary>f"))
-    dialog.add(section)
+    if let section = ShortcutsSection(title: "General") {
+        if let goBack = ShortcutsItem(title: "Go Back", accelerator: "<Primary>Left") {
+            section.add(goBack)
+        }
+        if let find = ShortcutsItem(title: "Find", accelerator: "<Primary>f") {
+            section.add(find)
+        }
+        dialog.add(section)
+    }
 
     dialog.present(parent)
     """
@@ -33,8 +38,7 @@ struct ShortcutsDialogExample: DemoExample {
         openBtn.addCSSClass("pill")
         openBtn.halign = .center
         openBtn.sensitive = ShortcutsDialog.isAvailable
-        openBtn.onClicked { [weak box] in
-            guard let box else { return }
+        openBtn.onClicked { [box] in
             guard ShortcutsDialog.isAvailable else { return }
             let dialog = ShortcutsDialog()
 

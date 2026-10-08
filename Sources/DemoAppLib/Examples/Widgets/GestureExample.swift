@@ -26,8 +26,8 @@ struct GestureExample: DemoExample {
 
     // Click
     let click = GestureClick()
-    click.onPressed { button, x, y in
-        print("Button \\(button) at (\\(x), \\(y))")
+    click.onPressed { nPress, x, y in
+        print("Pressed \\(nPress)× at (\\(x), \\(y))")
     }
     widget.addController(click)
 
@@ -121,7 +121,7 @@ struct GestureExample: DemoExample {
         // Click
         let group3 = PreferencesGroup()
         group3.title = "Click"
-        group3.description = "Click (tap) the area below; the button number is reported"
+        group3.description = "Click (tap) the area below with the primary (left) mouse button; the press count and position are reported"
 
         let clickLabel = Label("Click here")
         clickLabel.addCSSClass("title-3")
@@ -139,8 +139,11 @@ struct GestureExample: DemoExample {
         clickBox.setSizeRequest(width: -1, height: 120)
 
         let click = GestureClick()
-        click.onPressed { [clickLabel, clickResult] button, x, y in
-            clickLabel.text = "Button \(button) pressed!"
+        // Respond to the primary (left) button only, matching the description
+        // above; the wrapper's default is "any button".
+        click.button = 1
+        click.onPressed { [clickLabel, clickResult] nPress, x, y in
+            clickLabel.text = "Pressed \(nPress)×!"
             clickResult.text = "at (\(Int(x)), \(Int(y)))"
         }
         click.onReleased { [clickLabel] _, _, _ in
@@ -173,13 +176,13 @@ struct GestureExample: DemoExample {
 
         let drag = GestureDrag()
         drag.onDragBegin { [dragResult] dx, dy in
-            dragResult.text = "Began at (\(Int(dx)), \(Int(dy)))"
+            dragResult.text = "Began at offset (\(Int(dx)), \(Int(dy)))"
         }
         drag.onDragUpdate { [dragResult] dx, dy in
             dragResult.text = "Offset: (\(Int(dx)), \(Int(dy)))"
         }
         drag.onDragEnd { [dragResult, dragLabel] dx, dy in
-            dragResult.text = "Ended at (\(Int(dx)), \(Int(dy)))"
+            dragResult.text = "Ended at offset (\(Int(dx)), \(Int(dy)))"
             dragLabel.text = "Dragged"
         }
         dragBox.addController(drag)

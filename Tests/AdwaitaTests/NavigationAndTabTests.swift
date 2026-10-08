@@ -164,8 +164,92 @@ struct NavigationAndTabTests {
     @Test @MainActor func tabViewOnClosePageSignal() {
         ensureAdwInit()
         let tabView = TabView()
-        let conn = tabView.onClosePage { _ in }
+        let conn = tabView.onClosePage { _ in false }
         conn.disconnect()
+    }
+
+    @Test @MainActor func tabViewOnClosePageSignalEmitted() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let page = tabView.append(Label("x"))
+        var fired = false
+        let conn = tabView.onClosePage { p in
+            fired = true
+            _ = p
+            return false
+        }
+        _ = cadw_signal_emit_close_page(tabView.pointer, page.pointer)
+        #expect(fired, "onClosePage handler should fire")
+        conn.disconnect()
+    }
+
+    @Test @MainActor func tabViewOnCreateWindowSignal() {
+        ensureAdwInit()
+        let tabView = TabView()
+        var fired = false
+        let conn = tabView.onCreateWindow {
+            fired = true
+            return nil
+        }
+        cadw_signal_emit_no_args(tabView.pointer, "create-window")
+        #expect(fired, "onCreateWindow handler should fire (nil result)")
+        conn.disconnect()
+    }
+
+    @Test @MainActor func tabViewOnCreateWindowSignalReturnsView() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let dest = TabView()
+        var fired = false
+        let conn = tabView.onCreateWindow {
+            fired = true
+            return dest
+        }
+        cadw_signal_emit_no_args(tabView.pointer, "create-window")
+        #expect(fired, "onCreateWindow handler should fire and return the destination view")
+        conn.disconnect()
+    }
+
+    @Test @MainActor func navigationViewOnGetNextPageSignal() {
+        ensureAdwInit()
+        let navView = NavigationView()
+        var fired = false
+        let conn = navView.onGetNextPage {
+            fired = true
+            return NavigationPage(child: Label("next"), title: "next")
+        }
+        cadw_signal_emit_no_args(navView.pointer, "get-next-page")
+        #expect(fired, "onGetNextPage handler should fire")
+        conn.disconnect()
+    }
+
+    @Test @MainActor func navigationViewOnGetNextPageFinalizesOnce() {
+        ensureAdwInit()
+        let navView = NavigationView()
+        var createdPage: NavigationPage?
+        navView.onGetNextPage {
+            let p = NavigationPage(child: Label("next"), title: "next")
+            createdPage = p
+            return p
+        }
+        // Transfer-full: the marshaller hands the caller the trampoline's
+        // `g_object_ref` (+1). If the trampoline omitted that ref, `createdPage`
+        // would be the sole owner, so dropping it would finalize the page early
+        // and the `g_object_unref` below would be a double-free (crash).
+        let raw = cadw_signal_emit_get_next_page(navView.gobjectPointer)
+        #expect(createdPage != nil, "the handler must create and return a page")
+        #expect(raw != nil, "the signal must hand back a live reference to the page")
+        var weakSlot: UnsafeMutableRawPointer?
+        if let page = createdPage {
+            weakSlot = page.pointer
+            g_object_add_weak_pointer(page.gobjectPointer, &weakSlot)
+        }
+        createdPage = nil
+        if let raw {
+            g_object_unref(raw.assumingMemoryBound(to: GObject.self))
+        }
+        spinMainLoop()
+        #expect(weakSlot == nil, "the returned page must finalize exactly once (balanced transfer-full ref)")
     }
 
     @Test @MainActor func tabViewTransferPage() {
@@ -179,6 +263,55 @@ struct NavigationAndTabTests {
         tabView1.transferPage(page, otherView: tabView2, position: 0)
         #expect(tabView1.nPages == 0)
         #expect(tabView2.nPages == 1)
+    }
+
+    @Test @MainActor func tabOverviewCreateTabSignalAddsAndFinalizesPage() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let overview = TabOverview()
+        overview.view = tabView
+        overview.enableNewTab = true
+
+        var emitted = false
+        overview.onCreateTab {
+            emitted = true
+            let label = Label("New Tab")
+            let page = tabView.append(label)
+            page.title = "New Tab"
+            return page
+        }
+
+        // Fire create-tab through the real signal path so the C marshaller
+        // (g_value_take_object) runs, exactly as libadwaita's "New Tab" button
+        // would. A broken handler leaves the returned page over-released and
+        // the view holding a dangling pointer (SIGSEGV here).
+        cadw_signal_emit_no_args(overview.pointer, "create-tab")
+
+        #expect(emitted, "onCreateTab handler should fire")
+        #expect(tabView.nPages == 1, "The handler must append exactly one page")
+
+        // Watch the underlying C object for finalization, then close the tab.
+        // With the refcount balanced the page finalizes exactly once (weak
+        // pointer reset to NULL); an over-release crashes and a leak keeps the
+        // weak pointer set.
+        var weakSlot: UnsafeMutableRawPointer?
+        if let page = tabView.selectedPage {
+            // Seed the weak slot with the live pointer and watch it: on a
+            // balanced refcount the page finalizes exactly once (when `page`
+            // and the tab view both release it on close) and the slot is reset
+            // to NULL; an over-release crashes earlier, a leak leaves it set.
+            // The check lives below the `if` so `page`'s own reference is
+            // dropped first — otherwise the page cannot reach refcount zero.
+            weakSlot = page.pointer
+            g_object_add_weak_pointer(page.gobjectPointer, &weakSlot)
+            tabView.onClosePage { p in
+                tabView.closePageFinish(p, confirm: true)
+                return true
+            }
+            tabView.closePage(page)
+        }
+        spinMainLoop()
+        #expect(weakSlot == nil, "Closed page must finalize exactly once (balanced refcount)")
     }
 
     // MARK: - TabBar Tests

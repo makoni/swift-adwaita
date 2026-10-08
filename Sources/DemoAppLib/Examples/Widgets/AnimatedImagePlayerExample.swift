@@ -4,7 +4,14 @@
 import Adwaita
 import Foundation
 
-private let animatedImagePlayerKey = "swift-adwaita-demo-animated-image-player"
+/// Retains the currently-playing player so it outlives the transient file-picker
+/// closure while still being released when the button (and the closure that
+/// captures it) is torn down. A strong reference here is cycle-free: the
+/// picture is owned by the widget tree and the player→picture edge is one-way.
+@MainActor
+private final class PlayerHolder {
+    var player: AnimatedImagePlayer?
+}
 
 @MainActor
 struct AnimatedImagePlayerExample: DemoExample {
@@ -15,11 +22,11 @@ struct AnimatedImagePlayerExample: DemoExample {
     let sourceCode = """
     let picture = Picture()
 
-    let player = try AnimatedImagePlayer(contentsOf: url, displayedBy: picture)
-    player.start()
-
-    let meta = player.metadata
-    print(\\(meta.width) x \\(meta.height))
+    if let player = try? AnimatedImagePlayer(contentsOf: url, displayedBy: picture) {
+        player.start()
+        let meta = player.metadata
+        print("\\(meta.width) x \\(meta.height)")
+    }
     """
 
     func buildWidget() -> Widget {
@@ -47,41 +54,35 @@ struct AnimatedImagePlayerExample: DemoExample {
         status.addCSSClass("monospace")
         status.wrap = true
 
-        openBtn.onClicked { [box, picture, status] in
+        let playerHolder = PlayerHolder()
+
+        openBtn.onClicked { [box, picture, status, playerHolder] in
             let dialog = FileDialog()
             dialog.title = "Open Animated Image"
             dialog.setFilters([
                 FileFilter(name: "Animated images", suffixes: ["gif", "webp"]),
                 FileFilter(name: "All files", patterns: ["*"])
             ])
-            dialog.open(parent: box.root) { [picture, status] result in
+            dialog.open(parent: box.root) { [picture, status, playerHolder] result in
                 guard case let .success(path?) = result else { return }
                 let url = URL(fileURLWithPath: path)
                 do {
                     if let player = try AnimatedImagePlayer(contentsOf: url, displayedBy: picture) {
-                        // Keep the player alive for the picture's lifetime and release
-                        // it when the picture is finalized — same retention idiom as
-                        // Dialog.enableBackdropClickDismiss (Dialog+BackdropDismiss.swift):
-                        // passRetained + g_object_set_data_full with a destroy-notify.
-                        // The destroy-notify runs on the main thread during finalize,
-                        // which satisfies AnimatedImagePlayer's MainActor-isolated deinit.
-                        let playerPointer = Unmanaged.passRetained(player).toOpaque()
-                        g_object_set_data_full(picture.gobjectPointer, animatedImagePlayerKey, playerPointer) { data in
-                            guard let data else { return }
-                            Unmanaged<AnimatedImagePlayer>.fromOpaque(data).release()
-                        }
+                        // Stop the previously-playing animation (if any) so its
+                        // timer does not keep repainting the picture with stale
+                        // frames, then hand the picture to the new player and
+                        // hold it in the button's closure for the UI's lifetime.
+                        playerHolder.player?.stop()
+                        playerHolder.player = player
                         player.start()
                         let meta = player.metadata
                         status.text = "Playing \(meta.width)×\(meta.height)"
                     } else {
-                        // A static file: stop the previously-playing animation,
-                        // whose timer would otherwise keep repainting the picture
-                        // on top of the static frame. It is still retained on the
-                        // picture (see the animated branch), so borrow it without
-                        // taking ownership just to stop the timer.
-                        if let oldPtr = g_object_get_data(picture.gobjectPointer, animatedImagePlayerKey) {
-                            Unmanaged<AnimatedImagePlayer>.fromOpaque(oldPtr).takeUnretainedValue().stop()
-                        }
+                        // A static file: stop any running animation (its timer
+                        // would otherwise repaint on top of the single frame),
+                        // then show the still image.
+                        playerHolder.player?.stop()
+                        playerHolder.player = nil
                         picture.setFilename(path)
                         status.text = "Static image (single frame, no animation)"
                     }

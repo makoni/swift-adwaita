@@ -86,10 +86,16 @@ public final class DragSource: GObjectRef {
 
     /// Emitted when a drag is cancelled.
     ///
+    /// The handler is a plain observer; the underlying signal's return value
+    /// is always passed through as `FALSE` so the standard "drag operation
+    /// failed" animation still plays.
+    ///
     /// - Parameter handler: Called when the drag is cancelled.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onDragCancelled(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: .dragCancel) { _ in handler() }
+        SignalHelper.connectDragCancel(self, signal: .dragCancel) {
+            handler()
+        }
     }
 }

@@ -92,11 +92,19 @@ struct DemoExampleInteractionTests {
         defer { Self.tearDown(window) }
 
         let frame = widgetOfType(root, AspectFrame.self)
+        let switch_ = widgetOfType(root, Switch.self)
         #expect(frame != nil)
+        #expect(switch_ != nil)
+
+        // Enter obey-child mode first, so the assertions below prove the preset
+        // actually overrides it (the frame is created with obeyChild == false).
+        switch_?.active = true
+        #expect(frame?.obeyChild == true)
 
         buttonLabeled(root, "1:1")?.emitClicked()
         #expect(abs((frame?.ratio ?? 0) - 1.0) < 0.0001)
-        #expect(frame?.obeyChild == false, "ratio presets reset obeyChild")
+        #expect(frame?.obeyChild == false, "ratio preset should override obey-child mode")
+        #expect(switch_?.active == false, "ratio preset should reset the obey-child switch")
 
         buttonLabeled(root, "4:3")?.emitClicked()
         #expect(abs((frame?.ratio ?? 0) - Float(4.0 / 3.0)) < 0.0001)
@@ -225,14 +233,14 @@ struct DemoExampleInteractionTests {
         // The example enables the button only on 1.8+ runtimes; assert that
         // contract on both sides (insensitive on 1.5, sensitive on 1.8+).
         #expect(button?.sensitive == ShortcutsDialog.isAvailable)
-        // Clicking must not crash. On 1.8+ this presents a modal
-        // AdwShortcutsDialog built inside the closure (no handle kept), so it
-        // outlives window.destroy() — a separate top-level. It is safe only
-        // while this test is the last one to run: a test added after it that
-        // enumerates top-levels would see the stale modal. Expose a handle if
-        // that ever becomes a problem.
+        // Clicking must not crash. On 1.8+ the dialog is presented on the
+        // example's AdwWindow (box.root == this window), so it becomes the
+        // window's visible dialog rather than a separate top-level.
         button?.emitClicked()
         drainMainLoop()
+        if ShortcutsDialog.isAvailable {
+            #expect(window.visibleDialog != nil, "the shortcuts dialog should be the window's visible dialog")
+        }
     }
 }
 #endif

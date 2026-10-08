@@ -24,6 +24,7 @@ import GObjectSupport
 /// tabOverview.onCreateTab {
 ///     let page = tabView.append(Label(text: "New Tab"))
 ///     page.title = "New Tab"
+///     return page
 /// }
 ///
 /// // Enable search within the overview
@@ -140,11 +141,19 @@ public final class TabOverview: Widget {
 
     /// Emitted when a new tab is requested (e.g. the "New Tab" button is pressed).
     ///
-    /// - Parameter handler: A closure invoked when tab creation is requested.
+    /// The handler must create a page in the associated ``TabView``, append it,
+    /// and return it. libadwaita selects the returned page and closes the
+    /// overview; it does not add the page to the view for you. The closure is
+    /// non-optional because a NULL return triggers a libadwaita critical.
+    ///
+    /// - Parameter handler: A closure invoked when tab creation is requested,
+    ///   returning the newly created ``TabPage``.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
-    public func onCreateTab(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: .createTab, handler: handler)
+    public func onCreateTab(_ handler: @escaping @MainActor () -> TabPage) -> SignalConnection {
+        SignalHelper.connectReturnObject(self, signal: .createTab) {
+            handler().pointer
+        }
     }
 
     /// Emitted when external data is dropped on a tab thumbnail.

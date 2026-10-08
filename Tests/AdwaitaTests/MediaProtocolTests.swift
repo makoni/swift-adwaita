@@ -278,6 +278,50 @@ extension SerializedLifecycleSuites {
             #expect(row.title == "Volume")
         }
 
+        @Test @MainActor func spinRowOnOutputSignalReturnsBool() {
+            ensureAdwInit()
+            let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)
+            row.value = 42
+            var called = false
+            let conn = row.onOutput {
+                called = true
+                return true
+            }
+            let ret = cadw_signal_emit_bool_return(row.pointer, "output")
+            #expect(called, "onOutput handler should fire")
+            #expect(ret != 0, "the handler's TRUE must become the signal's return value")
+            conn.disconnect()
+        }
+
+        @Test @MainActor func spinRowOnInputSignalWritesValue() {
+            ensureAdwInit()
+            let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)
+            row.value = 1
+            var called = false
+            let conn = row.onInput { text in
+                called = true
+                _ = text
+                return .value(7)
+            }
+            var outValue: Double = -1
+            let ret = cadw_signal_emit_spin_row_input(row.pointer, &outValue)
+            #expect(called, "onInput handler should fire")
+            #expect(ret == 1, "a .value result must return TRUE (1)")
+            #expect(outValue == 7.0, "the handler must write the value through the out-pointer")
+            conn.disconnect()
+        }
+
+        @Test @MainActor func spinRowOnInputSignalInvalid() {
+            ensureAdwInit()
+            let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)
+            let conn = row.onInput { _ in .invalid }
+            var outValue: Double = -1
+            let ret = cadw_signal_emit_spin_row_input(row.pointer, &outValue)
+            #expect(ret == -1, "an .invalid result must return GTK_INPUT_ERROR (-1)")
+            _ = outValue
+            conn.disconnect()
+        }
+
         @Test @MainActor func expanderRowConvenienceInit() {
             ensureAdwInit()
             let row = ExpanderRow(title: "Advanced")

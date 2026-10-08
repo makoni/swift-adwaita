@@ -105,16 +105,62 @@ public final class SpinRow: ActionRow {
         adw_spin_row_update(opaquePointer)
     }
 
+    /// The current text in the spin row's entry.
+    ///
+    /// Reads the text the user has typed. Returns an empty string if the
+    /// internal entry has not been realized yet.
+    public var text: String {
+        SpinRow.entryText(in: self) ?? ""
+    }
+
+    private static func entryText(in widget: Widget) -> String? {
+        if let entry = widget.tryCast(Entry.self) {
+            return entry.text
+        }
+        for child in widget.children() {
+            if let t = entryText(in: child) {
+                return t
+            }
+        }
+        return nil
+    }
+
     /// Called to convert the user's text input into a numeric value.
+    ///
+    /// The handler receives the text currently in the spin row's entry and
+    /// decides how to react: store the parsed value, keep the current value,
+    /// or mark the input as invalid. See ``SpinRowInputResult``.
+    ///
+    /// - Parameter handler: Called with the text being entered; returns a
+    ///   ``SpinRowInputResult``.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
-    public func onInput(_ handler: @escaping @MainActor (Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDouble(self, signal: .input, handler: handler)
+    public func onInput(_ handler: @escaping @MainActor (String) -> SpinRowInputResult) -> SignalConnection {
+        SignalHelper.connectInput(self, signal: .input) { (newValue: UnsafeMutablePointer<Double>) in
+            let result = handler(self.text)
+            switch result {
+            // swiftformat:disable:next hoistPatternLet
+            case .value(let v):
+                newValue.pointee = v
+                return 1
+            case .useDefault:
+                return 0
+            case .invalid:
+                return -1
+            }
+        }
     }
 
     /// Called to format the numeric value for display.
+    ///
+    /// Return `true` if the handler wrote the display text into the spin
+    /// button; return `false` to let libadwaita format the value itself.
+    ///
+    /// - Parameter handler: Invoked when the value should be rendered.
+    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
-    public func onOutput(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: .output, handler: handler)
+    public func onOutput(_ handler: @escaping @MainActor () -> Bool) -> SignalConnection {
+        SignalHelper.connectReturnBool(self, signal: .output, handler: handler)
     }
 
     /// Called when the value wraps around from max to min or vice versa.

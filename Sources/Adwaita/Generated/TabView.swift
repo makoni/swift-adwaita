@@ -343,25 +343,34 @@ public final class TabView: Widget {
 
     /// Emitted when a page close is requested.
     ///
-    /// Call ``closePageFinish(_:confirm:)`` from the handler to confirm
-    /// or cancel the close.
+    /// Return `true` if the close is handled (the default handler is skipped,
+    /// so the page is not closed for you — call ``closePageFinish(_:confirm:)``
+    /// yourself). Return `false` to run the default close behavior.
     ///
-    /// - Parameter handler: Called with the ``TabPage`` being closed.
+    /// - Parameter handler: Called with the ``TabPage`` being closed; return
+    ///   `true` to indicate the close was handled.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
-    public func onClosePage(_ handler: @escaping @MainActor (TabPage) -> Void) -> SignalConnection {
-        SignalHelper.connectPointer(self, signal: .closePage) { (ptr: OpaquePointer) in
+    public func onClosePage(_ handler: @escaping @MainActor (TabPage) -> Bool) -> SignalConnection {
+        SignalHelper.connectPointerReturnBool(self, signal: .closePage) { (ptr: OpaquePointer) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)))
         }
     }
 
     /// Emitted when a new window should be created for a detached tab.
     ///
-    /// - Parameter handler: Called when a tab is dragged out of the window.
+    /// The handler returns the destination ``TabView`` that will receive the
+    /// dragged tab, or `nil` to cancel the drag. The returned view is used
+    /// as-is (no extra reference is taken).
+    ///
+    /// - Parameter handler: Called when a tab is dragged out of the window;
+    ///   returns the destination ``TabView`` or `nil`.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
-    public func onCreateWindow(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: .createWindow, handler: handler)
+    public func onCreateWindow(_ handler: @escaping @MainActor () -> TabView?) -> SignalConnection {
+        SignalHelper.connectReturnObjectNullable(self, signal: .createWindow) {
+            handler()?.pointer
+        }
     }
 
     /// Emitted when a tab's indicator icon is clicked.

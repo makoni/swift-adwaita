@@ -150,11 +150,17 @@ public final class NavigationView: Widget, Swipeable {
 
     /// Emitted when the next page is needed for forward navigation (e.g. swipe gestures).
     ///
-    /// - Parameter handler: A closure invoked when forward navigation requires a new page.
+    /// The handler returns the ``NavigationPage`` to navigate forward to, or
+    /// `nil` if there is no next page.
+    ///
+    /// - Parameter handler: A closure invoked when forward navigation requires a
+    ///   new page; returns the page or `nil`.
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
-    public func onGetNextPage(_ handler: @escaping @MainActor () -> Void) -> SignalConnection {
-        SignalHelper.connect(self, signal: .getNextPage, handler: handler)
+    public func onGetNextPage(_ handler: @escaping @MainActor () -> NavigationPage?) -> SignalConnection {
+        SignalHelper.connectReturnObjectRef(self, signal: .getNextPage) {
+            handler()?.pointer
+        }
     }
 
     /// Emitted when a page has been popped from the navigation stack.

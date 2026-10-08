@@ -34,14 +34,15 @@ func drainMainLoop(_ passes: Int = 4) {
     }
 }
 
-/// Depth-first collection of `root` and every descendant widget.
+/// Depth-first, pre-order collection of `root` and every descendant widget,
+/// visiting siblings in GTK child order (first child first).
 @MainActor
 func allWidgets(_ root: Widget) -> [Widget] {
     var stack = [root]
     var out: [Widget] = []
     while let widget = stack.popLast() {
         out.append(widget)
-        for child in widget.children() {
+        for child in widget.children().reversed() {
             stack.append(child)
         }
     }

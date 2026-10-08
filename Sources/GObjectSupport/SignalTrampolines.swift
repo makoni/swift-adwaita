@@ -10,6 +10,9 @@ import Foundation
 struct UncheckedOpaquePointer: @unchecked Sendable { let value: OpaquePointer }
 struct UncheckedOptionalOpaquePointer: @unchecked Sendable { let value: OpaquePointer? }
 struct UncheckedGValuePointer: @unchecked Sendable { let value: UnsafePointer<GValue> }
+struct UncheckedOptionalRawPointer: @unchecked Sendable { let value: UnsafeMutableRawPointer? }
+struct UncheckedRawPointer: @unchecked Sendable { let value: UnsafeMutableRawPointer }
+struct UncheckedDoublePointer: @unchecked Sendable { let value: UnsafeMutablePointer<Double> }
 
 // MARK: - C-compatible trampoline functions
 
@@ -303,6 +306,129 @@ func signalTrampolineReturnBool(
     return MainActor.assumeIsolated {
         box.closure() ? 1 : 0
     }
+}
+
+/// Trampoline for no-argument signals whose C return type is a GObject
+/// (e.g. `AdwTabOverview::create-tab`, whose handler returns the newly
+/// created `AdwTabPage`).
+///
+/// The trampoline must hand the object pointer back to the C marshaller in a
+/// return register — a trampoline that returns `Void` leaves the register the
+/// marshaller reads holding garbage, which is what crashed `create-tab` before
+/// this existed. Whether the return is an *optional* pointer is irrelevant to
+/// the ABI: `UnsafeMutableRawPointer?` maps to a C pointer that may be NULL and
+/// is returned in `rax` just like the non-optional form, so it can safely carry
+/// a NULL (see `signalTrampolineReturnObjectNullable`).
+///
+/// Ownership is governed by the GIR `transfer-ownership` annotation on the
+/// signal's return value, not by anything here: `create-tab` is `transfer
+/// none`, so the handler returns the object exactly like a C handler would
+/// (`return adw_tab_view_append(view, page)`) — no extra reference is taken.
+/// The balance is verified by a weak-pointer test that the page finalizes
+/// exactly once when its tab is closed.
+func signalTrampolineReturnObject(
+    _ instance: UnsafeMutableRawPointer,
+    _ userData: UnsafeMutableRawPointer
+) -> UnsafeMutableRawPointer {
+    let box = Unmanaged<ClosureBox<@MainActor () -> UnsafeMutableRawPointer>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    let result = MainActor.assumeIsolated {
+        UncheckedRawPointer(value: box.closure())
+    }
+    return result.value
+}
+
+/// Trampoline for no-argument signals whose C return type is a **nullable**
+/// GObject returned without a reference (GIR `transfer-ownership="none"`),
+/// e.g. `AdwTabView::create-window`.
+///
+/// Like `signalTrampolineReturnObject` but the handler may return `nil`, which
+/// is passed through as `NULL` — the C marshaller treats a NULL object return
+/// the same as an absent value. No reference is added (transfer none).
+func signalTrampolineReturnObjectNullable(
+    _ instance: UnsafeMutableRawPointer,
+    _ userData: UnsafeMutableRawPointer
+) -> UnsafeMutableRawPointer? {
+    let box = Unmanaged<ClosureBox<@MainActor () -> UnsafeMutableRawPointer?>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    let result = MainActor.assumeIsolated {
+        UncheckedOptionalRawPointer(value: box.closure())
+    }
+    return result.value
+}
+
+/// Trampoline for no-argument signals whose C return type is a **nullable**
+/// GObject returned with a full reference (GIR `transfer-ownership="full"`),
+/// e.g. `AdwNavigationView::get-next-page`.
+///
+/// With `transfer full` the returned object is owned by the emitter side, which
+/// releases it once the signal returns. The Swift handler's wrapper only holds
+/// a temporary reference, so we take an extra reference here — before that
+/// wrapper is released — to balance the release the emitter performs. Omitting
+/// it would leave a dangling pointer (use-after-free).
+func signalTrampolineReturnObjectRef(
+    _ instance: UnsafeMutableRawPointer,
+    _ userData: UnsafeMutableRawPointer
+) -> UnsafeMutableRawPointer? {
+    let box = Unmanaged<ClosureBox<@MainActor () -> UnsafeMutableRawPointer?>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    let result = MainActor.assumeIsolated {
+        guard let pointer = box.closure() else {
+            return UncheckedOptionalRawPointer(value: nil)
+        }
+        g_object_ref(pointer)
+        return UncheckedOptionalRawPointer(value: pointer)
+    }
+    return result.value
+}
+
+/// Trampoline for signals with a single pointer parameter that return a
+/// `gboolean`, e.g. `AdwTabView::close-page`. Returning `true` stops
+/// propagation (the default handler does not run); `false` lets it run.
+func signalTrampolinePointerReturnBool(
+    _ instance: UnsafeMutableRawPointer,
+    _ value: OpaquePointer,
+    _ userData: UnsafeMutableRawPointer
+) -> gboolean {
+    let box = Unmanaged<ClosureBox<@MainActor (OpaquePointer) -> Bool>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    let wrapped = UncheckedOpaquePointer(value: value)
+    return MainActor.assumeIsolated {
+        box.closure(wrapped.value) ? 1 : 0
+    }
+}
+
+/// Trampoline for `AdwSpinRow::input`: the single parameter is an out-pointer
+/// `double *new_value` the handler may write, and the return is a `gint`
+/// (TRUE = value written, FALSE = default conversion, -1 = GTK_INPUT_ERROR).
+func signalTrampolineInput(
+    _ instance: UnsafeMutableRawPointer,
+    _ newValue: UnsafeMutablePointer<Double>,
+    _ userData: UnsafeMutableRawPointer
+) -> Int32 {
+    let box = Unmanaged<ClosureBox<@MainActor (UnsafeMutablePointer<Double>) -> Int32>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    let wrapped = UncheckedDoublePointer(value: newValue)
+    return MainActor.assumeIsolated {
+        box.closure(wrapped.value)
+    }
+}
+
+/// Trampoline for `GtkDragSource::drag-cancel`: `(GdkDrag*, GdkDragCancelReason)`,
+/// returns `gboolean`. We always return `FALSE` so the standard cancel
+/// animation runs; the Swift handler is invoked purely as an observer.
+func signalTrampolineDragCancel(
+    _ instance: UnsafeMutableRawPointer,
+    _ drag: OpaquePointer,
+    _ reason: UInt32,
+    _ userData: UnsafeMutableRawPointer
+) -> gboolean {
+    let box = Unmanaged<ClosureBox<@MainActor () -> Void>>.fromOpaque(userData)
+        .takeUnretainedValue()
+    MainActor.assumeIsolated {
+        box.closure()
+    }
+    return 0
 }
 
 func signalTrampolineDoubleDoubleBool(

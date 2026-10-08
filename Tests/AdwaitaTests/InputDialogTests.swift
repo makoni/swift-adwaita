@@ -60,6 +60,17 @@ struct InputDialogTests {
         #expect(source.isDragging == false)
     }
 
+    @Test @MainActor func dragSourceOnDragCancelledSignal() {
+        ensureAdwInit()
+        let source = DragSource()
+        var fired = false
+        let conn = source.onDragCancelled {
+            fired = true
+        }
+        #expect(!fired, "onDragCancelled should not fire before a drag is cancelled")
+        conn.disconnect()
+    }
+
     // MARK: - DropTarget
 
     @Test @MainActor func dropTargetCreation() {

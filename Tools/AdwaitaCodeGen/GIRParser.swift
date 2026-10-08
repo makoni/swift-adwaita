@@ -68,6 +68,7 @@ struct GIRParameter {
     let name: String
     let transferOwnership: String
     let nullable: Bool
+    let direction: String
     let type: GIRType
 }
 
@@ -87,6 +88,8 @@ struct GIRSignal {
     let isDeprecated: Bool
     let version: String?
     let returnType: GIRType
+    let returnTransfer: String
+    let returnNullable: Bool
     var parameters: [GIRParameter] = []
 }
 
@@ -136,6 +139,7 @@ class GIRParser: NSObject, XMLParserDelegate {
     private var pendingParamName: String?
     private var pendingParamTransfer: String?
     private var pendingParamNullable: Bool = false
+    private var pendingParamDirection: String = "in"
     private var pendingReturnTransfer: String?
     private var pendingReturnNullable: Bool = false
     private var inInstanceParameter = false
@@ -208,6 +212,7 @@ class GIRParser: NSObject, XMLParserDelegate {
             pendingParamName = attributes["name"]
             pendingParamTransfer = attributes["transfer-ownership"] ?? "none"
             pendingParamNullable = attributes["nullable"] == "1" || attributes["allow-none"] == "1"
+            pendingParamDirection = attributes["direction"] ?? "in"
 
         case "array":
             inArray = true
@@ -236,7 +241,9 @@ class GIRParser: NSObject, XMLParserDelegate {
                 name: attributes["name"] ?? "",
                 isDeprecated: attributes["deprecated"] == "1",
                 version: attributes["version"],
-                returnType: GIRType(name: "none", cType: "void")
+                returnType: GIRType(name: "none", cType: "void"),
+                returnTransfer: "none",
+                returnNullable: false
             )
 
         case "enumeration":
@@ -336,7 +343,9 @@ class GIRParser: NSObject, XMLParserDelegate {
                     name: currentSignal!.name,
                     isDeprecated: currentSignal!.isDeprecated,
                     version: currentSignal!.version,
-                    returnType: GIRType(name: typeName, cType: typeCType)
+                    returnType: GIRType(name: typeName, cType: typeCType),
+                    returnTransfer: pendingReturnTransfer ?? "none",
+                    returnNullable: pendingReturnNullable
                 )
             }
             pendingTypeName = nil
@@ -358,6 +367,7 @@ class GIRParser: NSObject, XMLParserDelegate {
                     name: name,
                     transferOwnership: pendingParamTransfer ?? "none",
                     nullable: pendingParamNullable,
+                    direction: pendingParamDirection,
                     type: GIRType(
                         name: pendingTypeName ?? "",
                         cType: paramCType,
@@ -366,6 +376,7 @@ class GIRParser: NSObject, XMLParserDelegate {
                 )
                 inArray = false
                 pendingArrayCType = nil
+                pendingParamDirection = "in"
                 if currentSignal != nil {
                     currentSignal?.parameters.append(param)
                 } else {
