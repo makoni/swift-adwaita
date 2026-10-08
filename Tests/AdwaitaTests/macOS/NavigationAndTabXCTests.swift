@@ -162,7 +162,7 @@ final class NavigationAndTabXCTests: XCTestCase {
     @MainActor func test_tabViewOnClosePageSignal() {
         ensureAdwInit()
         let tabView = TabView()
-        let conn = tabView.onClosePage { _ in }
+        let conn = tabView.onClosePage { _ in false }
         conn.disconnect()
     }
 
