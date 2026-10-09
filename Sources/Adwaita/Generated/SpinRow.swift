@@ -129,7 +129,6 @@ public final class SpinRow: ActionRow {
             let text = spinRowEditableText(instance)
             let result = handler(text)
             switch result {
-            // swiftformat:disable:next hoistPatternLet
             case .value(let v):
                 newValue.pointee = v
                 return 1

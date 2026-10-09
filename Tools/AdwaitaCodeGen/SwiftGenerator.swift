@@ -671,7 +671,7 @@ class SwiftGenerator {
         if inParams.count == 2,
            isPointerTypeParam(inParams[0]),
            inParams[1].type.name == "GObject.Value" {
-            return generatePointerGValueSignal(signal, swiftName: swiftName)
+            return generatePointerGValueSignal(signal, swiftName: swiftName, signalCase: signalCase)
         }
 
         // (7) Any remaining signal with a return value has no matching helper.
@@ -685,7 +685,7 @@ class SwiftGenerator {
 
         // Special case: (Pointer, GValue) signals with return values
         if connectMethod == "__pointerGValue__" {
-            return generatePointerGValueSignal(signal, swiftName: swiftName)
+            return generatePointerGValueSignal(signal, swiftName: swiftName, signalCase: signalCase)
         }
 
         // Build Swift parameter types for the handler closure
@@ -802,7 +802,6 @@ class SwiftGenerator {
         out += "            let text = spinRowEditableText(instance)\n"
         out += "            let result = handler(text)\n"
         out += "            switch result {\n"
-        out += "            // swiftformat:disable:next hoistPatternLet\n"
         out += "            case .value(let v):\n                newValue.pointee = v\n                return 1\n"
         out += "            case .useDefault:\n                return 0\n"
         out += "            case .invalid:\n                return -1\n"
@@ -812,9 +811,12 @@ class SwiftGenerator {
         return out
     }
 
-    /// Generates a signal method for (OpaquePointer, GValue) → Bool or GdkDragAction signals.
-    private func generatePointerGValueSignal(_ signal: GIRSignal, swiftName: String) -> String {
+    /// Generates a signal method for (Pointer, GObject.Value) → Bool or GdkDragAction signals.
+    /// The first pointer parameter is wrapped in its concrete Swift type (e.g. `TabPage`)
+    /// so the handler sees the class, not a raw pointer.
+    private func generatePointerGValueSignal(_ signal: GIRSignal, swiftName: String, signalCase: String) -> String {
         let returnTypeName = signal.returnType.name
+        let clsName = signal.parameters.first!.type.name
 
         let helperMethod: String
         let swiftReturnType: String
@@ -831,11 +833,17 @@ class SwiftGenerator {
 
         var out = "\n    /// Emitted when the `\(signal.name)` signal is fired.\n"
         out += "    ///\n"
-        out += "    /// - Parameter handler: Called when the signal is emitted.\n"
+        out += "    /// - Parameter handler: Called with the `\(clsName)` and a `GValue`.\n"
         out += "    /// - Returns: A `SignalConnection` that can be used to disconnect the handler.\n"
         out += "    @discardableResult\n"
-        out += "    public func \(swiftName)(_ handler: @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> \(swiftReturnType)) -> SignalConnection {\n"
-        out += "        SignalHelper.\(helperMethod)(self, signal: \"\(signal.name)\", handler: handler)\n"
+        out += "    public func \(swiftName)(_ handler: @escaping @MainActor (\(clsName), UnsafePointer<GValue>) -> \(swiftReturnType))\n"
+        out += "        -> SignalConnection {\n"
+        out += "        SignalHelper.\(helperMethod)(self, signal: .\(signalCase)) { (\n"
+        out += "            ptr: OpaquePointer,\n"
+        out += "            val: UnsafePointer<GValue>\n"
+        out += "        ) in\n"
+        out += "            handler(\(clsName)(borrowing: UnsafeMutableRawPointer(ptr)), val)\n"
+        out += "        }\n"
         out += "    }\n"
 
         return out
