@@ -59,6 +59,21 @@ final class InputDialogXCTests: XCTestCase {
         XCTAssertTrue(source.isDragging == false)
     }
 
+    @MainActor func test_dragSourceOnDragCancelledSignal() {
+        ensureAdwInit()
+        let source = DragSource()
+        var fired = false
+        let conn = source.onDragCancelled {
+            fired = true
+        }
+        XCTAssertFalse(fired, "onDragCancelled should not fire before a drag is cancelled")
+        // Real `GtkDragSource::drag-cancel` is `(GdkDrag*, GdkDragCancelReason) ->
+        // gboolean` (see Gtk-4.0.gir); the emit shim and the C trampoline match it.
+        _ = cadw_signal_emit_drag_cancel(source.pointer, nil, 0)
+        XCTAssertTrue(fired, "onDragCancelled must fire when the drag-cancel signal is emitted")
+        conn.disconnect()
+    }
+
     // MARK: - DropTarget
 
     @MainActor func test_dropTargetCreation() {

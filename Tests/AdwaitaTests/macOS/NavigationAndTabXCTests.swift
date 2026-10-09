@@ -166,6 +166,116 @@ final class NavigationAndTabXCTests: XCTestCase {
         conn.disconnect()
     }
 
+    @MainActor func test_tabViewOnClosePageSignalEmitted() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let page = tabView.append(Label("x"))
+        var fired = false
+        let conn = tabView.onClosePage { p in
+            fired = true
+            _ = p
+            return true
+        }
+        let ret = cadw_signal_emit_close_page(tabView.pointer, page.pointer)
+        XCTAssertTrue(fired, "onClosePage handler should fire")
+        XCTAssertTrue(ret != 0, "the handler's return value must reach the signal's return")
+        conn.disconnect()
+    }
+
+    @MainActor func test_tabViewOnClosePageCancelKeepsPage() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let page = tabView.append(Label("x"))
+        var fired = false
+        let conn = tabView.onClosePage { p in
+            fired = true
+            tabView.closePageFinish(p, confirm: false)
+            return true
+        }
+        tabView.closePage(page)
+        XCTAssertTrue(fired, "onClosePage handler should fire")
+        XCTAssertTrue(tabView.nPages == 1, "cancelling the close must keep the page")
+        conn.disconnect()
+    }
+
+    @MainActor func test_tabViewOnClosePageConfirmClosesPage() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let page = tabView.append(Label("x"))
+        var fired = false
+        let conn = tabView.onClosePage { p in
+            fired = true
+            tabView.closePageFinish(p, confirm: true)
+            return true
+        }
+        tabView.closePage(page)
+        XCTAssertTrue(fired, "onClosePage handler should fire")
+        XCTAssertTrue(tabView.nPages == 0, "confirming the close must remove the page")
+        conn.disconnect()
+    }
+
+    @MainActor func test_tabViewOnClosePageReturnFalseClosesPage() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let page = tabView.append(Label("x"))
+        var fired = false
+        let conn = tabView.onClosePage { p in
+            fired = true
+            _ = p
+            return false
+        }
+        tabView.closePage(page)
+        XCTAssertTrue(fired, "onClosePage handler should fire")
+        XCTAssertTrue(tabView.nPages == 0, "returning false must fall through to the default close")
+        conn.disconnect()
+    }
+
+    @MainActor func test_tabViewOnCreateWindowSignal() {
+        ensureAdwInit()
+        let tabView = TabView()
+        var fired = false
+        let conn = tabView.onCreateWindow {
+            fired = true
+            return nil
+        }
+        cadw_signal_emit_no_args(tabView.pointer, "create-window")
+        XCTAssertTrue(fired, "onCreateWindow handler should fire (nil result)")
+        conn.disconnect()
+    }
+
+    @MainActor func test_tabViewOnCreateWindowSignalReturnsView() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let dest = TabView()
+        var fired = false
+        let conn = tabView.onCreateWindow {
+            fired = true
+            return dest
+        }
+        let raw = cadw_signal_emit_create_window(tabView.gobjectPointer)
+        XCTAssertTrue(fired, "onCreateWindow handler should fire and return the destination view")
+        XCTAssertNotNil(raw, "the signal must hand back the destination view")
+        XCTAssertTrue(raw == dest.pointer, "the returned pointer must reach the caller (transfer-none borrow)")
+        conn.disconnect()
+    }
+
+    @MainActor func test_navigationViewOnGetNextPageSignal() {
+        ensureAdwInit()
+        let navView = NavigationView()
+        var fired = false
+        let conn = navView.onGetNextPage {
+            fired = true
+            return NavigationPage(child: Label("next"), title: "next")
+        }
+        let raw = cadw_signal_emit_get_next_page(navView.gobjectPointer)
+        XCTAssertTrue(fired, "onGetNextPage handler should fire")
+        XCTAssertNotNil(raw, "the signal must hand back the created page")
+        if let raw {
+            g_object_unref(raw.assumingMemoryBound(to: GObject.self))
+        }
+        conn.disconnect()
+    }
+
     @MainActor func test_tabViewTransferPage() {
         ensureAdwInit()
         let tabView1 = TabView()

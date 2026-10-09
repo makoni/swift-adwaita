@@ -216,6 +216,22 @@ struct NavigationAndTabTests {
         conn.disconnect()
     }
 
+    @Test @MainActor func tabViewOnClosePageReturnFalseClosesPage() {
+        ensureAdwInit()
+        let tabView = TabView()
+        let page = tabView.append(Label("x"))
+        var fired = false
+        let conn = tabView.onClosePage { p in
+            fired = true
+            _ = p
+            return false
+        }
+        tabView.closePage(page)
+        #expect(fired, "onClosePage handler should fire")
+        #expect(tabView.nPages == 0, "returning false must fall through to the default close")
+        conn.disconnect()
+    }
+
     @Test @MainActor func tabViewOnCreateWindowSignal() {
         ensureAdwInit()
         let tabView = TabView()
@@ -266,7 +282,7 @@ struct NavigationAndTabTests {
         ensureAdwInit()
         let navView = NavigationView()
         var created = false
-        var weakSlot: UnsafeMutableRawPointer?
+        var weakSlot: WeakPointerSlot?
         // The handler keeps NO reference to the page it creates. This is the
         // case that would use-after-free if the return-object trampoline failed
         // to add its `g_object_ref` before the caller's temporary `NavigationPage`
@@ -276,19 +292,20 @@ struct NavigationAndTabTests {
         navView.onGetNextPage {
             created = true
             let p = NavigationPage(child: Label("next"), title: "next")
-            weakSlot = p.pointer
-            g_object_add_weak_pointer(p.gobjectPointer, &weakSlot)
+            weakSlot = WeakPointerSlot(watching: p.gobjectPointer)
             return p
         }
         let raw = cadw_signal_emit_get_next_page(navView.gobjectPointer)
         #expect(created, "onGetNextPage handler should fire")
         #expect(raw != nil, "the signal must hand back a live reference to the page")
-        #expect(weakSlot != nil, "the page must still be alive once handed to the caller (transfer-full ref)")
+        #expect(weakSlot != nil, "the handler must have registered the weak pointer")
+        let stillAlive = weakSlot?.isCleared == false
+        #expect(stillAlive, "the page must still be alive once handed to the caller (transfer-full ref)")
         if let raw {
             g_object_unref(raw.assumingMemoryBound(to: GObject.self))
         }
         spinMainLoop()
-        #expect(weakSlot == nil, "the page must finalize exactly once after the caller releases it")
+        #expect(weakSlot?.isCleared == true, "the page must finalize exactly once after the caller releases it")
     }
 
     @Test @MainActor func tabViewTransferPage() {
@@ -333,16 +350,15 @@ struct NavigationAndTabTests {
         // With the refcount balanced the page finalizes exactly once (weak
         // pointer reset to NULL); an over-release crashes and a leak keeps the
         // weak pointer set.
-        var weakSlot: UnsafeMutableRawPointer?
+        var weakSlot: WeakPointerSlot?
         if let page = tabView.selectedPage {
-            // Seed the weak slot with the live pointer and watch it: on a
-            // balanced refcount the page finalizes exactly once (when `page`
-            // and the tab view both release it on close) and the slot is reset
-            // to NULL; an over-release crashes earlier, a leak leaves it set.
-            // The check lives below the `if` so `page`'s own reference is
-            // dropped first — otherwise the page cannot reach refcount zero.
-            weakSlot = page.pointer
-            g_object_add_weak_pointer(page.gobjectPointer, &weakSlot)
+            // Watch the underlying C object from a heap slot: on a balanced
+            // refcount the page finalizes exactly once (when `page` and the
+            // tab view both release it on close) and the slot is cleared; an
+            // over-release crashes earlier, a leak leaves it set. The check
+            // lives below the `if` so `page`'s own reference is dropped
+            // first — otherwise the page cannot reach refcount zero.
+            weakSlot = WeakPointerSlot(watching: page.gobjectPointer)
             tabView.onClosePage { p in
                 tabView.closePageFinish(p, confirm: true)
                 return true
@@ -350,7 +366,7 @@ struct NavigationAndTabTests {
             tabView.closePage(page)
         }
         spinMainLoop()
-        #expect(weakSlot == nil, "Closed page must finalize exactly once (balanced refcount)")
+        #expect(weakSlot?.isCleared == true, "Closed page must finalize exactly once (balanced refcount)")
     }
 
     // MARK: - TabBar Tests

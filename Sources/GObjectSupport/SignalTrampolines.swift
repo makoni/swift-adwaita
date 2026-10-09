@@ -416,7 +416,7 @@ func signalTrampolineInput(
 /// animation runs; the Swift handler is invoked purely as an observer.
 func signalTrampolineDragCancel(
     _ instance: UnsafeMutableRawPointer,
-    _ drag: OpaquePointer,
+    _ drag: OpaquePointer?,
     _ reason: UInt32,
     _ userData: UnsafeMutableRawPointer
 ) -> gboolean {

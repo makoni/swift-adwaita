@@ -113,7 +113,7 @@ final class ExpandedWidgetXCTests: XCTestCase {
         XCTAssertNotNil(overview.child)
     }
 
-    @MainActor func test_tabOverviewCreateTabSignal() {
+    @MainActor func test_tabOverviewCreateTabSignalConnect() {
         ensureAdwInit()
         let overview = TabOverview()
         let tabView = TabView()

@@ -269,6 +269,68 @@ final class MediaProtocolXCTests: XCTestCase {
         XCTAssertTrue(row.title == "Volume")
     }
 
+    @MainActor func test_spinRowOnOutputSignalReturnsBool() {
+        ensureAdwInit()
+        let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)
+        row.value = 42
+        var called = false
+        let conn = row.onOutput {
+            called = true
+            return true
+        }
+        let ret = cadw_signal_emit_bool_return(row.pointer, "output")
+        XCTAssertTrue(called, "onOutput handler should fire")
+        XCTAssertTrue(ret != 0, "the handler's TRUE must become the signal's return value")
+        conn.disconnect()
+    }
+
+    @MainActor func test_spinRowOnInputSignalWritesValue() {
+        ensureAdwInit()
+        let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)
+        row.value = 1
+        var called = false
+        let conn = row.onInput { text in
+            called = true
+            _ = text
+            return .value(7)
+        }
+        var outValue: Double = -1
+        let ret = cadw_signal_emit_spin_row_input(row.pointer, &outValue)
+        XCTAssertTrue(called, "onInput handler should fire")
+        XCTAssertEqual(ret, 1, "a .value result must return TRUE (1)")
+        XCTAssertEqual(outValue, 7.0, "the handler must write the value through the out-pointer")
+        conn.disconnect()
+    }
+
+    @MainActor func test_spinRowOnInputReceivesEditableText() {
+        ensureAdwInit()
+        let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)
+        row.value = 42
+        var received: String?
+        let conn = row.onInput { text in
+            received = text
+            return .value(Double(text) ?? 0)
+        }
+        var outValue: Double = -1
+        _ = cadw_signal_emit_spin_row_input(row.pointer, &outValue)
+        let editableText = String(cString: gtk_editable_get_text(row.opaquePointer))
+        XCTAssertNotNil(received, "onInput handler should fire")
+        XCTAssertEqual(received, editableText, "onInput must receive the row's current editable text")
+        XCTAssertEqual(outValue, 42.0, "the handler must parse the text back to the row's value")
+        conn.disconnect()
+    }
+
+    @MainActor func test_spinRowOnInputSignalInvalid() {
+        ensureAdwInit()
+        let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)
+        let conn = row.onInput { _ in .invalid }
+        var outValue: Double = -1
+        let ret = cadw_signal_emit_spin_row_input(row.pointer, &outValue)
+        XCTAssertEqual(ret, -1, "an .invalid result must return GTK_INPUT_ERROR (-1)")
+        _ = outValue
+        conn.disconnect()
+    }
+
     @MainActor func test_expanderRowConvenienceInit() {
         ensureAdwInit()
         let row = ExpanderRow(title: "Advanced")

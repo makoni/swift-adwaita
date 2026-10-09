@@ -159,11 +159,3 @@ public final class SpinRow: ActionRow {
         SignalHelper.connect(self, signal: .wrapped, handler: handler)
     }
 }
-
-/// Reads the text of a `GtkEditable` (which `AdwSpinRow` is) from its instance
-/// pointer. Kept at file scope so the `input` signal closure can read the
-/// entry's text without capturing the `SpinRow` wrapper, which would keep the
-/// wrapper alive forever.
-private func spinRowEditableText(_ ptr: OpaquePointer) -> String {
-    String(cString: gtk_editable_get_text(ptr))
-}
