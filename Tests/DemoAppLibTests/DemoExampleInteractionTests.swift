@@ -61,8 +61,9 @@ struct DemoExampleInteractionTests {
 
         restoreBtn?.emitClicked()
         #expect(centerBox?.centerWidget != nil, "Restore should set the centre widget back")
-        #expect((centerBox?.centerWidget?.tryCast(Label.self))?.text == "Page Title",
-                "Restore should restore the titled centre widget, not just a non-nil one")
+        #expect(
+            (centerBox?.centerWidget?.tryCast(Label.self))?.text == "Page Title",
+            "Restore should restore the titled centre widget, not just a non-nil one")
     }
 
     @Test @MainActor
@@ -137,8 +138,9 @@ struct DemoExampleInteractionTests {
             // On <1.7 runtimes the example renders its fallback instead of the
             // switcher. Assert that, so this test checks something real on CI
             // (libadwaita 1.5) rather than returning before any assertion.
-            #expect(widgetOfType(root, InlineViewSwitcher.self) == nil,
-                    "fallback runtime should not have an InlineViewSwitcher")
+            #expect(
+                widgetOfType(root, InlineViewSwitcher.self) == nil,
+                "fallback runtime should not have an InlineViewSwitcher")
             let showsFallback = allWidgets(root).contains { widget in
                 guard let label = widget.tryCast(Label.self) else { return false }
                 return label.text.contains("Requires libadwaita 1.7+")

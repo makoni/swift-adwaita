@@ -56,7 +56,7 @@ final class ListViewXCTests: XCTestCase {
         store.appendPlaceholder()
         store.appendPlaceholder()
         let selection = SingleSelection(model: store)
-        XCTAssertTrue(selection.selected == 0) // autoselects first
+        XCTAssertTrue(selection.selected == 0)  // autoselects first
         selection.canUnselect = true
         XCTAssertTrue(selection.canUnselect == true)
     }

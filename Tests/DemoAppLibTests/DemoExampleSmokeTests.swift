@@ -26,8 +26,9 @@ struct DemoExampleSmokeTests {
         // The gallery navigates by id (DemoAppRunner looks examples up by id),
         // so a duplicate id would silently break navigation while every build
         // still passes. Guard the registry invariant explicitly.
-        #expect(Set(allExamples.map(\.id)).count == allExamples.count,
-                "demo example ids must be unique")
+        #expect(
+            Set(allExamples.map(\.id)).count == allExamples.count,
+            "demo example ids must be unique")
 
         for example in allExamples {
             // Name the example before doing anything with it: a hard crash

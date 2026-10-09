@@ -47,10 +47,12 @@ public class ExpanderRow: PreferencesRow {
     /// Whether the row can be expanded by the user.
     public var enableExpansion: Bool {
         get { adw_expander_row_get_enable_expansion(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>) != 0 }
-        set { adw_expander_row_set_enable_expansion(
-            castedPointer() as UnsafeMutablePointer<AdwExpanderRow>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_expander_row_set_enable_expansion(
+                castedPointer() as UnsafeMutablePointer<AdwExpanderRow>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// Whether the row is currently expanded, revealing its child rows.
@@ -62,10 +64,12 @@ public class ExpanderRow: PreferencesRow {
     /// Whether to show a switch that allows the user to enable or disable the expansion.
     public var showEnableSwitch: Bool {
         get { adw_expander_row_get_show_enable_switch(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>) != 0 }
-        set { adw_expander_row_set_show_enable_switch(
-            castedPointer() as UnsafeMutablePointer<AdwExpanderRow>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_expander_row_set_show_enable_switch(
+                castedPointer() as UnsafeMutablePointer<AdwExpanderRow>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// The secondary text displayed below the title.
@@ -78,10 +82,12 @@ public class ExpanderRow: PreferencesRow {
     /// - Since: libadwaita 1.3
     public var subtitleLines: Int {
         get { Int(adw_expander_row_get_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwExpanderRow>)) }
-        set { adw_expander_row_set_subtitle_lines(
-            castedPointer() as UnsafeMutablePointer<AdwExpanderRow>,
-            Int32(newValue)
-        ) }
+        set {
+            adw_expander_row_set_subtitle_lines(
+                castedPointer() as UnsafeMutablePointer<AdwExpanderRow>,
+                Int32(newValue)
+            )
+        }
     }
 
     /// The maximum number of lines for the title (0 for unlimited).

@@ -10,12 +10,12 @@ struct ButtonRowExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let row = ButtonRow()
-    row.title = "Clear Cache"
-    row.startIconName = "user-trash-symbolic"
-    row.endIconName = "go-next-symbolic"
-    row.onActivated { print("Activated!") }
-    """
+        let row = ButtonRow()
+        row.title = "Clear Cache"
+        row.startIconName = "user-trash-symbolic"
+        row.endIconName = "go-next-symbolic"
+        row.onActivated { print("Activated!") }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

@@ -10,28 +10,28 @@ struct ShortcutExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Simple shortcut on any widget
-    widget.addKeyboardShortcut(key: .s, modifiers: .control) {
-        print("Save!")
-        return true
-    }
+        // Simple shortcut on any widget
+        widget.addKeyboardShortcut(key: .s, modifiers: .control) {
+            print("Save!")
+            return true
+        }
 
-    // Multiple modifiers
-    widget.addKeyboardShortcut(key: .z,
-        modifiers: [.control, .shift]) {
-        print("Redo!")
-        return true
-    }
+        // Multiple modifiers
+        widget.addKeyboardShortcut(key: .z,
+            modifiers: [.control, .shift]) {
+            print("Redo!")
+            return true
+        }
 
-    // ShortcutController for grouped shortcuts
-    let controller = ShortcutController()
-    controller.scope = GTK_SHORTCUT_SCOPE_MANAGED
-    controller.addShortcut(key: .z, modifiers: .control) {
-        print("Undo!")
-        return true
-    }
-    widget.addController(controller)
-    """
+        // ShortcutController for grouped shortcuts
+        let controller = ShortcutController()
+        controller.scope = GTK_SHORTCUT_SCOPE_MANAGED
+        controller.addShortcut(key: .z, modifiers: .control) {
+            print("Undo!")
+            return true
+        }
+        widget.addController(controller)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -59,7 +59,7 @@ struct ShortcutExample: DemoExample {
             (.digit2, .control, "Ctrl+2"),
             (.digit3, .control, "Ctrl+3"),
             (.s, .control, "Ctrl+S — Save"),
-            (.z, [.control, .shift], "Ctrl+Shift+Z — Redo")
+            (.z, [.control, .shift], "Ctrl+Shift+Z — Redo"),
         ]
 
         let infoGroup = PreferencesGroup()

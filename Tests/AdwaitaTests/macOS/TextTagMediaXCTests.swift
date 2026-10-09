@@ -33,7 +33,7 @@ final class TextTagMediaXCTests: XCTestCase {
         let tag = TextTag()
         tag.sizePoints = 14.0
         XCTAssertTrue(abs(tag.sizePoints - 14.0) < 0.01)
-        tag.size = 12288 // 12 * 1024
+        tag.size = 12288  // 12 * 1024
         XCTAssertTrue(tag.size == 12288)
     }
 

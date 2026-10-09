@@ -10,20 +10,20 @@ struct RevealerExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let revealer = Revealer()
-    revealer.transitionType = .slideDown
-    revealer.transitionDuration = 300
-    revealer.revealChild = true
+        let revealer = Revealer()
+        revealer.transitionType = .slideDown
+        revealer.transitionDuration = 300
+        revealer.revealChild = true
 
-    let content = Label("This content can be revealed or hidden")
-    content.setMargins(12)
-    revealer.child = content
+        let content = Label("This content can be revealed or hidden")
+        content.setMargins(12)
+        revealer.child = content
 
-    let toggleBtn = Button(label: "Toggle")
-    toggleBtn.onClicked {
-        revealer.revealChild = !revealer.revealChild
-    }
-    """
+        let toggleBtn = Button(label: "Toggle")
+        toggleBtn.onClicked {
+            revealer.revealChild = !revealer.revealChild
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

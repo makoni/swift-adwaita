@@ -283,7 +283,8 @@ private extension Clipboard {
         let valuePtr = gdk_clipboard_read_value_finish(OpaquePointer(source), result, &error)
         if let error { g_error_free(error) }
         guard let valuePtr,
-              let fileList = cadw_value_get_file_list(valuePtr) else {
+            let fileList = cadw_value_get_file_list(valuePtr)
+        else {
             MainActor.assumeIsolated { box.closure([]) }
             return
         }

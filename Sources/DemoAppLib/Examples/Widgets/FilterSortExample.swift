@@ -10,23 +10,23 @@ struct FilterSortExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let store = ListStore()
-    // ... populate store + parallel data array
+        let store = ListStore()
+        // ... populate store + parallel data array
 
-    // Filter: only show items matching search text
-    let filter = CustomFilter { item in true }
-    let filtered = FilterListModel(model: store, filter: filter)
+        // Filter: only show items matching search text
+        let filter = CustomFilter { item in true }
+        let filtered = FilterListModel(model: store, filter: filter)
 
-    // Sort: alphabetical order
-    let sorter = CustomSorter { a, b in 0 }
-    let sorted = SortListModel(model: filtered, sorter: sorter)
+        // Sort: alphabetical order
+        let sorter = CustomSorter { a, b in 0 }
+        let sorted = SortListModel(model: filtered, sorter: sorter)
 
-    // Update filter when search text changes
-    searchEntry.onSearchChanged {
-        // update predicate, then:
-        filter.changed()
-    }
-    """
+        // Update filter when search text changes
+        searchEntry.onSearchChanged {
+            // update predicate, then:
+            filter.changed()
+        }
+        """
 
     func buildWidget() -> Widget {
         // Data
@@ -34,7 +34,7 @@ struct FilterSortExample: DemoExample {
             "Apple", "Banana", "Cherry", "Date", "Elderberry",
             "Fig", "Grape", "Honeydew", "Kiwi", "Lemon",
             "Mango", "Nectarine", "Orange", "Papaya", "Quince",
-            "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon"
+            "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon",
         ]
 
         let store = ListStore()
@@ -54,7 +54,7 @@ struct FilterSortExample: DemoExample {
         let filtered = FilterListModel(model: store, filter: positionFilter)
 
         let sorter = CustomSorter { _, _ in
-            0 // No sort by default
+            0  // No sort by default
         }
         let sorted = SortListModel(model: filtered, sorter: sorter)
 
@@ -105,7 +105,7 @@ struct FilterSortExample: DemoExample {
                 "Apple", "Banana", "Cherry", "Date", "Elderberry",
                 "Fig", "Grape", "Honeydew", "Kiwi", "Lemon",
                 "Mango", "Nectarine", "Orange", "Papaya", "Quince",
-                "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon"
+                "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon",
             ]
 
             for fruit in allFruits {
@@ -154,7 +154,7 @@ struct FilterSortExample: DemoExample {
                 "Apple", "Banana", "Cherry", "Date", "Elderberry",
                 "Fig", "Grape", "Honeydew", "Kiwi", "Lemon",
                 "Mango", "Nectarine", "Orange", "Papaya", "Quince",
-                "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon"
+                "Raspberry", "Strawberry", "Tangerine", "Ugli fruit", "Watermelon",
             ]
             while store.count > 0 {
                 store.remove(at: 0)

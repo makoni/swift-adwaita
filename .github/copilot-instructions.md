@@ -9,7 +9,7 @@
 - Run the full test suite in a virtual display: `xvfb-run swift test` (CI uses `--no-parallel` because tests share GTK/libadwaita state)
 - Run one Swift Testing test by suite and test name: `xvfb-run swift test --filter 'WidgetBaseTests/widgetTooltipText'`
 - Run the demo gallery: `swift run DemoApp`
-- Lint formatting the same way CI does: `swiftformat --lint Sources/ Tests/`
+- Lint formatting the same way CI does: `swift-format lint -r Sources/ Tests/`
 - Generate API docs for the library target: `swift package generate-documentation --target Adwaita --disable-indexing`
 - Generate the repository HTML and Markdown docs bundle: `./buildDocs.sh`
 
@@ -37,5 +37,5 @@ The test suite in `Tests/AdwaitaTests` uses Swift Testing rather than XCTest. Mo
 - For libadwaita features introduced after the minimum supported version, gate usage with `AdwaitaVersion.isAtLeast(...)`. Newer generated wrappers may use failable initializers or `isAvailable` to preserve runtime compatibility, and matching C shims belong in `Sources/CAdwaita/shim.h`.
 - When adding a demo example, implement `DemoExample` in `Sources/DemoApp/Examples/...` and register it in the `allExamples` array; the demo UI is driven from that central registry.
 - Tests use Swift Testing syntax: `@Suite(.serialized)`, `@Test`, and `#expect(...)`, not XCTest assertions.
-- Formatting in CI is enforced with the repository’s `.swiftformat` settings: 4-space indentation, 120-column width, and alphabetized import grouping without auto-sorting imports semantically.
+- Formatting in CI is enforced with the repository’s `.swift-format` configuration (the Swift toolchain’s `swift-format`): 4-space indentation, 120-column width, and alphabetized import grouping.
 - The package targets `swift-tools-version: 6.3` and CI runs the build/test matrix on Swift 6.3 and 6.4 (the local toolchain pinned in `.swift-version` is 6.4.0); keep changes compatible with both.

@@ -10,28 +10,28 @@ struct MenuExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    // Create actions
-    let copyAction = SimpleAction(name: "copy")
-    copyAction.onActivate { print("Copy!") }
+        // Create actions
+        let copyAction = SimpleAction(name: "copy")
+        copyAction.onActivate { print("Copy!") }
 
-    let pasteAction = SimpleAction(name: "paste")
-    pasteAction.onActivate { print("Paste!") }
+        let pasteAction = SimpleAction(name: "paste")
+        pasteAction.onActivate { print("Paste!") }
 
-    // Add to window action map
-    window.addAction(copyAction)
-    window.addAction(pasteAction)
+        // Add to window action map
+        window.addAction(copyAction)
+        window.addAction(pasteAction)
 
-    // Build menu model
-    let menu = GMenuRef()
-    menu.append("Copy", action: "win.copy")
-    menu.append("Paste", action: "win.paste")
+        // Build menu model
+        let menu = GMenuRef()
+        menu.append("Copy", action: "win.copy")
+        menu.append("Paste", action: "win.paste")
 
-    // Menu button with hamburger icon
-    let menuBtn = MenuButton()
-    menuBtn.iconName = "open-menu-symbolic"
-    menuBtn.setMenuModel(menu)
-    headerBar.packEnd(menuBtn)
-    """
+        // Menu button with hamburger icon
+        let menuBtn = MenuButton()
+        menuBtn.iconName = "open-menu-symbolic"
+        menuBtn.setMenuModel(menu)
+        headerBar.packEnd(menuBtn)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

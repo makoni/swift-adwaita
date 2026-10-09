@@ -10,31 +10,31 @@ struct AnimationExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let target = CallbackAnimationTarget { value in
-        label.opacity = value
-    }
-    let anim = TimedAnimation(
-        widget: label,
-        from: 0.0, to: 1.0,
-        duration: 1000,
-        target: target
-    )
-    anim.easing = .easeInOutCubic
-    anim.play()
+        let target = CallbackAnimationTarget { value in
+            label.opacity = value
+        }
+        let anim = TimedAnimation(
+            widget: label,
+            from: 0.0, to: 1.0,
+            duration: 1000,
+            target: target
+        )
+        anim.easing = .easeInOutCubic
+        anim.play()
 
-    // Spring animation
-    let springTarget = CallbackAnimationTarget { value in
-        widget.marginStart = Int(value)
-    }
-    let springParams = SpringParams(damping: 0.7, mass: 1.0, stiffness: 100)
-    let spring = SpringAnimation(
-        widget: widget,
-        from: 0, to: 200,
-        springParams: springParams,
-        target: springTarget
-    )
-    spring.play()
-    """
+        // Spring animation
+        let springTarget = CallbackAnimationTarget { value in
+            widget.marginStart = Int(value)
+        }
+        let springParams = SpringParams(damping: 0.7, mass: 1.0, stiffness: 100)
+        let spring = SpringAnimation(
+            widget: widget,
+            from: 0, to: 200,
+            springParams: springParams,
+            target: springTarget
+        )
+        spring.play()
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 16)

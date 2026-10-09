@@ -10,23 +10,23 @@ struct DialogExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let dialog = Dialog()
-    dialog.title = "Preferences"
-    dialog.contentWidth = 500
-    dialog.contentHeight = 400
+        let dialog = Dialog()
+        dialog.title = "Preferences"
+        dialog.contentWidth = 500
+        dialog.contentHeight = 400
 
-    let group = PreferencesGroup()
-    group.title = "General"
-    let row = SwitchRow()
-    row.title = "Dark Mode"
-    group.add(row)
+        let group = PreferencesGroup()
+        group.title = "General"
+        let row = SwitchRow()
+        row.title = "Dark Mode"
+        group.add(row)
 
-    let scrolled = ScrolledWindow()
-    scrolled.child = group
-    dialog.child = scrolled
+        let scrolled = ScrolledWindow()
+        scrolled.child = group
+        dialog.child = scrolled
 
-    dialog.present(parentWidget)
-    """
+        dialog.present(parentWidget)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

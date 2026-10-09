@@ -57,7 +57,7 @@ struct ListViewTests {
         store.appendPlaceholder()
         store.appendPlaceholder()
         let selection = SingleSelection(model: store)
-        #expect(selection.selected == 0) // autoselects first
+        #expect(selection.selected == 0)  // autoselects first
         selection.canUnselect = true
         #expect(selection.canUnselect == true)
     }

@@ -502,7 +502,7 @@ struct NavigationAndTabTests {
         let page = tabView.append(label)
         // pinned and selected are read-only
         #expect(page.pinned == false)
-        #expect(page.selected == true) // first page is auto-selected
+        #expect(page.selected == true)  // first page is auto-selected
         // child is read-only
         #expect(page.child.pointer != nil)
     }

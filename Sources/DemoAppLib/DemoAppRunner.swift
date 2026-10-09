@@ -45,7 +45,7 @@ private func registerDemoIcons(for display: Display) {
             .appendingPathComponent("Resources", isDirectory: true)
             .appendingPathComponent("icons", isDirectory: true),
         Bundle.module.resourceURL?
-            .appendingPathComponent("icons", isDirectory: true)
+            .appendingPathComponent("icons", isDirectory: true),
     ].compactMap(\.self)
 
     guard let iconsPath = candidatePaths.first(where: { fileManager.fileExists(atPath: $0.path) }) else {
@@ -98,7 +98,8 @@ public func runDemoApp(arguments: [String] = CommandLine.arguments) -> Int {
         let welcomePage = StatusPage()
         welcomePage.iconName = "applications-science-symbolic"
         welcomePage.title = "swift-adwaita Demo"
-        welcomePage.description = "An imperative Swift 6.3 wrapper for GTK4 and libadwaita.\nSelect an example from the sidebar to get started."
+        welcomePage.description =
+            "An imperative Swift 6.3 wrapper for GTK4 and libadwaita.\nSelect an example from the sidebar to get started."
         contentStack.addNamed(welcomePage, name: "welcome")
 
         for example in allExamples {

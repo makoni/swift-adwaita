@@ -36,7 +36,7 @@ extension SerializedLifecycleSuites {
             let tag = TextTag()
             tag.sizePoints = 14.0
             #expect(abs(tag.sizePoints - 14.0) < 0.01)
-            tag.size = 12288 // 12 * 1024
+            tag.size = 12288  // 12 * 1024
             #expect(tag.size == 12288)
         }
 

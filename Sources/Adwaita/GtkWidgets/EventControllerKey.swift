@@ -43,7 +43,8 @@ public final class EventControllerKey: GObjectRef, EventControllerProtocol {
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onKeyPressed(_ handler: @escaping @MainActor (UInt32, UInt32, GdkModifierType) -> Bool)
-        -> SignalConnection {
+        -> SignalConnection
+    {
         SignalHelper.connectUIntUIntUIntReturnBool(self, signal: .keyPressed) { keyval, keycode, state in
             handler(keyval, keycode, GdkModifierType(rawValue: state))
         }
@@ -55,7 +56,8 @@ public final class EventControllerKey: GObjectRef, EventControllerProtocol {
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onKeyReleased(_ handler: @escaping @MainActor (UInt32, UInt32, GdkModifierType) -> Void)
-        -> SignalConnection {
+        -> SignalConnection
+    {
         SignalHelper.connectUIntUIntUInt(self, signal: .keyReleased) { keyval, keycode, state in
             handler(keyval, keycode, GdkModifierType(rawValue: state))
         }

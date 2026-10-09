@@ -116,7 +116,8 @@ public class Dialog: Widget {
     /// - Since: libadwaita 1.5
     public var followsContentSize: Bool {
         get { adw_dialog_get_follows_content_size(castedPointer() as UnsafeMutablePointer<AdwDialog>) != 0 }
-        set { adw_dialog_set_follows_content_size(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue ? 1 : 0)
+        set {
+            adw_dialog_set_follows_content_size(castedPointer() as UnsafeMutablePointer<AdwDialog>, newValue ? 1 : 0)
         }
     }
 

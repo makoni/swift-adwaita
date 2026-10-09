@@ -10,22 +10,22 @@ struct DrawingAreaExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let drawingArea = DrawingArea()
-    drawingArea.contentWidth = 300
-    drawingArea.contentHeight = 200
-    drawingArea.setDrawFunc { cr, width, height in
-        // Blue background
-        cr.setSourceRGB(0.2, 0.4, 0.8)
-        cr.rectangle(x: 0, y: 0, width: Double(width), height: Double(height))
-        cr.fill()
+        let drawingArea = DrawingArea()
+        drawingArea.contentWidth = 300
+        drawingArea.contentHeight = 200
+        drawingArea.setDrawFunc { cr, width, height in
+            // Blue background
+            cr.setSourceRGB(0.2, 0.4, 0.8)
+            cr.rectangle(x: 0, y: 0, width: Double(width), height: Double(height))
+            cr.fill()
 
-        // White circle
-        let cx = Double(width) / 2, cy = Double(height) / 2
-        cr.setSourceRGB(1, 1, 1)
-        cr.arc(centerX: cx, centerY: cy, radius: 50, startAngle: 0, endAngle: .pi * 2)
-        cr.fill()
-    }
-    """
+            // White circle
+            let cx = Double(width) / 2, cy = Double(height) / 2
+            cr.setSourceRGB(1, 1, 1)
+            cr.arc(centerX: cx, centerY: cy, radius: 50, startAngle: 0, endAngle: .pi * 2)
+            cr.fill()
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 16)

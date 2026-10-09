@@ -11,24 +11,24 @@ struct ViewSwitcherExample: DemoExample {
     let opensInWindow = true
 
     let sourceCode = """
-    let viewStack = ViewStack()
+        let viewStack = ViewStack()
 
-    let page1 = StatusPage()
-    page1.title = "Recent"
-    page1.iconName = "document-open-recent-symbolic"
-    viewStack.addTitledWithIcon(page1, name: "recent",
-        title: "Recent", iconName: "document-open-recent-symbolic")
+        let page1 = StatusPage()
+        page1.title = "Recent"
+        page1.iconName = "document-open-recent-symbolic"
+        viewStack.addTitledWithIcon(page1, name: "recent",
+            title: "Recent", iconName: "document-open-recent-symbolic")
 
-    let page2 = StatusPage()
-    page2.title = "Starred"
-    page2.iconName = "starred-symbolic"
-    viewStack.addTitledWithIcon(page2, name: "starred",
-        title: "Starred", iconName: "starred-symbolic")
+        let page2 = StatusPage()
+        page2.title = "Starred"
+        page2.iconName = "starred-symbolic"
+        viewStack.addTitledWithIcon(page2, name: "starred",
+            title: "Starred", iconName: "starred-symbolic")
 
-    let switcher = ViewSwitcher()
-    switcher.stack = viewStack
-    switcher.policy = .wide
-    """
+        let switcher = ViewSwitcher()
+        switcher.stack = viewStack
+        switcher.policy = .wide
+        """
 
     func buildWidget() -> Widget {
         let viewStack = ViewStack()

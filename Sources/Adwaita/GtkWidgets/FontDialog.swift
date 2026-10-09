@@ -52,11 +52,12 @@ public final class FontDialog: GObjectRef {
         try await FontDialog.retype {
             try await withCheckedThrowingContinuation { continuation in
                 let box = DialogAsyncSupport.retainBox(continuation)
-                let initialDesc: OpaquePointer? = if let initialFont {
-                    pango_font_description_from_string(initialFont)
-                } else {
-                    nil
-                }
+                let initialDesc: OpaquePointer? =
+                    if let initialFont {
+                        pango_font_description_from_string(initialFont)
+                    } else {
+                        nil
+                    }
                 gtk_font_dialog_choose_font(
                     self.opaquePointer,
                     parent.map { cadw_cast_window($0.pointer) },
@@ -85,11 +86,12 @@ public final class FontDialog: GObjectRef {
         completion: @escaping @MainActor (Result<String?, GLibError>) -> Void
     ) {
         let box = DialogAsyncSupport.retainBox(completion)
-        let initialDesc: OpaquePointer? = if let initialFont {
-            pango_font_description_from_string(initialFont)
-        } else {
-            nil
-        }
+        let initialDesc: OpaquePointer? =
+            if let initialFont {
+                pango_font_description_from_string(initialFont)
+            } else {
+                nil
+            }
         gtk_font_dialog_choose_font(
             opaquePointer,
             parent.map { cadw_cast_window($0.pointer) },

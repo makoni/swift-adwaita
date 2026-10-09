@@ -10,12 +10,12 @@ struct ActionBarExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let actionBar = ActionBar()
-    actionBar.packStart(Button(label: "Cancel"))
-    actionBar.packEnd(Button(label: "Apply"))
-    actionBar.centerWidget = Label("3 items selected")
-    actionBar.revealed = true
-    """
+        let actionBar = ActionBar()
+        actionBar.packStart(Button(label: "Cancel"))
+        actionBar.packEnd(Button(label: "Apply"))
+        actionBar.centerWidget = Label("3 items selected")
+        actionBar.revealed = true
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

@@ -10,14 +10,14 @@ struct ComboRowExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let combo = ComboRow()
-    combo.title = "Color Theme"
-    combo.subtitle = "Choose your preferred theme"
+        let combo = ComboRow()
+        combo.title = "Color Theme"
+        combo.subtitle = "Choose your preferred theme"
 
-    let model = StringList(["Default", "Light", "Dark"])
-    combo.setModel(model)
-    combo.selected = 0
-    """
+        let model = StringList(["Default", "Light", "Dark"])
+        combo.setModel(model)
+        combo.selected = 0
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

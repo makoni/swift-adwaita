@@ -10,12 +10,12 @@ struct FontPickerExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let fontBtn = FontDialogButton()
-    fontBtn.fontDescription = "Sans 14"
-    fontBtn.onFontChanged {
-        print("Font: \\(fontBtn.fontDescription ?? "none")")
-    }
-    """
+        let fontBtn = FontDialogButton()
+        fontBtn.fontDescription = "Sans 14"
+        fontBtn.onFontChanged {
+            print("Font: \\(fontBtn.fontDescription ?? "none")")
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 16)

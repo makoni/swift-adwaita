@@ -10,14 +10,14 @@ struct AspectFrameExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Keep a 16:9 aspect ratio for a video area
-    let frame = AspectFrame(ratio: 16.0 / 9.0)
-    frame.child = videoWidget
+        // Keep a 16:9 aspect ratio for a video area
+        let frame = AspectFrame(ratio: 16.0 / 9.0)
+        frame.child = videoWidget
 
-    // Or let the child determine the ratio
-    let frame2 = AspectFrame(obeyChild: true)
-    frame2.child = picture
-    """
+        // Or let the child determine the ratio
+        let frame2 = AspectFrame(obeyChild: true)
+        frame2.child = picture
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

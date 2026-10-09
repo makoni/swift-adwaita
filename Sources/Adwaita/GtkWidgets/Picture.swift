@@ -209,13 +209,15 @@ public final class Texture: GObjectRef {
     /// etc).
     public init?(filename: String, maxWidth: Int, maxHeight: Int) {
         var error: UnsafeMutablePointer<GError>?
-        guard let pixbuf = gdk_pixbuf_new_from_file_at_scale(
-            filename,
-            Int32(maxWidth),
-            Int32(maxHeight),
-            1, // preserve_aspect_ratio
-            &error
-        ) else {
+        guard
+            let pixbuf = gdk_pixbuf_new_from_file_at_scale(
+                filename,
+                Int32(maxWidth),
+                Int32(maxHeight),
+                1,  // preserve_aspect_ratio
+                &error
+            )
+        else {
             if let error { g_error_free(error) }
             return nil
         }
@@ -229,18 +231,20 @@ public final class Texture: GObjectRef {
         // last row is only as long as the pixels in it, and reading a full
         // stride past it would run off the buffer.
         guard let pixels = gdk_pixbuf_read_pixels(pixbuf),
-              let bytes = g_bytes_new_with_free_func(
-                  pixels,
-                  gdk_pixbuf_get_byte_length(pixbuf),
-                  { pixbufGeneric in g_object_unref(pixbufGeneric) },
-                  pixbufGeneric
-              ) else {
+            let bytes = g_bytes_new_with_free_func(
+                pixels,
+                gdk_pixbuf_get_byte_length(pixbuf),
+                { pixbufGeneric in g_object_unref(pixbufGeneric) },
+                pixbufGeneric
+            )
+        else {
             g_object_unref(pixbufGeneric)
             return nil
         }
         // GdkPixbuf stores straight (non-premultiplied) 8-bit channels, which
         // is what these two formats name.
-        let format = gdk_pixbuf_get_has_alpha(pixbuf) != 0
+        let format =
+            gdk_pixbuf_get_has_alpha(pixbuf) != 0
             ? GDK_MEMORY_R8G8B8A8
             : GDK_MEMORY_R8G8B8
         let ptr = gdk_memory_texture_new(
@@ -383,10 +387,10 @@ public final class Texture: GObjectRef {
             }
             MainContext.idle {
                 switch decode {
-                case let .success(pixels):
+                case .success(let pixels):
                     let texture = Texture(rgbaData: pixels.rgba, width: pixels.width, height: pixels.height)
                     completion(.success(texture))
-                case let .failure(error):
+                case .failure(let error):
                     completion(.failure(error))
                 }
             }

@@ -11,36 +11,36 @@ struct BottomSheetExample: DemoExample {
     let opensInWindow = true
 
     let sourceCode = """
-    let bottomSheet = BottomSheet()
-    bottomSheet.showDragHandle = true
-    bottomSheet.modal = true
+        let bottomSheet = BottomSheet()
+        bottomSheet.showDragHandle = true
+        bottomSheet.modal = true
 
-    // Main content
-    let content = StatusPage()
-    content.title = "Bottom Sheet Demo"
-    content.iconName = "view-reveal-symbolic"
-    content.description = "Tap the button to open the sheet"
-    bottomSheet.content = content
+        // Main content
+        let content = StatusPage()
+        content.title = "Bottom Sheet Demo"
+        content.iconName = "view-reveal-symbolic"
+        content.description = "Tap the button to open the sheet"
+        bottomSheet.content = content
 
-    // Sheet content
-    let group = PreferencesGroup()
-    group.title = "Settings"
-    let row1 = SwitchRow()
-    row1.title = "Notifications"
-    row1.active = true
-    group.add(row1)
-    let row2 = SwitchRow()
-    row2.title = "Dark Mode"
-    group.add(row2)
-    bottomSheet.sheet = group
+        // Sheet content
+        let group = PreferencesGroup()
+        group.title = "Settings"
+        let row1 = SwitchRow()
+        row1.title = "Notifications"
+        row1.active = true
+        group.add(row1)
+        let row2 = SwitchRow()
+        row2.title = "Dark Mode"
+        group.add(row2)
+        bottomSheet.sheet = group
 
-    // Toggle button
-    let toggleBtn = Button(label: "Open Sheet")
-    toggleBtn.onClicked {
-        bottomSheet.open = !bottomSheet.open
-    }
-    content.child = toggleBtn
-    """
+        // Toggle button
+        let toggleBtn = Button(label: "Open Sheet")
+        toggleBtn.onClicked {
+            bottomSheet.open = !bottomSheet.open
+        }
+        content.child = toggleBtn
+        """
 
     func buildWidget() -> Widget {
         guard let bottomSheet = BottomSheet() else {

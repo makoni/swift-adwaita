@@ -11,20 +11,20 @@ struct NavigationSplitViewExample: DemoExample {
     let opensInWindow = true
 
     let sourceCode = """
-    let splitView = NavigationSplitView()
-    splitView.sidebarWidthFraction = 0.3
+        let splitView = NavigationSplitView()
+        splitView.sidebarWidthFraction = 0.3
 
-    // Sidebar
-    let sidebarPage = NavigationPage(
-        child: sidebarContent, title: "Categories")
+        // Sidebar
+        let sidebarPage = NavigationPage(
+            child: sidebarContent, title: "Categories")
 
-    // Content
-    let contentPage = NavigationPage(
-        child: contentWidget, title: "Detail")
+        // Content
+        let contentPage = NavigationPage(
+            child: contentWidget, title: "Detail")
 
-    splitView.sidebar = sidebarPage
-    splitView.content = contentPage
-    """
+        splitView.sidebar = sidebarPage
+        splitView.content = contentPage
+        """
 
     func buildWidget() -> Widget {
         let splitView = NavigationSplitView()
@@ -39,7 +39,7 @@ struct NavigationSplitViewExample: DemoExample {
         let categories = ["Inbox", "Starred", "Sent", "Drafts", "Trash"]
         let icons = [
             "mail-inbox-symbolic", "starred-symbolic", "mail-send-symbolic",
-            "document-edit-symbolic", "user-trash-symbolic"
+            "document-edit-symbolic", "user-trash-symbolic",
         ]
 
         for category in categories {

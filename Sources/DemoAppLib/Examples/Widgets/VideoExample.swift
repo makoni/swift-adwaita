@@ -10,21 +10,21 @@ struct VideoExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let video = Video()
-    video.autoplay = true
-    video.loop = true
+        let video = Video()
+        video.autoplay = true
+        video.loop = true
 
-    // Load via FileDialog
-    let dialog = FileDialog()
-    dialog.setFilters([
-        FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi"]),
-    ])
-    dialog.open(parent: window) { result in
-        if case .success(let path?) = result {
-            video.setFilename(path)
+        // Load via FileDialog
+        let dialog = FileDialog()
+        dialog.setFilters([
+            FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi"]),
+        ])
+        dialog.open(parent: window) { result in
+            if case .success(let path?) = result {
+                video.setFilename(path)
+            }
         }
-    }
-    """
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -51,10 +51,10 @@ struct VideoExample: DemoExample {
             dialog.title = "Open Video"
             dialog.setFilters([
                 FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi", "mov", "ogv"]),
-                FileFilter(name: "All files", patterns: ["*"])
+                FileFilter(name: "All files", patterns: ["*"]),
             ])
             dialog.open(parent: box.root) { [video] result in
-                if case let .success(path?) = result {
+                if case .success(let path?) = result {
                     video.setFilename(path)
                 }
             }

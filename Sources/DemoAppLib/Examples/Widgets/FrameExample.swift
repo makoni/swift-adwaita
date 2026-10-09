@@ -10,11 +10,11 @@ struct FrameExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let frame = Frame(label: "Settings")
-    let content = Label("Frame content goes here")
-    content.setMargins(12)
-    frame.child = content
-    """
+        let frame = Frame(label: "Settings")
+        let content = Label("Frame content goes here")
+        content.setMargins(12)
+        frame.child = content
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 16)

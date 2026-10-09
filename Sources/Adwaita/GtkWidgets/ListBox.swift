@@ -180,10 +180,11 @@ public final class ListBox: Widget, Container {
                 let box = Unmanaged<PublicClosureBox<@MainActor (ListBoxRow, ListBoxRow) -> Int>>
                     .fromOpaque(userData).takeUnretainedValue()
                 return MainActor.assumeIsolated {
-                    Int32(box.closure(
-                        ListBoxRow(borrowing: UnsafeMutableRawPointer(row1)),
-                        ListBoxRow(borrowing: UnsafeMutableRawPointer(row2))
-                    ))
+                    Int32(
+                        box.closure(
+                            ListBoxRow(borrowing: UnsafeMutableRawPointer(row1)),
+                            ListBoxRow(borrowing: UnsafeMutableRawPointer(row2))
+                        ))
                 }
             },
             box,

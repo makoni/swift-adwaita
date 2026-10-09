@@ -13,7 +13,7 @@ final class LayoutAndMenuXCTests: XCTestCase {
     @MainActor func test_gmenuCreation() {
         ensureAdwInit()
         let menu = GMenuRef()
-        _ = menu // verify creation doesn't crash
+        _ = menu  // verify creation doesn't crash
     }
 
     @MainActor func test_gmenuAppendItems() {
@@ -208,7 +208,7 @@ final class LayoutAndMenuXCTests: XCTestCase {
         let page1 = Label("First")
         carousel.append(page1)
         let retrieved = carousel.getNthPage(0)
-        _ = retrieved // verify retrieval doesn't crash
+        _ = retrieved  // verify retrieval doesn't crash
     }
 
     // MARK: - CarouselIndicatorDots
@@ -379,7 +379,7 @@ final class LayoutAndMenuXCTests: XCTestCase {
         let stack = ViewStack()
         let child = Label("Content")
         let page = stack.add(child)
-        _ = page.child // read-only; should not crash
+        _ = page.child  // read-only; should not crash
     }
 }
 #endif

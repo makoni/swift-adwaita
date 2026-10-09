@@ -58,13 +58,15 @@ public class PreferencesDialog: Dialog {
     /// - Since: libadwaita 1.5
     public var searchEnabled: Bool {
         get {
-            adw_preferences_dialog_get_search_enabled(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>) !=
-                0
+            adw_preferences_dialog_get_search_enabled(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>)
+                != 0
         }
-        set { adw_preferences_dialog_set_search_enabled(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_preferences_dialog_set_search_enabled(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// The name of the currently visible preferences page, used for programmatic navigation.
@@ -74,10 +76,12 @@ public class PreferencesDialog: Dialog {
             adw_preferences_dialog_get_visible_page_name(castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>)
                 .map { String(cString: $0) }
         }
-        set { adw_preferences_dialog_set_visible_page_name(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>,
-            newValue
-        ) }
+        set {
+            adw_preferences_dialog_set_visible_page_name(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesDialog>,
+                newValue
+            )
+        }
     }
 
     /// Adds a preferences page to the dialog.

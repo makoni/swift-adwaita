@@ -11,8 +11,10 @@ final class DeepCoverageXCTests: XCTestCase {
     // MARK: - CairoContext
 
     @MainActor
-    private func makeCairoContext(width: Int = 200,
-                                  height: Int = 200) -> (CairoContext, OpaquePointer, OpaquePointer) {
+    private func makeCairoContext(
+        width: Int = 200,
+        height: Int = 200
+    ) -> (CairoContext, OpaquePointer, OpaquePointer) {
         let surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, Int32(width), Int32(height))!
         let cr = cairo_create(surface)!
         return (CairoContext(cr), cr, surface)

@@ -115,7 +115,7 @@ private let rightToLeftLanguages: Set<String> = [
     // Syriac
     "syr", "aii", "cld",
     // N'Ko
-    "nqo"
+    "nqo",
 ]
 
 /// Scripts written right to left, lowercased as ``languageSubtag`` reports
@@ -123,7 +123,7 @@ private let rightToLeftLanguages: Set<String> = [
 /// `ff_Adlm_GN` — is right to left whatever its language's default is, which
 /// is why the language list above needs no `language_script` entries.
 private let rightToLeftScripts: Set<String> = [
-    "arab", "hebr", "thaa", "syrc", "nkoo", "adlm", "mand", "samr", "yezi"
+    "arab", "hebr", "thaa", "syrc", "nkoo", "adlm", "mand", "samr", "yezi",
 ]
 
 /// Scripts written left to right that belong to languages the list above
@@ -131,7 +131,7 @@ private let rightToLeftScripts: Set<String> = [
 /// right to left in its default Arabic script and left to right in
 /// Devanagari, and only the script says which.
 private let leftToRightScripts: Set<String> = [
-    "latn", "deva", "cyrl", "guru", "beng"
+    "latn", "deva", "cyrl", "guru", "beng",
 ]
 
 /// Extracts the part of a locale or language identifier that names the

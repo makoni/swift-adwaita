@@ -17,7 +17,7 @@ final class AnimationXCTests: XCTestCase {
             received = value
         }
         XCTAssertNil(received)
-        _ = target // keep alive
+        _ = target  // keep alive
     }
 
     // MARK: - TimedAnimation

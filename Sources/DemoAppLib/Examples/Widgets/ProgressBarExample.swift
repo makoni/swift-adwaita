@@ -10,31 +10,31 @@ struct ProgressBarExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let progressBar = ProgressBar()
-    progressBar.fraction = 0.4
-    progressBar.showText = true
-    progressBar.text = "40%"
+        let progressBar = ProgressBar()
+        progressBar.fraction = 0.4
+        progressBar.showText = true
+        progressBar.text = "40%"
 
-    // Increase
-    let incBtn = Button(label: "Increase")
-    incBtn.onClicked {
-        let newVal = min(1.0, progressBar.fraction + 0.1)
-        progressBar.fraction = newVal
-        progressBar.text = "\\(Int(newVal * 100))%"
-    }
+        // Increase
+        let incBtn = Button(label: "Increase")
+        incBtn.onClicked {
+            let newVal = min(1.0, progressBar.fraction + 0.1)
+            progressBar.fraction = newVal
+            progressBar.text = "\\(Int(newVal * 100))%"
+        }
 
-    // Decrease
-    let decBtn = Button(label: "Decrease")
-    decBtn.onClicked {
-        let newVal = max(0.0, progressBar.fraction - 0.1)
-        progressBar.fraction = newVal
-        progressBar.text = "\\(Int(newVal * 100))%"
-    }
+        // Decrease
+        let decBtn = Button(label: "Decrease")
+        decBtn.onClicked {
+            let newVal = max(0.0, progressBar.fraction - 0.1)
+            progressBar.fraction = newVal
+            progressBar.text = "\\(Int(newVal * 100))%"
+        }
 
-    // Pulse mode
-    let pulseBar = ProgressBar()
-    pulseBar.pulse()
-    """
+        // Pulse mode
+        let pulseBar = ProgressBar()
+        pulseBar.pulse()
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

@@ -10,19 +10,19 @@ struct FlowBoxExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let flowBox = FlowBox()
-    flowBox.minChildrenPerLine = 2
-    flowBox.maxChildrenPerLine = 8
-    flowBox.rowSpacing = 8
-    flowBox.columnSpacing = 8
-    flowBox.homogeneous = true
-    flowBox.selectionMode = .single
+        let flowBox = FlowBox()
+        flowBox.minChildrenPerLine = 2
+        flowBox.maxChildrenPerLine = 8
+        flowBox.rowSpacing = 8
+        flowBox.columnSpacing = 8
+        flowBox.homogeneous = true
+        flowBox.selectionMode = .single
 
-    for i in 1...24 {
-        let btn = Button(label: "Item \\(i)")
-        flowBox.append(btn)
-    }
-    """
+        for i in 1...24 {
+            let btn = Button(label: "Item \\(i)")
+            flowBox.append(btn)
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 16)
@@ -69,7 +69,7 @@ struct FlowBoxExample: DemoExample {
             ("edit-cut-symbolic", "Cut"),
             ("edit-undo-symbolic", "Undo"),
             ("edit-redo-symbolic", "Redo"),
-            ("folder-symbolic", "Folder")
+            ("folder-symbolic", "Folder"),
         ]
 
         for (icon, label) in items {

@@ -63,10 +63,12 @@ public class NavigationPage: Widget {
     /// - Since: libadwaita 1.4
     public var canPop: Bool {
         get { adw_navigation_page_get_can_pop(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>) != 0 }
-        set { adw_navigation_page_set_can_pop(
-            castedPointer() as UnsafeMutablePointer<AdwNavigationPage>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_navigation_page_set_can_pop(
+                castedPointer() as UnsafeMutablePointer<AdwNavigationPage>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// The content widget displayed inside this page.
@@ -76,10 +78,12 @@ public class NavigationPage: Widget {
             adw_navigation_page_get_child(castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)
                 .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
         }
-        set { adw_navigation_page_set_child(
-            castedPointer() as UnsafeMutablePointer<AdwNavigationPage>,
-            newValue?.widgetPointer
-        ) }
+        set {
+            adw_navigation_page_set_child(
+                castedPointer() as UnsafeMutablePointer<AdwNavigationPage>,
+                newValue?.widgetPointer
+            )
+        }
     }
 
     /// A unique string identifier for this page, used with

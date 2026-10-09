@@ -10,16 +10,16 @@ struct LevelBarExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let bar = LevelBar()
-    bar.value = 0.7
-    bar.minValue = 0
-    bar.maxValue = 1
+        let bar = LevelBar()
+        bar.value = 0.7
+        bar.minValue = 0
+        bar.maxValue = 1
 
-    // Discrete mode
-    let discrete = LevelBar(min: 0, max: 5)
-    discrete.mode = GTK_LEVEL_BAR_MODE_DISCRETE
-    discrete.value = 3
-    """
+        // Discrete mode
+        let discrete = LevelBar(min: 0, max: 5)
+        discrete.mode = GTK_LEVEL_BAR_MODE_DISCRETE
+        discrete.value = 3
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

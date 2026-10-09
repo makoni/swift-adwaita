@@ -10,26 +10,26 @@ struct ToastExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let overlay = ToastOverlay()
+        let overlay = ToastOverlay()
 
-    // Simple toast
-    let toast = Toast(title: "Hello from swift-adwaita!")
-    overlay.addToast(toast)
+        // Simple toast
+        let toast = Toast(title: "Hello from swift-adwaita!")
+        overlay.addToast(toast)
 
-    // Toast with button
-    let toast2 = Toast(title: "File deleted")
-    toast2.buttonLabel = "Undo"
-    toast2.onButtonClicked {
-        let undone = Toast(title: "Undo successful")
-        overlay.addToast(undone)
-    }
-    overlay.addToast(toast2)
+        // Toast with button
+        let toast2 = Toast(title: "File deleted")
+        toast2.buttonLabel = "Undo"
+        toast2.onButtonClicked {
+            let undone = Toast(title: "Undo successful")
+            overlay.addToast(undone)
+        }
+        overlay.addToast(toast2)
 
-    // Toast with timeout
-    let toast3 = Toast(title: "Auto-dismiss in 3s")
-    toast3.timeout = 3
-    overlay.addToast(toast3)
-    """
+        // Toast with timeout
+        let toast3 = Toast(title: "Auto-dismiss in 3s")
+        toast3.timeout = 3
+        overlay.addToast(toast3)
+        """
 
     func buildWidget() -> Widget {
         let overlay = ToastOverlay()

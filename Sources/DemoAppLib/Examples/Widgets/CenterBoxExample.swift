@@ -10,14 +10,14 @@ struct CenterBoxExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let centerBox = CenterBox()
-    centerBox.startWidget = Button(iconName: "go-previous-symbolic")
-    centerBox.centerWidget = Label("Page Title")
-    centerBox.endWidget = Button(iconName: "open-menu-symbolic")
+        let centerBox = CenterBox()
+        centerBox.startWidget = Button(iconName: "go-previous-symbolic")
+        centerBox.centerWidget = Label("Page Title")
+        centerBox.endWidget = Button(iconName: "open-menu-symbolic")
 
-    // When space runs out, shrink the center widget last
-    centerBox.shrinkCenterLast = true
-    """
+        // When space runs out, shrink the center widget last
+        centerBox.shrinkCenterLast = true
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

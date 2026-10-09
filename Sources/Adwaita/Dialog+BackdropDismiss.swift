@@ -67,7 +67,8 @@ private final class DialogBackdropDismissHelper {
 
         guard
             gtk_widget_get_root(dialogWidgetPointer) != nil,
-            gtk_widget_get_mapped(dialogWidgetPointer) != 0 else {
+            gtk_widget_get_mapped(dialogWidgetPointer) != 0
+        else {
             return
         }
 
@@ -106,7 +107,8 @@ private final class DialogBackdropDismissHelper {
         guard
             epoch == presentationEpoch,
             installedController == nil,
-            gtk_widget_get_mapped(dialogWidgetPointer) != 0 else {
+            gtk_widget_get_mapped(dialogWidgetPointer) != 0
+        else {
             return
         }
 
@@ -169,7 +171,8 @@ private final class DialogBackdropDismissHelper {
         guard !didReportRetryExhaustion else { return }
         didReportRetryExhaustion = true
         #if DEBUG
-        let message = "swift-adwaita: Dialog.enableBackdropClickDismiss() exhausted retries without finding the internal floating backdrop widget"
+        let message =
+            "swift-adwaita: Dialog.enableBackdropClickDismiss() exhausted retries without finding the internal floating backdrop widget"
         "MESSAGE".withCString { key in
             message.withCString { value in
                 var field = GLogField(key: key, value: UnsafeRawPointer(value), length: -1)
@@ -196,9 +199,11 @@ private final class DialogBackdropDismissHelper {
     }
 
     private func typeName(of widget: Widget) -> String {
-        g_type_name_from_instance(UnsafeMutableRawPointer(widget.widgetPointer)
-            .assumingMemoryBound(to: GTypeInstance.self))
-            .map { String(cString: $0) } ?? "GtkWidget"
+        g_type_name_from_instance(
+            UnsafeMutableRawPointer(widget.widgetPointer)
+                .assumingMemoryBound(to: GTypeInstance.self)
+        )
+        .map { String(cString: $0) } ?? "GtkWidget"
     }
 }
 
@@ -248,12 +253,14 @@ public extension Dialog {
         return helper.isInstalled
     }
 
-    var debugBackdropClickDismissState: (
-        isInstalled: Bool,
-        remainingRetries: Int,
-        retryScheduled: Bool,
-        isEnabled: Bool
-    )? {
+    var debugBackdropClickDismissState:
+        (
+            isInstalled: Bool,
+            remainingRetries: Int,
+            retryScheduled: Bool,
+            isEnabled: Bool
+        )?
+    {
         guard let pointer = g_object_get_data(gobjectPointer, dialogBackdropDismissHelperKey) else { return nil }
         let helper = Unmanaged<DialogBackdropDismissHelper>.fromOpaque(pointer).takeUnretainedValue()
         let state = helper.debugState

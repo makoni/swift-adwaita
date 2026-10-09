@@ -107,7 +107,7 @@ final class NavigationMiscXCTests: XCTestCase {
     @MainActor func test_textBufferUndoRedo() {
         ensureAdwInit()
         let buf = TextBuffer()
-        XCTAssertTrue(buf.enableUndo == true) // enabled by default
+        XCTAssertTrue(buf.enableUndo == true)  // enabled by default
         buf.beginUserAction()
         buf.text = "Hello"
         buf.endUserAction()
@@ -373,7 +373,7 @@ final class NavigationMiscXCTests: XCTestCase {
     @MainActor func test_widgetTickCallback() {
         ensureAdwInit()
         let label = Label("Tick")
-        let id = label.addTickCallback { false } // immediately removes itself
+        let id = label.addTickCallback { false }  // immediately removes itself
         // Can also remove manually
         label.removeTickCallback(id)
     }

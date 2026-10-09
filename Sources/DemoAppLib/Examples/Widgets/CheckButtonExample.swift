@@ -10,24 +10,24 @@ struct CheckButtonExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Simple check button
-    let check = CheckButton(label: "Enable feature")
-    check.onToggled {
-        print("Active: \\(check.active)")
-    }
+        // Simple check button
+        let check = CheckButton(label: "Enable feature")
+        check.onToggled {
+            print("Active: \\(check.active)")
+        }
 
-    // Radio group
-    let radio1 = CheckButton(label: "Option A")
-    let radio2 = CheckButton(label: "Option B")
-    let radio3 = CheckButton(label: "Option C")
-    radio2.setGroup(radio1)
-    radio3.setGroup(radio1)
-    radio1.active = true
+        // Radio group
+        let radio1 = CheckButton(label: "Option A")
+        let radio2 = CheckButton(label: "Option B")
+        let radio3 = CheckButton(label: "Option C")
+        radio2.setGroup(radio1)
+        radio3.setGroup(radio1)
+        radio1.active = true
 
-    // Tri-state (inconsistent)
-    let tri = CheckButton(label: "Select all")
-    tri.inconsistent = true
-    """
+        // Tri-state (inconsistent)
+        let tri = CheckButton(label: "Select all")
+        tri.inconsistent = true
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

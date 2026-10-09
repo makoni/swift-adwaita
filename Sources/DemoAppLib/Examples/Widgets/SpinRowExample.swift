@@ -10,29 +10,29 @@ struct SpinRowExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Basic spin row
-    let spin = SpinRow.newWithRange(min: 0, max: 100, step: 1)
-    spin.title = "Quantity"
-    spin.value = 42
+        // Basic spin row
+        let spin = SpinRow.newWithRange(min: 0, max: 100, step: 1)
+        spin.title = "Quantity"
+        spin.value = 42
 
-    // Decimal spin row
-    let decimal = SpinRow.newWithRange(min: 0, max: 10, step: 0.1)
-    decimal.title = "Temperature"
-    decimal.digits = 1
-    decimal.value = 3.7
+        // Decimal spin row
+        let decimal = SpinRow.newWithRange(min: 0, max: 10, step: 0.1)
+        decimal.title = "Temperature"
+        decimal.digits = 1
+        decimal.value = 3.7
 
-    // Wrapping spin row
-    let wrap = SpinRow.newWithRange(min: 0, max: 23, step: 1)
-    wrap.title = "Hour"
-    wrap.wrap = true
-    wrap.value = 12
+        // Wrapping spin row
+        let wrap = SpinRow.newWithRange(min: 0, max: 23, step: 1)
+        wrap.title = "Hour"
+        wrap.wrap = true
+        wrap.value = 12
 
-    // Snap-to-ticks
-    let snap = SpinRow.newWithRange(min: 0, max: 100, step: 10)
-    snap.title = "Percentage"
-    snap.snapToTicks = true
-    snap.value = 50
-    """
+        // Snap-to-ticks
+        let snap = SpinRow.newWithRange(min: 0, max: 100, step: 10)
+        snap.title = "Percentage"
+        snap.snapToTicks = true
+        snap.value = 50
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

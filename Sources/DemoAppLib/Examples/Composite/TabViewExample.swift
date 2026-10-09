@@ -11,37 +11,37 @@ struct TabViewExample: DemoExample {
     let opensInWindow = true
 
     let sourceCode = """
-    let tabView = TabView()
+        let tabView = TabView()
 
-    // Add tabs with StatusPage content
-    let page1 = StatusPage()
-    page1.title = "Documents"
-    page1.iconName = "document-open-symbolic"
-    let tab1 = tabView.append(page1)
-    tab1.title = "Documents"
+        // Add tabs with StatusPage content
+        let page1 = StatusPage()
+        page1.title = "Documents"
+        page1.iconName = "document-open-symbolic"
+        let tab1 = tabView.append(page1)
+        tab1.title = "Documents"
 
-    let page2 = StatusPage()
-    page2.title = "Music"
-    page2.iconName = "audio-x-generic-symbolic"
-    let tab2 = tabView.append(page2)
-    tab2.title = "Music"
+        let page2 = StatusPage()
+        page2.title = "Music"
+        page2.iconName = "audio-x-generic-symbolic"
+        let tab2 = tabView.append(page2)
+        tab2.title = "Music"
 
-    // TabBar linked to TabView
-    let tabBar = TabBar()
-    tabBar.view = tabView
+        // TabBar linked to TabView
+        let tabBar = TabBar()
+        tabBar.view = tabView
 
-    // "New Tab" button as end action
-    let addBtn = Button(iconName: "tab-new-symbolic")
-    addBtn.onClicked {
-        let n = tabView.nPages + 1
-        let page = StatusPage()
-        page.title = "Tab \\(n)"
-        page.iconName = "tab-new-symbolic"
-        let tab = tabView.append(page)
-        tab.title = "Tab \\(n)"
-    }
-    tabBar.endActionWidget = addBtn
-    """
+        // "New Tab" button as end action
+        let addBtn = Button(iconName: "tab-new-symbolic")
+        addBtn.onClicked {
+            let n = tabView.nPages + 1
+            let page = StatusPage()
+            page.title = "Tab \\(n)"
+            page.iconName = "tab-new-symbolic"
+            let tab = tabView.append(page)
+            tab.title = "Tab \\(n)"
+        }
+        tabBar.endActionWidget = addBtn
+        """
 
     func buildWidget() -> Widget {
         let tabView = TabView()

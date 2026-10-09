@@ -104,7 +104,8 @@ struct PropertyBindingTests {
         ensureAdwInit()
         let label = Label("Test")
         label.setSizeRequest(width: 100, height: 50)
-        var w: Int32 = 0, h: Int32 = 0
+        var w: Int32 = 0
+        var h: Int32 = 0
         gtk_widget_get_size_request(label.widgetPointer, &w, &h)
         #expect(w == 100)
         #expect(h == 50)
@@ -180,9 +181,9 @@ struct PropertyBindingTests {
         let scale = Scale(orientation: .horizontal, min: 0, max: 100, step: 1)
         scale.value = 50
         #expect(abs(scale.value - 50) < 0.01)
-        scale.value = -10 // Below min
+        scale.value = -10  // Below min
         #expect(scale.value >= 0, "Scale should clamp to minimum")
-        scale.value = 200 // Above max
+        scale.value = 200  // Above max
         #expect(scale.value <= 100, "Scale should clamp to maximum")
     }
 

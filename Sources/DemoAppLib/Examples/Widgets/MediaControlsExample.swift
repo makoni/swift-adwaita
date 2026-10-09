@@ -10,19 +10,19 @@ struct MediaControlsExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // One MediaStream shared between the display and the controls
-    let stream = MediaStream(filename: "video.mp4")
+        // One MediaStream shared between the display and the controls
+        let stream = MediaStream(filename: "video.mp4")
 
-    let video = Video()
-    video.mediaStream = stream
-    video.autoplay = false
+        let video = Video()
+        video.mediaStream = stream
+        video.autoplay = false
 
-    let controls = MediaControls(stream: stream)
+        let controls = MediaControls(stream: stream)
 
-    let vbox = Box(orientation: .vertical)
-    vbox.append(video)
-    vbox.append(controls)
-    """
+        let vbox = Box(orientation: .vertical)
+        vbox.append(video)
+        vbox.append(controls)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -59,10 +59,10 @@ struct MediaControlsExample: DemoExample {
             dialog.title = "Open Video"
             dialog.setFilters([
                 FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi", "mov", "ogv"]),
-                FileFilter(name: "All files", patterns: ["*"])
+                FileFilter(name: "All files", patterns: ["*"]),
             ])
             dialog.open(parent: box.root) { [placeholder, video, controls, playerBox] result in
-                guard case let .success(path?) = result else { return }
+                guard case .success(let path?) = result else { return }
                 let stream = MediaStream(filename: path)
                 // Tear the previous stream's GStreamer pipeline down now, while
                 // the main loop is still running, instead of letting it dispose

@@ -95,22 +95,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Cache SwiftFormat
-        id: cache-swiftformat
-        uses: actions/cache@v5
-        with:
-          path: /usr/local/bin/swiftformat
-          key: swiftformat-0.60.1-swift6.3
-
-      - name: Install SwiftFormat
-        if: steps.cache-swiftformat.outputs.cache-hit != 'true'
-        run: |
-          git clone --depth 1 --branch 0.60.1 https://github.com/nicklockwood/SwiftFormat.git /tmp/SwiftFormat
-          cd /tmp/SwiftFormat && swift build -c release
-          cp /tmp/SwiftFormat/.build/release/swiftformat /usr/local/bin/
-
       - name: Check formatting
-        run: swiftformat --lint Sources/ Tests/
+        run: swift-format lint -r Sources/ Tests/
 
   docs:
     name: Build Documentation

@@ -129,7 +129,7 @@ final class TypeHierarchyXCTests: XCTestCase {
             ShortcutsDialog.self, ShortcutsSection.self, ShortcutsItem.self,
             Window.self,
             // Non-widget
-            StyleManager.self, SwipeTracker.self, EnumListModel.self
+            StyleManager.self, SwipeTracker.self, EnumListModel.self,
         ]
         XCTAssertTrue(types.count >= 64, "Expected at least 64 generated types")
     }

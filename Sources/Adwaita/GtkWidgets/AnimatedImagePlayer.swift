@@ -69,7 +69,8 @@ public final class AnimatedImagePlayer {
     public init?(contentsOf fileURL: URL, displayedBy picture: Picture) throws {
         var error: UnsafeMutablePointer<GError>?
         guard let animation = swiftadw_pixbuf_animation_new_from_file(fileURL.path, &error) else {
-            let message = error.map { String(cString: $0.pointee.message) }
+            let message =
+                error.map { String(cString: $0.pointee.message) }
                 ?? "gdk_pixbuf_animation_new_from_file returned NULL"
             if let error { g_error_free(error) }
             throw ImageDecodingError.decodeFailed(message)
@@ -132,8 +133,9 @@ public final class AnimatedImagePlayer {
 private extension AnimatedImagePlayer {
     func renderCurrentFrame() {
         guard let iterator,
-              let pixbuf = swiftadw_pixbuf_animation_iter_get_pixbuf(iterator),
-              let pixels = try? PixbufPixelDecoder.rgbaPixels(from: pixbuf) else {
+            let pixbuf = swiftadw_pixbuf_animation_iter_get_pixbuf(iterator),
+            let pixels = try? PixbufPixelDecoder.rgbaPixels(from: pixbuf)
+        else {
             return
         }
         let texture = Texture(rgbaData: pixels.rgba, width: pixels.width, height: pixels.height)

@@ -10,17 +10,17 @@ struct ExpanderRowExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let row = ExpanderRow()
-    row.title = "Advanced Settings"
-    row.subtitle = "Fine-tune your experience"
-    row.expanded = false
+        let row = ExpanderRow()
+        row.title = "Advanced Settings"
+        row.subtitle = "Fine-tune your experience"
+        row.expanded = false
 
-    let child1 = ActionRow()
-    child1.title = "Cache Size"
-    row.addRow(child1)
+        let child1 = ActionRow()
+        child1.title = "Cache Size"
+        row.addRow(child1)
 
-    row.showEnableSwitch = true
-    """
+        row.showEnableSwitch = true
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

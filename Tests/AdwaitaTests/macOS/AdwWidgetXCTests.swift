@@ -308,7 +308,7 @@ final class AdwWidgetXCTests: XCTestCase {
     @MainActor func test_signalConnectionReturnsValidObject() {
         ensureAdwInit()
         let btn = Button(label: "Test")
-        let conn = btn.onClicked { /* no-op */ }
+        let conn = btn.onClicked { /* no-op */  }
         // Connection object should be non-nil and disconnectable
         conn.disconnect()
         // Double-disconnect should not crash
@@ -370,7 +370,7 @@ final class AdwWidgetXCTests: XCTestCase {
         let borrowed = Widget(borrowing: label.pointer)
         let refCount2 = label.gobjectPointer.pointee.ref_count
         XCTAssertTrue(refCount2 == refCount1 + 1, "Borrowing should add a reference")
-        _ = borrowed // keep alive
+        _ = borrowed  // keep alive
     }
 
     @MainActor func test_widgetPointerStability() {

@@ -108,7 +108,7 @@ struct NavigationMiscTests {
     @Test @MainActor func textBufferUndoRedo() {
         ensureAdwInit()
         let buf = TextBuffer()
-        #expect(buf.enableUndo == true) // enabled by default
+        #expect(buf.enableUndo == true)  // enabled by default
         buf.beginUserAction()
         buf.text = "Hello"
         buf.endUserAction()
@@ -374,7 +374,7 @@ struct NavigationMiscTests {
     @Test @MainActor func widgetTickCallback() {
         ensureAdwInit()
         let label = Label("Tick")
-        let id = label.addTickCallback { false } // immediately removes itself
+        let id = label.addTickCallback { false }  // immediately removes itself
         // Can also remove manually
         label.removeTickCallback(id)
     }

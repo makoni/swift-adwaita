@@ -10,44 +10,44 @@ struct FileDialogExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let dialog = FileDialog()
-    dialog.title = "Open a File"
+        let dialog = FileDialog()
+        dialog.title = "Open a File"
 
-    // Set file filters
-    dialog.setFilters([
-        FileFilter(name: "Swift files", suffixes: ["swift"]),
-        FileFilter(name: "All files", patterns: ["*"]),
-    ])
+        // Set file filters
+        dialog.setFilters([
+            FileFilter(name: "Swift files", suffixes: ["swift"]),
+            FileFilter(name: "All files", patterns: ["*"]),
+        ])
 
-    // Open — callback form (works inside a running GTK application,
-    // where Task { @MainActor in ... } bodies never execute because
-    // GLib's main loop doesn't drain Swift's DispatchQueue.main).
-    dialog.open(parent: widget) { result in
-        switch result {
-        case .success(let path?):
-            print("Selected: \\(path)")
-        case .success(nil):
-            print("Cancelled")
-        case .failure(let error):
-            print("Error: \\(error.message)")
+        // Open — callback form (works inside a running GTK application,
+        // where Task { @MainActor in ... } bodies never execute because
+        // GLib's main loop doesn't drain Swift's DispatchQueue.main).
+        dialog.open(parent: widget) { result in
+            switch result {
+            case .success(let path?):
+                print("Selected: \\(path)")
+            case .success(nil):
+                print("Cancelled")
+            case .failure(let error):
+                print("Error: \\(error.message)")
+            }
         }
-    }
 
-    // Save
-    dialog.initialName = "untitled.swift"
-    dialog.save(parent: widget) { result in
-        if case .success(let path?) = result {
-            print("Save to: \\(path)")
+        // Save
+        dialog.initialName = "untitled.swift"
+        dialog.save(parent: widget) { result in
+            if case .success(let path?) = result {
+                print("Save to: \\(path)")
+            }
         }
-    }
 
-    // Select folder
-    dialog.selectFolder(parent: widget) { result in
-        if case .success(let path?) = result {
-            print("Folder: \\(path)")
+        // Select folder
+        dialog.selectFolder(parent: widget) { result in
+            if case .success(let path?) = result {
+                print("Folder: \\(path)")
+            }
         }
-    }
-    """
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -81,7 +81,7 @@ struct FileDialogExample: DemoExample {
             dialog.setFilters([
                 FileFilter(name: "Swift files", suffixes: ["swift"]),
                 FileFilter(name: "Text files", suffixes: ["txt", "md"]),
-                FileFilter(name: "All files", patterns: ["*"])
+                FileFilter(name: "All files", patterns: ["*"]),
             ])
             dialog.open(parent: box.root) { [resultLabel] result in
                 resultLabel.text = describe(result)
@@ -136,11 +136,11 @@ struct FileDialogExample: DemoExample {
 @MainActor
 private func describe(_ result: Result<String?, GLibError>) -> String {
     switch result {
-    case let .success(path?):
+    case .success(let path?):
         path
     case .success(nil):
         "Cancelled"
-    case let .failure(error):
+    case .failure(let error):
         "Error: \(error.message)"
     }
 }

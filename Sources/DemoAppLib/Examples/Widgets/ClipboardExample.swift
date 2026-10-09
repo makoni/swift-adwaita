@@ -10,21 +10,21 @@ struct ClipboardExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Copy text to clipboard
-    widget.clipboard.setText("Hello, clipboard!")
+        // Copy text to clipboard
+        widget.clipboard.setText("Hello, clipboard!")
 
-    // Read text from clipboard
-    widget.clipboard.readText { text in
-        if let text {
-            label.text = text
+        // Read text from clipboard
+        widget.clipboard.readText { text in
+            if let text {
+                label.text = text
+            }
         }
-    }
 
-    // Monitor clipboard changes
-    widget.clipboard.onChanged {
-        print("Clipboard changed!")
-    }
-    """
+        // Monitor clipboard changes
+        widget.clipboard.onChanged {
+            print("Clipboard changed!")
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

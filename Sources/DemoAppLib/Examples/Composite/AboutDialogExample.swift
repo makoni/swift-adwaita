@@ -10,19 +10,19 @@ struct AboutDialogExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let about = AboutDialog()
-    about.applicationName = "My App"
-    about.applicationIcon = "applications-science-symbolic"
-    about.developerName = "Developer Name"
-    about.version = "1.0.0"
-    about.website = "https://example.com"
-    about.copyright = "© 2026"
-    about.licenseType = .mit
-    about.comments = "A demo application"
-    about.issueUrl = "https://github.com/example/issues"
-    about.addLink("Documentation", url: "https://docs.example.com")
-    about.present(parentWidget)
-    """
+        let about = AboutDialog()
+        about.applicationName = "My App"
+        about.applicationIcon = "applications-science-symbolic"
+        about.developerName = "Developer Name"
+        about.version = "1.0.0"
+        about.website = "https://example.com"
+        about.copyright = "© 2026"
+        about.licenseType = .mit
+        about.comments = "A demo application"
+        about.issueUrl = "https://github.com/example/issues"
+        about.addLink("Documentation", url: "https://docs.example.com")
+        about.present(parentWidget)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 16)

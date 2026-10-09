@@ -10,29 +10,29 @@ struct ScaleExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Basic horizontal scale
-    let scale = Scale(orientation: .horizontal,
-                      min: 0, max: 100, step: 1)
-    scale.value = 50
-    scale.drawValue = true
+        // Basic horizontal scale
+        let scale = Scale(orientation: .horizontal,
+                          min: 0, max: 100, step: 1)
+        scale.value = 50
+        scale.drawValue = true
 
-    // Custom value formatting
-    scale.setFormatValueFunc { value in
-        "\\(Int(value))%"
-    }
+        // Custom value formatting
+        scale.setFormatValueFunc { value in
+            "\\(Int(value))%"
+        }
 
-    // Scale with decimal precision
-    let precise = Scale(orientation: .horizontal,
-                        min: 0, max: 1, step: 0.01)
-    precise.digits = 2
-    precise.drawValue = true
-    precise.hasOrigin = true
+        // Scale with decimal precision
+        let precise = Scale(orientation: .horizontal,
+                            min: 0, max: 1, step: 0.01)
+        precise.digits = 2
+        precise.drawValue = true
+        precise.hasOrigin = true
 
-    // Value changed callback
-    scale.onValueChanged {
-        print("Value: \\(scale.value)")
-    }
-    """
+        // Value changed callback
+        scale.onValueChanged {
+            print("Value: \\(scale.value)")
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

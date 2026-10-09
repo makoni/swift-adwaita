@@ -40,7 +40,7 @@ public final class TextTag: GObjectRef {
 
     /// The foreground color as a string (e.g. "red", "#ff0000").
     public var foreground: String? {
-        get { nil } // write-only in GTK
+        get { nil }  // write-only in GTK
         set {
             if let newValue {
                 g_object_set_string(pointer, "foreground", newValue)
@@ -50,7 +50,7 @@ public final class TextTag: GObjectRef {
 
     /// The background color as a string (e.g. "blue", "#0000ff").
     public var background: String? {
-        get { nil } // write-only in GTK
+        get { nil }  // write-only in GTK
         set {
             if let newValue {
                 g_object_set_string(pointer, "background", newValue)
@@ -96,7 +96,7 @@ public final class TextTag: GObjectRef {
 
     /// The font family name.
     public var family: String? {
-        get { nil } // write-only convenience
+        get { nil }  // write-only convenience
         set {
             if let newValue {
                 g_object_set_string(pointer, "family", newValue)

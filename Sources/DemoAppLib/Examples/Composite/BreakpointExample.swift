@@ -10,21 +10,21 @@ struct BreakpointExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    // Create a breakpoint for narrow windows
-    let condition = BreakpointCondition(parse: "max-width: 500sp")
-    let bp = Breakpoint(condition: condition)
+        // Create a breakpoint for narrow windows
+        let condition = BreakpointCondition(parse: "max-width: 500sp")
+        let bp = Breakpoint(condition: condition)
 
-    // Change layout when breakpoint activates
-    bp.addSetter(box, property: .orientation, value: 1) // vertical
-    bp.addSetter(box, property: .spacing, value: 8)
+        // Change layout when breakpoint activates
+        bp.addSetter(box, property: .orientation, value: 1) // vertical
+        bp.addSetter(box, property: .spacing, value: 8)
 
-    bp.onApply { print("Narrow layout") }
-    bp.onUnapply { print("Wide layout") }
+        bp.onApply { print("Narrow layout") }
+        bp.onUnapply { print("Wide layout") }
 
-    let bin = BreakpointBin()
-    bin.child = box
-    bin.addBreakpoint(bp)
-    """
+        let bin = BreakpointBin()
+        bin.child = box
+        bin.addBreakpoint(bp)
+        """
 
     func buildWidget() -> Widget {
         // Status label

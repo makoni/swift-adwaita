@@ -304,9 +304,9 @@ public enum SignalName: Sendable, Equatable {
         case .invalidate: "invalidate"
         case .unapply: "unapply"
         // Property notification
-        case let .notify(property): "notify::\(property)"
+        case .notify(let property): "notify::\(property)"
         // Custom
-        case let .custom(name): name
+        case .custom(let name): name
         }
     }
 
@@ -314,7 +314,7 @@ public enum SignalName: Sendable, Equatable {
     public var isNotify: Bool {
         if case .notify = self { return true }
         // Also handle custom strings that start with "notify::"
-        if case let .custom(name) = self { return name.hasPrefix("notify::") }
+        if case .custom(let name) = self { return name.hasPrefix("notify::") }
         return false
     }
 }

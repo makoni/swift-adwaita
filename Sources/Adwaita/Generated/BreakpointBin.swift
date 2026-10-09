@@ -67,10 +67,12 @@ public class BreakpointBin: Widget {
             adw_breakpoint_bin_get_child(castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>)
                 .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
         }
-        set { adw_breakpoint_bin_set_child(
-            castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>,
-            newValue?.widgetPointer
-        ) }
+        set {
+            adw_breakpoint_bin_set_child(
+                castedPointer() as UnsafeMutablePointer<AdwBreakpointBin>,
+                newValue?.widgetPointer
+            )
+        }
     }
 
     /// The `current-breakpoint` property (read-only).

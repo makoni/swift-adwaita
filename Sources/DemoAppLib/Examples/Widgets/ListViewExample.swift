@@ -10,29 +10,29 @@ struct ListViewExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Data
-    var items = ["Hello!", "How are you?", "Great!"]
+        // Data
+        var items = ["Hello!", "How are you?", "Great!"]
 
-    // Store (one placeholder per item)
-    let store = ListStore()
-    for _ in items { store.appendPlaceholder() }
+        // Store (one placeholder per item)
+        let store = ListStore()
+        for _ in items { store.appendPlaceholder() }
 
-    // Factory — create & bind widgets
-    let factory = SignalListItemFactory()
-    factory.onSetup { listItem in
-        let label = Label("")
-        label.xalign = 0
-        listItem.child = label
-    }
-    factory.onBind { listItem in
-        let text = items[listItem.position]
-        listItem.child?.cast(Label.self).text = text
-    }
+        // Factory — create & bind widgets
+        let factory = SignalListItemFactory()
+        factory.onSetup { listItem in
+            let label = Label("")
+            label.xalign = 0
+            listItem.child = label
+        }
+        factory.onBind { listItem in
+            let text = items[listItem.position]
+            listItem.child?.cast(Label.self).text = text
+        }
 
-    // View
-    let selection = NoSelection(model: store)
-    let listView = ListView(model: selection, factory: factory)
-    """
+        // View
+        let selection = NoSelection(model: store)
+        let listView = ListView(model: selection, factory: factory)
+        """
 
     func buildWidget() -> Widget {
         // Chat-like message data
@@ -51,7 +51,7 @@ struct ListViewExample: DemoExample {
             ("Bob", "I'll use ListView for my chat app then."),
             ("Alice", "Good choice! The factory pattern takes some getting used to."),
             ("Bob", "onSetup creates the widget, onBind fills in data?"),
-            ("Alice", "Exactly! And widgets get recycled automatically.")
+            ("Alice", "Exactly! And widgets get recycled automatically."),
         ]
 
         let store = ListStore()

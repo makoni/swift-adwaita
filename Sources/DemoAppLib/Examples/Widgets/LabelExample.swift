@@ -10,50 +10,50 @@ struct LabelExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Plain label
-    let plain = Label("Hello, World!")
+        // Plain label
+        let plain = Label("Hello, World!")
 
-    // Bold markup
-    let bold = Label("")
-    bold.markup = "<b>Bold</b> and <i>italic</i> text"
+        // Bold markup
+        let bold = Label("")
+        bold.markup = "<b>Bold</b> and <i>italic</i> text"
 
-    // Range-based styling without markup
-    let highlightedText = "Search highlight"
-    let highlighted = Label(highlightedText)
-    let attrs = TextAttributes()
-    attrs.addBackgroundColor(
-        RGBA(red: 1.0, green: 0.93, blue: 0.6),
-        range: highlightedText.startIndex..<highlightedText.index(highlightedText.startIndex, offsetBy: 6),
-        in: highlightedText
-    )
-    highlighted.attributes = attrs
+        // Range-based styling without markup
+        let highlightedText = "Search highlight"
+        let highlighted = Label(highlightedText)
+        let attrs = TextAttributes()
+        attrs.addBackgroundColor(
+            RGBA(red: 1.0, green: 0.93, blue: 0.6),
+            range: highlightedText.startIndex..<highlightedText.index(highlightedText.startIndex, offsetBy: 6),
+            in: highlightedText
+        )
+        highlighted.attributes = attrs
 
-    // Wrapping label
-    let wrapping = Label(
-        "This is a long text that will wrap to multiple lines..."
-    )
-    wrapping.wrap = true
-    wrapping.xalign = 0
+        // Wrapping label
+        let wrapping = Label(
+            "This is a long text that will wrap to multiple lines..."
+        )
+        wrapping.wrap = true
+        wrapping.xalign = 0
 
-    // Selectable label
-    let selectable = Label("Select and copy this text")
-    selectable.selectable = true
+        // Selectable label
+        let selectable = Label("Select and copy this text")
+        selectable.selectable = true
 
-    // Heading styles
-    let heading = Label("Title Heading")
-    heading.addCSSClass("title-1")
+        // Heading styles
+        let heading = Label("Title Heading")
+        heading.addCSSClass("title-1")
 
-    let subtitle = Label("Subtitle Text")
-    subtitle.addCSSClass("title-4")
+        let subtitle = Label("Subtitle Text")
+        subtitle.addCSSClass("title-4")
 
-    // Dim label
-    let dim = Label("Secondary information")
-    dim.addCSSClass("dim-label")
+        // Dim label
+        let dim = Label("Secondary information")
+        dim.addCSSClass("dim-label")
 
-    // Monospace
-    let mono = Label("let x = 42")
-    mono.addCSSClass("monospace")
-    """
+        // Monospace
+        let mono = Label("let x = 42")
+        mono.addCSSClass("monospace")
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

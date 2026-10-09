@@ -53,30 +53,37 @@ public class PreferencesRow: ListBoxRow {
     /// Whether the title text can be selected and copied by the user.
     /// - Since: libadwaita 1.1
     public var titleSelectable: Bool {
-        get { adw_preferences_row_get_title_selectable(castedPointer() as UnsafeMutablePointer<AdwPreferencesRow>) != 0
+        get {
+            adw_preferences_row_get_title_selectable(castedPointer() as UnsafeMutablePointer<AdwPreferencesRow>) != 0
         }
-        set { adw_preferences_row_set_title_selectable(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesRow>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_preferences_row_set_title_selectable(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesRow>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// Whether Pango markup is interpreted in the title text.
     /// - Since: libadwaita 1.2
     public var useMarkup: Bool {
         get { adw_preferences_row_get_use_markup(castedPointer() as UnsafeMutablePointer<AdwPreferencesRow>) != 0 }
-        set { adw_preferences_row_set_use_markup(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesRow>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_preferences_row_set_use_markup(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesRow>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// Whether an underscore in the title marks a mnemonic accelerator.
     public var useUnderline: Bool {
         get { adw_preferences_row_get_use_underline(castedPointer() as UnsafeMutablePointer<AdwPreferencesRow>) != 0 }
-        set { adw_preferences_row_set_use_underline(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesRow>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_preferences_row_set_use_underline(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesRow>,
+                newValue ? 1 : 0
+            )
+        }
     }
 }

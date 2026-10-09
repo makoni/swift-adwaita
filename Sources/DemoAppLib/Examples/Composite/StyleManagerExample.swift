@@ -10,23 +10,23 @@ struct StyleManagerExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let styleManager = StyleManager.default
+        let styleManager = StyleManager.default
 
-    // Force dark theme
-    styleManager.forceDark()
+        // Force dark theme
+        styleManager.forceDark()
 
-    // Check current state
-    print("Dark: \\(styleManager.dark)")
-    print("High contrast: \\(styleManager.highContrast)")
+        // Check current state
+        print("Dark: \\(styleManager.dark)")
+        print("High contrast: \\(styleManager.highContrast)")
 
-    // Listen for changes
-    styleManager.onDarkChanged {
-        print("Theme changed, dark: \\(styleManager.dark)")
-    }
+        // Listen for changes
+        styleManager.onDarkChanged {
+            print("Theme changed, dark: \\(styleManager.dark)")
+        }
 
-    // Reset to system default
-    styleManager.resetColorScheme()
-    """
+        // Reset to system default
+        styleManager.resetColorScheme()
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 16)
@@ -44,13 +44,14 @@ struct StyleManagerExample: DemoExample {
         statusLabel.addCSSClass("dim-label")
 
         let updateStatus = { [styleManager, statusLabel] in
-            let scheme = switch styleManager.colorScheme {
-            case .forceDark: "Force Dark"
-            case .forceLight: "Force Light"
-            case .preferDark: "Prefer Dark"
-            case .preferLight: "Prefer Light"
-            default: "Default (System)"
-            }
+            let scheme =
+                switch styleManager.colorScheme {
+                case .forceDark: "Force Dark"
+                case .forceLight: "Force Light"
+                case .preferDark: "Prefer Dark"
+                case .preferLight: "Prefer Light"
+                default: "Default (System)"
+                }
             let dark = styleManager.dark ? "Yes" : "No"
             let hc = styleManager.highContrast ? "Yes" : "No"
             statusLabel.text = "Scheme: \(scheme) | Dark: \(dark) | High-Contrast: \(hc)"

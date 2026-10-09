@@ -10,26 +10,26 @@ struct DragDropExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Drag source
-    let drag = DragSource()
-    drag.setTextContent("Hello!")
-    drag.onDragBegin { print("Drag started") }
-    sourceWidget.addController(drag)
+        // Drag source
+        let drag = DragSource()
+        drag.setTextContent("Hello!")
+        drag.onDragBegin { print("Drag started") }
+        sourceWidget.addController(drag)
 
-    // Drop target
-    let drop = DropTarget.forText()
-    drop.onDrop { text in
-        if let text { label.text = text }
-        return true
-    }
-    drop.onEnter { _, _ in
-        targetWidget.addCSSClass("drop-highlight")
-    }
-    drop.onLeave {
-        targetWidget.removeCSSClass("drop-highlight")
-    }
-    targetWidget.addController(drop)
-    """
+        // Drop target
+        let drop = DropTarget.forText()
+        drop.onDrop { text in
+            if let text { label.text = text }
+            return true
+        }
+        drop.onEnter { _, _ in
+            targetWidget.addCSSClass("drop-highlight")
+        }
+        drop.onLeave {
+            targetWidget.removeCSSClass("drop-highlight")
+        }
+        targetWidget.addController(drop)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

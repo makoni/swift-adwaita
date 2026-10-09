@@ -100,7 +100,8 @@ public final class TabBar: Widget {
 
     /// A widget displayed at the leading start of the tab bar.
     public var startActionWidget: Widget? {
-        get { adw_tab_bar_get_start_action_widget(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
+        get {
+            adw_tab_bar_get_start_action_widget(opaquePointer).map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
         }
         set { adw_tab_bar_set_start_action_widget(opaquePointer, newValue?.widgetPointer) }
     }
@@ -123,11 +124,13 @@ public final class TabBar: Widget {
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onExtraDragDrop(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> Bool)
-        -> SignalConnection {
-        SignalHelper.connectPointerGValueReturnBool(self, signal: .extraDragDrop) { (
-            ptr: OpaquePointer,
-            val: UnsafePointer<GValue>
-        ) in
+        -> SignalConnection
+    {
+        SignalHelper.connectPointerGValueReturnBool(self, signal: .extraDragDrop) {
+            (
+                ptr: OpaquePointer,
+                val: UnsafePointer<GValue>
+            ) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), val)
         }
     }
@@ -139,11 +142,13 @@ public final class TabBar: Widget {
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onExtraDragValue(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> GdkDragAction)
-        -> SignalConnection {
-        SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: .extraDragValue) { (
-            ptr: OpaquePointer,
-            val: UnsafePointer<GValue>
-        ) in
+        -> SignalConnection
+    {
+        SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: .extraDragValue) {
+            (
+                ptr: OpaquePointer,
+                val: UnsafePointer<GValue>
+            ) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), val)
         }
     }

@@ -10,27 +10,27 @@ struct GridViewExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let store = ListStore()
-    for _ in items { store.appendPlaceholder() }
+        let store = ListStore()
+        for _ in items { store.appendPlaceholder() }
 
-    let factory = SignalListItemFactory()
-    factory.onSetup { listItem in
-        let box = Box(orientation: .vertical, spacing: 4)
-        let label = Label("")
-        label.addCSSClass("title-4")
-        box.append(label)
-        listItem.child = box
-    }
-    factory.onBind { listItem in
-        let item = items[listItem.position]
-        // update child widgets...
-    }
+        let factory = SignalListItemFactory()
+        factory.onSetup { listItem in
+            let box = Box(orientation: .vertical, spacing: 4)
+            let label = Label("")
+            label.addCSSClass("title-4")
+            box.append(label)
+            listItem.child = box
+        }
+        factory.onBind { listItem in
+            let item = items[listItem.position]
+            // update child widgets...
+        }
 
-    let selection = SingleSelection(model: store)
-    let gridView = GridView(model: selection, factory: factory)
-    gridView.minColumns = 2
-    gridView.maxColumns = 5
-    """
+        let selection = SingleSelection(model: store)
+        let gridView = GridView(model: selection, factory: factory)
+        gridView.minColumns = 2
+        gridView.maxColumns = 5
+        """
 
     func buildWidget() -> Widget {
         // Color data
@@ -40,7 +40,7 @@ struct GridViewExample: DemoExample {
             ("Pink", "#e66100"), ("Teal", "#2ec27e"), ("Indigo", "#1c71d8"),
             ("Brown", "#986a44"), ("Gray", "#77767b"), ("Slate", "#5e5c64"),
             ("Lime", "#8ff0a4"), ("Cyan", "#99c1f1"), ("Magenta", "#dc8add"),
-            ("Gold", "#e5a50a"), ("Coral", "#ed333b"), ("Mint", "#57e389")
+            ("Gold", "#e5a50a"), ("Coral", "#ed333b"), ("Mint", "#57e389"),
         ]
 
         let store = ListStore()

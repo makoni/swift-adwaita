@@ -10,23 +10,23 @@ struct SwitchExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // GtkSwitch inside an ActionRow
-    let row = ActionRow()
-    row.title = "Dark Mode"
-    let toggle = Switch()
-    toggle.valign = .center
-    row.addSuffix(toggle)
-    row.activatableWidget = toggle
+        // GtkSwitch inside an ActionRow
+        let row = ActionRow()
+        row.title = "Dark Mode"
+        let toggle = Switch()
+        toggle.valign = .center
+        row.addSuffix(toggle)
+        row.activatableWidget = toggle
 
-    // AdwSwitchRow — built-in switch row
-    let switchRow = SwitchRow()
-    switchRow.title = "Notifications"
-    switchRow.subtitle = "Receive alerts"
-    switchRow.active = true
+        // AdwSwitchRow — built-in switch row
+        let switchRow = SwitchRow()
+        switchRow.title = "Notifications"
+        switchRow.subtitle = "Receive alerts"
+        switchRow.active = true
 
-    // GtkCheckButton
-    let check = CheckButton(label: "Accept terms")
-    """
+        // GtkCheckButton
+        let check = CheckButton(label: "Accept terms")
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

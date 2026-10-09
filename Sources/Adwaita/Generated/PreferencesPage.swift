@@ -43,10 +43,12 @@ public class PreferencesPage: Widget {
             adw_preferences_page_get_banner(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>)
                 .map { Banner(borrowing: UnsafeMutableRawPointer($0)) }
         }
-        set { adw_preferences_page_set_banner(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>,
-            newValue?.opaquePointer
-        ) }
+        set {
+            adw_preferences_page_set_banner(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>,
+                newValue?.opaquePointer
+            )
+        }
     }
 
     /// The descriptive text displayed below the page title.
@@ -70,13 +72,14 @@ public class PreferencesPage: Widget {
         get {
             adw_preferences_page_get_description_centered(
                 castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>
-            ) !=
-                0
+            ) != 0
         }
-        set { adw_preferences_page_set_description_centered(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_preferences_page_set_description_centered(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// The icon name shown alongside the page title in the sidebar or tab bar.
@@ -85,7 +88,8 @@ public class PreferencesPage: Widget {
             adw_preferences_page_get_icon_name(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>)
                 .map { String(cString: $0) }
         }
-        set { adw_preferences_page_set_icon_name(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>, newValue)
+        set {
+            adw_preferences_page_set_icon_name(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>, newValue)
         }
     }
 
@@ -109,10 +113,12 @@ public class PreferencesPage: Widget {
     /// Whether an underscore in the title indicates a mnemonic accelerator.
     public var useUnderline: Bool {
         get { adw_preferences_page_get_use_underline(castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>) != 0 }
-        set { adw_preferences_page_set_use_underline(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_preferences_page_set_use_underline(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesPage>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// Adds a preferences group to this page.

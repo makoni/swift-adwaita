@@ -10,20 +10,20 @@ struct ShortcutsDialogExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let dialog = ShortcutsDialog()
+        let dialog = ShortcutsDialog()
 
-    if let section = ShortcutsSection(title: "General") {
-        if let goBack = ShortcutsItem(title: "Go Back", accelerator: "<Primary>Left") {
-            section.add(goBack)
+        if let section = ShortcutsSection(title: "General") {
+            if let goBack = ShortcutsItem(title: "Go Back", accelerator: "<Primary>Left") {
+                section.add(goBack)
+            }
+            if let find = ShortcutsItem(title: "Find", accelerator: "<Primary>f") {
+                section.add(find)
+            }
+            dialog.add(section)
         }
-        if let find = ShortcutsItem(title: "Find", accelerator: "<Primary>f") {
-            section.add(find)
-        }
-        dialog.add(section)
-    }
 
-    dialog.present(parent)
-    """
+        dialog.present(parent)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -43,10 +43,12 @@ struct ShortcutsDialogExample: DemoExample {
             let dialog = ShortcutsDialog()
 
             if let general = ShortcutsSection(title: "General") {
-                for (title, accel) in [("Go Back", "<Primary>Left"),
-                                       ("Go Forward", "<Primary>Right"),
-                                       ("Find", "<Primary>f"),
-                                       ("Reload", "<Primary>r")] {
+                for (title, accel) in [
+                    ("Go Back", "<Primary>Left"),
+                    ("Go Forward", "<Primary>Right"),
+                    ("Find", "<Primary>f"),
+                    ("Reload", "<Primary>r"),
+                ] {
                     if let item = ShortcutsItem(title: title, accelerator: accel) {
                         general.add(item)
                     }
@@ -55,10 +57,12 @@ struct ShortcutsDialogExample: DemoExample {
             }
 
             if let editing = ShortcutsSection(title: "Editing") {
-                for (title, accel) in [("Bold", "<Primary>b"),
-                                       ("Italic", "<Primary>i"),
-                                       ("Undo", "<Primary>z"),
-                                       ("Redo", "<Primary><Shift>z")] {
+                for (title, accel) in [
+                    ("Bold", "<Primary>b"),
+                    ("Italic", "<Primary>i"),
+                    ("Undo", "<Primary>z"),
+                    ("Redo", "<Primary><Shift>z"),
+                ] {
                     if let item = ShortcutsItem(title: title, accelerator: accel) {
                         editing.add(item)
                     }

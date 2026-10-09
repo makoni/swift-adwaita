@@ -10,16 +10,16 @@ struct TextViewExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let textView = TextView()
-    textView.text = "Hello, World!"
-    textView.wrapMode = .wordChar
-    textView.monospace = true
+        let textView = TextView()
+        textView.text = "Hello, World!"
+        textView.wrapMode = .wordChar
+        textView.monospace = true
 
-    let buffer = textView.buffer
-    buffer.onChanged {
-        print("Text changed: \\(buffer.charCount) chars")
-    }
-    """
+        let buffer = textView.buffer
+        buffer.onChanged {
+            print("Text changed: \\(buffer.charCount) chars")
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 12)
@@ -32,7 +32,8 @@ struct TextViewExample: DemoExample {
         box.append(title)
 
         let textView = TextView()
-        textView.text = "Type something here...\n\nThe TextView supports multi-line text editing with word wrapping, undo/redo, and clipboard operations."
+        textView.text =
+            "Type something here...\n\nThe TextView supports multi-line text editing with word wrapping, undo/redo, and clipboard operations."
         textView.wrapMode = .wordChar
         textView.leftMargin = 8
         textView.rightMargin = 8

@@ -11,23 +11,23 @@ struct PreferencesDialogExample: DemoExample {
     let opensInWindow = false
 
     let sourceCode = """
-    let dialog = PreferencesDialog()
-    dialog.searchEnabled = true
+        let dialog = PreferencesDialog()
+        dialog.searchEnabled = true
 
-    let general = PreferencesPage()
-    general.title = "General"
-    general.iconName = "preferences-other-symbolic"
+        let general = PreferencesPage()
+        general.title = "General"
+        general.iconName = "preferences-other-symbolic"
 
-    let group = PreferencesGroup()
-    group.title = "Appearance"
-    let darkRow = SwitchRow()
-    darkRow.title = "Dark Mode"
-    group.add(darkRow)
-    general.add(group)
+        let group = PreferencesGroup()
+        group.title = "Appearance"
+        let darkRow = SwitchRow()
+        darkRow.title = "Dark Mode"
+        group.add(darkRow)
+        general.add(group)
 
-    dialog.add(general)
-    dialog.present(parentWidget)
-    """
+        dialog.add(general)
+        dialog.present(parentWidget)
+        """
 
     func buildWidget() -> Widget {
         let statusPage = StatusPage()

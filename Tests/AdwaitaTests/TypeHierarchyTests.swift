@@ -130,7 +130,7 @@ struct TypeHierarchyTests {
             ShortcutsDialog.self, ShortcutsSection.self, ShortcutsItem.self,
             Window.self,
             // Non-widget
-            StyleManager.self, SwipeTracker.self, EnumListModel.self
+            StyleManager.self, SwipeTracker.self, EnumListModel.self,
         ]
         #expect(types.count >= 64, "Expected at least 64 generated types")
     }

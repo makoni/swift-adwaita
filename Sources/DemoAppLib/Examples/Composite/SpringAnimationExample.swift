@@ -10,16 +10,16 @@ struct SpringAnimationExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let params = SpringParams(dampingRatio: 0.5,
-                              mass: 1.0, stiffness: 100)
-    let target = CallbackAnimationTarget { value in
-        widget.marginTop = Int(value)
-    }
-    let anim = SpringAnimation(
-        widget: widget, from: 0, to: 100,
-        springParams: params, target: target)
-    anim.play()
-    """
+        let params = SpringParams(dampingRatio: 0.5,
+                                  mass: 1.0, stiffness: 100)
+        let target = CallbackAnimationTarget { value in
+            widget.marginTop = Int(value)
+        }
+        let anim = SpringAnimation(
+            widget: widget, from: 0, to: 100,
+            springParams: params, target: target)
+        anim.play()
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

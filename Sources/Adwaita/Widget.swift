@@ -834,15 +834,19 @@ extension Widget {
 
     @MainActor
     private func debugLine(for widget: UnsafeMutablePointer<GtkWidget>, depth: Int) -> String {
-        let typeName = g_type_name_from_instance(UnsafeMutableRawPointer(widget)
-            .assumingMemoryBound(to: GTypeInstance.self))
+        let typeName =
+            g_type_name_from_instance(
+                UnsafeMutableRawPointer(widget)
+                    .assumingMemoryBound(to: GTypeInstance.self)
+            )
             .map { String(cString: $0) } ?? "GtkWidget"
         let cssClasses = Self.cssClasses(for: widget)
-        let cssSuffix = if cssClasses.isEmpty {
-            ""
-        } else {
-            " css=[\(cssClasses.joined(separator: ", "))]"
-        }
+        let cssSuffix =
+            if cssClasses.isEmpty {
+                ""
+            } else {
+                " css=[\(cssClasses.joined(separator: ", "))]"
+            }
         let indent = String(repeating: "  ", count: depth)
         return
             "\(indent)\(typeName) size=\(gtk_widget_get_width(widget))x\(gtk_widget_get_height(widget)) visible=\(gtk_widget_get_visible(widget) != 0) focusable=\(gtk_widget_get_focusable(widget) != 0)\(cssSuffix)"

@@ -10,34 +10,34 @@ struct GestureExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Long press
-    let longPress = GestureLongPress()
-    longPress.onPressed { x, y in
-        print("Long press at (\\(x), \\(y))")
-    }
-    widget.addController(longPress)
+        // Long press
+        let longPress = GestureLongPress()
+        longPress.onPressed { x, y in
+            print("Long press at (\\(x), \\(y))")
+        }
+        widget.addController(longPress)
 
-    // Swipe
-    let swipe = GestureSwipe()
-    swipe.onSwipe { vx, vy in
-        print("Swipe velocity: (\\(vx), \\(vy))")
-    }
-    widget.addController(swipe)
+        // Swipe
+        let swipe = GestureSwipe()
+        swipe.onSwipe { vx, vy in
+            print("Swipe velocity: (\\(vx), \\(vy))")
+        }
+        widget.addController(swipe)
 
-    // Click
-    let click = GestureClick()
-    click.onPressed { nPress, x, y in
-        print("Pressed \\(nPress)× at (\\(x), \\(y))")
-    }
-    widget.addController(click)
+        // Click
+        let click = GestureClick()
+        click.onPressed { nPress, x, y in
+            print("Pressed \\(nPress)× at (\\(x), \\(y))")
+        }
+        widget.addController(click)
 
-    // Drag
-    let drag = GestureDrag()
-    drag.onDragUpdate { dx, dy in
-        print("Offset: (\\(dx), \\(dy))")
-    }
-    widget.addController(drag)
-    """
+        // Drag
+        let drag = GestureDrag()
+        drag.onDragUpdate { dx, dy in
+            print("Offset: (\\(dx), \\(dy))")
+        }
+        widget.addController(drag)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -106,11 +106,12 @@ struct GestureExample: DemoExample {
         let swipe = GestureSwipe()
         swipe.onSwipe { [swipeResult, directionLabel] vx, vy in
             swipeResult.text = "Velocity: (\(Int(vx)), \(Int(vy))) px/s"
-            let direction: String = if abs(vx) > abs(vy) {
-                vx > 0 ? "Right" : "Left"
-            } else {
-                vy > 0 ? "Down" : "Up"
-            }
+            let direction: String =
+                if abs(vx) > abs(vy) {
+                    vx > 0 ? "Right" : "Left"
+                } else {
+                    vy > 0 ? "Down" : "Up"
+                }
             directionLabel.text = direction
         }
         swipeBox.addController(swipe)
@@ -121,7 +122,8 @@ struct GestureExample: DemoExample {
         // Click
         let group3 = PreferencesGroup()
         group3.title = "Click"
-        group3.description = "Click (tap) the area below with the primary (left) mouse button; the press count and position are reported"
+        group3.description =
+            "Click (tap) the area below with the primary (left) mouse button; the press count and position are reported"
 
         let clickLabel = Label("Click here")
         clickLabel.addCSSClass("title-3")
