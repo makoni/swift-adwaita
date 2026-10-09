@@ -73,14 +73,15 @@ func withMainLoopDrain<T>(iterations: Int = 20, _ body: () throws -> T) rethrows
 ///
 /// `&local` addresses are only valid for the duration of the C call, but GLib
 /// stores the slot for as long as the watched object can still finalize, so it
-/// must live on the heap instead. The slot is deallocated when this instance
-/// goes out of scope, so the watched object must already have finalized by
-/// then — the tests that use this spin the main loop first and assert
-/// `isCleared` before the slot goes out of scope.
+/// must live on the heap instead. When this instance goes out of scope the
+/// weak pointer is removed if the watched object is still alive (so it can
+/// never write into the deallocated slot), and the slot is deallocated.
 final class WeakPointerSlot {
     private let slot: UnsafeMutablePointer<UnsafeMutableRawPointer?>
+    private let object: UnsafeMutablePointer<GObject>
 
     init(watching object: UnsafeMutablePointer<GObject>) {
+        self.object = object
         slot = .allocate(capacity: 1)
         slot.initialize(to: UnsafeMutableRawPointer(object))
         g_object_add_weak_pointer(object, slot)
@@ -92,6 +93,9 @@ final class WeakPointerSlot {
     }
 
     deinit {
+        if !isCleared {
+            g_object_remove_weak_pointer(object, slot)
+        }
         slot.deallocate()
     }
 }
