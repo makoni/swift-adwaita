@@ -656,7 +656,7 @@ public enum SignalHelper {
             trampoline: unsafeBitCast(
                 signalTrampolineDragCancel as @convention(c) (
                     UnsafeMutableRawPointer,
-                    OpaquePointer,
+                    OpaquePointer?,
                     UInt32,
                     UnsafeMutableRawPointer
                 ) -> gboolean,

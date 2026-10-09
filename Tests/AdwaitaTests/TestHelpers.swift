@@ -69,6 +69,37 @@ func withMainLoopDrain<T>(iterations: Int = 20, _ body: () throws -> T) rethrows
     return result
 }
 
+/// A stable heap slot for `g_object_add_weak_pointer`.
+///
+/// `&local` addresses are only valid for the duration of the C call, but GLib
+/// stores the slot for as long as the watched object can still finalize, so it
+/// must live on the heap instead. When this instance goes out of scope the
+/// weak pointer is removed if the watched object is still alive (so it can
+/// never write into the deallocated slot), and the slot is deallocated.
+final class WeakPointerSlot {
+    private let slot: UnsafeMutablePointer<UnsafeMutableRawPointer?>
+    private let object: UnsafeMutablePointer<GObject>
+
+    init(watching object: UnsafeMutablePointer<GObject>) {
+        self.object = object
+        slot = .allocate(capacity: 1)
+        slot.initialize(to: UnsafeMutableRawPointer(object))
+        g_object_add_weak_pointer(object, slot)
+    }
+
+    /// Whether GLib cleared the slot, i.e. the watched object finalized.
+    var isCleared: Bool {
+        slot.pointee == nil
+    }
+
+    deinit {
+        if !isCleared {
+            g_object_remove_weak_pointer(object, slot)
+        }
+        slot.deallocate()
+    }
+}
+
 actor BoolRecorder {
     private var value = false
 

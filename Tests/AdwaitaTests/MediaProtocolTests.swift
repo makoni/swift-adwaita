@@ -340,6 +340,25 @@ extension SerializedLifecycleSuites {
             conn.disconnect()
         }
 
+        @Test @MainActor func spinRowOnInputSignalDoesNotLeakRow() {
+            ensureAdwInit()
+            // Regression test for the `self` capture: when the `input`
+            // trampoline closure captured the `SpinRow` wrapper, the C object
+            // kept the closure box, the box kept the wrapper, and the wrapper
+            // kept the C object — a cycle the row could never break, so it
+            // never finalized. The handler must capture nothing, and the row
+            // must go away once the wrapper leaves scope.
+            var weakSlot: WeakPointerSlot?
+            do {
+                let row = SpinRow(title: "Volume", min: 0, max: 100, step: 1)
+                row.value = 1
+                weakSlot = WeakPointerSlot(watching: row.gobjectPointer)
+                row.onInput { _ in .value(1) }
+            }
+            spinMainLoop()
+            #expect(weakSlot?.isCleared == true, "the SpinRow must finalize once the wrapper goes out of scope")
+        }
+
         @Test @MainActor func expanderRowConvenienceInit() {
             ensureAdwInit()
             let row = ExpanderRow(title: "Advanced")
