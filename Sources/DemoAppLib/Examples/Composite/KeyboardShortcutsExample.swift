@@ -10,34 +10,34 @@ struct KeyboardShortcutsExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    // ShortcutController with managed scope (window-wide)
-    let controller = ShortcutController()
-    controller.scope = GTK_SHORTCUT_SCOPE_MANAGED
+        // ShortcutController with managed scope (window-wide)
+        let controller = ShortcutController()
+        controller.scope = GTK_SHORTCUT_SCOPE_MANAGED
 
-    // Add shortcuts using Key enum + KeyModifiers
-    controller.addShortcut(key: .s, modifiers: .control) {
-        log("Ctrl+S: Save")
-        return true
-    }
-    controller.addShortcut(key: .z,
-        modifiers: [.control, .shift]) {
-        log("Ctrl+Shift+Z: Redo")
-        return true
-    }
-    widget.addController(controller)
+        // Add shortcuts using Key enum + KeyModifiers
+        controller.addShortcut(key: .s, modifiers: .control) {
+            log("Ctrl+S: Save")
+            return true
+        }
+        controller.addShortcut(key: .z,
+            modifiers: [.control, .shift]) {
+            log("Ctrl+Shift+Z: Redo")
+            return true
+        }
+        widget.addController(controller)
 
-    // Simple per-widget shortcut via Widget API
-    button.addKeyboardShortcut(key: .return,
-        modifiers: []) {
-        log("Enter pressed on button")
-        return true
-    }
+        // Simple per-widget shortcut via Widget API
+        button.addKeyboardShortcut(key: .return,
+            modifiers: []) {
+            log("Enter pressed on button")
+            return true
+        }
 
-    // Scopes:
-    //   GTK_SHORTCUT_SCOPE_LOCAL — widget only
-    //   GTK_SHORTCUT_SCOPE_MANAGED — window
-    //   GTK_SHORTCUT_SCOPE_GLOBAL — entire app
-    """
+        // Scopes:
+        //   GTK_SHORTCUT_SCOPE_LOCAL — widget only
+        //   GTK_SHORTCUT_SCOPE_MANAGED — window
+        //   GTK_SHORTCUT_SCOPE_GLOBAL — entire app
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -92,7 +92,7 @@ struct KeyboardShortcutsExample: DemoExample {
             (.z, .control, "Ctrl+Z"),
             (.z, [.control, .shift], "Ctrl+Shift+Z"),
             (.n, .control, "Ctrl+N"),
-            (.w, .control, "Ctrl+W")
+            (.w, .control, "Ctrl+W"),
         ]
 
         let managedController = ShortcutController()
@@ -127,7 +127,7 @@ struct KeyboardShortcutsExample: DemoExample {
         let localShortcuts: [(Key, KeyModifiers, String)] = [
             (.f1, [], "F1"),
             (.f2, [], "F2"),
-            (.space, .control, "Ctrl+Space")
+            (.space, .control, "Ctrl+Space"),
         ]
 
         for (key, modifiers, desc) in localShortcuts {
@@ -162,7 +162,8 @@ struct KeyboardShortcutsExample: DemoExample {
 
         let keyRow = ActionRow()
         keyRow.title = "Key enum"
-        keyRow.subtitle = ".a-.z, .digit0-.digit9, .f1-.f12, .escape, .return, .tab, .space, .up/.down/.left/.right, and more"
+        keyRow.subtitle =
+            ".a-.z, .digit0-.digit9, .f1-.f12, .escape, .return, .tab, .space, .up/.down/.left/.right, and more"
         refGroup.add(keyRow)
 
         let scopeRow = ActionRow()

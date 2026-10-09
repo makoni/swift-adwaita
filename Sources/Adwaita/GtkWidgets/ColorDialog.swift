@@ -48,7 +48,10 @@ public struct RGBA: Sendable, Equatable {
 
         guard let value = UInt32(expanded, radix: 16) else { return nil }
         let hasAlpha = expanded.count == 8
-        let r: UInt32, g: UInt32, b: UInt32, a: UInt32
+        let r: UInt32
+        let g: UInt32
+        let b: UInt32
+        let a: UInt32
         if hasAlpha {
             r = (value >> 24) & 0xFF
             g = (value >> 16) & 0xFF

@@ -140,6 +140,24 @@ When wrapping APIs from newer libadwaita versions:
 - No docstrings on trivial property wrappers; document non-obvious behavior
 - Tests use Swift Testing framework (`@Test`, `#expect`)
 
+### Formatting
+
+Enforced with the toolchain's `swift-format`, run in CI against the `swift:6.3`
+image — that image's `swift-format` is the reference, so a local pass only means
+something if your local version matches.
+
+```sh
+swift format lint --strict -r Sources/ Tests/     # what CI runs
+swift format format -i -r Sources/ Tests/         # format in place
+```
+
+`Sources/Adwaita/Generated/` is produced by `Tools/AdwaitaCodeGen`; after
+regenerating, format it the same way so the output matches the rest of the tree:
+
+```sh
+swift format format -i -r Sources/Adwaita/Generated
+```
+
 ## Submitting Changes
 
 1. Fork the repository

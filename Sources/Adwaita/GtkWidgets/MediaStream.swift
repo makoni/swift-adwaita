@@ -50,10 +50,12 @@ public class MediaStream: GObjectRef {
     /// Worth doing at the end of a test, and whenever a stream outlives the
     /// thing that was playing it. A no-op on a stream that is not a media file.
     public func clear() {
-        guard g_type_check_instance_is_a(
-            pointer.assumingMemoryBound(to: GTypeInstance.self),
-            gtk_media_file_get_type()
-        ) != 0 else { return }
+        guard
+            g_type_check_instance_is_a(
+                pointer.assumingMemoryBound(to: GTypeInstance.self),
+                gtk_media_file_get_type()
+            ) != 0
+        else { return }
         gtk_media_file_clear(pointer.assumingMemoryBound(to: GtkMediaFile.self))
     }
 

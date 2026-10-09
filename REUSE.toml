@@ -37,7 +37,7 @@ SPDX-License-Identifier = "MIT"
 path = [
     ".gitignore",
     ".swift-version",
-    ".swiftformat",
+    ".swift-format",
     "**/.gitignore",
     "Package.swift",
     "buildDocs.sh",

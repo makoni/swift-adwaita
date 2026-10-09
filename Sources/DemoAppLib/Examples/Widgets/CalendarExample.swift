@@ -10,13 +10,13 @@ struct CalendarExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let calendar = Calendar()
-    calendar.showWeekNumbers = true
-    calendar.markDay(15)
-    calendar.onDaySelected {
-        print("Selected: \\(calendar.year)-\\(calendar.month)-\\(calendar.day)")
-    }
-    """
+        let calendar = Calendar()
+        calendar.showWeekNumbers = true
+        calendar.markDay(15)
+        calendar.onDaySelected {
+            print("Selected: \\(calendar.year)-\\(calendar.month)-\\(calendar.day)")
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 16)

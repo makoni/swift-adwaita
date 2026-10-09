@@ -10,35 +10,35 @@ struct ButtonExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Standard button
-    let btn = Button(label: "Click Me")
-    btn.onClicked {
-        btn.label = "Clicked!"
-    }
+        // Standard button
+        let btn = Button(label: "Click Me")
+        btn.onClicked {
+            btn.label = "Clicked!"
+        }
 
-    // Icon button (flat)
-    let iconBtn = Button(iconName: "edit-copy-symbolic")
-    iconBtn.addCSSClass("flat")
+        // Icon button (flat)
+        let iconBtn = Button(iconName: "edit-copy-symbolic")
+        iconBtn.addCSSClass("flat")
 
-    // Toggle button
-    let toggleBtn = ToggleButton(label: "Toggle")
+        // Toggle button
+        let toggleBtn = ToggleButton(label: "Toggle")
 
-    // ButtonContent — icon + label combined
-    let bc = ButtonContent()
-    bc.iconName = "document-open-symbolic"
-    bc.label = "Open File"
-    let richBtn = Button()
-    richBtn.child = bc
-    richBtn.addCSSClass("suggested-action")
+        // ButtonContent — icon + label combined
+        let bc = ButtonContent()
+        bc.iconName = "document-open-symbolic"
+        bc.label = "Open File"
+        let richBtn = Button()
+        richBtn.child = bc
+        richBtn.addCSSClass("suggested-action")
 
-    // Destructive button
-    let deleteBtn = Button(label: "Delete")
-    deleteBtn.addCSSClass("destructive-action")
+        // Destructive button
+        let deleteBtn = Button(label: "Delete")
+        deleteBtn.addCSSClass("destructive-action")
 
-    // Pill button
-    let pillBtn = Button(label: "Pill Shape")
-    pillBtn.addCSSClass("pill")
-    """
+        // Pill button
+        let pillBtn = Button(label: "Pill Shape")
+        pillBtn.addCSSClass("pill")
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

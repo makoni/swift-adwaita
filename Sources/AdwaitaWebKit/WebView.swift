@@ -144,4 +144,4 @@ public final class WebView: Widget {
     }
 }
 
-#endif // os(Linux)
+#endif  // os(Linux)

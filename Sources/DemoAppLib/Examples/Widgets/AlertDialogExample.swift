@@ -10,42 +10,42 @@ struct AlertDialogExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Info dialog
-    let dialog = AlertDialog(
-        heading: "Information",
-        body: "The operation completed successfully."
-    )
-    dialog.addResponse("ok", label: "OK")
-    dialog.defaultResponse = "ok"
-    dialog.present(parentWidget)
+        // Info dialog
+        let dialog = AlertDialog(
+            heading: "Information",
+            body: "The operation completed successfully."
+        )
+        dialog.addResponse("ok", label: "OK")
+        dialog.defaultResponse = "ok"
+        dialog.present(parentWidget)
 
-    // Confirmation dialog
-    let confirm = AlertDialog(
-        heading: "Save Changes?",
-        body: "Unsaved changes will be lost."
-    )
-    confirm.addResponse("cancel", label: "Cancel")
-    confirm.addResponse("save", label: "Save")
-    confirm.setResponseAppearance(
-        "save", appearance: AdwResponseAppearance(1)
-    )
-    confirm.defaultResponse = "save"
-    confirm.closeResponse = "cancel"
-    confirm.present(parentWidget)
+        // Confirmation dialog
+        let confirm = AlertDialog(
+            heading: "Save Changes?",
+            body: "Unsaved changes will be lost."
+        )
+        confirm.addResponse("cancel", label: "Cancel")
+        confirm.addResponse("save", label: "Save")
+        confirm.setResponseAppearance(
+            "save", appearance: AdwResponseAppearance(1)
+        )
+        confirm.defaultResponse = "save"
+        confirm.closeResponse = "cancel"
+        confirm.present(parentWidget)
 
-    // Destructive dialog
-    let danger = AlertDialog(
-        heading: "Delete File?",
-        body: "This action cannot be undone."
-    )
-    danger.addResponse("cancel", label: "Cancel")
-    danger.addResponse("delete", label: "Delete")
-    danger.setResponseAppearance(
-        "delete", appearance: AdwResponseAppearance(2)
-    )
-    danger.closeResponse = "cancel"
-    danger.present(parentWidget)
-    """
+        // Destructive dialog
+        let danger = AlertDialog(
+            heading: "Delete File?",
+            body: "This action cannot be undone."
+        )
+        danger.addResponse("cancel", label: "Cancel")
+        danger.addResponse("delete", label: "Delete")
+        danger.setResponseAppearance(
+            "delete", appearance: AdwResponseAppearance(2)
+        )
+        danger.closeResponse = "cancel"
+        danger.present(parentWidget)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

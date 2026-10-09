@@ -93,13 +93,14 @@ public final class DropTarget: GObjectRef {
             self,
             signal: .drop,
             trampoline: unsafeBitCast(
-                dropTrampoline as @convention(c) (
-                    UnsafeMutableRawPointer,
-                    UnsafePointer<GValue>,
-                    Double,
-                    Double,
-                    UnsafeMutableRawPointer
-                ) -> gboolean,
+                dropTrampoline
+                    as @convention(c) (
+                        UnsafeMutableRawPointer,
+                        UnsafePointer<GValue>,
+                        Double,
+                        Double,
+                        UnsafeMutableRawPointer
+                    ) -> gboolean,
                 to: GCallback.self
             ),
             box: PublicClosureBox(handler)
@@ -116,13 +117,14 @@ public final class DropTarget: GObjectRef {
             self,
             signal: .drop,
             trampoline: unsafeBitCast(
-                fileDropTrampoline as @convention(c) (
-                    UnsafeMutableRawPointer,
-                    UnsafePointer<GValue>,
-                    Double,
-                    Double,
-                    UnsafeMutableRawPointer
-                ) -> gboolean,
+                fileDropTrampoline
+                    as @convention(c) (
+                        UnsafeMutableRawPointer,
+                        UnsafePointer<GValue>,
+                        Double,
+                        Double,
+                        UnsafeMutableRawPointer
+                    ) -> gboolean,
                 to: GCallback.self
             ),
             box: PublicClosureBox(handler)
@@ -156,7 +158,8 @@ public final class DropTarget: GObjectRef {
     /// accept with that action; return a value with no bits set to reject.
     @discardableResult
     public func onEnter(preferredAction handler: @escaping @MainActor (Double, Double) -> GdkDragAction)
-        -> SignalConnection {
+        -> SignalConnection
+    {
         SignalHelper.connectDoubleDoubleReturnGdkDragAction(self, signal: .enter, handler: handler)
     }
 
@@ -190,7 +193,8 @@ public final class DropTarget: GObjectRef {
     /// to prefer as the pointer moves.
     @discardableResult
     public func onMotion(preferredAction handler: @escaping @MainActor (Double, Double) -> GdkDragAction)
-        -> SignalConnection {
+        -> SignalConnection
+    {
         SignalHelper.connectDoubleDoubleReturnGdkDragAction(self, signal: .motion, handler: handler)
     }
 
@@ -220,11 +224,12 @@ private func dropTrampoline(
     struct WrappedGValue: @unchecked Sendable { let ptr: UnsafePointer<GValue> }
     let wrapped = WrappedGValue(ptr: value)
     return MainActor.assumeIsolated {
-        let text: String? = if cadw_value_holds_string(wrapped.ptr) != 0 {
-            g_value_get_string(wrapped.ptr).map { String(cString: $0) }
-        } else {
-            nil
-        }
+        let text: String? =
+            if cadw_value_holds_string(wrapped.ptr) != 0 {
+                g_value_get_string(wrapped.ptr).map { String(cString: $0) }
+            } else {
+                nil
+            }
         return box.closure(text) ? 1 : 0
     }
 }

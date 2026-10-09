@@ -50,7 +50,9 @@ public class EntryRow: PreferencesRow {
     /// - Since: libadwaita 1.2
     public var textAttributes: TextAttributes? {
         get {
-            guard let ptr = adw_entry_row_get_attributes(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) else { return nil }
+            guard let ptr = adw_entry_row_get_attributes(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) else {
+                return nil
+            }
             return TextAttributes(borrowing: ptr)
         }
         set { adw_entry_row_set_attributes(castedPointer() as UnsafeMutablePointer<AdwEntryRow>, newValue?.pointer) }
@@ -60,10 +62,12 @@ public class EntryRow: PreferencesRow {
     /// - Since: libadwaita 1.2
     public var enableEmojiCompletion: Bool {
         get { adw_entry_row_get_enable_emoji_completion(castedPointer() as UnsafeMutablePointer<AdwEntryRow>) != 0 }
-        set { adw_entry_row_set_enable_emoji_completion(
-            castedPointer() as UnsafeMutablePointer<AdwEntryRow>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_entry_row_set_enable_emoji_completion(
+                castedPointer() as UnsafeMutablePointer<AdwEntryRow>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// Hints for the input method about expected content, such as auto-capitalization or no-spellcheck.

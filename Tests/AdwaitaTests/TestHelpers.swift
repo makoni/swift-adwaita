@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2026 Sergey Armodin
 
+import CAdwaita
 import Foundation
 import Testing
+
 @testable import Adwaita
-import CAdwaita
 
 /// Helper to verify subclass relationships at runtime.
 ///

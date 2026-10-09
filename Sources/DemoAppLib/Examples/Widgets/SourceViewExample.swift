@@ -10,62 +10,64 @@ struct SourceViewExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let markdownEditor = makeEditor(
-        title: "Markdown",
-        languageID: .markdown,
-        text: "# Hello\\n\\n- Markdown highlighting",
-        wrapMode: .wordChar
-    )
+        let markdownEditor = makeEditor(
+            title: "Markdown",
+            languageID: .markdown,
+            text: "# Hello\\n\\n- Markdown highlighting",
+            wrapMode: .wordChar
+        )
 
-    let swiftEditor = makeEditor(
-        title: "Swift",
-        languageID: .swift,
-        text: "import Foundation\\n\\nprint(\\"Hello\\")",
-        wrapMode: .none
-    )
-    """
+        let swiftEditor = makeEditor(
+            title: "Swift",
+            languageID: .swift,
+            text: "import Foundation\\n\\nprint(\\"Hello\\")",
+            wrapMode: .none
+        )
+        """
 
     func buildWidget() -> Widget {
         let outer = Box(orientation: .vertical, spacing: 12)
         outer.setMargins(24)
         outer.append(Label("GtkSourceView-backed editors").cssClass(.title3))
         outer.append(Label("Markdown and Swift syntax highlighting using the same widget API.").cssClass(.dimLabel))
-        outer.append(makeEditor(
-            title: "Markdown",
-            languageID: .markdown,
-            text: """
-            # Markdown Example
+        outer.append(
+            makeEditor(
+                title: "Markdown",
+                languageID: .markdown,
+                text: """
+                    # Markdown Example
 
-            - Live syntax highlighting
-            - Line numbers
-            - Right margin guide
+                    - Live syntax highlighting
+                    - Line numbers
+                    - Right margin guide
 
-            ```swift
-            print("Hello from GtkSourceView")
-            ```
-            """,
-            wrapMode: .wordChar
-        ))
-        outer.append(makeEditor(
-            title: "Swift",
-            languageID: .swift,
-            text: """
-            import Foundation
+                    ```swift
+                    print("Hello from GtkSourceView")
+                    ```
+                    """,
+                wrapMode: .wordChar
+            ))
+        outer.append(
+            makeEditor(
+                title: "Swift",
+                languageID: .swift,
+                text: """
+                    import Foundation
 
-            struct Greeter {
-                let name: String
+                    struct Greeter {
+                        let name: String
 
-                func message() -> String {
-                    "Hello, \\(name)!"
-                }
-            }
+                        func message() -> String {
+                            "Hello, \\(name)!"
+                        }
+                    }
 
-            let greeter = Greeter(name: "GtkSourceView")
-            print(greeter.message())
-            """,
-            wrapMode: .none,
-            minContentHeight: 280
-        ))
+                    let greeter = Greeter(name: "GtkSourceView")
+                    print(greeter.message())
+                    """,
+                wrapMode: .none,
+                minContentHeight: 280
+            ))
 
         return outer.scrollableClamped()
     }
@@ -78,11 +80,12 @@ struct SourceViewExample: DemoExample {
         minContentHeight: Int = 220
     ) -> Widget {
         let styleManager = StyleManager.default
-        let buffer = if let language = SourceLanguageManager.default.language(id: languageID) {
-            SourceBuffer(language: language)
-        } else {
-            SourceBuffer()
-        }
+        let buffer =
+            if let language = SourceLanguageManager.default.language(id: languageID) {
+                SourceBuffer(language: language)
+            } else {
+                SourceBuffer()
+            }
 
         func applyStyleScheme() {
             buffer.styleScheme = SourceStyleSchemeManager.default.preferredScheme(dark: styleManager.dark)

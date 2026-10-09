@@ -10,24 +10,24 @@ struct TabOverviewExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let tabView = TabView()
-    let tabBar = TabBar()
-    tabBar.view = tabView
+        let tabView = TabView()
+        let tabBar = TabBar()
+        tabBar.view = tabView
 
-    let overview = TabOverview()
-    overview.view = tabView
-    overview.child = Label("Main content")
-    overview.enableNewTab = true
-    overview.enableSearch = true
-    // The handler must append a page to the TabView and return it; the
-    // overview selects it and closes, and does not re-add it.
-    overview.onCreateTab {
-        let label = Label("A new tab")
-        let page = tabView.append(label)
-        page.title = "New Tab"
-        return page
-    }
-    """
+        let overview = TabOverview()
+        overview.view = tabView
+        overview.child = Label("Main content")
+        overview.enableNewTab = true
+        overview.enableSearch = true
+        // The handler must append a page to the TabView and return it; the
+        // overview selects it and closes, and does not re-add it.
+        overview.onCreateTab {
+            let label = Label("A new tab")
+            let page = tabView.append(label)
+            page.title = "New Tab"
+            return page
+        }
+        """
 
     func buildWidget() -> Widget {
         let tabView = TabView()

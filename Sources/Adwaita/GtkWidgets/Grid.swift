@@ -43,8 +43,10 @@ public final class Grid: Widget {
     }
 
     /// Attaches a child widget next to an existing child.
-    public func attachNextTo(_ child: Widget, sibling: Widget?, side: GtkPositionType, width: Int = 1,
-                             height: Int = 1) {
+    public func attachNextTo(
+        _ child: Widget, sibling: Widget?, side: GtkPositionType, width: Int = 1,
+        height: Int = 1
+    ) {
         gtk_grid_attach_next_to(
             castedPointer(),
             child.widgetPointer,

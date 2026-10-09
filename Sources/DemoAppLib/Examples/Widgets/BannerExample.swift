@@ -10,21 +10,21 @@ struct BannerExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let banner = Banner(title: "New update available")
-    banner.buttonLabel = "Update Now"
-    banner.revealed = true
+        let banner = Banner(title: "New update available")
+        banner.buttonLabel = "Update Now"
+        banner.revealed = true
 
-    banner.onButtonClicked {
-        banner.title = "Updating..."
-        banner.buttonLabel = nil
-    }
+        banner.onButtonClicked {
+            banner.title = "Updating..."
+            banner.buttonLabel = nil
+        }
 
-    // Toggle banner visibility
-    let toggleBtn = Button(label: "Toggle Banner")
-    toggleBtn.onClicked {
-        banner.revealed = !banner.revealed
-    }
-    """
+        // Toggle banner visibility
+        let toggleBtn = Button(label: "Toggle Banner")
+        toggleBtn.onClicked {
+            banner.revealed = !banner.revealed
+        }
+        """
 
     func buildWidget() -> Widget {
         let outerBox = Box(orientation: .vertical, spacing: 0)

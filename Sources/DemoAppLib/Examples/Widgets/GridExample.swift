@@ -10,16 +10,16 @@ struct GridExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let grid = Grid()
-    grid.columnSpacing = 12
-    grid.rowSpacing = 12
+        let grid = Grid()
+        grid.columnSpacing = 12
+        grid.rowSpacing = 12
 
-    let label = Label("Row 0, Col 0")
-    grid.attach(label, column: 0, row: 0)
+        let label = Label("Row 0, Col 0")
+        grid.attach(label, column: 0, row: 0)
 
-    let wide = Label("Spans 2 columns")
-    grid.attach(wide, column: 0, row: 1, width: 2)
-    """
+        let wide = Label("Spans 2 columns")
+        grid.attach(wide, column: 0, row: 1, width: 2)
+        """
 
     func buildWidget() -> Widget {
         let grid = Grid()

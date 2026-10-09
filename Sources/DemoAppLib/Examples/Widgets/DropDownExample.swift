@@ -10,11 +10,11 @@ struct DropDownExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let dropdown = DropDown(strings: ["Option A", "Option B", "Option C"])
-    dropdown.onSelectedChanged {
-        print("Selected: \\(dropdown.selected)")
-    }
-    """
+        let dropdown = DropDown(strings: ["Option A", "Option B", "Option C"])
+        dropdown.onSelectedChanged {
+            print("Selected: \\(dropdown.selected)")
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

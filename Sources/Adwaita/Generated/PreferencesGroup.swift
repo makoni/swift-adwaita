@@ -42,10 +42,12 @@ public class PreferencesGroup: Widget {
             adw_preferences_group_get_description(castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>)
                 .map { String(cString: $0) }
         }
-        set { adw_preferences_group_set_description(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>,
-            newValue
-        ) }
+        set {
+            adw_preferences_group_set_description(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>,
+                newValue
+            )
+        }
     }
 
     /// A widget placed at the end of the group's header row, next to the title.
@@ -55,10 +57,12 @@ public class PreferencesGroup: Widget {
             adw_preferences_group_get_header_suffix(castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>)
                 .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
         }
-        set { adw_preferences_group_set_header_suffix(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>,
-            newValue?.widgetPointer
-        ) }
+        set {
+            adw_preferences_group_set_header_suffix(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>,
+                newValue?.widgetPointer
+            )
+        }
     }
 
     /// Whether each row in the group is visually separated with individual frames.
@@ -67,10 +71,12 @@ public class PreferencesGroup: Widget {
         get {
             adw_preferences_group_get_separate_rows(castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>) != 0
         }
-        set { adw_preferences_group_set_separate_rows(
-            castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_preferences_group_set_separate_rows(
+                castedPointer() as UnsafeMutablePointer<AdwPreferencesGroup>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// The title displayed at the top of the preferences group.

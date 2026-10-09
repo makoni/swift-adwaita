@@ -11,24 +11,24 @@ struct MultiWindowExample: DemoExample {
     let opensInWindow = true
 
     let sourceCode = """
-    // Get the running application instance
-    guard let app = Application.current else { return }
+        // Get the running application instance
+        guard let app = Application.current else { return }
 
-    // Create a secondary window
-    let secondary = ApplicationWindow(application: app)
-    secondary.title = "Secondary Window"
-    secondary.defaultWidth = 400
-    secondary.defaultHeight = 300
+        // Create a secondary window
+        let secondary = ApplicationWindow(application: app)
+        secondary.title = "Secondary Window"
+        secondary.defaultWidth = 400
+        secondary.defaultHeight = 300
 
-    // Make it transient to the main window
-    secondary.transientFor = mainWindow
+        // Make it transient to the main window
+        secondary.transientFor = mainWindow
 
-    let content = StatusPage()
-    content.title = "I'm a secondary window!"
-    content.iconName = "window-new-symbolic"
-    secondary.setContent(content)
-    secondary.present()
-    """
+        let content = StatusPage()
+        content.title = "I'm a secondary window!"
+        content.iconName = "window-new-symbolic"
+        secondary.setContent(content)
+        secondary.present()
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -79,7 +79,8 @@ struct MultiWindowExample: DemoExample {
             let page = StatusPage()
             page.iconName = "window-new-symbolic"
             page.title = "Secondary Window #\(windowCount)"
-            page.description = "This window is transient to the parent.\nClosing the parent will also close this window."
+            page.description =
+                "This window is transient to the parent.\nClosing the parent will also close this window."
 
             let closeBtn = Button(label: "Close This Window")
             closeBtn.addCSSClass("pill")
@@ -166,7 +167,8 @@ struct MultiWindowExample: DemoExample {
 
         let noteRow = ActionRow()
         noteRow.title = "transientFor"
-        noteRow.subtitle = "Links child windows to their parent so the window manager can position and stack them correctly"
+        noteRow.subtitle =
+            "Links child windows to their parent so the window manager can position and stack them correctly"
         let checkIcon = Image(iconName: "emblem-ok-symbolic")
         checkIcon.valign = .center
         checkIcon.addCSSClass("success")

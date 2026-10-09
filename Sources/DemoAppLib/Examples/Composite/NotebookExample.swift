@@ -10,12 +10,12 @@ struct NotebookExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let notebook = Notebook()
-    notebook.appendPage(Label("Page 1"), label: "Tab 1")
-    notebook.appendPage(Label("Page 2"), label: "Tab 2")
-    notebook.scrollable = true
-    notebook.tabPos = .top
-    """
+        let notebook = Notebook()
+        notebook.appendPage(Label("Page 1"), label: "Tab 1")
+        notebook.appendPage(Label("Page 2"), label: "Tab 2")
+        notebook.scrollable = true
+        notebook.tabPos = .top
+        """
 
     func buildWidget() -> Widget {
         let notebook = Notebook()

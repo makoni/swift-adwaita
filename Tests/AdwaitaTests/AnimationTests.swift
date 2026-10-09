@@ -18,7 +18,7 @@ struct AnimationTests {
             received = value
         }
         #expect(received == nil)
-        _ = target // keep alive
+        _ = target  // keep alive
     }
 
     // MARK: - TimedAnimation

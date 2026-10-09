@@ -10,17 +10,17 @@ struct SeparatorExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Horizontal separator
-    let hSep = Separator(orientation: .horizontal)
+        // Horizontal separator
+        let hSep = Separator(orientation: .horizontal)
 
-    // Vertical separator
-    let vSep = Separator(orientation: .vertical)
+        // Vertical separator
+        let vSep = Separator(orientation: .vertical)
 
-    // Common usage: between items in a vertical box
-    box.append(Label("Above"))
-    box.append(Separator())
-    box.append(Label("Below"))
-    """
+        // Common usage: between items in a vertical box
+        box.append(Label("Above"))
+        box.append(Separator())
+        box.append(Label("Below"))
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

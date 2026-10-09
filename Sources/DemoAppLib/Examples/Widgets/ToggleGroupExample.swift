@@ -10,23 +10,24 @@ struct ToggleGroupExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let group = ToggleGroup()
-    let t1 = Toggle()
-    t1.label = "Day"
-    let t2 = Toggle()
-    t2.label = "Week"
-    let t3 = Toggle()
-    t3.label = "Month"
-    group.add(t1)
-    group.add(t2)
-    group.add(t3)
-    group.active = 0
-    """
+        let group = ToggleGroup()
+        let t1 = Toggle()
+        t1.label = "Day"
+        let t2 = Toggle()
+        t2.label = "Week"
+        let t3 = Toggle()
+        t3.label = "Month"
+        group.add(t1)
+        group.add(t2)
+        group.add(t3)
+        group.active = 0
+        """
 
     func buildWidget() -> Widget {
         guard let toggleGroup1 = ToggleGroup(),
-              let toggleGroup2 = ToggleGroup(),
-              let toggleGroup3 = ToggleGroup() else {
+            let toggleGroup2 = ToggleGroup(),
+            let toggleGroup3 = ToggleGroup()
+        else {
             return Label("ToggleGroup requires libadwaita 1.7+")
         }
 
@@ -39,16 +40,20 @@ struct ToggleGroupExample: DemoExample {
 
         // Text toggles
         toggleGroup1.setMargins(12)
-        if let d = Toggle() { d.label = "Day"
+        if let d = Toggle() {
+            d.label = "Day"
             toggleGroup1.add(d)
         }
-        if let w = Toggle() { w.label = "Week"
+        if let w = Toggle() {
+            w.label = "Week"
             toggleGroup1.add(w)
         }
-        if let m = Toggle() { m.label = "Month"
+        if let m = Toggle() {
+            m.label = "Month"
             toggleGroup1.add(m)
         }
-        if let y = Toggle() { y.label = "Year"
+        if let y = Toggle() {
+            y.label = "Year"
             toggleGroup1.add(y)
         }
         toggleGroup1.active = 0
@@ -82,16 +87,20 @@ struct ToggleGroupExample: DemoExample {
 
         toggleGroup3.setMargins(12)
         toggleGroup3.homogeneous = true
-        if let s = Toggle() { s.label = "S"
+        if let s = Toggle() {
+            s.label = "S"
             toggleGroup3.add(s)
         }
-        if let med = Toggle() { med.label = "M"
+        if let med = Toggle() {
+            med.label = "M"
             toggleGroup3.add(med)
         }
-        if let l = Toggle() { l.label = "L"
+        if let l = Toggle() {
+            l.label = "L"
             toggleGroup3.add(l)
         }
-        if let xl = Toggle() { xl.label = "XL"
+        if let xl = Toggle() {
+            xl.label = "XL"
             toggleGroup3.add(xl)
         }
         toggleGroup3.active = 1

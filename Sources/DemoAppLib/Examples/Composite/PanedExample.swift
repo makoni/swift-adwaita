@@ -10,12 +10,12 @@ struct PanedExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let paned = Paned(orientation: .horizontal)
-    paned.startChild = Label("Left Pane")
-    paned.endChild = Label("Right Pane")
-    paned.position = 200
-    paned.wideHandle = true
-    """
+        let paned = Paned(orientation: .horizontal)
+        paned.startChild = Label("Left Pane")
+        paned.endChild = Label("Right Pane")
+        paned.position = 200
+        paned.wideHandle = true
+        """
 
     func buildWidget() -> Widget {
         let paned = Paned(orientation: .horizontal)

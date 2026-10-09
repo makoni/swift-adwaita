@@ -61,7 +61,7 @@ public extension Widget {
     @discardableResult
     func onRightClick(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
         let gesture = GestureClick()
-        gesture.button = 3 // GDK_BUTTON_SECONDARY
+        gesture.button = 3  // GDK_BUTTON_SECONDARY
         addController(gesture)
         return gesture.onPressed { _, x, y in handler(x, y) }
     }

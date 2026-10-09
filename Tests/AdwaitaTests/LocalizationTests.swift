@@ -230,9 +230,9 @@ struct LocalizationTests {
             #expect(setMessagesLocale("C.UTF-8") == true, "C.UTF-8 is generated everywhere")
 
             let escaped = setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"])
-            guard escaped else { return } // no generated locale to escape to
+            guard escaped else { return }  // no generated locale to escape to
 
-            _ = cadw_activate_locale_from_environment() // what gtk_init does
+            _ = cadw_activate_locale_from_environment()  // what gtk_init does
             #expect(
                 messagesLocaleSupportsTranslation,
                 """
@@ -260,7 +260,7 @@ struct LocalizationTests {
             let escaped = setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"])
             guard escaped else { return }
 
-            _ = cadw_activate_locale_from_environment() // what gtk_init does
+            _ = cadw_activate_locale_from_environment()  // what gtk_init does
             #expect(
                 messagesLocaleSupportsTranslation,
                 "LC_ALL=C.UTF-8 outranked the exported LC_MESSAGES: \(currentMessagesLocale() ?? "nil")"
@@ -288,7 +288,7 @@ struct LocalizationTests {
             #expect(setMessagesLocale("C.UTF-8") == true)
 
             _ = configureLocalization(domain: "adwaita.tests.clocale")
-            _ = cadw_activate_locale_from_environment() // what gtk_init does
+            _ = cadw_activate_locale_from_environment()  // what gtk_init does
             #expect(
                 messagesLocaleSupportsTranslation,
                 """
@@ -315,7 +315,7 @@ struct LocalizationTests {
             guard setLanguage("ru", localeCandidates: ["en_US.UTF-8", "en_GB.UTF-8"]) else { return }
             _ = setLanguage(nil)
 
-            _ = cadw_activate_locale_from_environment() // what gtk_init does
+            _ = cadw_activate_locale_from_environment()  // what gtk_init does
             #expect(
                 messagesLocaleSupportsTranslation,
                 """
@@ -440,7 +440,7 @@ struct LocalizationTests {
                 ("ks_IN@devanagari", false),
                 ("uz_UZ@arabic", true),
                 ("uz_UZ", false),
-                ("sr_RS@latin", false)
+                ("sr_RS@latin", false),
             ] {
                 setenv("LANG", name, 1)
                 recaptureSessionLanguage()
@@ -463,7 +463,7 @@ struct LocalizationTests {
                 ("ks_IN@devanagari", "ks_Deva_IN"),
                 // Not a script: a currency, and an orthography.
                 ("de_DE.UTF-8@euro", "de_DE"),
-                ("ca_ES@valencia", "ca_ES")
+                ("ca_ES@valencia", "ca_ES"),
             ] {
                 setenv("LANG", name, 1)
                 recaptureSessionLanguage()
@@ -562,7 +562,7 @@ struct LocalizationTests {
             ("ha_NG.UTF-8", false), ("ku_TR.UTF-8", false),
             // Ordinary left-to-right, including two non-Latin scripts
             ("de_DE.UTF-8", false), ("ja_JP.UTF-8", false), ("zh_CN.UTF-8", false),
-            ("el_GR.UTF-8", false), ("ru_RU.UTF-8", false), ("hi_IN.UTF-8", false)
+            ("el_GR.UTF-8", false), ("ru_RU.UTF-8", false), ("hi_IN.UTF-8", false),
         ]
         let wrong = expected.filter { isRightToLeft(language: $0.0) != $0.1 }
         #expect(
@@ -657,7 +657,8 @@ struct LocalizationTests {
         defer { try? FileManager.default.removeItem(at: root) }
 
         let domain = "com.example.discovery"
-        let proper = root
+        let proper =
+            root
             .appendingPathComponent("xh", isDirectory: true)
             .appendingPathComponent("LC_MESSAGES", isDirectory: true)
         try FileManager.default.createDirectory(at: proper, withIntermediateDirectories: true)
@@ -667,7 +668,8 @@ struct LocalizationTests {
         // layout — must not count.
         try Data().write(to: root.appendingPathComponent("zu.mo", isDirectory: false))
         // Nor one for a different domain.
-        let otherDomain = root
+        let otherDomain =
+            root
             .appendingPathComponent("ts", isDirectory: true)
             .appendingPathComponent("LC_MESSAGES", isDirectory: true)
         try FileManager.default.createDirectory(at: otherDomain, withIntermediateDirectories: true)
@@ -707,7 +709,8 @@ struct LocalizationTests {
             defer { try? FileManager.default.removeItem(at: root) }
 
             let domain = "com.example.localizationtest"
-            let messages = root
+            let messages =
+                root
                 .appendingPathComponent("xh", isDirectory: true)
                 .appendingPathComponent("LC_MESSAGES", isDirectory: true)
             try FileManager.default.createDirectory(at: messages, withIntermediateDirectories: true)
@@ -725,7 +728,7 @@ struct LocalizationTests {
             compile.executableURL = msgfmt
             compile.arguments = [
                 "-o", messages.appendingPathComponent("\(domain).mo", isDirectory: false).path,
-                po.path
+                po.path,
             ]
             try compile.run()
             compile.waitUntilExit()

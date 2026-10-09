@@ -309,7 +309,7 @@ struct AdwWidgetTests {
     @Test @MainActor func signalConnectionReturnsValidObject() {
         ensureAdwInit()
         let btn = Button(label: "Test")
-        let conn = btn.onClicked { /* no-op */ }
+        let conn = btn.onClicked { /* no-op */  }
         // Connection object should be non-nil and disconnectable
         conn.disconnect()
         // Double-disconnect should not crash
@@ -371,7 +371,7 @@ struct AdwWidgetTests {
         let borrowed = Widget(borrowing: label.pointer)
         let refCount2 = label.gobjectPointer.pointee.ref_count
         #expect(refCount2 == refCount1 + 1, "Borrowing should add a reference")
-        _ = borrowed // keep alive
+        _ = borrowed  // keep alive
     }
 
     @Test @MainActor func widgetPointerStability() {

@@ -10,26 +10,26 @@ struct CssProviderExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Load CSS globally
-    CSSProvider.loadGlobal(\"""
-    .custom-red { color: @error_color; }
-    .custom-big { font-size: 24px; }
-    .custom-rounded {
-        border-radius: 16px;
-        padding: 12px 24px;
-    }
-    \""")
+        // Load CSS globally
+        CSSProvider.loadGlobal(\"""
+        .custom-red { color: @error_color; }
+        .custom-big { font-size: 24px; }
+        .custom-rounded {
+            border-radius: 16px;
+            padding: 12px 24px;
+        }
+        \""")
 
-    // Apply classes to widgets
-    label.addCSSClass("custom-red")
-    label.addCSSClass("custom-big")
+        // Apply classes to widgets
+        label.addCSSClass("custom-red")
+        label.addCSSClass("custom-big")
 
-    // Or use a provider instance
-    let provider = CSSProvider()
-    provider.loadFromString(css)
-    provider.addToDefaultDisplay()
-    // Later: provider.removeFromDefaultDisplay()
-    """
+        // Or use a provider instance
+        let provider = CSSProvider()
+        provider.loadFromString(css)
+        provider.addToDefaultDisplay()
+        // Later: provider.removeFromDefaultDisplay()
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -37,28 +37,29 @@ struct CssProviderExample: DemoExample {
 
         // Load custom CSS
         let provider = CSSProvider()
-        provider.loadFromString("""
-        .demo-gradient {
-            background: linear-gradient(135deg, @accent_bg_color, @headerbar_bg_color);
-            color: @accent_fg_color;
-            border-radius: 12px;
-            padding: 24px;
-        }
-        .demo-shadow {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            padding: 16px;
-        }
-        .demo-pulsing {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .demo-bordered {
-            border: 2px solid @accent_color;
-            border-radius: 24px;
-            padding: 12px 24px;
-        }
-        """)
+        provider.loadFromString(
+            """
+            .demo-gradient {
+                background: linear-gradient(135deg, @accent_bg_color, @headerbar_bg_color);
+                color: @accent_fg_color;
+                border-radius: 12px;
+                padding: 24px;
+            }
+            .demo-shadow {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                border-radius: 8px;
+                padding: 16px;
+            }
+            .demo-pulsing {
+                font-size: 20px;
+                font-weight: bold;
+            }
+            .demo-bordered {
+                border: 2px solid @accent_color;
+                border-radius: 24px;
+                padding: 12px 24px;
+            }
+            """)
         provider.addToDefaultDisplay()
 
         // Gradient box

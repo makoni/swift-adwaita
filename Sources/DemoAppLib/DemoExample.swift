@@ -114,5 +114,5 @@ let allExamples: [any DemoExample] = [
     GridViewExample(),
     ColumnViewExample(),
     TreeListExample(),
-    FilterSortExample()
+    FilterSortExample(),
 ]

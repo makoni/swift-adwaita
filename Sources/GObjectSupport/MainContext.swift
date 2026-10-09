@@ -195,7 +195,8 @@ public enum MainContext {
     ///   - ms: The delay in milliseconds.
     ///   - closure: The work to perform after the delay.
     public static func delay(ms: UInt32, _ closure: @escaping @MainActor () -> Void) {
-        timeout(intervalMs: ms) { closure()
+        timeout(intervalMs: ms) {
+            closure()
             return false
         }
     }
@@ -302,7 +303,7 @@ public enum MainContext {
                 MainActor.assumeIsolated {
                     box.closure()
                 }
-                return 0 // G_SOURCE_REMOVE — run once
+                return 0  // G_SOURCE_REMOVE — run once
             },
             box,
             { userData in
@@ -378,14 +379,16 @@ private enum ScrollbarWarningFilter {
 
     fileprivate static func isScrolledWindowInternal(message: String) -> Bool {
         guard let pointerString = extractPointer(from: message),
-              let address = UInt(pointerString.dropFirst(2), radix: 16),
-              let widget = UnsafeMutableRawPointer(bitPattern: address) else {
+            let address = UInt(pointerString.dropFirst(2), radix: 16),
+            let widget = UnsafeMutableRawPointer(bitPattern: address)
+        else {
             return false
         }
         var current: UnsafeMutableRawPointer? = widget
         var depth = 0
         while let ptr = current, depth < 8 {
-            let typeName = g_type_name_from_instance(ptr.assumingMemoryBound(to: GTypeInstance.self))
+            let typeName =
+                g_type_name_from_instance(ptr.assumingMemoryBound(to: GTypeInstance.self))
                 .map { String(cString: $0) } ?? ""
             if typeName == "GtkScrolledWindow" || typeName == "GtkScrollbar" {
                 return true

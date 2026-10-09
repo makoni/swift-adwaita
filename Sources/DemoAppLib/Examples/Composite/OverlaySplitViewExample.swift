@@ -11,18 +11,18 @@ struct OverlaySplitViewExample: DemoExample {
     let opensInWindow = true
 
     let sourceCode = """
-    let splitView = OverlaySplitView()
-    splitView.pinSidebar = false
-    splitView.showSidebar = true
-    splitView.enableShowGesture = true
-    splitView.enableHideGesture = true
+        let splitView = OverlaySplitView()
+        splitView.pinSidebar = false
+        splitView.showSidebar = true
+        splitView.enableShowGesture = true
+        splitView.enableHideGesture = true
 
-    // Toggle sidebar with a button
-    let toggleBtn = Button(iconName: "sidebar-show-symbolic")
-    toggleBtn.onClicked {
-        splitView.showSidebar = !splitView.showSidebar
-    }
-    """
+        // Toggle sidebar with a button
+        let toggleBtn = Button(iconName: "sidebar-show-symbolic")
+        toggleBtn.onClicked {
+            splitView.showSidebar = !splitView.showSidebar
+        }
+        """
 
     func buildWidget() -> Widget {
         let splitView = OverlaySplitView()

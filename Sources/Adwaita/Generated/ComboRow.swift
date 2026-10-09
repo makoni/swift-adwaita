@@ -59,7 +59,9 @@ public class ComboRow: ActionRow {
 
     /// The currently selected item, or `nil` if nothing is selected.
     public var selectedItem: GObjectRef? {
-        guard let ptr = adw_combo_row_get_selected_item(castedPointer() as UnsafeMutablePointer<AdwComboRow>) else { return nil }
+        guard let ptr = adw_combo_row_get_selected_item(castedPointer() as UnsafeMutablePointer<AdwComboRow>) else {
+            return nil
+        }
         return GObjectRef(borrowing: UnsafeMutableRawPointer(ptr))
     }
 

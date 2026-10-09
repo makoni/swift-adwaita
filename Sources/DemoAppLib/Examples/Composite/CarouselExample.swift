@@ -10,33 +10,33 @@ struct CarouselExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let carousel = Carousel()
-    carousel.allowMouseDrag = true
-    carousel.spacing = 12
+        let carousel = Carousel()
+        carousel.allowMouseDrag = true
+        carousel.spacing = 12
 
-    // Add pages
-    let page1 = StatusPage()
-    page1.title = "Welcome"
-    page1.iconName = "start-here-symbolic"
-    page1.description = "Swipe to explore"
-    carousel.append(page1)
+        // Add pages
+        let page1 = StatusPage()
+        page1.title = "Welcome"
+        page1.iconName = "start-here-symbolic"
+        page1.description = "Swipe to explore"
+        carousel.append(page1)
 
-    let page2 = StatusPage()
-    page2.title = "Features"
-    page2.iconName = "applications-science-symbolic"
-    carousel.append(page2)
+        let page2 = StatusPage()
+        page2.title = "Features"
+        page2.iconName = "applications-science-symbolic"
+        carousel.append(page2)
 
-    let page3 = StatusPage()
-    page3.title = "Get Started"
-    page3.iconName = "emblem-ok-symbolic"
-    carousel.append(page3)
+        let page3 = StatusPage()
+        page3.title = "Get Started"
+        page3.iconName = "emblem-ok-symbolic"
+        carousel.append(page3)
 
-    // Indicator dots, or line-style indicators
-    let dots = CarouselIndicatorDots()
-    dots.carousel = carousel
-    let lines = CarouselIndicatorLines()
-    lines.carousel = carousel
-    """
+        // Indicator dots, or line-style indicators
+        let dots = CarouselIndicatorDots()
+        dots.carousel = carousel
+        let lines = CarouselIndicatorLines()
+        lines.carousel = carousel
+        """
 
     func buildWidget() -> Widget {
         let carousel = Carousel()

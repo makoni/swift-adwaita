@@ -10,17 +10,17 @@ struct OverlayExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let overlay = Overlay()
-    let image = Image(iconName: "folder-symbolic")
-    image.pixelSize = 48
-    overlay.child = image
+        let overlay = Overlay()
+        let image = Image(iconName: "folder-symbolic")
+        image.pixelSize = 48
+        overlay.child = image
 
-    let badge = Label("3")
-    badge.addCSSClass("accent")
-    badge.halign = .end
-    badge.valign = .start
-    overlay.addOverlay(badge)
-    """
+        let badge = Label("3")
+        badge.addCSSClass("accent")
+        badge.halign = .end
+        badge.valign = .start
+        overlay.addOverlay(badge)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -59,7 +59,7 @@ struct OverlayExample: DemoExample {
         let icons = [
             ("folder-symbolic", "emblem-ok-symbolic", "success"),
             ("mail-unread-symbolic", "starred-symbolic", "warning"),
-            ("drive-harddisk-symbolic", "process-stop-symbolic", "error")
+            ("drive-harddisk-symbolic", "process-stop-symbolic", "error"),
         ]
         for (base, overlay, style) in icons {
             let ov = Overlay()

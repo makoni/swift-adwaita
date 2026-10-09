@@ -20,14 +20,14 @@ struct AnimatedImagePlayerExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let picture = Picture()
+        let picture = Picture()
 
-    if let player = try? AnimatedImagePlayer(contentsOf: url, displayedBy: picture) {
-        player.start()
-        let meta = player.metadata
-        print("\\(meta.width) x \\(meta.height)")
-    }
-    """
+        if let player = try? AnimatedImagePlayer(contentsOf: url, displayedBy: picture) {
+            player.start()
+            let meta = player.metadata
+            print("\\(meta.width) x \\(meta.height)")
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -61,10 +61,10 @@ struct AnimatedImagePlayerExample: DemoExample {
             dialog.title = "Open Animated Image"
             dialog.setFilters([
                 FileFilter(name: "Animated images", suffixes: ["gif", "webp"]),
-                FileFilter(name: "All files", patterns: ["*"])
+                FileFilter(name: "All files", patterns: ["*"]),
             ])
             dialog.open(parent: box.root) { [picture, status, playerHolder] result in
-                guard case let .success(path?) = result else { return }
+                guard case .success(let path?) = result else { return }
                 let url = URL(fileURLWithPath: path)
                 do {
                     if let player = try AnimatedImagePlayer(contentsOf: url, displayedBy: picture) {

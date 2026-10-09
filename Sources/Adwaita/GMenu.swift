@@ -261,17 +261,18 @@ public final class SimpleAction: GObjectRef {
     public func onActivateWithParameter(
         _ handler: @escaping @MainActor (Variant) -> Void
     ) -> SignalConnection {
-        let trampoline: @convention(c) (
-            UnsafeMutableRawPointer, OpaquePointer?, UnsafeMutableRawPointer
-        ) -> Void = { _, variantPtr, userData in
-            let box = Unmanaged<PublicClosureBox<@MainActor (Variant) -> Void>>
-                .fromOpaque(userData).takeUnretainedValue()
-            guard let variantPtr else { return }
-            MainActor.assumeIsolated {
-                let variant = Variant(borrowing: variantPtr)
-                box.closure(variant)
+        let trampoline:
+            @convention(c) (
+                UnsafeMutableRawPointer, OpaquePointer?, UnsafeMutableRawPointer
+            ) -> Void = { _, variantPtr, userData in
+                let box = Unmanaged<PublicClosureBox<@MainActor (Variant) -> Void>>
+                    .fromOpaque(userData).takeUnretainedValue()
+                guard let variantPtr else { return }
+                MainActor.assumeIsolated {
+                    let variant = Variant(borrowing: variantPtr)
+                    box.closure(variant)
+                }
             }
-        }
         return SignalHelper.connectCustom(
             self,
             signal: .activate,

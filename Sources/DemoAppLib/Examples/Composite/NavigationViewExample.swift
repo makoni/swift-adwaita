@@ -11,27 +11,27 @@ struct NavigationViewExample: DemoExample {
     let opensInWindow = true
 
     let sourceCode = """
-    let navView = NavigationView()
+        let navView = NavigationView()
 
-    let mainPage = StatusPage()
-    mainPage.title = "Home"
-    mainPage.iconName = "go-home-symbolic"
+        let mainPage = StatusPage()
+        mainPage.title = "Home"
+        mainPage.iconName = "go-home-symbolic"
 
-    let detailBtn = Button(label: "Go to Detail")
-    detailBtn.addCSSClass("pill")
-    detailBtn.addCSSClass("suggested-action")
-    mainPage.child = detailBtn
+        let detailBtn = Button(label: "Go to Detail")
+        detailBtn.addCSSClass("pill")
+        detailBtn.addCSSClass("suggested-action")
+        mainPage.child = detailBtn
 
-    let page1 = NavigationPage(child: mainPage, title: "Home")
-    navView.add(page1)
+        let page1 = NavigationPage(child: mainPage, title: "Home")
+        navView.add(page1)
 
-    detailBtn.onClicked {
-        let detailPage = StatusPage()
-        detailPage.title = "Detail"
-        let page2 = NavigationPage(child: detailPage, title: "Detail")
-        navView.push(page2)
-    }
-    """
+        detailBtn.onClicked {
+            let detailPage = StatusPage()
+            detailPage.title = "Detail"
+            let page2 = NavigationPage(child: detailPage, title: "Detail")
+            navView.push(page2)
+        }
+        """
 
     func buildWidget() -> Widget {
         let navView = NavigationView()

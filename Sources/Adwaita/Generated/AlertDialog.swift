@@ -59,10 +59,12 @@ public class AlertDialog: Dialog {
     /// - Since: libadwaita 1.5
     public var bodyUseMarkup: Bool {
         get { adw_alert_dialog_get_body_use_markup(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>) != 0 }
-        set { adw_alert_dialog_set_body_use_markup(
-            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_alert_dialog_set_body_use_markup(
+                castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// The response ID used when the dialog is closed (e.g. by pressing Escape).
@@ -93,10 +95,12 @@ public class AlertDialog: Dialog {
             adw_alert_dialog_get_extra_child(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>)
                 .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
         }
-        set { adw_alert_dialog_set_extra_child(
-            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
-            newValue?.widgetPointer
-        ) }
+        set {
+            adw_alert_dialog_set_extra_child(
+                castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+                newValue?.widgetPointer
+            )
+        }
     }
 
     /// The heading text displayed at the top of the dialog.
@@ -113,20 +117,24 @@ public class AlertDialog: Dialog {
     /// - Since: libadwaita 1.5
     public var headingUseMarkup: Bool {
         get { adw_alert_dialog_get_heading_use_markup(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>) != 0 }
-        set { adw_alert_dialog_set_heading_use_markup(
-            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_alert_dialog_set_heading_use_markup(
+                castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// Whether to use a wider layout with the heading and body side by side.
     /// - Since: libadwaita 1.6
     public var preferWideLayout: Bool {
         get { adw_alert_dialog_get_prefer_wide_layout(castedPointer() as UnsafeMutablePointer<AdwAlertDialog>) != 0 }
-        set { adw_alert_dialog_set_prefer_wide_layout(
-            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_alert_dialog_set_prefer_wide_layout(
+                castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// Adds a response button to the dialog.
@@ -160,10 +168,11 @@ public class AlertDialog: Dialog {
     /// - Returns: The label text displayed on the button.
     @discardableResult
     public func getResponseLabel(_ response: String) -> String {
-        String(cString: adw_alert_dialog_get_response_label(
-            castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
-            response
-        ))
+        String(
+            cString: adw_alert_dialog_get_response_label(
+                castedPointer() as UnsafeMutablePointer<AdwAlertDialog>,
+                response
+            ))
     }
 
     /// Checks whether a response with the given ID exists.

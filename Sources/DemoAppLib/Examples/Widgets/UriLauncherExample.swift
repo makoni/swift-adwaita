@@ -10,25 +10,25 @@ struct UriLauncherExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Open a URL in the default browser
-    let launcher = UriLauncher(uri: "https://gnome.org")
-    launcher.launch()
+        // Open a URL in the default browser
+        let launcher = UriLauncher(uri: "https://gnome.org")
+        launcher.launch()
 
-    // Or with an async result
-    launcher.launch { success in
-        print("Launched: \\(success)")
-    }
+        // Or with an async result
+        launcher.launch { success in
+            print("Launched: \\(success)")
+        }
 
-    // Change URI and launch again
-    launcher.uri = "https://gtk.org"
-    launcher.launch()
+        // Change URI and launch again
+        launcher.uri = "https://gtk.org"
+        launcher.launch()
 
-    // When the URI comes from untrusted input, allowlist the scheme first:
-    let uri = "https://gnome.org"
-    if uri.lowercased().hasPrefix("http://") || uri.lowercased().hasPrefix("https://") || uri.lowercased().hasPrefix("file://") {
-        UriLauncher(uri: uri).launch()
-    }
-    """
+        // When the URI comes from untrusted input, allowlist the scheme first:
+        let uri = "https://gnome.org"
+        if uri.lowercased().hasPrefix("http://") || uri.lowercased().hasPrefix("https://") || uri.lowercased().hasPrefix("file://") {
+            UriLauncher(uri: uri).launch()
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -87,7 +87,7 @@ struct UriLauncherExample: DemoExample {
         for (name, uri) in [
             ("GNOME", "https://gnome.org"),
             ("GTK", "https://gtk.org"),
-            ("GitHub", "https://github.com")
+            ("GitHub", "https://github.com"),
         ] {
             let btn = Button(label: name)
             btn.addCSSClass("pill")

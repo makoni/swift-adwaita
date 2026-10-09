@@ -11,7 +11,8 @@ import Foundation
 /// current machine, and use the static convenience values below for common
 /// languages.
 public struct SourceLanguageID: RawRepresentable, Hashable, Codable, Sendable, ExpressibleByStringLiteral,
-    CustomStringConvertible {
+    CustomStringConvertible
+{
     public let rawValue: String
 
     public init(rawValue: String) {

@@ -10,11 +10,11 @@ struct ExpanderExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let expander = Expander(label: "Click to expand")
-    let content = Label("Hidden content revealed!")
-    expander.child = content
-    expander.expanded = false
-    """
+        let expander = Expander(label: "Click to expand")
+        let content = Label("Hidden content revealed!")
+        expander.child = content
+        expander.expanded = false
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 12)

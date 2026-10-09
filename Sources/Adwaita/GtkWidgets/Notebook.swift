@@ -61,12 +61,13 @@ public final class Notebook: Widget {
     @discardableResult
     public func insertPage(_ child: Widget, label: String, position: Int) -> Int {
         let tabLabel = Label(label)
-        return Int(gtk_notebook_insert_page(
-            opaquePointer,
-            child.widgetPointer,
-            tabLabel.widgetPointer,
-            Int32(position)
-        ))
+        return Int(
+            gtk_notebook_insert_page(
+                opaquePointer,
+                child.widgetPointer,
+                tabLabel.widgetPointer,
+                Int32(position)
+            ))
     }
 
     /// Removes the page at the given index.

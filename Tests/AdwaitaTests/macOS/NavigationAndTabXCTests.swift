@@ -422,7 +422,7 @@ final class NavigationAndTabXCTests: XCTestCase {
         let page = tabView.append(label)
         // pinned and selected are read-only
         XCTAssertTrue(page.pinned == false)
-        XCTAssertTrue(page.selected == true) // first page is auto-selected
+        XCTAssertTrue(page.selected == true)  // first page is auto-selected
         // child is read-only
         XCTAssertNotNil(page.child.pointer)
     }

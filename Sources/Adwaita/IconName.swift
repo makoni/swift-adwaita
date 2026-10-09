@@ -223,7 +223,7 @@ public enum IconName: Sendable, Equatable {
         case .sidebarShow: "sidebar-show-symbolic"
         case .openMenu: "open-menu-symbolic"
         case .viewMore: "view-more-symbolic"
-        case let .custom(name): name
+        case .custom(let name): name
         }
     }
 }

@@ -10,16 +10,16 @@ struct WrapBoxExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let wrap = WrapBox()
-    wrap.childSpacing = 8
-    wrap.lineSpacing = 8
+        let wrap = WrapBox()
+        wrap.childSpacing = 8
+        wrap.lineSpacing = 8
 
-    for tag in ["Swift", "GTK4", "Adwaita", "Linux"] {
-        let btn = Button(label: tag)
-        btn.addCSSClass("pill")
-        wrap.append(btn)
-    }
-    """
+        for tag in ["Swift", "GTK4", "Adwaita", "Linux"] {
+            let btn = Button(label: tag)
+            btn.addCSSClass("pill")
+            wrap.append(btn)
+        }
+        """
 
     func buildWidget() -> Widget {
         guard let wrap1 = WrapBox(), let wrap2 = WrapBox() else {
@@ -38,7 +38,7 @@ struct WrapBoxExample: DemoExample {
 
         let tags = [
             "Swift", "GTK4", "Adwaita", "Linux", "GNOME", "GObject",
-            "libadwaita", "Vala", "Flatpak", "Meson", "Blueprint", "Rust"
+            "libadwaita", "Vala", "Flatpak", "Meson", "Blueprint", "Rust",
         ]
         for tag in tags {
             let btn = Button(label: tag)

@@ -56,10 +56,12 @@ public class ActionRow: PreferencesRow {
             adw_action_row_get_activatable_widget(castedPointer() as UnsafeMutablePointer<AdwActionRow>)
                 .map { Widget(borrowing: UnsafeMutableRawPointer($0)) }
         }
-        set { adw_action_row_set_activatable_widget(
-            castedPointer() as UnsafeMutablePointer<AdwActionRow>,
-            newValue?.widgetPointer
-        ) }
+        set {
+            adw_action_row_set_activatable_widget(
+                castedPointer() as UnsafeMutablePointer<AdwActionRow>,
+                newValue?.widgetPointer
+            )
+        }
     }
 
     /// The secondary text displayed below the title.
@@ -74,7 +76,8 @@ public class ActionRow: PreferencesRow {
     /// The maximum number of lines for the subtitle (0 for unlimited).
     public var subtitleLines: Int {
         get { Int(adw_action_row_get_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>)) }
-        set { adw_action_row_set_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>, Int32(newValue))
+        set {
+            adw_action_row_set_subtitle_lines(castedPointer() as UnsafeMutablePointer<AdwActionRow>, Int32(newValue))
         }
     }
 
@@ -82,10 +85,12 @@ public class ActionRow: PreferencesRow {
     /// - Since: libadwaita 1.3
     public var subtitleSelectable: Bool {
         get { adw_action_row_get_subtitle_selectable(castedPointer() as UnsafeMutablePointer<AdwActionRow>) != 0 }
-        set { adw_action_row_set_subtitle_selectable(
-            castedPointer() as UnsafeMutablePointer<AdwActionRow>,
-            newValue ? 1 : 0
-        ) }
+        set {
+            adw_action_row_set_subtitle_selectable(
+                castedPointer() as UnsafeMutablePointer<AdwActionRow>,
+                newValue ? 1 : 0
+            )
+        }
     }
 
     /// The maximum number of lines for the title (0 for unlimited).

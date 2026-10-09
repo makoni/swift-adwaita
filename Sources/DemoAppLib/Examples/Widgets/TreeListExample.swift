@@ -10,54 +10,54 @@ struct TreeListExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Tree data — each node has a label and optional children
-    struct TreeNode {
-        let label: String
-        let children: [TreeNode]
-    }
-
-    let tree: [TreeNode] = [
-        TreeNode(label: "src", children: [
-            TreeNode(label: "main.swift", children: []),
-            TreeNode(label: "utils.swift", children: []),
-        ]),
-        TreeNode(label: "tests", children: [
-            TreeNode(label: "test_main.swift", children: []),
-        ]),
-    ]
-
-    // Flatten to index-based parallel arrays, then:
-    let rootStore = ListStore()
-    for _ in rootItems { rootStore.appendPlaceholder() }
-
-    let treeModel = TreeListModel(
-        root: rootStore,
-        passthrough: false,    // wrap items in TreeListRow
-        autoexpand: false
-    ) { item in
-        // Return a ListStore for children, or nil for leaves
-        let childStore = ListStore()
-        for _ in children { childStore.appendPlaceholder() }
-        return childStore
-    }
-
-    // Factory with TreeExpander for indent + expand arrows
-    let factory = SignalListItemFactory()
-    factory.onSetup { listItem in
-        let expander = TreeExpander()
-        expander.child = Label("")
-        listItem.child = expander
-    }
-    factory.onBind { listItem in
-        let expander = listItem.child?.cast(TreeExpander.self)
-        if let item = listItem.item {
-            expander.setListRow(item.opaquePointer)
+        // Tree data — each node has a label and optional children
+        struct TreeNode {
+            let label: String
+            let children: [TreeNode]
         }
-    }
 
-    let selection = SingleSelection(model: treeModel)
-    let listView = ListView(model: selection, factory: factory)
-    """
+        let tree: [TreeNode] = [
+            TreeNode(label: "src", children: [
+                TreeNode(label: "main.swift", children: []),
+                TreeNode(label: "utils.swift", children: []),
+            ]),
+            TreeNode(label: "tests", children: [
+                TreeNode(label: "test_main.swift", children: []),
+            ]),
+        ]
+
+        // Flatten to index-based parallel arrays, then:
+        let rootStore = ListStore()
+        for _ in rootItems { rootStore.appendPlaceholder() }
+
+        let treeModel = TreeListModel(
+            root: rootStore,
+            passthrough: false,    // wrap items in TreeListRow
+            autoexpand: false
+        ) { item in
+            // Return a ListStore for children, or nil for leaves
+            let childStore = ListStore()
+            for _ in children { childStore.appendPlaceholder() }
+            return childStore
+        }
+
+        // Factory with TreeExpander for indent + expand arrows
+        let factory = SignalListItemFactory()
+        factory.onSetup { listItem in
+            let expander = TreeExpander()
+            expander.child = Label("")
+            listItem.child = expander
+        }
+        factory.onBind { listItem in
+            let expander = listItem.child?.cast(TreeExpander.self)
+            if let item = listItem.item {
+                expander.setListRow(item.opaquePointer)
+            }
+        }
+
+        let selection = SingleSelection(model: treeModel)
+        let listView = ListView(model: selection, factory: factory)
+        """
 
     func buildWidget() -> Widget {
         // Tree data structure
@@ -69,28 +69,38 @@ struct TreeListExample: DemoExample {
 
         // A project file tree
         let tree: [TreeNode] = [
-            TreeNode(label: "Sources", icon: "folder-symbolic", children: [
-                TreeNode(label: "App", icon: "folder-symbolic", children: [
-                    TreeNode(label: "main.swift", icon: "text-x-generic-symbolic", children: []),
-                    TreeNode(label: "AppDelegate.swift", icon: "text-x-generic-symbolic", children: []),
-                    TreeNode(label: "Views", icon: "folder-symbolic", children: [
-                        TreeNode(label: "ContentView.swift", icon: "text-x-generic-symbolic", children: []),
-                        TreeNode(label: "SidebarView.swift", icon: "text-x-generic-symbolic", children: []),
-                        TreeNode(label: "DetailView.swift", icon: "text-x-generic-symbolic", children: [])
-                    ])
+            TreeNode(
+                label: "Sources", icon: "folder-symbolic",
+                children: [
+                    TreeNode(
+                        label: "App", icon: "folder-symbolic",
+                        children: [
+                            TreeNode(label: "main.swift", icon: "text-x-generic-symbolic", children: []),
+                            TreeNode(label: "AppDelegate.swift", icon: "text-x-generic-symbolic", children: []),
+                            TreeNode(
+                                label: "Views", icon: "folder-symbolic",
+                                children: [
+                                    TreeNode(label: "ContentView.swift", icon: "text-x-generic-symbolic", children: []),
+                                    TreeNode(label: "SidebarView.swift", icon: "text-x-generic-symbolic", children: []),
+                                    TreeNode(label: "DetailView.swift", icon: "text-x-generic-symbolic", children: []),
+                                ]),
+                        ]),
+                    TreeNode(
+                        label: "Library", icon: "folder-symbolic",
+                        children: [
+                            TreeNode(label: "Networking.swift", icon: "text-x-generic-symbolic", children: []),
+                            TreeNode(label: "Database.swift", icon: "text-x-generic-symbolic", children: []),
+                        ]),
                 ]),
-                TreeNode(label: "Library", icon: "folder-symbolic", children: [
-                    TreeNode(label: "Networking.swift", icon: "text-x-generic-symbolic", children: []),
-                    TreeNode(label: "Database.swift", icon: "text-x-generic-symbolic", children: [])
-                ])
-            ]),
-            TreeNode(label: "Tests", icon: "folder-symbolic", children: [
-                TreeNode(label: "AppTests.swift", icon: "text-x-generic-symbolic", children: []),
-                TreeNode(label: "LibraryTests.swift", icon: "text-x-generic-symbolic", children: [])
-            ]),
+            TreeNode(
+                label: "Tests", icon: "folder-symbolic",
+                children: [
+                    TreeNode(label: "AppTests.swift", icon: "text-x-generic-symbolic", children: []),
+                    TreeNode(label: "LibraryTests.swift", icon: "text-x-generic-symbolic", children: []),
+                ]),
             TreeNode(label: "Package.swift", icon: "text-x-generic-symbolic", children: []),
             TreeNode(label: "README.md", icon: "text-x-generic-symbolic", children: []),
-            TreeNode(label: ".gitignore", icon: "text-x-generic-symbolic", children: [])
+            TreeNode(label: ".gitignore", icon: "text-x-generic-symbolic", children: []),
         ]
 
         // Flatten tree nodes into a lookup table keyed by index.
@@ -144,13 +154,14 @@ struct TreeListExample: DemoExample {
         // TreeListModel — creates child stores lazily
         let treeModel = TreeListModel(
             root: rootStore,
-            passthrough: false, // items wrapped in GtkTreeListRow
-            autoexpand: false // user expands manually
+            passthrough: false,  // items wrapped in GtkTreeListRow
+            autoexpand: false  // user expands manually
         ) { [data, ptrMap] item in
             // Look up which node this item corresponds to
             guard let nodeIndex = ptrMap.map[item.pointer],
-                  let node = data.nodes[nodeIndex],
-                  !node.children.isEmpty else {
+                let node = data.nodes[nodeIndex],
+                !node.children.isEmpty
+            else {
                 return nil
             }
 
@@ -190,9 +201,10 @@ struct TreeListExample: DemoExample {
                 // The underlying item is inside the TreeListRow
                 let treeRow = TreeListRow(borrowing: treeRowObj.pointer)
                 if let underlyingItem = treeRow.item,
-                   let nodeIndex = ptrMap.map[underlyingItem.pointer],
-                   let node = data.nodes[nodeIndex],
-                   let box = expander.child {
+                    let nodeIndex = ptrMap.map[underlyingItem.pointer],
+                    let node = data.nodes[nodeIndex],
+                    let box = expander.child
+                {
                     let icon = box.firstChild!.cast(Image.self)
                     let label = box.lastChild!.cast(Label.self)
 

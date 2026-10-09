@@ -346,9 +346,12 @@ struct AdvancedFeatureTests {
         ensureAdwInit()
         let label1 = Label("Hello")
         let label2 = Label("World")
-        label1.bind(.label, to: label2, property: .label,
-                    flags: GBindingFlags(rawValue: GBindingFlags.bidirectional.rawValue | GBindingFlags.syncCreate
-                        .rawValue))
+        label1.bind(
+            .label, to: label2, property: .label,
+            flags: GBindingFlags(
+                rawValue: GBindingFlags.bidirectional.rawValue
+                    | GBindingFlags.syncCreate
+                    .rawValue))
         #expect(label2.text == "Hello")
     }
 
@@ -436,7 +439,7 @@ struct AdvancedFeatureTests {
         let dialog = FileDialog()
         dialog.setFilters([
             FileFilter(name: "Swift", suffixes: ["swift"]),
-            FileFilter(name: "All", patterns: ["*"])
+            FileFilter(name: "All", patterns: ["*"]),
         ])
         dialog.acceptLabel = "Choose"
         #expect(dialog.acceptLabel == "Choose")

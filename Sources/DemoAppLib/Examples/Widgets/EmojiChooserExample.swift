@@ -10,16 +10,16 @@ struct EmojiChooserExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let menuBtn = MenuButton()
-    menuBtn.label = "Pick Emoji"
+        let menuBtn = MenuButton()
+        menuBtn.label = "Pick Emoji"
 
-    let emojiChooser = EmojiChooser()
-    menuBtn.popover = emojiChooser
+        let emojiChooser = EmojiChooser()
+        menuBtn.popover = emojiChooser
 
-    emojiChooser.onEmojiPicked { emoji in
-        print("Picked: \\(emoji)")
-    }
-    """
+        emojiChooser.onEmojiPicked { emoji in
+            print("Picked: \\(emoji)")
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 16)

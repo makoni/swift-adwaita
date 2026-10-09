@@ -10,25 +10,25 @@ struct EntryExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // GtkEntry — basic text input
-    let entry = Entry()
-    entry.placeholderText = "Type something..."
-    entry.onActivate {
-        print("Entered: \\(entry.text)")
-    }
+        // GtkEntry — basic text input
+        let entry = Entry()
+        entry.placeholderText = "Type something..."
+        entry.onActivate {
+            print("Entered: \\(entry.text)")
+        }
 
-    // AdwEntryRow — entry inside a list row
-    let entryRow = EntryRow()
-    entryRow.title = "Username"
+        // AdwEntryRow — entry inside a list row
+        let entryRow = EntryRow()
+        entryRow.title = "Username"
 
-    // AdwPasswordEntryRow — masked input
-    let passwordRow = PasswordEntryRow()
-    passwordRow.title = "Password"
+        // AdwPasswordEntryRow — masked input
+        let passwordRow = PasswordEntryRow()
+        passwordRow.title = "Password"
 
-    // GtkSearchEntry — search-styled input
-    let searchEntry = SearchEntry()
-    searchEntry.placeholderText = "Search..."
-    """
+        // GtkSearchEntry — search-styled input
+        let searchEntry = SearchEntry()
+        searchEntry.placeholderText = "Search..."
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

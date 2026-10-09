@@ -244,7 +244,7 @@ struct StyleTagTests {
             .easeInQuad, .easeOutQuad, .easeInOutQuad,
             .easeInQuart, .easeOutQuart, .easeInOutQuart,
             .easeInQuint, .easeOutQuint, .easeInOutQuint,
-            .easeInBounce, .easeOutBounce, .easeInOutBounce
+            .easeInBounce, .easeOutBounce, .easeInOutBounce,
         ]
         // All should be distinct
         let unique = Set(easings.map { $0.rawValue })

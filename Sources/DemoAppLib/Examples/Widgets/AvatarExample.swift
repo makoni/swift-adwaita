@@ -10,18 +10,18 @@ struct AvatarExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // Small avatar
-    let small = Avatar(size: 32, text: "John Doe", showInitials: true)
+        // Small avatar
+        let small = Avatar(size: 32, text: "John Doe", showInitials: true)
 
-    // Medium avatar
-    let medium = Avatar(size: 48, text: "Jane Smith", showInitials: true)
+        // Medium avatar
+        let medium = Avatar(size: 48, text: "Jane Smith", showInitials: true)
 
-    // Large avatar
-    let large = Avatar(size: 96, text: "Alice", showInitials: true)
+        // Large avatar
+        let large = Avatar(size: 96, text: "Alice", showInitials: true)
 
-    // Avatar without initials (shows fallback icon)
-    let fallback = Avatar(size: 64, text: nil, showInitials: false)
-    """
+        // Avatar without initials (shows fallback icon)
+        let fallback = Avatar(size: 64, text: nil, showInitials: false)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -65,7 +65,7 @@ struct AvatarExample: DemoExample {
         let users: [(String, String, String)] = [
             ("Alice Wonderland", "AW", "@alice.wonderland"),
             ("Bob Builder", "BB", "@bob.builder"),
-            ("Charlie Chaplin", "CC", "@charlie.chaplin")
+            ("Charlie Chaplin", "CC", "@charlie.chaplin"),
         ]
         for (fullName, initials, handle) in users {
             let row = ActionRow()

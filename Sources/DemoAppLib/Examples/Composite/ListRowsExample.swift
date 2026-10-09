@@ -10,46 +10,46 @@ struct ListRowsExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let group = PreferencesGroup()
-    group.title = "List Rows"
-    group.description = "Various row types for lists"
+        let group = PreferencesGroup()
+        group.title = "List Rows"
+        group.description = "Various row types for lists"
 
-    // Simple action row
-    let row1 = ActionRow()
-    row1.title = "Wi-Fi"
-    row1.subtitle = "Connected"
-    let wifiIcon = Image(iconName: "network-wireless-symbolic")
-    row1.addPrefix(wifiIcon)
-    group.add(row1)
+        // Simple action row
+        let row1 = ActionRow()
+        row1.title = "Wi-Fi"
+        row1.subtitle = "Connected"
+        let wifiIcon = Image(iconName: "network-wireless-symbolic")
+        row1.addPrefix(wifiIcon)
+        group.add(row1)
 
-    // Action row with switch suffix
-    let row2 = ActionRow()
-    row2.title = "Bluetooth"
-    row2.subtitle = "Disabled"
-    let btIcon = Image(iconName: "bluetooth-symbolic")
-    row2.addPrefix(btIcon)
-    let btSwitch = Switch()
-    btSwitch.valign = .center
-    row2.addSuffix(btSwitch)
-    group.add(row2)
+        // Action row with switch suffix
+        let row2 = ActionRow()
+        row2.title = "Bluetooth"
+        row2.subtitle = "Disabled"
+        let btIcon = Image(iconName: "bluetooth-symbolic")
+        row2.addPrefix(btIcon)
+        let btSwitch = Switch()
+        btSwitch.valign = .center
+        row2.addSuffix(btSwitch)
+        group.add(row2)
 
-    // Expander row with nested rows
-    let expander = ExpanderRow()
-    expander.title = "Privacy"
-    expander.subtitle = "Location, Camera, Microphone"
-    let privIcon = Image(iconName: "security-high-symbolic")
-    expander.addPrefix(privIcon)
+        // Expander row with nested rows
+        let expander = ExpanderRow()
+        expander.title = "Privacy"
+        expander.subtitle = "Location, Camera, Microphone"
+        let privIcon = Image(iconName: "security-high-symbolic")
+        expander.addPrefix(privIcon)
 
-    let locRow = ActionRow()
-    locRow.title = "Location Services"
-    expander.addRow(locRow)
+        let locRow = ActionRow()
+        locRow.title = "Location Services"
+        expander.addRow(locRow)
 
-    let camRow = ActionRow()
-    camRow.title = "Camera Access"
-    expander.addRow(camRow)
+        let camRow = ActionRow()
+        camRow.title = "Camera Access"
+        expander.addRow(camRow)
 
-    group.add(expander)
-    """
+        group.add(expander)
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

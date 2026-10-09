@@ -11,23 +11,23 @@ struct MenuBarExample: DemoExample {
     let opensInWindow = true
 
     let sourceCode = """
-    // Build menu model
-    let fileMenu = GMenuRef()
-    fileMenu.append("New", action: "win.new")
-    fileMenu.append("Open...", action: "win.open")
-    fileMenu.append("Save", action: "win.save")
+        // Build menu model
+        let fileMenu = GMenuRef()
+        fileMenu.append("New", action: "win.new")
+        fileMenu.append("Open...", action: "win.open")
+        fileMenu.append("Save", action: "win.save")
 
-    let editMenu = GMenuRef()
-    editMenu.append("Cut", action: "win.cut")
-    editMenu.append("Copy", action: "win.copy")
-    editMenu.append("Paste", action: "win.paste")
+        let editMenu = GMenuRef()
+        editMenu.append("Cut", action: "win.cut")
+        editMenu.append("Copy", action: "win.copy")
+        editMenu.append("Paste", action: "win.paste")
 
-    let menuModel = GMenuRef()
-    menuModel.appendSubmenu("File", submenu: fileMenu)
-    menuModel.appendSubmenu("Edit", submenu: editMenu)
+        let menuModel = GMenuRef()
+        menuModel.appendSubmenu("File", submenu: fileMenu)
+        menuModel.appendSubmenu("Edit", submenu: editMenu)
 
-    let menuBar = PopoverMenuBar(model: menuModel)
-    """
+        let menuBar = PopoverMenuBar(model: menuModel)
+        """
 
     func buildWidget() -> Widget {
         // Build the menu model
@@ -79,7 +79,7 @@ struct MenuBarExample: DemoExample {
             "new", "open", "save", "quit",
             "cut", "copy", "paste", "selectall",
             "zoomin", "zoomout", "resetzoom",
-            "docs", "about"
+            "docs", "about",
         ]
         for name in actionNames {
             let action = SimpleAction(name: name)

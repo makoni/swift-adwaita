@@ -201,17 +201,20 @@ public func configureLocalization(
 /// packaging change before shipping it.
 public func catalogueLanguages(in directory: String, domain: String) -> Set<String> {
     let fileManager = FileManager.default
-    guard let entries = try? fileManager.contentsOfDirectory(
-        at: URL(fileURLWithPath: directory, isDirectory: true),
-        includingPropertiesForKeys: nil
-    ) else {
+    guard
+        let entries = try? fileManager.contentsOfDirectory(
+            at: URL(fileURLWithPath: directory, isDirectory: true),
+            includingPropertiesForKeys: nil
+        )
+    else {
         return []
     }
 
     return Set(
         entries.filter { entry in
             fileManager.fileExists(
-                atPath: entry
+                atPath:
+                    entry
                     .appendingPathComponent("LC_MESSAGES", isDirectory: true)
                     .appendingPathComponent("\(domain).mo", isDirectory: false)
                     .path
@@ -362,7 +365,8 @@ private func defaultLocaleCandidates(for language: String) -> [String] {
 /// Foundation formats, come up translated.
 private func ensureMessagesLocaleIsNotC(candidates: [String]) -> Bool {
     if let current = cadw_current_messages_locale(),
-       !isCLocaleName(String(cString: current)) {
+        !isCLocaleName(String(cString: current))
+    {
         return true
     }
     // Skip candidates that are themselves C-locale names. `C.UTF-8` is
@@ -372,7 +376,8 @@ private func ensureMessagesLocaleIsNotC(candidates: [String]) -> Bool {
     // before the rejection.
     for candidate in candidates where !isCLocaleName(candidate) {
         if let applied = candidate.withCString({ cadw_set_messages_locale($0) }),
-           !isCLocaleName(String(cString: applied)) {
+            !isCLocaleName(String(cString: applied))
+        {
             exportMessagesLocale(String(cString: applied))
             return true
         }

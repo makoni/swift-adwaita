@@ -180,21 +180,24 @@ public final class ScrolledWindow: Widget {
         didQueueAnimation: (() -> Void)? = nil
     ) {
         let adjustment = verticalAdjustment
-        let focusAction = focusAction ?? { [weak focusTarget] in
-            focusTarget?.grabFocus() ?? false
-        }
+        let focusAction =
+            focusAction ?? { [weak focusTarget] in
+                focusTarget?.grabFocus() ?? false
+            }
         func grabFocusIfNeeded() {
             guard !preserveFocus else { return }
             _ = focusAction()
         }
-        guard let clampedTarget = Self.targetVerticalOffset(
-            visibleTop: adjustment.value,
-            pageSize: adjustment.pageSize,
-            childTop: childTop,
-            childHeight: childHeight,
-            lower: adjustment.lower,
-            upper: adjustment.upper
-        ) else {
+        guard
+            let clampedTarget = Self.targetVerticalOffset(
+                visibleTop: adjustment.value,
+                pageSize: adjustment.pageSize,
+                childTop: childTop,
+                childHeight: childHeight,
+                lower: adjustment.lower,
+                upper: adjustment.upper
+            )
+        else {
             grabFocusIfNeeded()
             return
         }

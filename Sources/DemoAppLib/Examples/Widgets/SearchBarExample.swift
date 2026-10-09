@@ -10,22 +10,22 @@ struct SearchBarExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let searchBar = SearchBar()
-    let entry = SearchEntry()
-    searchBar.child = entry
-    searchBar.connectEntry(entry)
-    searchBar.setKeyCaptureWidget(window)
-    searchBar.showCloseButton = true
+        let searchBar = SearchBar()
+        let entry = SearchEntry()
+        searchBar.child = entry
+        searchBar.connectEntry(entry)
+        searchBar.setKeyCaptureWidget(window)
+        searchBar.showCloseButton = true
 
-    // Toggle search mode
-    searchBar.searchModeEnabled = true
+        // Toggle search mode
+        searchBar.searchModeEnabled = true
 
-    // Connect to entry
-    entry.onSearchChanged {
-        let query = entry.text
-        print("Searching: \\(query)")
-    }
-    """
+        // Connect to entry
+        entry.onSearchChanged {
+            let query = entry.text
+            print("Searching: \\(query)")
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

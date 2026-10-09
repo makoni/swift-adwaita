@@ -163,11 +163,13 @@ public final class TabOverview: Widget {
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onExtraDragDrop(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> Bool)
-        -> SignalConnection {
-        SignalHelper.connectPointerGValueReturnBool(self, signal: .extraDragDrop) { (
-            ptr: OpaquePointer,
-            val: UnsafePointer<GValue>
-        ) in
+        -> SignalConnection
+    {
+        SignalHelper.connectPointerGValueReturnBool(self, signal: .extraDragDrop) {
+            (
+                ptr: OpaquePointer,
+                val: UnsafePointer<GValue>
+            ) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), val)
         }
     }
@@ -179,11 +181,13 @@ public final class TabOverview: Widget {
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onExtraDragValue(_ handler: @escaping @MainActor (TabPage, UnsafePointer<GValue>) -> GdkDragAction)
-        -> SignalConnection {
-        SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: .extraDragValue) { (
-            ptr: OpaquePointer,
-            val: UnsafePointer<GValue>
-        ) in
+        -> SignalConnection
+    {
+        SignalHelper.connectPointerGValueReturnGdkDragAction(self, signal: .extraDragValue) {
+            (
+                ptr: OpaquePointer,
+                val: UnsafePointer<GValue>
+            ) in
             handler(TabPage(borrowing: UnsafeMutableRawPointer(ptr)), val)
         }
     }

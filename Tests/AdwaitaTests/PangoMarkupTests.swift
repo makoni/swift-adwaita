@@ -20,7 +20,7 @@ struct PangoMarkupTests {
                 #"foo<a href="javascript:alert(1)">x</a>bar"#,
                 "foo&lt;a href=&quot;javascript:alert(1)&quot;&gt;x&lt;/a&gt;bar"
             ),
-            ("&amp;", "&amp;amp;")
+            ("&amp;", "&amp;amp;"),
         ]
 
         for (input, expected) in cases {

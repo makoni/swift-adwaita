@@ -10,35 +10,35 @@ struct DataBindingExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    var counter = 0
-    let maxValue = 20
+        var counter = 0
+        let maxValue = 20
 
-    // Multiple widgets reflecting the same value
-    let countLabel = Label("0")
-    let progressBar = ProgressBar()
-    let levelBar = LevelBar(min: 0, max: Double(maxValue))
+        // Multiple widgets reflecting the same value
+        let countLabel = Label("0")
+        let progressBar = ProgressBar()
+        let levelBar = LevelBar(min: 0, max: Double(maxValue))
 
-    // Helper to update all views from one data source
-    func updateAll() {
-        countLabel.text = "\\(counter)"
-        progressBar.fraction = Double(counter) / Double(maxValue)
-        levelBar.value = Double(counter)
-    }
+        // Helper to update all views from one data source
+        func updateAll() {
+            countLabel.text = "\\(counter)"
+            progressBar.fraction = Double(counter) / Double(maxValue)
+            levelBar.value = Double(counter)
+        }
 
-    // Buttons mutate the model, then update all views
-    incrementBtn.onClicked {
-        counter = min(counter + 1, maxValue)
-        updateAll()
-    }
-    decrementBtn.onClicked {
-        counter = max(counter - 1, 0)
-        updateAll()
-    }
-    resetBtn.onClicked {
-        counter = 0
-        updateAll()
-    }
-    """
+        // Buttons mutate the model, then update all views
+        incrementBtn.onClicked {
+            counter = min(counter + 1, maxValue)
+            updateAll()
+        }
+        decrementBtn.onClicked {
+            counter = max(counter - 1, 0)
+            updateAll()
+        }
+        resetBtn.onClicked {
+            counter = 0
+            updateAll()
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

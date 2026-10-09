@@ -10,16 +10,16 @@ struct InlineViewSwitcherExample: DemoExample {
     let category: ExampleCategory = .composite
 
     let sourceCode = """
-    let stack = ViewStack()
-    stack.addTitledWithIcon(page, name: "a", title: "A", iconName: "a-symbolic")
+        let stack = ViewStack()
+        stack.addTitledWithIcon(page, name: "a", title: "A", iconName: "a-symbolic")
 
-    // Compact segmented-control switcher for a ViewStack (libadwaita 1.7+)
-    if let switcher = InlineViewSwitcher() {
-        switcher.stack = stack
-        switcher.displayMode = .both
-        switcher.canShrink = true
-    }
-    """
+        // Compact segmented-control switcher for a ViewStack (libadwaita 1.7+)
+        if let switcher = InlineViewSwitcher() {
+            switcher.stack = stack
+            switcher.displayMode = .both
+            switcher.canShrink = true
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -80,9 +80,11 @@ struct InlineViewSwitcherExample: DemoExample {
             switcher.stack = stack
             switcher.displayMode = .both
 
-            for (label, mode) in [("Icons", InlineViewSwitcher.DisplayMode.icons),
-                                  ("Labels", .labels),
-                                  ("Both", .both)] {
+            for (label, mode) in [
+                ("Icons", InlineViewSwitcher.DisplayMode.icons),
+                ("Labels", .labels),
+                ("Both", .both),
+            ] {
                 let btn = Button(label: label)
                 btn.addCSSClass("pill")
                 btn.onClicked { [switcher] in

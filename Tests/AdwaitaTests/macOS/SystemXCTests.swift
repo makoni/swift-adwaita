@@ -201,7 +201,7 @@ final class SystemXCTests: XCTestCase {
         // requires a running event loop so we just check availability
         let box = Box(orientation: .vertical, spacing: 0)
         let clipboard = box.clipboard
-        _ = clipboard // async methods available: readText(), readTexture()
+        _ = clipboard  // async methods available: readText(), readTexture()
     }
 
     // MARK: - Paste-clipboard hook
@@ -233,7 +233,7 @@ final class SystemXCTests: XCTestCase {
         // to disk).
         let pixels: [UInt8] = [
             255, 0, 0, 255, /* */ 0, 255, 0, 255,
-            0, 0, 255, 255, /* */ 255, 255, 0, 255
+            0, 0, 255, 255, /* */ 255, 255, 0, 255,
         ]
         let texture = Texture(rgbaData: pixels, width: 2, height: 2)
 
@@ -318,7 +318,7 @@ final class SystemXCTests: XCTestCase {
         var called = false
         win.onCloseRequest {
             called = true
-            return true // prevent closing
+            return true  // prevent closing
         }
         // Signal handler connected successfully
         XCTAssertFalse(called)

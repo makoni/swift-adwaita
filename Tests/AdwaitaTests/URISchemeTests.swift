@@ -33,14 +33,15 @@ struct URISchemeTests {
                 "vbscript:msgbox(1)",
                 "custom:thing",
                 "bareword",
-                ""
+                "",
             ]
         )
     }
 
     @Test @MainActor func fileSchemeIsRejectedWhenNotAllowlisted() {
         var rejected: [String] = []
-        let handler = URIScheme.allowlist(.https) { _ in } onReject: { uri in
+        let handler = URIScheme.allowlist(.https) { _ in
+        } onReject: { uri in
             rejected.append(uri)
         }
 

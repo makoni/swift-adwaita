@@ -102,12 +102,13 @@ struct SignalLifecycleTests {
         let button = Button(label: "Test")
         let conn = button.onClicked {}
         conn.disconnect()
-        conn.disconnect() // Should not crash
+        conn.disconnect()  // Should not crash
     }
 
     @Test @MainActor func multipleSignalConnectionsIndependent() {
         ensureAdwInit()
-        var a = 0, b = 0
+        var a = 0
+        var b = 0
         let sw = Switch()
         let connA = sw.onActiveChanged { a += 1 }
         sw.onActiveChanged { b += 1 }
@@ -135,7 +136,7 @@ struct SignalLifecycleTests {
         let sw = Switch()
         sw.active = false
         sw.onActiveChanged { count += 1 }
-        sw.active = false // Same value
+        sw.active = false  // Same value
         #expect(count == 0, "Notify should not fire when value doesn't change")
     }
 

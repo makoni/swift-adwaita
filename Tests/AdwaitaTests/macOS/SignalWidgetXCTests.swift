@@ -29,15 +29,19 @@ final class SignalWidgetXCTests: XCTestCase {
             .connectBool
         let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer) -> Void) -> SignalConnection = SignalHelper
             .connectPointer
-        let _: (GObjectRef, SignalName, @escaping @MainActor (Double, Double) -> Void)
-            -> SignalConnection = SignalHelper.connectDoubleDouble
-        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, Int32) -> Void)
-            -> SignalConnection = SignalHelper.connectPointerInt
+        let _:
+            (GObjectRef, SignalName, @escaping @MainActor (Double, Double) -> Void)
+                -> SignalConnection = SignalHelper.connectDoubleDouble
+        let _:
+            (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, Int32) -> Void)
+                -> SignalConnection = SignalHelper.connectPointerInt
         let _: (GObjectRef, PropertyName, @escaping @MainActor () -> Void) -> SignalConnection = SignalHelper.onNotify
-        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> Bool)
-            -> SignalConnection = SignalHelper.connectPointerGValueReturnBool
-        let _: (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction)
-            -> SignalConnection = SignalHelper.connectPointerGValueReturnGdkDragAction
+        let _:
+            (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> Bool)
+                -> SignalConnection = SignalHelper.connectPointerGValueReturnBool
+        let _:
+            (GObjectRef, SignalName, @escaping @MainActor (OpaquePointer, UnsafePointer<GValue>) -> GdkDragAction)
+                -> SignalConnection = SignalHelper.connectPointerGValueReturnGdkDragAction
     }
 
     @MainActor func test_applicationOpenApiSurfaceExists() {
@@ -76,7 +80,7 @@ final class SignalWidgetXCTests: XCTestCase {
             TabView.self, TabBar.self, TabOverview.self,
             NavigationView.self, NavigationPage.self,
             AlertDialog.self, Carousel.self, Toast.self,
-            SwipeTracker.self, SpinRow.self
+            SwipeTracker.self, SpinRow.self,
         ]
         XCTAssertTrue(signalTypes.count >= 10)
     }

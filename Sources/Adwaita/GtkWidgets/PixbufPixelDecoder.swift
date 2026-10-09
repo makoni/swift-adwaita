@@ -25,7 +25,8 @@ enum PixbufPixelDecoder {
     static func decode(at fileURL: URL) throws -> DecodedPixels {
         var error: UnsafeMutablePointer<GError>?
         guard let pixbuf = gdk_pixbuf_new_from_file(fileURL.path, &error) else {
-            let message = error.map { String(cString: $0.pointee.message) }
+            let message =
+                error.map { String(cString: $0.pointee.message) }
                 ?? "gdk_pixbuf_new_from_file returned NULL"
             if let error { g_error_free(error) }
             throw ImageDecodingError.decodeFailed(message)

@@ -10,15 +10,15 @@ struct StackSwitcherExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let stack = Stack()
-    stack.transitionType = .slideLeftRight
+        let stack = Stack()
+        stack.transitionType = .slideLeftRight
 
-    stack.addTitled(page1, name: "page1", title: "Page 1")
-    stack.addTitled(page2, name: "page2", title: "Page 2")
+        stack.addTitled(page1, name: "page1", title: "Page 1")
+        stack.addTitled(page2, name: "page2", title: "Page 2")
 
-    let switcher = StackSwitcher()
-    switcher.stack = stack
-    """
+        let switcher = StackSwitcher()
+        switcher.stack = stack
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

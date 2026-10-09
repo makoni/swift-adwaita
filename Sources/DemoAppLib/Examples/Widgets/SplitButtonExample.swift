@@ -10,26 +10,26 @@ struct SplitButtonExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let splitBtn = SplitButton()
-    splitBtn.label = "Action"
+        let splitBtn = SplitButton()
+        splitBtn.label = "Action"
 
-    // Use a popover with custom content
-    let popover = Popover()
-    let popBox = Box(orientation: .vertical, spacing: 4)
-    let optBtn = Button(label: "Option A")
-    optBtn.addCSSClass("flat")
-    optBtn.onClicked {
-        print("Option A selected")
-        popover.popdown()
-    }
-    popBox.append(optBtn)
-    popover.child = popBox
-    splitBtn.setPopover(popover)
+        // Use a popover with custom content
+        let popover = Popover()
+        let popBox = Box(orientation: .vertical, spacing: 4)
+        let optBtn = Button(label: "Option A")
+        optBtn.addCSSClass("flat")
+        optBtn.onClicked {
+            print("Option A selected")
+            popover.popdown()
+        }
+        popBox.append(optBtn)
+        popover.child = popBox
+        splitBtn.setPopover(popover)
 
-    splitBtn.onClicked {
-        print("Main button clicked")
-    }
-    """
+        splitBtn.onClicked {
+            print("Main button clicked")
+        }
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

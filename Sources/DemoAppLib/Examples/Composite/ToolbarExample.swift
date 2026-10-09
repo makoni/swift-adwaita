@@ -11,37 +11,37 @@ struct ToolbarExample: DemoExample {
     let opensInWindow = true
 
     let sourceCode = """
-    let toolbarView = ToolbarView()
+        let toolbarView = ToolbarView()
 
-    // Top bar with custom title widget
-    let headerBar = HeaderBar()
-    let title = WindowTitle(title: "My App", subtitle: "Toolbar Example")
-    headerBar.titleWidget = title
+        // Top bar with custom title widget
+        let headerBar = HeaderBar()
+        let title = WindowTitle(title: "My App", subtitle: "Toolbar Example")
+        headerBar.titleWidget = title
 
-    let searchBtn = Button(iconName: "system-search-symbolic")
-    searchBtn.addCSSClass("flat")
-    headerBar.packEnd(searchBtn)
+        let searchBtn = Button(iconName: "system-search-symbolic")
+        searchBtn.addCSSClass("flat")
+        headerBar.packEnd(searchBtn)
 
-    let menuBtn = Button(iconName: "open-menu-symbolic")
-    menuBtn.addCSSClass("flat")
-    headerBar.packEnd(menuBtn)
+        let menuBtn = Button(iconName: "open-menu-symbolic")
+        menuBtn.addCSSClass("flat")
+        headerBar.packEnd(menuBtn)
 
-    toolbarView.addTopBar(headerBar)
+        toolbarView.addTopBar(headerBar)
 
-    // Content
-    let content = StatusPage()
-    content.title = "Content Area"
-    content.description = "This is the main content"
-    toolbarView.content = content
+        // Content
+        let content = StatusPage()
+        content.title = "Content Area"
+        content.description = "This is the main content"
+        toolbarView.content = content
 
-    // Bottom bar
-    let bottomBar = Box(orientation: .horizontal, spacing: 6)
-    bottomBar.halign = .center
-    bottomBar.setMargins(6)
-    let bottomLabel = Label("Bottom Toolbar")
-    bottomBar.append(bottomLabel)
-    toolbarView.addBottomBar(bottomBar)
-    """
+        // Bottom bar
+        let bottomBar = Box(orientation: .horizontal, spacing: 6)
+        bottomBar.halign = .center
+        bottomBar.setMargins(6)
+        let bottomLabel = Label("Bottom Toolbar")
+        bottomBar.append(bottomLabel)
+        toolbarView.addBottomBar(bottomBar)
+        """
 
     func buildWidget() -> Widget {
         let toolbarView = ToolbarView()

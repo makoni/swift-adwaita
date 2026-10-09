@@ -212,7 +212,7 @@ struct SystemTests {
         // requires a running event loop so we just check availability
         let box = Box(orientation: .vertical, spacing: 0)
         let clipboard = box.clipboard
-        _ = clipboard // async methods available: readText(), readTexture()
+        _ = clipboard  // async methods available: readText(), readTexture()
     }
 
     // MARK: - Paste-clipboard hook
@@ -244,7 +244,7 @@ struct SystemTests {
         // to disk).
         let pixels: [UInt8] = [
             255, 0, 0, 255, /* */ 0, 255, 0, 255,
-            0, 0, 255, 255, /* */ 255, 255, 0, 255
+            0, 0, 255, 255, /* */ 255, 255, 0, 255,
         ]
         let texture = Texture(rgbaData: pixels, width: 2, height: 2)
 
@@ -330,7 +330,7 @@ struct SystemTests {
         var called = false
         win.onCloseRequest {
             called = true
-            return true // prevent closing
+            return true  // prevent closing
         }
         // Signal handler connected successfully
         #expect(!called)

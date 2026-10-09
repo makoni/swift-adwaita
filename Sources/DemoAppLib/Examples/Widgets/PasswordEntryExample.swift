@@ -10,14 +10,14 @@ struct PasswordEntryExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // AdwEntryRow — text input in a list
-    let entryRow = EntryRow()
-    entryRow.title = "Username"
+        // AdwEntryRow — text input in a list
+        let entryRow = EntryRow()
+        entryRow.title = "Username"
 
-    // AdwPasswordEntryRow — password input with reveal toggle
-    let passRow = PasswordEntryRow()
-    passRow.title = "Password"
-    """
+        // AdwPasswordEntryRow — password input with reveal toggle
+        let passRow = PasswordEntryRow()
+        passRow.title = "Password"
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)

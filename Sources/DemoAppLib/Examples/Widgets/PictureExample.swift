@@ -10,24 +10,24 @@ struct PictureExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    let picture = Picture(filename: "/path/to/image.png")
-    picture.contentFit = .contain
-    picture.canShrink = true
-    picture.alternativeText = "A photo"
+        let picture = Picture(filename: "/path/to/image.png")
+        picture.contentFit = .contain
+        picture.canShrink = true
+        picture.alternativeText = "A photo"
 
-    // Or create from a Texture
-    let texture = Texture(rgbaData: pixels, width: 200, height: 150)
-    picture.setPaintable(texture)
+        // Or create from a Texture
+        let texture = Texture(rgbaData: pixels, width: 200, height: 150)
+        picture.setPaintable(texture)
 
-    // Load via FileDialog — callback form is the one that works
-    // inside a running GTK application.
-    let dialog = FileDialog()
-    dialog.open(parent: window) { result in
-        if case .success(let path?) = result {
-            picture.setFilename(path)
+        // Load via FileDialog — callback form is the one that works
+        // inside a running GTK application.
+        let dialog = FileDialog()
+        dialog.open(parent: window) { result in
+            if case .success(let path?) = result {
+                picture.setFilename(path)
+            }
         }
-    }
-    """
+        """
 
     func buildWidget() -> Widget {
         let box = Box(orientation: .vertical, spacing: 24)
@@ -75,10 +75,10 @@ struct PictureExample: DemoExample {
             dialog.title = "Open Image"
             dialog.setFilters([
                 FileFilter(name: "Images", suffixes: ["png", "jpg", "jpeg", "webp", "svg", "bmp", "gif"]),
-                FileFilter(name: "All files", patterns: ["*"])
+                FileFilter(name: "All files", patterns: ["*"]),
             ])
             dialog.open(parent: box.root) { [picture] result in
-                if case let .success(path?) = result {
+                if case .success(let path?) = result {
                     picture.setFilename(path)
                 }
             }

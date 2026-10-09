@@ -10,17 +10,17 @@ struct SpinnerExample: DemoExample {
     let category: ExampleCategory = .widgets
 
     let sourceCode = """
-    // AdwSpinner — always animating loading indicator
-    let spinner = Spinner()
+        // AdwSpinner — always animating loading indicator
+        let spinner = Spinner()
 
-    // Larger spinner via size request
-    let bigSpinner = Spinner()
-    bigSpinner.setSizeRequest(width: 48, height: 48)
+        // Larger spinner via size request
+        let bigSpinner = Spinner()
+        bigSpinner.setSizeRequest(width: 48, height: 48)
 
-    // Spinner can be shown/hidden with .visible
-    spinner.visible = true   // show
-    spinner.visible = false  // hide
-    """
+        // Spinner can be shown/hidden with .visible
+        spinner.visible = true   // show
+        spinner.visible = false  // hide
+        """
 
     func buildWidget() -> Widget {
         guard let spinner1 = Spinner(), let spinner2 = Spinner(), let spinner3 = Spinner() else {
