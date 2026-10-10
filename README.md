@@ -326,7 +326,8 @@ Swift's default `MainActor` executor is `DispatchQueue.main`, and the GLib main 
 let dialog = FileDialog()
 dialog.title = "Open a File"
 
-openButton.onClicked {
+openButton.onClicked { [weak window] in
+    guard let window else { return }
     dialog.open(parent: window) { result in
         switch result {
         case let .success(path?): print("Selected: \(path)")
@@ -354,8 +355,8 @@ The same shape is available on `FileDialog.save/selectFolder`, `ColorDialog.choo
 `Widget.onPasteClipboard` lets a `TextView`/`SourceView`-backed editor decide what to do with a paste before GTK's default text insertion runs. Pair it with the synchronous probes `Clipboard.containsImage` / `Clipboard.containsFiles`, then either let the default fire or call `Widget.stopSignalEmission(named:)` and handle the payload yourself via `Clipboard.readTexture` / `Clipboard.readFiles`. `Texture.encodedPNGData()` re-encodes a clipboard image as PNG `Data` for content-import pipelines.
 
 ```swift
-editor.onPasteClipboard { [weak self] in
-    guard let self else { return }
+editor.onPasteClipboard { [weak editor] in
+    guard let editor else { return }
     if editor.clipboard.containsImage {
         editor.stopSignalEmission(named: "paste-clipboard")
         editor.clipboard.readTexture { texture in

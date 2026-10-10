@@ -46,10 +46,11 @@ toolbar.addTopBar(HeaderBar())
 toolbar.content = toastOverlay
 
 let saveBtn = Button(label: "Save")
-saveBtn.onClicked {
+// `toastOverlay` contains `saveBtn`, so capture it weakly
+saveBtn.onClicked { [weak toastOverlay] in
     // ... perform save ...
     let toast = Toast(title: "Document saved")
-    toastOverlay.addToast(toast)
+    toastOverlay?.addToast(toast)
 }
 
 toastOverlay.child = contentBox
@@ -67,9 +68,9 @@ banner.title = "No internet connection"
 banner.buttonLabel = "Retry"
 banner.revealed = true
 
-banner.onButtonClicked {
+banner.onButtonClicked { [weak banner] in
     print("Retrying connection...")
-    banner.revealed = false
+    banner?.revealed = false
 }
 
 // Place at the top of content

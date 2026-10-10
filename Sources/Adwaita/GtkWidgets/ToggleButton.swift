@@ -11,7 +11,8 @@ import GObjectSupport
 ///
 /// ```swift
 /// let bold = ToggleButton(label: "Bold")
-/// bold.onToggled {
+/// bold.onToggled { [weak bold] in
+///     guard let bold else { return }
 ///     print("Bold is \(bold.active ? "on" : "off")")
 /// }
 ///

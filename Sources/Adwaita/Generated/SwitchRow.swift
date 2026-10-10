@@ -14,7 +14,8 @@ import GObjectSupport
 /// let darkMode = SwitchRow(title: "Dark Mode", active: true)
 /// darkMode.subtitle = "Use dark color scheme"
 ///
-/// darkMode.onNotify(property: .active) {
+/// darkMode.onNotify(property: .active) { [weak darkMode] in
+///     guard let darkMode else { return }
 ///     print("Dark mode is now: \(darkMode.active)")
 /// }
 ///

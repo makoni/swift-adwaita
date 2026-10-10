@@ -39,8 +39,9 @@ homeToolbar.content = homePage
 let rootPage = NavigationPage(child: homeToolbar, title: "Home")
 navView.add(rootPage)
 
-// Push a detail page when the button is clicked
-detailBtn.onClicked {
+// Push a detail page when the button is clicked. `navView` contains
+// `detailBtn`, so capture it weakly.
+detailBtn.onClicked { [weak navView] in
     let detail = StatusPage()
     detail.title = "Detail"
     detail.iconName = "emblem-documents-symbolic"
@@ -51,7 +52,7 @@ detailBtn.onClicked {
     toolbar.content = detail
 
     let page = NavigationPage(child: toolbar, title: "Detail")
-    navView.push(page)
+    navView?.push(page)
 }
 ```
 
@@ -132,7 +133,8 @@ splitView.enableHideGesture = true
 // Toggle button in the content header bar
 let toggleBtn = Button(iconName: "sidebar-show-symbolic")
 toggleBtn.addCSSClass("flat")
-toggleBtn.onClicked {
+toggleBtn.onClicked { [weak splitView] in
+    guard let splitView else { return }
     splitView.showSidebar = !splitView.showSidebar
 }
 

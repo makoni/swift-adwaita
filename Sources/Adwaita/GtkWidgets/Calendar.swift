@@ -17,7 +17,8 @@ import GObjectSupport
 /// calendar.markDay(15)
 /// calendar.markDay(25)
 ///
-/// calendar.onDaySelected {
+/// calendar.onDaySelected { [weak calendar] in
+///     guard let calendar else { return }
 ///     print("Selected: \(calendar.year)-\(calendar.month)-\(calendar.day)")
 /// }
 /// ```

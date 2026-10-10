@@ -23,7 +23,8 @@ import GObjectSupport
 /// stack.visibleChildName = "page2"
 ///
 /// // React to page changes
-/// stack.onVisibleChildChanged {
+/// stack.onVisibleChildChanged { [weak stack] in
+///     guard let stack else { return }
 ///     print("Switched to: \(stack.visibleChildName ?? "unknown")")
 /// }
 /// ```

@@ -15,7 +15,8 @@ import GObjectSupport
 /// expander.child = details
 /// expander.expanded = false
 ///
-/// expander.onExpanded {
+/// expander.onExpanded { [weak expander] in
+///     guard let expander else { return }
 ///     print("Expander is now \(expander.expanded ? "open" : "closed")")
 /// }
 /// ```

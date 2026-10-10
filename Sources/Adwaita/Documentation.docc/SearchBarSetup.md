@@ -38,7 +38,8 @@ searchBar.connectEntry(searchEntry)
 searchBar.setKeyCaptureWidget(window)
 searchBar.showCloseButton = true
 
-searchEntry.onSearchChanged { [searchEntry] in
+searchEntry.onSearchChanged { [weak searchEntry] in
+    guard let searchEntry else { return }
     print("Searching for \(searchEntry.text)")
 }
 ```

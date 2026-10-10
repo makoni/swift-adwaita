@@ -19,7 +19,8 @@ import GObjectSupport
 /// // Toggle visibility with animation
 /// revealer.revealChild = true
 ///
-/// revealer.onChildRevealed {
+/// revealer.onChildRevealed { [weak revealer] in
+///     guard let revealer else { return }
 ///     print("Animation finished, visible: \(revealer.childRevealed)")
 /// }
 /// ```

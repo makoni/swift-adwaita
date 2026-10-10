@@ -13,8 +13,8 @@ import GObjectSupport
 /// let colorButton = ColorDialogButton()
 /// colorButton.rgba = RGBA(red: 0.2, green: 0.6, blue: 1.0, alpha: 1.0)
 ///
-/// colorButton.onColorChanged {
-///     let color = colorButton.rgba
+/// colorButton.onColorChanged { [weak colorButton] in
+///     guard let color = colorButton?.rgba else { return }
 ///     print("Selected color: R=\(color.red) G=\(color.green) B=\(color.blue)")
 /// }
 ///

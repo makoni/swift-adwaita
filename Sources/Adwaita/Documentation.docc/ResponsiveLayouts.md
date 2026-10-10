@@ -94,7 +94,8 @@ splitView.sidebar = sidebarToolbar
 // Content with toggle button
 let toggleBtn = Button(iconName: "sidebar-show-symbolic")
 toggleBtn.addCSSClass("flat")
-toggleBtn.onClicked {
+toggleBtn.onClicked { [weak splitView] in
+    guard let splitView else { return }
     splitView.showSidebar = !splitView.showSidebar
 }
 
@@ -107,7 +108,8 @@ contentToolbar.content = StatusPage()
 splitView.content = contentToolbar
 
 // Auto-close on narrow selection
-sidebarList.onRowActivated { _ in
+sidebarList.onRowActivated { [weak splitView] _ in
+    guard let splitView else { return }
     if splitView.collapsed {
         splitView.showSidebar = false
     }

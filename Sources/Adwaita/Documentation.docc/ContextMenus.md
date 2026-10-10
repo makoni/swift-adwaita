@@ -24,7 +24,9 @@ let popover = PopoverMenu()
 popover.menuModel = menu
 
 let click = GestureClick(button: .secondary)
-click.onPressed { _, x, y in
+// `targetWidget` owns `click`, so capture it weakly
+click.onPressed { [weak targetWidget] _, x, y in
+    guard let targetWidget else { return }
     popover.setParent(targetWidget)
     popover.present(from: targetWidget, x: x, y: y)
 }

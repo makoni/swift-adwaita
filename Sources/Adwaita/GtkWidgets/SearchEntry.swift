@@ -15,11 +15,13 @@ import GObjectSupport
 /// search.placeholderText = "Search items..."
 /// search.searchDelay = 300  // milliseconds
 ///
-/// search.onSearchChanged {
+/// search.onSearchChanged { [weak search] in
+///     guard let search else { return }
 ///     print("Searching for: \(search.text)")
 /// }
 ///
-/// search.onActivate {
+/// search.onActivate { [weak search] in
+///     guard let search else { return }
 ///     print("User pressed Enter with: \(search.text)")
 /// }
 /// ```

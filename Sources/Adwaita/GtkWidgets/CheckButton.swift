@@ -12,7 +12,8 @@ import GObjectSupport
 /// ```swift
 /// // Simple checkbox
 /// let agree = CheckButton(label: "I agree to the terms")
-/// agree.onToggled {
+/// agree.onToggled { [weak agree] in
+///     guard let agree else { return }
 ///     print("Checked: \(agree.active)")
 /// }
 ///

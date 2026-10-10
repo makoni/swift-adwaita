@@ -10,7 +10,8 @@ import GObjectSupport
 ///
 /// ```swift
 /// let toggle = Switch(active: false)
-/// toggle.onActiveChanged {
+/// toggle.onActiveChanged { [weak toggle] in
+///     guard let toggle else { return }
 ///     print("Switch is now: \(toggle.active ? "ON" : "OFF")")
 /// }
 /// ```

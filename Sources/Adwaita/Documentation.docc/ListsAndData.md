@@ -83,8 +83,8 @@ combo.subtitle = "Choose a color scheme"
 let model = StringList(strings: ["System", "Light", "Dark"])
 combo.model = model
 
-combo.onNotify(.selected) {
-    let idx = combo.selected
+combo.onNotify(.selected) { [weak combo] in
+    guard let idx = combo?.selected else { return }
     print("Selected theme index: \(idx)")
 }
 
@@ -150,8 +150,8 @@ let filter = CustomFilter { item in
 let filtered = FilterListModel(model: sourceModel, filter: filter)
 
 // Update filter dynamically
-searchEntry.onSearchChanged {
-    let query = searchEntry.text.lowercased()
+searchEntry.onSearchChanged { [weak searchEntry] in
+    guard let query = searchEntry?.text.lowercased() else { return }
     filter.setFilterFunc { item in
         let name = StringList.itemToString(item) ?? ""
         return query.isEmpty || name.lowercased().contains(query)

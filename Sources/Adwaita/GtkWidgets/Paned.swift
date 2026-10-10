@@ -17,7 +17,8 @@ import GObjectSupport
 /// paned.position = 200
 /// paned.wideHandle = true
 ///
-/// paned.onPositionChanged {
+/// paned.onPositionChanged { [weak paned] in
+///     guard let paned else { return }
 ///     print("Divider moved to \(paned.position)")
 /// }
 /// ```

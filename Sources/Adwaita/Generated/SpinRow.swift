@@ -15,7 +15,8 @@ import GObjectSupport
 /// fontSize.value = 14
 /// fontSize.subtitle = "Points"
 ///
-/// fontSize.onNotify(property: .value) {
+/// fontSize.onNotify(property: .value) { [weak fontSize] in
+///     guard let fontSize else { return }
 ///     print("Font size: \(fontSize.value)")
 /// }
 ///

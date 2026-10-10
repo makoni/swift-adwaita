@@ -19,7 +19,8 @@ import GObjectSupport
 ///     pageSize: 0
 /// )
 ///
-/// adjustment.onValueChanged {
+/// adjustment.onValueChanged { [weak adjustment] in
+///     guard let adjustment else { return }
 ///     print("Value changed to \(adjustment.value)")
 /// }
 ///

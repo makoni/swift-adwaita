@@ -13,8 +13,8 @@ import GObjectSupport
 /// let fontButton = FontDialogButton()
 /// fontButton.fontDescription = "Sans 12"
 ///
-/// fontButton.onFontChanged {
-///     if let font = fontButton.fontDescription {
+/// fontButton.onFontChanged { [weak fontButton] in
+///     if let font = fontButton?.fontDescription {
 ///         print("Selected font: \(font)")
 ///     }
 /// }

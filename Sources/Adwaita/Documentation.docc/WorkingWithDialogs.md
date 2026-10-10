@@ -203,8 +203,8 @@ colorDialog.withAlpha = true
 let colorButton = ColorDialogButton(dialog: colorDialog)
 
 // React to color changes
-colorButton.onNotify(.rgba) {
-    let color = colorButton.rgba
+colorButton.onNotify(.rgba) { [weak colorButton] in
+    guard let color = colorButton?.rgba else { return }
     print("Selected color: \(color)")
 }
 ```

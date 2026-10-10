@@ -19,8 +19,8 @@ import GObjectSupport
 /// settings.setInt("window-width", value: 800)
 ///
 /// // React to changes on a specific key
-/// settings.onChanged(key: "dark-mode") {
-///     let dark = settings.getBool("dark-mode")
+/// settings.onChanged(key: "dark-mode") { [weak settings] in
+///     guard let dark = settings?.getBool("dark-mode") else { return }
 ///     print("Dark mode is now \(dark)")
 /// }
 /// ```

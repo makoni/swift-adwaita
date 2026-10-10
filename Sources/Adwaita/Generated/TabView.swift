@@ -29,8 +29,8 @@ import GObjectSupport
 /// tabView.selectedPage = page2
 ///
 /// // React to tab close requests
-/// tabView.onClosePage { page in
-///     tabView.closePageFinish(page, confirm: true)
+/// tabView.onClosePage { [weak tabView] page in
+///     tabView?.closePageFinish(page, confirm: true)
 ///     return true
 /// }
 /// ```

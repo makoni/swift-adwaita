@@ -117,7 +117,8 @@ let themeRow = SwitchRow()
 themeRow.title = "Dark Mode"
 themeRow.active = StyleManager.default.dark
 
-themeRow.onNotify(.active) {
+themeRow.onNotify(.active) { [weak themeRow] in
+    guard let themeRow else { return }
     let style = StyleManager.default
     style.colorScheme = themeRow.active ? .forceDark : .forceLight
 }

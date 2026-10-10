@@ -19,7 +19,8 @@ import GObjectSupport
 /// A text field with placeholder text:
 /// ```swift
 /// let nameField = Entry(placeholder: "Enter your name")
-/// nameField.onActivate {
+/// nameField.onActivate { [weak nameField] in
+///     guard let nameField else { return }
 ///     print("Submitted: \(nameField.text)")
 /// }
 /// ```

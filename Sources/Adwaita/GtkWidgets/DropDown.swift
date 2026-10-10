@@ -14,7 +14,8 @@ import GObjectSupport
 /// dropdown.selected = 1  // selects "Medium"
 /// dropdown.enableSearch = true
 ///
-/// dropdown.onSelectedChanged {
+/// dropdown.onSelectedChanged { [weak dropdown] in
+///     guard let dropdown else { return }
 ///     print("Selected index: \(dropdown.selected)")
 /// }
 /// ```

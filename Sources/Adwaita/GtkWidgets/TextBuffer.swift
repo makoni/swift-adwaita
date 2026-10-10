@@ -20,7 +20,8 @@ import GObjectSupport
 /// boldTag.weight = 700
 /// buffer.applyTag(boldTag, startOffset: 0, endOffset: 5)
 ///
-/// buffer.onChanged {
+/// buffer.onChanged { [weak buffer] in
+///     guard let buffer else { return }
 ///     print("Buffer now has \(buffer.charCount) characters")
 /// }
 /// ```

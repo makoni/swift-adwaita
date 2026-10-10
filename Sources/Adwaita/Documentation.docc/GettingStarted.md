@@ -199,7 +199,8 @@ Observe any GObject property with `onNotify(_:handler:)`:
 ```swift
 let entry = Entry()
 
-entry.onNotify(.text) {
+entry.onNotify(.text) { [weak entry] in
+    guard let entry else { return }
     print("Text changed to: \(entry.text)")
 }
 ```
@@ -255,8 +256,9 @@ app.onActivate {
     statusBox.append(statusLabel)
 
     // Update character count on text changes
-    textView.buffer.onChanged {
-        let count = textView.buffer.charCount
+    // The buffer belongs to `textView`, so capture `textView` weakly
+    textView.buffer.onChanged { [weak textView] in
+        guard let count = textView?.buffer.charCount else { return }
         statusLabel.text = "\(count) characters"
     }
 

@@ -212,11 +212,12 @@ moving over a widget:
 
 ```swift
 let motion = EventControllerMotion()
-motion.onEnter { x, y in
-    widget.addCSSClass("hover")
+// `widget` owns `motion`, so capture it weakly
+motion.onEnter { [weak widget] x, y in
+    widget?.addCSSClass("hover")
 }
-motion.onLeave {
-    widget.removeCSSClass("hover")
+motion.onLeave { [weak widget] in
+    widget?.removeCSSClass("hover")
 }
 widget.addController(motion)
 ```

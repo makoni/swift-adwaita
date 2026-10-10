@@ -19,8 +19,8 @@ import GObjectSupport
 /// // Open the tab overview when clicked
 /// let tabOverview = TabOverview()
 /// tabOverview.view = tabView
-/// tabButton.onClicked {
-///     tabOverview.open = true
+/// tabButton.onClicked { [weak tabOverview] in
+///     tabOverview?.open = true
 /// }
 ///
 /// // Place in a header bar
