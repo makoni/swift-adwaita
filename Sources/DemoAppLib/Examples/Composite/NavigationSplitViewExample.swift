@@ -38,7 +38,7 @@ struct NavigationSplitViewExample: DemoExample {
 
         let categories = ["Inbox", "Starred", "Sent", "Drafts", "Trash"]
         let icons = [
-            "mail-inbox-symbolic", "starred-symbolic", "mail-send-symbolic",
+            "mail-unread-symbolic", "starred-symbolic", "mail-send-symbolic",
             "document-edit-symbolic", "user-trash-symbolic",
         ]
 
@@ -67,7 +67,7 @@ struct NavigationSplitViewExample: DemoExample {
         // Content
         let contentStatus = StatusPage()
         contentStatus.title = "Inbox"
-        contentStatus.iconName = "mail-inbox-symbolic"
+        contentStatus.iconName = "mail-unread-symbolic"
         contentStatus.description = "Select a category from the sidebar"
 
         let contentHeader = HeaderBar()
@@ -77,13 +77,17 @@ struct NavigationSplitViewExample: DemoExample {
 
         let contentPage = NavigationPage(child: contentToolbar, title: "Inbox")
 
-        sidebarList.onRowActivated { [contentStatus] row in
+        sidebarList.onRowActivated { [contentStatus, contentPage] row in
             let idx = Int(row.index)
             guard idx >= 0, idx < categories.count else { return }
             contentStatus.title = categories[idx]
             contentStatus.iconName = icons[idx]
             contentStatus.description = "Showing \(categories[idx]) items"
+            // The content header shows the page title; keep it on the selection.
+            contentPage.title = categories[idx]
         }
+        // The content starts on Inbox, so start with Inbox selected too.
+        sidebarList.selectRow(at: 0)
 
         splitView.setSidebar(sidebarPage)
         splitView.setContent(contentPage)

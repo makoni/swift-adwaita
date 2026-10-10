@@ -22,11 +22,12 @@ struct DragDropExample: DemoExample {
             if let text { label.text = text }
             return true
         }
-        drop.onEnter { _, _ in
-            targetWidget.addCSSClass("drop-highlight")
+        // Weak: the controller (and so its handlers) belongs to targetWidget.
+        drop.onEnter { [weak targetWidget] _, _ in
+            targetWidget?.addCSSClass("drop-highlight")
         }
-        drop.onLeave {
-            targetWidget.removeCSSClass("drop-highlight")
+        drop.onLeave { [weak targetWidget] in
+            targetWidget?.removeCSSClass("drop-highlight")
         }
         targetWidget.addController(drop)
         """
@@ -102,11 +103,12 @@ struct DragDropExample: DemoExample {
             }
             return true
         }
-        drop.onEnter { [dropBox] _, _ in
-            dropBox.addCSSClass("accent")
+        // Weak: the controller (and so these handlers) belongs to dropBox.
+        drop.onEnter { [weak dropBox] _, _ in
+            dropBox?.addCSSClass("accent")
         }
-        drop.onLeave { [dropBox] in
-            dropBox.removeCSSClass("accent")
+        drop.onLeave { [weak dropBox] in
+            dropBox?.removeCSSClass("accent")
         }
         dropBox.addController(drop)
 

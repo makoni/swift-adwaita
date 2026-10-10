@@ -46,14 +46,15 @@ struct VideoExample: DemoExample {
         openBtn.addCSSClass("pill")
         openBtn.halign = .center
         openBtn.setMargins(12)
-        openBtn.onClicked { [video, box] in
+        // `box` is an ancestor of the button, so capture it weakly.
+        openBtn.onClicked { [video, weak box] in
             let dialog = FileDialog()
             dialog.title = "Open Video"
             dialog.setFilters([
                 FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi", "mov", "ogv"]),
                 FileFilter(name: "All files", patterns: ["*"]),
             ])
-            dialog.open(parent: box.root) { [video] result in
+            dialog.open(parent: box?.root) { [video] result in
                 if case .success(let path?) = result {
                     video.setFilename(path)
                 }
@@ -73,9 +74,7 @@ struct VideoExample: DemoExample {
         let autoSwitch = Switch()
         autoSwitch.active = false
         autoSwitch.valign = .center
-        autoSwitch.onActiveChanged { [video, autoSwitch] in
-            video.autoplay = autoSwitch.active
-        }
+        autoSwitch.bind(.active, to: video, property: .custom("autoplay"))
         autoplayRow.addSuffix(autoSwitch)
         autoplayRow.activatableWidget = autoSwitch
         group2.add(autoplayRow)
@@ -86,9 +85,7 @@ struct VideoExample: DemoExample {
         let loopSwitch = Switch()
         loopSwitch.active = true
         loopSwitch.valign = .center
-        loopSwitch.onActiveChanged { [video, loopSwitch] in
-            video.loop = loopSwitch.active
-        }
+        loopSwitch.bind(.active, to: video, property: .custom("loop"))
         loopRow.addSuffix(loopSwitch)
         loopRow.activatableWidget = loopSwitch
         group2.add(loopRow)

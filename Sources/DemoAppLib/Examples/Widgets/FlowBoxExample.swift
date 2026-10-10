@@ -59,7 +59,7 @@ struct FlowBoxExample: DemoExample {
             ("weather-showers-symbolic", "Rain"),
             ("weather-snow-symbolic", "Snow"),
             ("starred-symbolic", "Star"),
-            ("heart-filled-symbolic", "Heart"),
+            ("emote-love-symbolic", "Heart"),
             ("bookmark-new-symbolic", "Bookmark"),
             ("document-new-symbolic", "New"),
             ("document-open-symbolic", "Open"),

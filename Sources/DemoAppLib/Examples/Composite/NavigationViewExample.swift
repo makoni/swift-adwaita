@@ -25,7 +25,8 @@ struct NavigationViewExample: DemoExample {
         let page1 = NavigationPage(child: mainPage, title: "Home")
         navView.add(page1)
 
-        detailBtn.onClicked {
+        detailBtn.onClicked { [weak navView] in
+            guard let navView else { return }
             let detailPage = StatusPage()
             detailPage.title = "Detail"
             let page2 = NavigationPage(child: detailPage, title: "Detail")
@@ -64,10 +65,13 @@ struct NavigationViewExample: DemoExample {
         let mainPage = NavigationPage(child: mainToolbar, title: "Home")
         navView.add(mainPage)
 
-        detailBtn.onClicked { [navView] in
+        // The buttons live inside the navigation view: capture it weakly, or
+        // their handlers would keep the whole view alive forever.
+        detailBtn.onClicked { [weak navView] in
+            guard let navView else { return }
             let detailStatus = StatusPage()
             detailStatus.title = "Detail Page"
-            detailStatus.iconName = "emblem-documents-symbolic"
+            detailStatus.iconName = "folder-documents-symbolic"
             detailStatus.description = "Press Back to return to the Home page."
 
             let toolbar = ToolbarView()
@@ -78,7 +82,8 @@ struct NavigationViewExample: DemoExample {
             navView.push(page)
         }
 
-        settingsBtn.onClicked { [navView] in
+        settingsBtn.onClicked { [weak navView] in
+            guard let navView else { return }
             let settingsStatus = StatusPage()
             settingsStatus.title = "Settings"
             settingsStatus.iconName = "preferences-system-symbolic"

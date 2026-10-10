@@ -13,7 +13,8 @@ struct CalendarExample: DemoExample {
         let calendar = Calendar()
         calendar.showWeekNumbers = true
         calendar.markDay(15)
-        calendar.onDaySelected {
+        calendar.onDaySelected { [weak calendar] in
+            guard let calendar else { return }
             print("Selected: \\(calendar.year)-\\(calendar.month)-\\(calendar.day)")
         }
         """
@@ -35,7 +36,8 @@ struct CalendarExample: DemoExample {
         let resultLabel = Label("Select a date")
         resultLabel.addCSSClass("dim-label")
 
-        calendar.onDaySelected { [calendar, resultLabel] in
+        calendar.onDaySelected { [weak calendar, resultLabel] in
+            guard let calendar else { return }
             resultLabel.text = "Selected: \(calendar.year)-\(calendar.month)-\(calendar.day)"
         }
 

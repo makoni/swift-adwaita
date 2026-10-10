@@ -18,6 +18,14 @@ struct SwitchExample: DemoExample {
         row.addSuffix(toggle)
         row.activatableWidget = toggle
 
+        // Keep it in sync with the app's appearance and drive it
+        let styleManager = StyleManager.default
+        styleManager.bind(.custom("dark"), to: toggle, property: .active)
+        toggle.onActiveChanged { [weak toggle] in
+            guard let toggle, toggle.active != styleManager.dark else { return }
+            styleManager.colorScheme = toggle.active ? .forceDark : .forceLight
+        }
+
         // AdwSwitchRow — built-in switch row
         let switchRow = SwitchRow()
         switchRow.title = "Notifications"
@@ -41,6 +49,18 @@ struct SwitchExample: DemoExample {
         row1.subtitle = "Use dark appearance"
         let toggle = Switch()
         toggle.valign = .center
+        // Follow the app's actual appearance (also when it is changed elsewhere,
+        // e.g. in the Style Manager example). `dark` is read-only, so the binding
+        // is one-way and the handler below drives the color scheme.
+        let styleManager = StyleManager.default
+        styleManager.bind(.custom("dark"), to: toggle, property: .active, flags: .syncCreate)
+        // The switch owns this handler, so capture it weakly. The binding holds
+        // no references, so StyleManager.default keeps nothing of this page alive.
+        toggle.onActiveChanged { [weak toggle] in
+            // Ignore the echo of the binding above.
+            guard let toggle, toggle.active != StyleManager.default.dark else { return }
+            StyleManager.default.colorScheme = toggle.active ? .forceDark : .forceLight
+        }
         row1.addSuffix(toggle)
         row1.activatableWidget = toggle
         switchGroup.add(row1)

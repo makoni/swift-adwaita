@@ -42,7 +42,9 @@ struct AboutDialogExample: DemoExample {
         showBtn.addCSSClass("pill")
         showBtn.halign = .center
 
-        showBtn.onClicked { [showBtn] in
+        // Weak: the button owns this handler, so a strong capture would be a cycle.
+        showBtn.onClicked { [weak showBtn] in
+            guard let showBtn else { return }
             let about = AboutDialog()
             about.applicationName = "swift-adwaita Demo"
             about.applicationIcon = "applications-science-symbolic"

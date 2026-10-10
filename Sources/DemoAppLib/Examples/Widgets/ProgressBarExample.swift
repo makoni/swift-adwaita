@@ -59,9 +59,11 @@ struct ProgressBarExample: DemoExample {
         incBtn.valign = .center
         incBtn.addCSSClass("flat")
         incBtn.onClicked { [progressBar] in
-            let newVal = min(1.0, progressBar.fraction + 0.1)
+            // Snap to whole tenths: repeated `+ 0.1` drifts (0.7 + 0.1 is
+            // 0.7999…), which would label the bar "79%".
+            let newVal = min(1.0, ((progressBar.fraction + 0.1) * 10).rounded() / 10)
             progressBar.fraction = newVal
-            progressBar.text = "\(Int(newVal * 100))%"
+            progressBar.text = "\(Int((newVal * 100).rounded()))%"
         }
         incRow.addSuffix(incBtn)
         incRow.activatableWidget = incBtn
@@ -74,9 +76,9 @@ struct ProgressBarExample: DemoExample {
         decBtn.valign = .center
         decBtn.addCSSClass("flat")
         decBtn.onClicked { [progressBar] in
-            let newVal = max(0.0, progressBar.fraction - 0.1)
+            let newVal = max(0.0, ((progressBar.fraction - 0.1) * 10).rounded() / 10)
             progressBar.fraction = newVal
-            progressBar.text = "\(Int(newVal * 100))%"
+            progressBar.text = "\(Int((newVal * 100).rounded()))%"
         }
         decRow.addSuffix(decBtn)
         decRow.activatableWidget = decBtn

@@ -28,7 +28,7 @@ struct BreakpointExample: DemoExample {
 
     func buildWidget() -> Widget {
         // Status label
-        let statusLabel = Label("Wide layout")
+        let statusLabel = Label("Wide layout (\u{2265} 500sp)")
         statusLabel.addCSSClass("title-4")
 
         // Two content cards side by side (horizontal) that stack vertically when narrow
@@ -73,8 +73,8 @@ struct BreakpointExample: DemoExample {
         // orientation: 1 = vertical (GTK_ORIENTATION_VERTICAL)
         bp.addSetter(cardsBox, property: .orientation, value: 1)
         bp.addSetter(cardsBox, property: .spacing, value: 8)
-        bp.onApply { statusLabel.text = "Narrow layout (< 500sp)" }
-        bp.onUnapply { statusLabel.text = "Wide layout (\u{2265} 500sp)" }
+        bp.onApply { [weak statusLabel] in statusLabel?.text = "Narrow layout (< 500sp)" }
+        bp.onUnapply { [weak statusLabel] in statusLabel?.text = "Wide layout (\u{2265} 500sp)" }
 
         // Outer layout
         let outerBox = Box(orientation: .vertical, spacing: 16)

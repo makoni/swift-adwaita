@@ -48,7 +48,9 @@ struct UriLauncherExample: DemoExample {
         let launchBtn = Button(label: "Launch")
         launchBtn.addCSSClass("suggested-action")
         launchBtn.valign = .center
-        launchBtn.onClicked { [entry, status] in
+        // The button owns this handler, so it captures itself weakly.
+        launchBtn.onClicked { [weak launchBtn, entry, status] in
+            guard let launchBtn else { return }
             // Launch only the schemes this demo intends to open. The text here is
             // user-typed (local-user threat model), but this is the pattern that
             // gets copy-pasted — so show the safe form: an allowlist is what you

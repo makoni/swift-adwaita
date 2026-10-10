@@ -22,6 +22,15 @@ struct PreferencesDialogExample: DemoExample {
         group.title = "Appearance"
         let darkRow = SwitchRow()
         darkRow.title = "Dark Mode"
+        darkRow.active = StyleManager.default.dark
+        darkRow.onNotify(.active) { [weak darkRow] in
+            guard let darkRow else { return }
+            if darkRow.active {
+                StyleManager.default.forceDark()
+            } else {
+                StyleManager.default.forceLight()
+            }
+        }
         group.add(darkRow)
         general.add(group)
 
@@ -33,13 +42,16 @@ struct PreferencesDialogExample: DemoExample {
         let statusPage = StatusPage()
         statusPage.iconName = "preferences-other-symbolic"
         statusPage.title = "Preferences Dialog"
-        statusPage.description = "A multi-page preferences dialog with search."
+        statusPage.description =
+            "A multi-page preferences dialog with search. Dark Mode applies to the whole app; the other rows are sample settings."
 
         let openBtn = Button(label: "Open Preferences")
         openBtn.addCSSClass("suggested-action")
         openBtn.addCSSClass("pill")
         openBtn.halign = .center
-        openBtn.onClicked {
+        // Weak self-capture: the button owns this handler.
+        openBtn.onClicked { [weak openBtn] in
+            guard let openBtn else { return }
             let dialog = PreferencesDialog()
             dialog.searchEnabled = true
 
@@ -55,6 +67,20 @@ struct PreferencesDialogExample: DemoExample {
             let darkRow = SwitchRow()
             darkRow.title = "Dark Mode"
             darkRow.subtitle = "Use dark color scheme"
+            // Show the app's current darkness (and follow it while open), and
+            // force the scheme when the user flips the row. The binding holds
+            // the row weakly, and the row's own handler captures it weakly, so
+            // nothing on the StyleManager singleton outlives the dialog.
+            let styleManager = StyleManager.default
+            styleManager.bind(.custom("dark"), to: darkRow, property: .active)
+            darkRow.onNotify(.active) { [weak darkRow, styleManager] in
+                guard let darkRow, darkRow.active != styleManager.dark else { return }
+                if darkRow.active {
+                    styleManager.forceDark()
+                } else {
+                    styleManager.forceLight()
+                }
+            }
             appearanceGroup.add(darkRow)
 
             let animationsRow = SwitchRow()

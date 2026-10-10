@@ -70,14 +70,15 @@ struct PictureExample: DemoExample {
         loadBtn.addCSSClass("pill")
         loadBtn.halign = .center
         loadBtn.setMargins(8)
-        loadBtn.onClicked { [picture, box] in
+        // `box` is an ancestor of the button, so a strong capture would form a cycle.
+        loadBtn.onClicked { [weak box, picture] in
             let dialog = FileDialog()
             dialog.title = "Open Image"
             dialog.setFilters([
                 FileFilter(name: "Images", suffixes: ["png", "jpg", "jpeg", "webp", "svg", "bmp", "gif"]),
                 FileFilter(name: "All files", patterns: ["*"]),
             ])
-            dialog.open(parent: box.root) { [picture] result in
+            dialog.open(parent: box?.root) { [picture] result in
                 if case .success(let path?) = result {
                     picture.setFilename(path)
                 }
@@ -90,7 +91,8 @@ struct PictureExample: DemoExample {
         fitRow.subtitle = "How the image fills the widget"
         let fitDropDown = DropDown(strings: ["Contain", "Cover", "Fill", "Scale Down"])
         fitDropDown.valign = .center
-        fitDropDown.onSelectedChanged { [fitDropDown, picture] in
+        fitDropDown.onSelectedChanged { [weak fitDropDown, picture] in
+            guard let fitDropDown else { return }
             switch fitDropDown.selected {
             case 0: picture.contentFit = .contain
             case 1: picture.contentFit = .cover
@@ -108,9 +110,7 @@ struct PictureExample: DemoExample {
         let shrinkSwitch = Switch()
         shrinkSwitch.active = true
         shrinkSwitch.valign = .center
-        shrinkSwitch.onActiveChanged { [shrinkSwitch, picture] in
-            picture.canShrink = shrinkSwitch.active
-        }
+        shrinkSwitch.bind(.active, to: picture, property: .custom("can-shrink"))
         shrinkRow.addSuffix(shrinkSwitch)
         group1.add(shrinkRow)
 

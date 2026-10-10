@@ -244,5 +244,34 @@ struct DemoExampleInteractionTests {
             #expect(window.visibleDialog != nil, "the shortcuts dialog should be the window's visible dialog")
         }
     }
+
+    @Test @MainActor
+    func searchBarSwitchesDriveSearchBar() {
+        ensureDemoAdwInit()
+        let (root, window) = Self.setUp(SearchBarExample())
+        defer { Self.tearDown(window) }
+
+        let searchBar = widgetOfType(root, SearchBar.self)
+        // Tree order: "Search Mode" first, then "Show Close Button".
+        let switches = allWidgets(root).compactMap { $0.tryCast(Switch.self) }
+        #expect(searchBar != nil)
+        #expect(switches.count == 2)
+        guard let searchBar, switches.count == 2 else { return }
+        let modeSwitch = switches[0]
+        let closeSwitch = switches[1]
+        #expect(!searchBar.searchModeEnabled)
+        #expect(!modeSwitch.active)
+
+        modeSwitch.active = true
+        #expect(searchBar.searchModeEnabled, "the switch should reveal the search bar")
+
+        // Closing the bar (close button / Escape) must flip the switch back.
+        searchBar.searchModeEnabled = false
+        #expect(!modeSwitch.active, "the switch should follow the search bar")
+
+        #expect(searchBar.showCloseButton)
+        closeSwitch.active = false
+        #expect(!searchBar.showCloseButton, "the switch should hide the close button")
+    }
 }
 #endif

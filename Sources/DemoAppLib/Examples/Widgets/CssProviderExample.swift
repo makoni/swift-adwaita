@@ -28,7 +28,9 @@ struct CssProviderExample: DemoExample {
         let provider = CSSProvider()
         provider.loadFromString(css)
         provider.addToDefaultDisplay()
-        // Later: provider.removeFromDefaultDisplay()
+
+        // Remove it once the UI that uses it is gone
+        root.onDestroy { provider.removeFromDefaultDisplay() }
         """
 
     func buildWidget() -> Widget {
@@ -125,7 +127,7 @@ struct CssProviderExample: DemoExample {
         let row = ActionRow()
         row.title = "loadGlobal()"
         row.subtitle = "One-liner to add CSS app-wide"
-        let checkIcon = Image(iconName: "emblem-ok-symbolic")
+        let checkIcon = Image(iconName: "object-select-symbolic")
         checkIcon.valign = .center
         checkIcon.addCSSClass("success")
         row.addSuffix(checkIcon)
@@ -133,6 +135,11 @@ struct CssProviderExample: DemoExample {
 
         box.append(group4)
 
-        return box.scrollableClamped()
+        // The provider is display-wide: drop it when this page is destroyed so
+        // rebuilding the example doesn't pile up providers on the display.
+        // Capturing the provider (not a widget) leaves no cycle.
+        let root = box.scrollableClamped()
+        root.onDestroy { provider.removeFromDefaultDisplay() }
+        return root
     }
 }

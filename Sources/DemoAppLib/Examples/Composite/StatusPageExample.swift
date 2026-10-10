@@ -19,9 +19,9 @@ struct StatusPageExample: DemoExample {
         getStartedBtn.addCSSClass("suggested-action")
         getStartedBtn.addCSSClass("pill")
         getStartedBtn.halign = .center
-        getStartedBtn.onClicked {
-            statusPage.title = "Let's Go!"
-            statusPage.iconName = "emblem-ok-symbolic"
+        getStartedBtn.onClicked { [weak statusPage] in
+            statusPage?.title = "Let's Go!"
+            statusPage?.iconName = "object-select-symbolic"
         }
         statusPage.child = getStartedBtn
         """
@@ -37,9 +37,12 @@ struct StatusPageExample: DemoExample {
         getStartedBtn.addCSSClass("pill")
         getStartedBtn.halign = .center
 
-        getStartedBtn.onClicked { [statusPage] in
+        // The button lives inside the status page: capture the page weakly,
+        // or its own child's handler would keep it alive forever.
+        getStartedBtn.onClicked { [weak statusPage] in
+            guard let statusPage else { return }
             statusPage.title = "Let's Go!"
-            statusPage.iconName = "emblem-ok-symbolic"
+            statusPage.iconName = "object-select-symbolic"
         }
 
         statusPage.child = getStartedBtn

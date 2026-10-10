@@ -44,6 +44,20 @@ struct ButtonRowExample: DemoExample {
 
         box.append(group)
 
+        // Each row reports its activation, so clicking one visibly does something.
+        // `activated` only exists on a real AdwButtonRow (libadwaita 1.6+).
+        if ButtonRow.isAvailable {
+            let statusLabel = Label("Activate a row above")
+            statusLabel.addCSSClass("dim-label")
+            for row in [row1, row2, row3] {
+                let title = row.title
+                row.onActivated { [statusLabel] in
+                    statusLabel.text = "Activated: \(title)"
+                }
+            }
+            box.append(statusLabel)
+        }
+
         return box.scrollableClamped()
     }
 }

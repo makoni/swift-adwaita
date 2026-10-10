@@ -57,7 +57,7 @@ struct OverlayExample: DemoExample {
         iconsBox.setMargins(12)
 
         let icons = [
-            ("folder-symbolic", "emblem-ok-symbolic", "success"),
+            ("folder-symbolic", "object-select-symbolic", "success"),
             ("mail-unread-symbolic", "starred-symbolic", "warning"),
             ("drive-harddisk-symbolic", "process-stop-symbolic", "error"),
         ]

@@ -12,8 +12,8 @@ struct ButtonExample: DemoExample {
     let sourceCode = """
         // Standard button
         let btn = Button(label: "Click Me")
-        btn.onClicked {
-            btn.label = "Clicked!"
+        btn.onClicked { [weak btn] in
+            btn?.label = "Clicked!"
         }
 
         // Icon button (flat)
@@ -53,8 +53,8 @@ struct ButtonExample: DemoExample {
         row1.subtitle = "A simple labeled button"
         let btn = Button(label: "Click Me")
         btn.valign = .center
-        btn.onClicked { [btn] in
-            btn.label = "Clicked!"
+        btn.onClicked { [weak btn] in
+            btn?.label = "Clicked!"
         }
         row1.addSuffix(btn)
         row1.activatableWidget = btn

@@ -18,9 +18,10 @@ struct SplitButtonExample: DemoExample {
         let popBox = Box(orientation: .vertical, spacing: 4)
         let optBtn = Button(label: "Option A")
         optBtn.addCSSClass("flat")
-        optBtn.onClicked {
+        // The button lives inside the popover: capture it weakly
+        optBtn.onClicked { [weak popover] in
             print("Option A selected")
-            popover.popdown()
+            popover?.popdown()
         }
         popBox.append(optBtn)
         popover.child = popBox
@@ -49,9 +50,10 @@ struct SplitButtonExample: DemoExample {
         for option in ["Option A", "Option B", "Option C"] {
             let btn = Button(label: option)
             btn.addCSSClass("flat")
-            btn.onClicked { [statusLabel, popover1] in
+            // The button lives inside the popover, so capture it weakly.
+            btn.onClicked { [statusLabel, weak popover1] in
                 statusLabel.text = "\(option) selected"
-                popover1.popdown()
+                popover1?.popdown()
             }
             popBox1.append(btn)
         }
@@ -85,8 +87,8 @@ struct SplitButtonExample: DemoExample {
             content.iconName = icon
             btn.child = content
             btn.addCSSClass("flat")
-            btn.onClicked { [popover2] in
-                popover2.popdown()
+            btn.onClicked { [weak popover2] in
+                popover2?.popdown()
             }
             popBox2.append(btn)
         }
@@ -110,7 +112,7 @@ struct SplitButtonExample: DemoExample {
         pop3Box.setMargins(4)
         let pop3Btn = Button(label: "Save As...")
         pop3Btn.addCSSClass("flat")
-        pop3Btn.onClicked { [pop3] in pop3.popdown() }
+        pop3Btn.onClicked { [weak pop3] in pop3?.popdown() }
         pop3Box.append(pop3Btn)
         pop3.child = pop3Box
 
@@ -125,7 +127,7 @@ struct SplitButtonExample: DemoExample {
         pop4Box.setMargins(4)
         let pop4Btn = Button(label: "Delete All")
         pop4Btn.addCSSClass("flat")
-        pop4Btn.onClicked { [pop4] in pop4.popdown() }
+        pop4Btn.onClicked { [weak pop4] in pop4?.popdown() }
         pop4Box.append(pop4Btn)
         pop4.child = pop4Box
 

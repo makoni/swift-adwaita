@@ -61,14 +61,15 @@ struct AlertDialogExample: DemoExample {
         row1.subtitle = "A simple informational message"
         let btn1 = Button(label: "Show")
         btn1.valign = .center
-        btn1.onClicked { [btn1] in
+        btn1.onClicked { [weak btn1] in
+            guard let root = btn1?.root else { return }
             let dialog = AlertDialog(
                 heading: "Information",
                 body: "The operation completed successfully."
             )
             dialog.addResponse("ok", label: "OK")
             dialog.defaultResponse = "ok"
-            dialog.present(btn1.root!)
+            dialog.present(root)
         }
         row1.addSuffix(btn1)
         row1.activatableWidget = btn1
@@ -80,7 +81,8 @@ struct AlertDialogExample: DemoExample {
         row2.subtitle = "Ask the user to save changes"
         let btn2 = Button(label: "Show")
         btn2.valign = .center
-        btn2.onClicked { [btn2] in
+        btn2.onClicked { [weak btn2] in
+            guard let root = btn2?.root else { return }
             let dialog = AlertDialog(
                 heading: "Save Changes?",
                 body: "You have unsaved changes. Do you want to save before closing?"
@@ -92,7 +94,7 @@ struct AlertDialogExample: DemoExample {
             dialog.setResponseAppearance("save", appearance: .suggested)
             dialog.defaultResponse = "save"
             dialog.closeResponse = "cancel"
-            dialog.present(btn2.root!)
+            dialog.present(root)
         }
         row2.addSuffix(btn2)
         row2.activatableWidget = btn2
@@ -105,7 +107,8 @@ struct AlertDialogExample: DemoExample {
         let btn3 = Button(label: "Show")
         btn3.valign = .center
         btn3.addCSSClass("destructive-action")
-        btn3.onClicked { [btn3] in
+        btn3.onClicked { [weak btn3] in
+            guard let root = btn3?.root else { return }
             let dialog = AlertDialog(
                 heading: "Delete File?",
                 body: "This will permanently delete \"document.txt\". This action cannot be undone."
@@ -115,7 +118,7 @@ struct AlertDialogExample: DemoExample {
             dialog.setResponseAppearance("delete", appearance: .destructive)
             dialog.defaultResponse = "cancel"
             dialog.closeResponse = "cancel"
-            dialog.present(btn3.root!)
+            dialog.present(root)
         }
         row3.addSuffix(btn3)
         row3.activatableWidget = btn3

@@ -59,7 +59,9 @@ struct DialogExample: DemoExample {
         box.append(group)
 
         // Dialog 1 handler — will be attached after box is in widget tree
-        btn1.onClicked { [box] in
+        // Weak: `box` is an ancestor of the buttons that own these handlers.
+        btn1.onClicked { [weak box] in
+            guard let box else { return }
             let dialog = Dialog()
             dialog.title = "Preferences"
             dialog.contentWidth = 400
@@ -74,6 +76,18 @@ struct DialogExample: DemoExample {
             sr1.title = "Dark Mode"
             sr1.subtitle = "Use dark color scheme"
             g.add(sr1)
+            // Show the app's current darkness (and follow it while open), and
+            // force the scheme when the user flips the row.
+            let styleManager = StyleManager.default
+            styleManager.bind(.custom("dark"), to: sr1, property: .active)
+            sr1.onNotify(.active) { [weak sr1, styleManager] in
+                guard let sr1, sr1.active != styleManager.dark else { return }
+                if sr1.active {
+                    styleManager.forceDark()
+                } else {
+                    styleManager.forceLight()
+                }
+            }
             let sr2 = SwitchRow()
             sr2.title = "Notifications"
             sr2.active = true
@@ -93,7 +107,8 @@ struct DialogExample: DemoExample {
         }
 
         // Dialog 2 handler
-        btn2.onClicked { [box] in
+        btn2.onClicked { [weak box] in
+            guard let box else { return }
             let dialog = Dialog()
             dialog.title = "Account Settings"
             dialog.contentWidth = 600

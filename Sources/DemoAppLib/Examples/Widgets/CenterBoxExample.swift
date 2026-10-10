@@ -54,9 +54,7 @@ struct CenterBoxExample: DemoExample {
         let shrinkSwitch = Switch()
         shrinkSwitch.active = true
         shrinkSwitch.valign = .center
-        shrinkSwitch.onActiveChanged { [centerBox, shrinkSwitch] in
-            centerBox.shrinkCenterLast = shrinkSwitch.active
-        }
+        shrinkSwitch.bind(.active, to: centerBox, property: .custom("shrink-center-last"))
         shrinkRow.addSuffix(shrinkSwitch)
         shrinkRow.activatableWidget = shrinkSwitch
         controlGroup.add(shrinkRow)

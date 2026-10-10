@@ -29,7 +29,9 @@ struct ScaleExample: DemoExample {
         precise.hasOrigin = true
 
         // Value changed callback
-        scale.onValueChanged {
+        // Capture the scale weakly: its own handler must not keep it alive.
+        scale.onValueChanged { [weak scale] in
+            guard let scale else { return }
             print("Value: \\(scale.value)")
         }
         """
@@ -53,7 +55,8 @@ struct ScaleExample: DemoExample {
         scale1.setFormatValueFunc { value in "\(Int(value))%" }
         scale1.hexpand = true
         scale1.setMargins(12)
-        scale1.onValueChanged { [scale1, valueLabel1] in
+        scale1.onValueChanged { [weak scale1, valueLabel1] in
+            guard let scale1 else { return }
             valueLabel1.text = "\(Int(scale1.value))"
         }
 
@@ -82,8 +85,10 @@ struct ScaleExample: DemoExample {
         scale2.hasOrigin = true
         scale2.hexpand = true
         scale2.setMargins(12)
-        scale2.onValueChanged { [scale2, valueLabel2] in
-            let v = Int(scale2.value * 100)
+        scale2.onValueChanged { [weak scale2, valueLabel2] in
+            guard let scale2 else { return }
+            // Round, don't truncate: 0.29 * 100 is 28.999… in binary floating point.
+            let v = Int((scale2.value * 100).rounded())
             let frac = v % 100
             valueLabel2.text = "\(v / 100).\(frac < 10 ? "0" : "")\(frac)"
         }

@@ -12,7 +12,8 @@ struct CheckButtonExample: DemoExample {
     let sourceCode = """
         // Simple check button
         let check = CheckButton(label: "Enable feature")
-        check.onToggled {
+        check.onToggled { [weak check] in
+            guard let check else { return }
             print("Active: \\(check.active)")
         }
 
@@ -48,11 +49,12 @@ struct CheckButtonExample: DemoExample {
         let check3 = CheckButton(label: "Feature C")
         check3.setMargins(12)
 
-        let updateStatus = { [statusLabel, check1, check2, check3] in
+        // Weak: each check button's own handler calls this closure.
+        let updateStatus = { [statusLabel, weak check1, weak check2, weak check3] in
             var selected: [String] = []
-            if check1.active { selected.append("A") }
-            if check2.active { selected.append("B") }
-            if check3.active { selected.append("C") }
+            if check1?.active == true { selected.append("A") }
+            if check2?.active == true { selected.append("B") }
+            if check3?.active == true { selected.append("C") }
             statusLabel.text = selected.isEmpty ? "No selection" : "Selected: \(selected.joined(separator: ", "))"
         }
 
@@ -85,14 +87,14 @@ struct CheckButtonExample: DemoExample {
         radio3.setMargins(12)
         radio3.setGroup(radio1)
 
-        radio1.onToggled { [radio1, radioLabel] in
-            if radio1.active { radioLabel.text = "Selected: Option 1" }
+        radio1.onToggled { [weak radio1, radioLabel] in
+            if radio1?.active == true { radioLabel.text = "Selected: Option 1" }
         }
-        radio2.onToggled { [radio2, radioLabel] in
-            if radio2.active { radioLabel.text = "Selected: Option 2" }
+        radio2.onToggled { [weak radio2, radioLabel] in
+            if radio2?.active == true { radioLabel.text = "Selected: Option 2" }
         }
-        radio3.onToggled { [radio3, radioLabel] in
-            if radio3.active { radioLabel.text = "Selected: Option 3" }
+        radio3.onToggled { [weak radio3, radioLabel] in
+            if radio3?.active == true { radioLabel.text = "Selected: Option 3" }
         }
 
         group2.add(radio1)
@@ -110,8 +112,8 @@ struct CheckButtonExample: DemoExample {
         let triCheck = CheckButton(label: "Select all items")
         triCheck.inconsistent = true
         triCheck.setMargins(12)
-        triCheck.onToggled { [triCheck] in
-            triCheck.inconsistent = false
+        triCheck.onToggled { [weak triCheck] in
+            triCheck?.inconsistent = false
         }
         group3.add(triCheck)
 

@@ -20,8 +20,15 @@ struct SearchBarExample: DemoExample {
         // Toggle search mode
         searchBar.searchModeEnabled = true
 
+        // Keep a switch in sync both ways (close button and Escape too)
+        let toggleSwitch = Switch()
+        searchBar.bind(
+            .custom("search-mode-enabled"), to: toggleSwitch,
+            property: .active, flags: [.bidirectional, .syncCreate])
+
         // Connect to entry
-        entry.onSearchChanged {
+        entry.onSearchChanged { [weak entry] in
+            guard let entry else { return }
             let query = entry.text
             print("Searching: \\(query)")
         }
@@ -44,10 +51,8 @@ struct SearchBarExample: DemoExample {
         searchBar.connectEntry(searchEntry)
         searchBar.showCloseButton = true
         searchBar.setMargins(12)
-        searchBar.onRealize { [weak searchBar] in
-            guard let searchBar else { return }
-            searchBar.setKeyCaptureWidget(searchBar.window)
-        }
+        // Typing anywhere on this page reveals the search bar.
+        searchBar.setKeyCaptureWidget(box)
         group1.add(searchBar)
 
         let resultLabel = Label("Type to search...")
@@ -55,7 +60,9 @@ struct SearchBarExample: DemoExample {
         resultLabel.setMargins(12)
         group1.add(resultLabel)
 
-        searchEntry.onSearchChanged { [searchEntry, resultLabel] in
+        // The entry owns this handler, so capture it weakly.
+        searchEntry.onSearchChanged { [weak searchEntry, resultLabel] in
+            guard let searchEntry else { return }
             let query = searchEntry.text
             if query.isEmpty {
                 resultLabel.text = "Type to search..."
@@ -66,13 +73,15 @@ struct SearchBarExample: DemoExample {
 
         let toggleRow = ActionRow()
         toggleRow.title = "Search Mode"
-        toggleRow.subtitle = "Toggle the search bar visibility; Ctrl+F also works once key capture is set"
+        toggleRow.subtitle = "Toggle the search bar visibility, or just start typing on this page"
         let toggleSwitch = Switch()
         toggleSwitch.valign = .center
-        toggleSwitch.onActiveChanged { [toggleSwitch, weak searchBar] in
-            guard let searchBar else { return }
-            searchBar.searchModeEnabled = toggleSwitch.active
-        }
+        // A two-way binding instead of a pair of signal handlers: it also
+        // follows the close button and Escape, and two handlers capturing each
+        // other's widget would form a reference cycle.
+        searchBar.bind(
+            .custom("search-mode-enabled"), to: toggleSwitch,
+            property: .active, flags: [.bidirectional, .syncCreate])
         toggleRow.addSuffix(toggleSwitch)
         group1.add(toggleRow)
 
@@ -88,10 +97,7 @@ struct SearchBarExample: DemoExample {
         let closeSwitch = Switch()
         closeSwitch.active = true
         closeSwitch.valign = .center
-        closeSwitch.onActiveChanged { [closeSwitch, weak searchBar] in
-            guard let searchBar else { return }
-            searchBar.showCloseButton = closeSwitch.active
-        }
+        closeSwitch.bind(.active, to: searchBar, property: .custom("show-close-button"))
         closeRow.addSuffix(closeSwitch)
         group2.add(closeRow)
 

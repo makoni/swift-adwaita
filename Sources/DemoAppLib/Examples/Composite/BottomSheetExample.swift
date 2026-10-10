@@ -36,7 +36,9 @@ struct BottomSheetExample: DemoExample {
 
         // Toggle button
         let toggleBtn = Button(label: "Open Sheet")
-        toggleBtn.onClicked {
+        // Weak: the sheet owns the button (and so this handler).
+        toggleBtn.onClicked { [weak bottomSheet] in
+            guard let bottomSheet else { return }
             bottomSheet.open = !bottomSheet.open
         }
         content.child = toggleBtn
@@ -59,7 +61,8 @@ struct BottomSheetExample: DemoExample {
         toggleBtn.addCSSClass("suggested-action")
         toggleBtn.addCSSClass("pill")
         toggleBtn.halign = .center
-        toggleBtn.onClicked { [bottomSheet] in
+        toggleBtn.onClicked { [weak bottomSheet] in
+            guard let bottomSheet else { return }
             bottomSheet.open = !bottomSheet.open
         }
         content.child = toggleBtn
@@ -82,6 +85,18 @@ struct BottomSheetExample: DemoExample {
         row2.title = "Dark Mode"
         row2.subtitle = "Use dark color scheme"
         group.add(row2)
+        // Show the app's current darkness (and follow it while open), and
+        // force the scheme when the user flips the row.
+        let styleManager = StyleManager.default
+        styleManager.bind(.custom("dark"), to: row2, property: .active)
+        row2.onNotify(.active) { [weak row2, styleManager] in
+            guard let row2, row2.active != styleManager.dark else { return }
+            if row2.active {
+                styleManager.forceDark()
+            } else {
+                styleManager.forceLight()
+            }
+        }
 
         let row3 = SwitchRow()
         row3.title = "Do Not Disturb"

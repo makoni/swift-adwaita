@@ -15,8 +15,10 @@ struct TextViewExample: DemoExample {
         textView.wrapMode = .wordChar
         textView.monospace = true
 
-        let buffer = textView.buffer
-        buffer.onChanged {
+        // The buffer owns the handler, and the view owns the buffer:
+        // capture weakly to avoid a reference cycle.
+        textView.buffer.onChanged { [weak textView] in
+            guard let buffer = textView?.buffer else { return }
             print("Text changed: \\(buffer.charCount) chars")
         }
         """
@@ -52,12 +54,14 @@ struct TextViewExample: DemoExample {
         let infoLabel = Label("Characters: 0 | Lines: 0")
         infoLabel.addCSSClass("dim-label")
 
-        let buffer = textView.buffer
-        let updateInfo = { [buffer, infoLabel] in
+        // The buffer owns its handler and the view owns the buffer, so capture
+        // the view weakly and look the buffer up through it.
+        let updateInfo = { [weak textView, infoLabel] in
+            guard let buffer = textView?.buffer else { return }
             infoLabel.text = "Characters: \(buffer.charCount) | Lines: \(buffer.lineCount)"
         }
         updateInfo()
-        buffer.onChanged { updateInfo() }
+        textView.buffer.onChanged { updateInfo() }
 
         box.append(infoLabel)
 
@@ -66,16 +70,12 @@ struct TextViewExample: DemoExample {
         controlsBox.halign = .center
 
         let monoBtn = ToggleButton(label: "Monospace")
-        monoBtn.onToggled { [monoBtn, textView] in
-            textView.monospace = monoBtn.active
-        }
+        monoBtn.bind(.active, to: textView, property: .custom("monospace"))
         controlsBox.append(monoBtn)
 
         let editableBtn = ToggleButton(label: "Editable")
         editableBtn.active = true
-        editableBtn.onToggled { [editableBtn, textView] in
-            textView.editable = editableBtn.active
-        }
+        editableBtn.bind(.active, to: textView, property: .custom("editable"))
         controlsBox.append(editableBtn)
 
         box.append(controlsBox)

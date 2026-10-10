@@ -75,7 +75,10 @@ struct FileDialogExample: DemoExample {
         openBtn.addCSSClass("suggested-action")
         openBtn.addCSSClass("pill")
         openBtn.halign = .center
-        openBtn.onClicked { [resultLabel, box] in
+        // Each button finds its window through itself, weakly: the handler
+        // belongs to the button, so capturing it (or an ancestor such as `box`)
+        // strongly would keep the whole page alive.
+        openBtn.onClicked { [resultLabel, weak openBtn] in
             let dialog = FileDialog()
             dialog.title = "Open a File"
             dialog.setFilters([
@@ -83,7 +86,7 @@ struct FileDialogExample: DemoExample {
                 FileFilter(name: "Text files", suffixes: ["txt", "md"]),
                 FileFilter(name: "All files", patterns: ["*"]),
             ])
-            dialog.open(parent: box.root) { [resultLabel] result in
+            dialog.open(parent: openBtn?.root) { [resultLabel] result in
                 resultLabel.text = describe(result)
             }
         }
@@ -97,11 +100,11 @@ struct FileDialogExample: DemoExample {
         let saveBtn = Button(label: "Save File...")
         saveBtn.addCSSClass("pill")
         saveBtn.halign = .center
-        saveBtn.onClicked { [resultLabel, box] in
+        saveBtn.onClicked { [resultLabel, weak saveBtn] in
             let dialog = FileDialog()
             dialog.title = "Save File"
             dialog.initialName = "untitled.swift"
-            dialog.save(parent: box.root) { [resultLabel] result in
+            dialog.save(parent: saveBtn?.root) { [resultLabel] result in
                 resultLabel.text = describe(result)
             }
         }
@@ -115,10 +118,10 @@ struct FileDialogExample: DemoExample {
         let folderBtn = Button(label: "Select Folder...")
         folderBtn.addCSSClass("pill")
         folderBtn.halign = .center
-        folderBtn.onClicked { [resultLabel, box] in
+        folderBtn.onClicked { [resultLabel, weak folderBtn] in
             let dialog = FileDialog()
             dialog.title = "Select Folder"
-            dialog.selectFolder(parent: box.root) { [resultLabel] result in
+            dialog.selectFolder(parent: folderBtn?.root) { [resultLabel] result in
                 resultLabel.text = describe(result)
             }
         }

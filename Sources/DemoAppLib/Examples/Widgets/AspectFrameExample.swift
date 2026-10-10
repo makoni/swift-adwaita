@@ -49,7 +49,8 @@ struct AspectFrameExample: DemoExample {
 
         let obeySwitch = Switch()
         obeySwitch.valign = .center
-        obeySwitch.onActiveChanged { [frame, obeySwitch] in
+        obeySwitch.onActiveChanged { [frame, weak obeySwitch] in
+            guard let obeySwitch else { return }
             frame.obeyChild = obeySwitch.active
         }
 

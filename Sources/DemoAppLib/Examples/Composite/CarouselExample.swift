@@ -28,7 +28,7 @@ struct CarouselExample: DemoExample {
 
         let page3 = StatusPage()
         page3.title = "Get Started"
-        page3.iconName = "emblem-ok-symbolic"
+        page3.iconName = "object-select-symbolic"
         carousel.append(page3)
 
         // Indicator dots, or line-style indicators
@@ -67,7 +67,7 @@ struct CarouselExample: DemoExample {
         // Page 4
         let page4 = StatusPage()
         page4.title = "Get Started"
-        page4.iconName = "emblem-ok-symbolic"
+        page4.iconName = "object-select-symbolic"
         page4.description = "You are all set!"
         carousel.append(page4)
 
@@ -115,7 +115,8 @@ struct CarouselExample: DemoExample {
         let styleLabel = Label("Line indicators")
         let lineSwitch = Switch()
         lineSwitch.valign = .center
-        lineSwitch.onActiveChanged { [dots, lines, lineSwitch] in
+        lineSwitch.onActiveChanged { [dots, lines, weak lineSwitch] in
+            guard let lineSwitch else { return }
             dots.visible = !lineSwitch.active
             lines.visible = lineSwitch.active
         }

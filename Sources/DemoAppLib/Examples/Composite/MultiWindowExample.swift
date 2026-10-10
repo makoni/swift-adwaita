@@ -51,10 +51,11 @@ struct MultiWindowExample: DemoExample {
         let newWindowBtn = Button(label: "Open")
         newWindowBtn.valign = .center
         newWindowBtn.addCSSClass("suggested-action")
-        newWindowBtn.onClicked { [counterLabel] in
-            windowCount += 1
-
+        // Weak self-capture: the button owns this handler.
+        newWindowBtn.onClicked { [weak newWindowBtn, counterLabel] in
+            // Only count windows that actually open.
             guard let app = Application.current else { return }
+            windowCount += 1
 
             let secondary = ApplicationWindow(application: app)
             secondary.title = "Window #\(windowCount)"
@@ -62,7 +63,7 @@ struct MultiWindowExample: DemoExample {
             secondary.defaultHeight = 300
 
             // Make the new window transient to the current window
-            if let root = newWindowBtn.root {
+            if let root = newWindowBtn?.root {
                 secondary.transientFor = root.cast(GtkWindow.self)
             }
 
@@ -85,8 +86,9 @@ struct MultiWindowExample: DemoExample {
             let closeBtn = Button(label: "Close This Window")
             closeBtn.addCSSClass("pill")
             closeBtn.halign = .center
-            closeBtn.onClicked { [weak closeBtn] in
-                closeBtn?.closeWindow()
+            // Weak: the window owns the button, and so this handler.
+            closeBtn.onClicked { [weak secondary] in
+                secondary?.close()
             }
             page.child = closeBtn
             toolbar.content = page
@@ -106,10 +108,9 @@ struct MultiWindowExample: DemoExample {
         row2.subtitle = "Opens a modal window that blocks interaction with the parent"
         let modalBtn = Button(label: "Open")
         modalBtn.valign = .center
-        modalBtn.onClicked { [counterLabel] in
-            windowCount += 1
-
+        modalBtn.onClicked { [weak modalBtn, counterLabel] in
             guard let app = Application.current else { return }
+            windowCount += 1
 
             let modal = ApplicationWindow(application: app)
             modal.title = "Modal #\(windowCount)"
@@ -117,7 +118,7 @@ struct MultiWindowExample: DemoExample {
             modal.defaultHeight = 250
             modal.modal = true
 
-            if let root = modalBtn.root {
+            if let root = modalBtn?.root {
                 modal.transientFor = root.cast(GtkWindow.self)
             }
 
@@ -138,8 +139,8 @@ struct MultiWindowExample: DemoExample {
             dismissBtn.addCSSClass("suggested-action")
             dismissBtn.addCSSClass("pill")
             dismissBtn.halign = .center
-            dismissBtn.onClicked { [weak dismissBtn] in
-                dismissBtn?.closeWindow()
+            dismissBtn.onClicked { [weak modal] in
+                modal?.close()
             }
             page.child = dismissBtn
             toolbar.content = page
@@ -169,7 +170,7 @@ struct MultiWindowExample: DemoExample {
         noteRow.title = "transientFor"
         noteRow.subtitle =
             "Links child windows to their parent so the window manager can position and stack them correctly"
-        let checkIcon = Image(iconName: "emblem-ok-symbolic")
+        let checkIcon = Image(iconName: "object-select-symbolic")
         checkIcon.valign = .center
         checkIcon.addCSSClass("success")
         noteRow.addSuffix(checkIcon)
@@ -178,7 +179,7 @@ struct MultiWindowExample: DemoExample {
         let modalNoteRow = ActionRow()
         modalNoteRow.title = "modal"
         modalNoteRow.subtitle = "When true, the window blocks interaction with its transient parent"
-        let checkIcon2 = Image(iconName: "emblem-ok-symbolic")
+        let checkIcon2 = Image(iconName: "object-select-symbolic")
         checkIcon2.valign = .center
         checkIcon2.addCSSClass("success")
         modalNoteRow.addSuffix(checkIcon2)

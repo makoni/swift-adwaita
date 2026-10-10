@@ -19,9 +19,17 @@ struct OverlaySplitViewExample: DemoExample {
 
         // Toggle sidebar with a button
         let toggleBtn = Button(iconName: "sidebar-show-symbolic")
-        toggleBtn.onClicked {
+        toggleBtn.onClicked { [weak splitView] in
+            guard let splitView else { return }
             splitView.showSidebar = !splitView.showSidebar
         }
+
+        // Collapse into an overlay when narrow (gestures need this)
+        let breakpoint = Breakpoint.maxWidth(500)
+        breakpoint.addSetter(splitView, property: .custom("collapsed"), value: true)
+        let bin = BreakpointBin()
+        bin.child = splitView
+        bin.addBreakpoint(breakpoint)
         """
 
     func buildWidget() -> Widget {
@@ -65,12 +73,16 @@ struct OverlaySplitViewExample: DemoExample {
         let contentStatus = StatusPage()
         contentStatus.title = "Home"
         contentStatus.iconName = "go-home-symbolic"
-        contentStatus.description = "Swipe from the edge or tap the button to toggle the sidebar overlay"
+        contentStatus.description =
+            "Tap the button to toggle the sidebar. Narrow the window to turn it into an overlay you can also swipe in from the edge."
 
         let toggleBtn = Button(iconName: "sidebar-show-symbolic")
         toggleBtn.addCSSClass("flat")
 
-        toggleBtn.onClicked { [splitView] in
+        // The button and the list live inside the split view: capture it
+        // weakly, or their handlers would keep the whole view alive forever.
+        toggleBtn.onClicked { [weak splitView] in
+            guard let splitView else { return }
             splitView.showSidebar = !splitView.showSidebar
         }
 
@@ -83,16 +95,26 @@ struct OverlaySplitViewExample: DemoExample {
 
         splitView.content = contentToolbar
 
-        sidebarList.onRowActivated { [contentStatus, splitView] row in
+        sidebarList.onRowActivated { [contentStatus, weak splitView] row in
             let idx = Int(row.index)
             guard idx >= 0, idx < items.count else { return }
             contentStatus.title = items[idx]
             // Auto-close sidebar overlay on selection
-            if splitView.collapsed {
+            if let splitView, splitView.collapsed {
                 splitView.showSidebar = false
             }
         }
 
-        return splitView
+        // The swipe gestures and the auto-close above only apply while the
+        // view is collapsed, which nothing else would ever set: collapse it
+        // into an overlay at narrow widths, as libadwaita apps do.
+        let breakpoint = Breakpoint.maxWidth(500)
+        breakpoint.addSetter(splitView, property: .custom("collapsed"), value: true)
+
+        let bin = BreakpointBin()
+        bin.child = splitView
+        bin.addBreakpoint(breakpoint)
+        bin.setSizeRequest(width: 360, height: 300)
+        return bin
     }
 }

@@ -28,6 +28,13 @@ struct ViewSwitcherExample: DemoExample {
         let switcher = ViewSwitcher()
         switcher.stack = viewStack
         switcher.policy = .wide
+
+        // Narrow: move the switcher to a bottom bar
+        let switcherBar = ViewSwitcherBar()
+        switcherBar.stack = viewStack
+        let breakpoint = Breakpoint.maxWidth(550)
+        breakpoint.addSetter(switcher, property: .visible, value: false)
+        breakpoint.addSetter(switcherBar, property: .custom("reveal"), value: true)
         """
 
     func buildWidget() -> Widget {
@@ -51,9 +58,9 @@ struct ViewSwitcherExample: DemoExample {
         // Page 3 — Shared
         let page3 = StatusPage()
         page3.title = "Shared"
-        page3.iconName = "emblem-shared-symbolic"
+        page3.iconName = "folder-publicshare-symbolic"
         page3.description = "Files shared with you by others."
-        viewStack.addTitledWithIcon(page3, name: "shared", title: "Shared", iconName: "emblem-shared-symbolic")
+        viewStack.addTitledWithIcon(page3, name: "shared", title: "Shared", iconName: "folder-publicshare-symbolic")
 
         // ViewSwitcher in a header bar
         let switcher = ViewSwitcher()
@@ -72,6 +79,16 @@ struct ViewSwitcherExample: DemoExample {
         toolbarView.addBottomBar(switcherBar)
         toolbarView.content = viewStack
 
-        return toolbarView
+        // The bar starts unrevealed and nothing else would reveal it: at
+        // narrow widths hide the header switcher and reveal the bar instead.
+        let breakpoint = Breakpoint.maxWidth(550)
+        breakpoint.addSetter(switcher, property: .visible, value: false)
+        breakpoint.addSetter(switcherBar, property: .custom("reveal"), value: true)
+
+        let bin = BreakpointBin()
+        bin.child = toolbarView
+        bin.addBreakpoint(breakpoint)
+        bin.setSizeRequest(width: 360, height: 300)
+        return bin
     }
 }

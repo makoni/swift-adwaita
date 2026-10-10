@@ -64,7 +64,7 @@ struct ShortcutExample: DemoExample {
 
         let infoGroup = PreferencesGroup()
         infoGroup.title = "Registered Shortcuts"
-        infoGroup.description = "Click the area above first, then use these keyboard shortcuts"
+        infoGroup.description = "Active whenever this page is shown — no need to focus anything first"
 
         for (_, _, desc) in shortcuts {
             let row = ActionRow()
@@ -79,8 +79,12 @@ struct ShortcutExample: DemoExample {
         box.append(group)
         box.append(infoGroup)
 
-        // Attach shortcuts using the enum-based API
+        // Attach shortcuts using the enum-based API. Managed scope lets the
+        // window dispatch them while the page is mapped; with the default
+        // local scope they would only fire with focus inside the page, and
+        // nothing here takes focus on click.
         let controller = ShortcutController()
+        controller.scope = GTK_SHORTCUT_SCOPE_MANAGED
         for (key, modifiers, desc) in shortcuts {
             let description = desc
             controller.addShortcut(key: key, modifiers: modifiers) { [logLabel] in
@@ -89,7 +93,6 @@ struct ShortcutExample: DemoExample {
             }
         }
         box.addController(controller)
-        box.isFocusable = true
 
         return box.scrollableClamped()
     }

@@ -12,7 +12,8 @@ struct FontPickerExample: DemoExample {
     let sourceCode = """
         let fontBtn = FontDialogButton()
         fontBtn.fontDescription = "Sans 14"
-        fontBtn.onFontChanged {
+        fontBtn.onFontChanged { [weak fontBtn] in
+            guard let fontBtn else { return }
             print("Font: \\(fontBtn.fontDescription ?? "none")")
         }
         """
@@ -32,7 +33,8 @@ struct FontPickerExample: DemoExample {
         let resultLabel = Label("Selected: Sans 14")
         resultLabel.addCSSClass("dim-label")
 
-        fontBtn.onFontChanged { [fontBtn, resultLabel] in
+        fontBtn.onFontChanged { [weak fontBtn, resultLabel] in
+            guard let fontBtn else { return }
             resultLabel.text = "Selected: \(fontBtn.fontDescription ?? "none")"
         }
 

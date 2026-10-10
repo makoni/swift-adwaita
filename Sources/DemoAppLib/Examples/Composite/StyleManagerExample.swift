@@ -62,28 +62,26 @@ struct StyleManagerExample: DemoExample {
         let btnBox = Box(orientation: .horizontal, spacing: 8)
         btnBox.halign = .center
 
+        // The label follows the notifications below, so the buttons only
+        // need to set the scheme.
         let systemBtn = Button(label: "System")
         systemBtn.onClicked { [styleManager] in
             styleManager.resetColorScheme()
-            updateStatus()
         }
 
         let lightBtn = Button(label: "Light")
         lightBtn.onClicked { [styleManager] in
             styleManager.forceLight()
-            updateStatus()
         }
 
         let darkBtn = Button(label: "Dark")
         darkBtn.onClicked { [styleManager] in
             styleManager.forceDark()
-            updateStatus()
         }
 
         let preferDarkBtn = Button(label: "Prefer Dark")
         preferDarkBtn.onClicked { [styleManager] in
             styleManager.preferDark()
-            updateStatus()
         }
 
         btnBox.append(systemBtn)
@@ -94,7 +92,18 @@ struct StyleManagerExample: DemoExample {
         box.append(btnBox)
         box.append(statusLabel)
 
-        styleManager.onDarkChanged { updateStatus() }
+        // Follow every field the label shows, including changes made outside
+        // this page (another example, or the system theme): `dark` alone misses
+        // a scheme change that keeps the same darkness, and high contrast.
+        let connections = [
+            styleManager.onDarkChanged { updateStatus() },
+            styleManager.onHighContrastChanged { updateStatus() },
+            SignalHelper.onNotify(styleManager, property: .custom("color-scheme")) { updateStatus() },
+        ]
+        // StyleManager is a process-wide singleton: drop the handlers with the page.
+        box.onDestroy {
+            for connection in connections { connection.disconnect() }
+        }
 
         return box
     }

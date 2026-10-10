@@ -56,14 +56,14 @@ struct AnimatedImagePlayerExample: DemoExample {
 
         let playerHolder = PlayerHolder()
 
-        openBtn.onClicked { [box, picture, status, playerHolder] in
+        openBtn.onClicked { [weak openBtn, picture, status, playerHolder] in
             let dialog = FileDialog()
             dialog.title = "Open Animated Image"
             dialog.setFilters([
                 FileFilter(name: "Animated images", suffixes: ["gif", "webp"]),
                 FileFilter(name: "All files", patterns: ["*"]),
             ])
-            dialog.open(parent: box.root) { [picture, status, playerHolder] result in
+            dialog.open(parent: openBtn?.root) { [picture, status, playerHolder] result in
                 guard case .success(let path?) = result else { return }
                 let url = URL(fileURLWithPath: path)
                 do {

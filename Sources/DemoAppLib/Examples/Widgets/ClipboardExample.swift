@@ -44,8 +44,10 @@ struct ClipboardExample: DemoExample {
         let copyBtn = Button(label: "Copy")
         copyBtn.addCSSClass("suggested-action")
         copyBtn.halign = .center
-        copyBtn.onClicked { [entry, box] in
-            box.clipboard.setText(entry.text)
+        // The clipboard is display-wide, so the button's own handle works; weak
+        // because the handler belongs to the button.
+        copyBtn.onClicked { [entry, weak copyBtn] in
+            copyBtn?.clipboard.setText(entry.text)
         }
         copyGroup.add(copyBtn)
 
@@ -69,8 +71,8 @@ struct ClipboardExample: DemoExample {
         let pasteBtn = Button(label: "Paste")
         pasteBtn.addCSSClass("pill")
         pasteBtn.halign = .center
-        pasteBtn.onClicked { [box, resultLabel] in
-            box.clipboard.readText { [resultLabel] text in
+        pasteBtn.onClicked { [weak pasteBtn, resultLabel] in
+            pasteBtn?.clipboard.readText { [resultLabel] text in
                 resultLabel.text = text ?? "(empty clipboard)"
             }
         }

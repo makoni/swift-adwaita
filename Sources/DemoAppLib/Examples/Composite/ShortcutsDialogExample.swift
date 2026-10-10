@@ -38,8 +38,10 @@ struct ShortcutsDialogExample: DemoExample {
         openBtn.addCSSClass("pill")
         openBtn.halign = .center
         openBtn.sensitive = ShortcutsDialog.isAvailable
-        openBtn.onClicked { [box] in
-            guard ShortcutsDialog.isAvailable else { return }
+        // The button lives inside `box`: capture it weakly, or the button's
+        // handler would keep the whole page alive forever.
+        openBtn.onClicked { [weak box] in
+            guard let box, ShortcutsDialog.isAvailable else { return }
             let dialog = ShortcutsDialog()
 
             if let general = ShortcutsSection(title: "General") {

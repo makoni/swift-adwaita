@@ -33,6 +33,9 @@ struct CustomCSSExample: DemoExample {
         \""")
         provider.addToDefaultDisplay()
 
+        // Uninstall it once the UI that uses it goes away
+        root.onDestroy { provider.removeFromDefaultDisplay() }
+
         // Apply classes to widgets
         let label = Label("Neon Text")
         label.addCSSClass("neon-green")
@@ -165,6 +168,13 @@ struct CustomCSSExample: DemoExample {
 
         box.append(group4)
 
-        return box.scrollableClamped()
+        // The provider is global to the display: take it off again when this
+        // example's UI is destroyed, so rebuilding it doesn't pile providers up.
+        // (CSSProvider is a plain Swift object, so the capture is no cycle.)
+        let root = box.scrollableClamped()
+        root.onDestroy { [provider] in
+            provider.removeFromDefaultDisplay()
+        }
+        return root
     }
 }

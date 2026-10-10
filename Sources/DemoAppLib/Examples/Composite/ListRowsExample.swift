@@ -30,6 +30,10 @@ struct ListRowsExample: DemoExample {
         row2.addPrefix(btIcon)
         let btSwitch = Switch()
         btSwitch.valign = .center
+        btSwitch.onActiveChanged { [weak row2, weak btSwitch] in
+            guard let row2, let btSwitch else { return }
+            row2.subtitle = btSwitch.active ? "Enabled" : "Disabled"
+        }
         row2.addSuffix(btSwitch)
         group.add(row2)
 
@@ -79,6 +83,12 @@ struct ListRowsExample: DemoExample {
         btSwitch.valign = .center
         row2.addSuffix(btSwitch)
         row2.activatableWidget = btSwitch
+        // Keep the status subtitle in step with the switch. Weak: the row
+        // owns the switch, and the switch owns this handler.
+        btSwitch.onActiveChanged { [weak row2, weak btSwitch] in
+            guard let row2, let btSwitch else { return }
+            row2.subtitle = btSwitch.active ? "Enabled" : "Disabled"
+        }
         group.add(row2)
 
         // Expander row
@@ -89,8 +99,6 @@ struct ListRowsExample: DemoExample {
         privIcon.valign = .center
         expander.addPrefix(privIcon)
 
-        let locRow = ActionRow()
-        locRow.title = "Location Services"
         let locSwitch = SwitchRow()
         locSwitch.title = "Location Services"
         locSwitch.active = true
@@ -118,7 +126,14 @@ struct ListRowsExample: DemoExample {
         let resetBtn = Button(label: "Reset")
         resetBtn.addCSSClass("destructive-action")
         resetBtn.valign = .center
+        resetBtn.onClicked { [btSwitch, locSwitch, camRow, micRow] in
+            btSwitch.active = false
+            locSwitch.active = true
+            camRow.active = true
+            micRow.active = false
+        }
         resetRow.addSuffix(resetBtn)
+        resetRow.activatableWidget = resetBtn
         dangerGroup.add(resetRow)
 
         box.append(group)

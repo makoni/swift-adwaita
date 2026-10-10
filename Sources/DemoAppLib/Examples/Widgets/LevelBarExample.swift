@@ -42,7 +42,8 @@ struct LevelBarExample: DemoExample {
         scale1.value = 70
         scale1.hexpand = true
         scale1.setMargins(12)
-        scale1.onValueChanged { [scale1, bar1] in
+        scale1.onValueChanged { [weak scale1, bar1] in
+            guard let scale1 else { return }
             bar1.value = scale1.value / 100.0
         }
         group1.add(scale1)
@@ -67,7 +68,8 @@ struct LevelBarExample: DemoExample {
         scale2.digits = 0
         scale2.hexpand = true
         scale2.setMargins(12)
-        scale2.onValueChanged { [scale2, bar2] in
+        scale2.onValueChanged { [weak scale2, bar2] in
+            guard let scale2 else { return }
             bar2.value = scale2.value
         }
         group2.add(scale2)

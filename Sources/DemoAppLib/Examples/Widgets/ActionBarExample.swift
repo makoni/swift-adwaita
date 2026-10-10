@@ -51,8 +51,15 @@ struct ActionBarExample: DemoExample {
         actionBar.centerWidget = centerLabel
         actionBar.revealed = true
 
-        revealSwitch.onActiveChanged { [actionBar, revealSwitch] in
-            actionBar.revealed = revealSwitch.active
+        revealSwitch.bind(.active, to: actionBar, property: .custom("revealed"))
+
+        // Both actions dismiss the bar. Go through the switch so it stays in
+        // sync with the bar's revealed state.
+        cancelBtn.onClicked { [revealSwitch] in
+            revealSwitch.active = false
+        }
+        applyBtn.onClicked { [revealSwitch] in
+            revealSwitch.active = false
         }
 
         box.append(actionBar)

@@ -11,7 +11,7 @@ struct InlineViewSwitcherExample: DemoExample {
 
     let sourceCode = """
         let stack = ViewStack()
-        stack.addTitledWithIcon(page, name: "a", title: "A", iconName: "a-symbolic")
+        stack.addTitledWithIcon(page, name: "a", title: "A", iconName: "view-list-symbolic")
 
         // Compact segmented-control switcher for a ViewStack (libadwaita 1.7+)
         if let switcher = InlineViewSwitcher() {
@@ -92,14 +92,10 @@ struct InlineViewSwitcherExample: DemoExample {
                 }
                 modeBox.append(btn)
             }
-            switcher.canShrink = shrinkSwitch.active
-            shrinkSwitch.onActiveChanged { [switcher, shrinkSwitch] in
-                switcher.canShrink = shrinkSwitch.active
-            }
-            switcher.homogeneous = homSwitch.active
-            homSwitch.onActiveChanged { [switcher, homSwitch] in
-                switcher.homogeneous = homSwitch.active
-            }
+            // Property bindings keep the switcher in step with the switches
+            // (and sync the initial values) without capturing any widget.
+            shrinkSwitch.bind(.active, to: switcher, property: .custom("can-shrink"))
+            homSwitch.bind(.active, to: switcher, property: .homogeneous)
 
             contentBox.append(switcher)
             contentBox.append(stack)

@@ -14,7 +14,9 @@ struct BannerExample: DemoExample {
         banner.buttonLabel = "Update Now"
         banner.revealed = true
 
-        banner.onButtonClicked {
+        // Weak: the handler belongs to the banner itself.
+        banner.onButtonClicked { [weak banner] in
+            guard let banner else { return }
             banner.title = "Updating..."
             banner.buttonLabel = nil
         }
@@ -34,7 +36,8 @@ struct BannerExample: DemoExample {
         banner.revealed = true
         outerBox.append(banner)
 
-        banner.onButtonClicked { [banner] in
+        banner.onButtonClicked { [weak banner] in
+            guard let banner else { return }
             banner.title = "Updating..."
             banner.buttonLabel = nil
         }

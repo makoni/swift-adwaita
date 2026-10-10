@@ -11,7 +11,8 @@ struct DropDownExample: DemoExample {
 
     let sourceCode = """
         let dropdown = DropDown(strings: ["Option A", "Option B", "Option C"])
-        dropdown.onSelectedChanged {
+        dropdown.onSelectedChanged { [weak dropdown] in
+            guard let dropdown else { return }
             print("Selected: \\(dropdown.selected)")
         }
         """
@@ -30,7 +31,8 @@ struct DropDownExample: DemoExample {
         let resultLabel = Label("Selected: Apple")
         resultLabel.addCSSClass("dim-label")
 
-        fruits.onSelectedChanged { [fruits, resultLabel] in
+        fruits.onSelectedChanged { [weak fruits, resultLabel] in
+            guard let fruits else { return }
             let names = ["Apple", "Banana", "Cherry", "Date", "Elderberry"]
             let idx = fruits.selected
             if idx >= 0, idx < names.count {

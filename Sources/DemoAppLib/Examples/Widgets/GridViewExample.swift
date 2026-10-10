@@ -116,12 +116,16 @@ struct GridViewExample: DemoExample {
         selectRow.addSuffix(selectLabel)
         group.add(selectRow)
 
-        selection.onSelectionChanged {
+        // SingleSelection autoselects the first item, so sync the label now as
+        // well as on every change (an invalid position means nothing selected).
+        // `selection` owns this handler, so capture it weakly.
+        let showSelection = { [weak selection, selectLabel] in
+            guard let selection else { return }
             let idx = selection.selected
-            if idx < colors.count {
-                selectLabel.text = colors[idx].name
-            }
+            selectLabel.text = idx < colors.count ? colors[idx].name : "None"
         }
+        selection.onSelectionChanged { showSelection() }
+        showSelection()
 
         outerBox.append(group)
 

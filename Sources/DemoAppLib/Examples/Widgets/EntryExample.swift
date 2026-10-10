@@ -13,7 +13,8 @@ struct EntryExample: DemoExample {
         // GtkEntry — basic text input
         let entry = Entry()
         entry.placeholderText = "Type something..."
-        entry.onActivate {
+        entry.onActivate { [weak entry] in
+            guard let entry else { return }
             print("Entered: \\(entry.text)")
         }
 

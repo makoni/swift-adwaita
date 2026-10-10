@@ -19,9 +19,10 @@ struct ToastExample: DemoExample {
         // Toast with button
         let toast2 = Toast(title: "File deleted")
         toast2.buttonLabel = "Undo"
-        toast2.onButtonClicked {
+        // The overlay owns the toast: capture it weakly
+        toast2.onButtonClicked { [weak overlay] in
             let undone = Toast(title: "Undo successful")
-            overlay.addToast(undone)
+            overlay?.addToast(undone)
         }
         overlay.addToast(toast2)
 
@@ -41,15 +42,18 @@ struct ToastExample: DemoExample {
         group.title = "Toast Demos"
         group.description = "Tap a button to show a toast notification"
 
+        // The buttons live inside the overlay, so their handlers (and the
+        // toasts' handlers) capture it weakly to avoid a reference cycle.
+
         // Simple toast
         let row1 = ActionRow()
         row1.title = "Simple Toast"
         row1.subtitle = "A basic text notification"
         let btn1 = Button(label: "Show")
         btn1.valign = .center
-        btn1.onClicked { [overlay] in
+        btn1.onClicked { [weak overlay] in
             let toast = Toast(title: "Hello from swift-adwaita!")
-            overlay.addToast(toast)
+            overlay?.addToast(toast)
         }
         row1.addSuffix(btn1)
         row1.activatableWidget = btn1
@@ -61,15 +65,15 @@ struct ToastExample: DemoExample {
         row2.subtitle = "Includes an undo button"
         let btn2 = Button(label: "Show")
         btn2.valign = .center
-        btn2.onClicked { [overlay] in
+        btn2.onClicked { [weak overlay] in
             let toast = Toast(title: "File deleted")
             toast.buttonLabel = "Undo"
-            toast.onButtonClicked { [overlay] in
+            toast.onButtonClicked { [weak overlay] in
                 let undone = Toast(title: "Undo successful")
                 undone.timeout = 2
-                overlay.addToast(undone)
+                overlay?.addToast(undone)
             }
-            overlay.addToast(toast)
+            overlay?.addToast(toast)
         }
         row2.addSuffix(btn2)
         row2.activatableWidget = btn2
@@ -81,10 +85,10 @@ struct ToastExample: DemoExample {
         row3.subtitle = "Auto-dismisses after 3 seconds"
         let btn3 = Button(label: "Show")
         btn3.valign = .center
-        btn3.onClicked { [overlay] in
+        btn3.onClicked { [weak overlay] in
             let toast = Toast(title: "This will disappear in 3 seconds")
             toast.timeout = 3
-            overlay.addToast(toast)
+            overlay?.addToast(toast)
         }
         row3.addSuffix(btn3)
         row3.activatableWidget = btn3
@@ -96,10 +100,10 @@ struct ToastExample: DemoExample {
         row4.subtitle = "Displayed ahead of other toasts"
         let btn4 = Button(label: "Show")
         btn4.valign = .center
-        btn4.onClicked { [overlay] in
+        btn4.onClicked { [weak overlay] in
             let toast = Toast(title: "Important notification!")
             toast.priority = .high
-            overlay.addToast(toast)
+            overlay?.addToast(toast)
         }
         row4.addSuffix(btn4)
         row4.activatableWidget = btn4

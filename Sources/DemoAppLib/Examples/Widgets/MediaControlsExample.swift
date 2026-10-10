@@ -54,14 +54,15 @@ struct MediaControlsExample: DemoExample {
         openBtn.addCSSClass("pill")
         openBtn.halign = .center
         openBtn.setMargins(12)
-        openBtn.onClicked { [box, placeholder, video, controls, playerBox] in
+        // `box` is an ancestor of the button, so a strong capture would form a cycle.
+        openBtn.onClicked { [weak box, placeholder, video, controls, playerBox] in
             let dialog = FileDialog()
             dialog.title = "Open Video"
             dialog.setFilters([
                 FileFilter(name: "Videos", suffixes: ["mp4", "webm", "mkv", "avi", "mov", "ogv"]),
                 FileFilter(name: "All files", patterns: ["*"]),
             ])
-            dialog.open(parent: box.root) { [placeholder, video, controls, playerBox] result in
+            dialog.open(parent: box?.root) { [placeholder, video, controls, playerBox] result in
                 guard case .success(let path?) = result else { return }
                 let stream = MediaStream(filename: path)
                 // Tear the previous stream's GStreamer pipeline down now, while
