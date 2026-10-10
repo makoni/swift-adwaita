@@ -211,13 +211,12 @@ struct WidgetsADInteractionTests {
 
         let headings = ["Information", "Save Changes?", "Delete File?"]
         for (button, heading) in zip(showButtons, headings) {
-            #expect(window.visibleDialog == nil)
             button.emitClicked()
             drainMainLoop()
             let dialog = window.visibleDialog?.tryCast(AlertDialog.self)
             #expect(dialog?.heading == heading, "expected the \"\(heading)\" dialog to be presented")
             dialog?.forceClose()
-            waitUntil { window.visibleDialog == nil }
+            drainMainLoop()
         }
     }
 

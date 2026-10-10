@@ -476,6 +476,9 @@ struct WidgetsPWInteractionTests {
         showButtons[0].emitClicked()
         drainMainLoop()
         #expect(toastShowing("Hello from swift-adwaita!"))
+        // The next toast only shows once this one is gone, and
+        // `adw_toast_overlay_dismiss_all` only exists from libadwaita 1.7.
+        guard AdwaitaVersion.isAtLeast(1, 7) else { return }
         widgetOfType(root, ToastOverlay.self)?.dismissAll()
         waitUntil { !toastShowing("Hello from swift-adwaita!") }
 
