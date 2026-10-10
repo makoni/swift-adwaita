@@ -352,6 +352,19 @@ final class AdvancedFeatureXCTests: XCTestCase {
         XCTAssertTrue(label2.text == "Hello")
     }
 
+    @MainActor func test_gobjectBindFlagsCombineWithOr() {
+        ensureAdwInit()
+        let flags: GBindingFlags = .bidirectional | .syncCreate
+        XCTAssertTrue(flags.rawValue == GBindingFlags.bidirectional.rawValue | GBindingFlags.syncCreate.rawValue)
+
+        let label1 = Label("Hello")
+        let label2 = Label("World")
+        label1.bind(.label, to: label2, property: .label, flags: flags)
+        XCTAssertTrue(label2.text == "Hello")
+        label2.text = "Back"
+        XCTAssertTrue(label1.text == "Back")
+    }
+
     // MARK: - PreferencesDialog
 
     @MainActor func test_preferencesDialogCreation() {

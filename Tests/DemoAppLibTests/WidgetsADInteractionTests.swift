@@ -217,7 +217,7 @@ struct WidgetsADInteractionTests {
             let dialog = window.visibleDialog?.tryCast(AlertDialog.self)
             #expect(dialog?.heading == heading, "expected the \"\(heading)\" dialog to be presented")
             dialog?.forceClose()
-            drainMainLoop()
+            waitUntil { window.visibleDialog == nil }
         }
     }
 

@@ -6,6 +6,15 @@ import CAdwaita
 public extension GBindingFlags {
     static let bidirectional = Self(rawValue: 1 << 0)
     static let syncCreate = Self(rawValue: 1 << 1)
+
+    /// Combines binding flags: `.bidirectional | .syncCreate`.
+    ///
+    /// Not every toolchain imports `GBindingFlags` as an `OptionSet`
+    /// (Swift 6.3 doesn't), so an array literal like
+    /// `[.bidirectional, .syncCreate]` is not portable; this is.
+    static func | (lhs: Self, rhs: Self) -> Self {
+        Self(rawValue: lhs.rawValue | rhs.rawValue)
+    }
 }
 
 private final class GObjectLifetimeObserver: @unchecked Sendable {

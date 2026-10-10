@@ -33,7 +33,7 @@ struct ToolbarExample: DemoExample {
         searchBar.child = SearchEntry()
         searchBar.bind(
             .custom("search-mode-enabled"), to: searchBtn,
-            property: .active, flags: [.bidirectional, .syncCreate])
+            property: .active, flags: .bidirectional | .syncCreate)
         toolbarView.addTopBar(searchBar)
 
         // Content
@@ -82,7 +82,7 @@ struct ToolbarExample: DemoExample {
         searchBar.connectEntry(searchEntry)
         searchBar.bind(
             .custom("search-mode-enabled"), to: searchBtn,
-            property: .active, flags: [.bidirectional, .syncCreate])
+            property: .active, flags: .bidirectional | .syncCreate)
         toolbarView.addTopBar(searchBar)
 
         // Content
@@ -113,7 +113,7 @@ struct ToolbarExample: DemoExample {
         let bottomBarCheck = CheckButton(label: "Show Bottom Bar")
         toolbarView.bind(
             .custom("reveal-bottom-bars"), to: bottomBarCheck,
-            property: .active, flags: [.bidirectional, .syncCreate])
+            property: .active, flags: .bidirectional | .syncCreate)
         let menuPopover = Popover()
         menuPopover.child = bottomBarCheck
         menuBtn.popover = menuPopover

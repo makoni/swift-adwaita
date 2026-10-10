@@ -24,7 +24,7 @@ struct SearchBarExample: DemoExample {
         let toggleSwitch = Switch()
         searchBar.bind(
             .custom("search-mode-enabled"), to: toggleSwitch,
-            property: .active, flags: [.bidirectional, .syncCreate])
+            property: .active, flags: .bidirectional | .syncCreate)
 
         // Connect to entry
         entry.onSearchChanged { [weak entry] in
@@ -81,7 +81,7 @@ struct SearchBarExample: DemoExample {
         // other's widget would form a reference cycle.
         searchBar.bind(
             .custom("search-mode-enabled"), to: toggleSwitch,
-            property: .active, flags: [.bidirectional, .syncCreate])
+            property: .active, flags: .bidirectional | .syncCreate)
         toggleRow.addSuffix(toggleSwitch)
         group1.add(toggleRow)
 

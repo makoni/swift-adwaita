@@ -34,6 +34,20 @@ func drainMainLoop(_ passes: Int = 4) {
     }
 }
 
+/// Pumps the main loop until `condition` holds or `timeout` passes. On older
+/// libadwaita (1.5) closing a dialog or replacing a toast completes on later
+/// frames, not within one `drainMainLoop()`.
+@MainActor
+func waitUntil(timeout: Duration = .seconds(2), _ condition: @MainActor () -> Bool) {
+    let clock = ContinuousClock()
+    let deadline = clock.now.advanced(by: timeout)
+    while !condition(), clock.now < deadline {
+        if MainContext.drainPending() == 0 {
+            g_usleep(1_000)
+        }
+    }
+}
+
 /// Depth-first, pre-order collection of `root` and every descendant widget,
 /// visiting siblings in GTK child order (first child first).
 @MainActor

@@ -355,6 +355,19 @@ struct AdvancedFeatureTests {
         #expect(label2.text == "Hello")
     }
 
+    @Test @MainActor func gobjectBindFlagsCombineWithOr() {
+        ensureAdwInit()
+        let flags: GBindingFlags = .bidirectional | .syncCreate
+        #expect(flags.rawValue == GBindingFlags.bidirectional.rawValue | GBindingFlags.syncCreate.rawValue)
+
+        let label1 = Label("Hello")
+        let label2 = Label("World")
+        label1.bind(.label, to: label2, property: .label, flags: flags)
+        #expect(label2.text == "Hello")
+        label2.text = "Back"
+        #expect(label1.text == "Back")
+    }
+
     // MARK: - PreferencesDialog
 
     @Test @MainActor func preferencesDialogCreation() {

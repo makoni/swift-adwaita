@@ -384,7 +384,7 @@ struct CompositeAMInteractionTests {
         drainMainLoop()
         #expect(window.visibleDialog?.title == "Preferences")
         window.visibleDialog?.forceClose()
-        drainMainLoop()
+        waitUntil { window.visibleDialog == nil }
         #expect(window.visibleDialog == nil)
 
         openers[1].emitClicked()

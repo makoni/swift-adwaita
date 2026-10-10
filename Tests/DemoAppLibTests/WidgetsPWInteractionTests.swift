@@ -477,15 +477,15 @@ struct WidgetsPWInteractionTests {
         drainMainLoop()
         #expect(toastShowing("Hello from swift-adwaita!"))
         widgetOfType(root, ToastOverlay.self)?.dismissAll()
-        drainMainLoop()
+        waitUntil { !toastShowing("Hello from swift-adwaita!") }
 
         showButtons[1].emitClicked()
-        drainMainLoop()
+        waitUntil { toastShowing("File deleted") && buttonLabeled(root, "Undo") != nil }
         #expect(toastShowing("File deleted"))
         let undo = buttonLabeled(root, "Undo")
         #expect(undo != nil, "toast Undo button not found")
         undo?.emitClicked()
-        drainMainLoop()
+        waitUntil { toastShowing("Undo successful") }
         #expect(toastShowing("Undo successful"), "Undo should show the follow-up toast")
     }
 
