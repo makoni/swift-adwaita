@@ -75,20 +75,61 @@ freed memory. In a long-lived process that is a rare crash; in a shared test
 process, where windows accumulate from every earlier suite, it is a reliable
 one.
 
+## A widget's wrapper lives as long as the widget
+
+The first Swift wrapper created for a GTK object holds a *toggle reference*:
+while anything else references the object — its parent, a list model, the
+widget a controller is attached to — the wrapper keeps itself alive. Once only
+Swift references the object, the wrapper is owned by Swift alone again and both
+go away with the last Swift reference.
+
+So a widget built in a local scope and attached to a parent keeps its wrapper
+(and any Swift state stored on a subclass) for as long as it is on screen:
+
+```swift
+func makeRow() -> Widget {
+    let toggle = Switch()
+    toggle.onActiveChanged { [weak toggle] in
+        // Still valid long after makeRow() returned.
+        print(toggle?.active ?? false)
+    }
+    return toggle
+}
+```
+
+Wrappers obtained by re-wrapping an existing object — ``Widget/parent``,
+``Widget/firstChild``, ``Widget/cast(_:)`` and similar — are extra wrappers when
+the object already has one. They hold a plain reference and live only as long
+as Swift references them.
+
 ## Signal closures should capture intentionally
 
-Prefer capturing the widgets you actually need:
+A handler is owned by the object that emits the signal. If the handler
+strongly captures that object, or one of its ancestors, the object owns a
+closure that owns the object: a reference cycle that keeps the whole subtree
+alive after its window closes. Capture those weakly:
 
 ```swift
 let button = Button(label: "Increment")
 let label = Label("0")
 var count = 0
 
-button.onClicked { [label] in
+button.onClicked { [weak button, label] in
     count += 1
     label.text = "\(count)"
+    button?.sensitive = count < 10
 }
 ```
+
+`label` can be captured strongly here: it does not own `button`, so no cycle
+forms. As a rule of thumb, capture weakly the handler's own widget, any widget
+that contains it, and any widget whose own handlers capture this one back.
+Implicit captures — using an outer widget variable in the closure body without
+a capture list — are strong captures too.
+
+Handlers connected to long-lived objects such as ``StyleManager/default`` live
+as long as those objects do. Capture widgets weakly there as well, or
+disconnect the returned ``SignalConnection`` when the widget is destroyed.
 
 Avoid hidden global registries or "keep alive everything forever" patterns.
 They make ownership bugs harder to see and can leak windows, dialogs, or
@@ -100,6 +141,8 @@ controllers.
   ``Widget/retainUntilClose()``
 - callback never fires after the widget closes: the signal owner may already be
   destroyed
+- a window's widgets are never freed after it closes: a handler strongly
+  captures its own widget or an ancestor — switch that capture to `[weak …]`
 - ``GtkWindow/close()`` appears to do nothing: the window was never presented,
   or a `close-request` handler vetoed it. ``GtkWindow/destroy()`` is
   unconditional
