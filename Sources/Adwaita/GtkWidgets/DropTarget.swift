@@ -145,9 +145,11 @@ public final class DropTarget: GObjectRef {
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onEnter(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDoubleReturnGdkDragAction(self, signal: .enter) { [weak self] x, y in
+        // The handler is owned by the target, so its pointer outlives every call.
+        let target = opaquePointer
+        return SignalHelper.connectDoubleDoubleReturnGdkDragAction(self, signal: .enter) { x, y in
             handler(x, y)
-            return self?.preferredAction ?? GDK_ACTION_COPY
+            return Self.preferredAction(for: gtk_drop_target_get_actions(target))
         }
     }
 
@@ -183,9 +185,11 @@ public final class DropTarget: GObjectRef {
     /// - Returns: A `SignalConnection` that can be used to disconnect the handler.
     @discardableResult
     public func onMotion(_ handler: @escaping @MainActor (Double, Double) -> Void) -> SignalConnection {
-        SignalHelper.connectDoubleDoubleReturnGdkDragAction(self, signal: .motion) { [weak self] x, y in
+        // The handler is owned by the target, so its pointer outlives every call.
+        let target = opaquePointer
+        return SignalHelper.connectDoubleDoubleReturnGdkDragAction(self, signal: .motion) { x, y in
             handler(x, y)
-            return self?.preferredAction ?? GDK_ACTION_COPY
+            return Self.preferredAction(for: gtk_drop_target_get_actions(target))
         }
     }
 
@@ -201,7 +205,7 @@ public final class DropTarget: GObjectRef {
     /// First action bit set in ``actions`` (COPY → MOVE → LINK). Used as the
     /// default return value for the void-returning `onEnter`/`onMotion`
     /// overloads when the handler doesn't express a choice itself.
-    private var preferredAction: GdkDragAction {
+    private static func preferredAction(for actions: GdkDragAction) -> GdkDragAction {
         let mask = actions.rawValue
         if mask & GDK_ACTION_COPY.rawValue != 0 { return GDK_ACTION_COPY }
         if mask & GDK_ACTION_MOVE.rawValue != 0 { return GDK_ACTION_MOVE }

@@ -32,7 +32,9 @@ public final class DragSource: GObjectRef {
         g_value_init(value, cadw_type_string())
         g_value_set_string(value, text)
         let provider = gdk_content_provider_new_for_value(value)
+        // The drag source takes its own reference; drop the one `_new` gave us.
         gtk_drag_source_set_content(opaquePointer, provider)
+        g_object_unref(UnsafeMutableRawPointer(provider))
         g_value_unset(value)
         value.deallocate()
     }

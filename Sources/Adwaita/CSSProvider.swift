@@ -23,11 +23,18 @@ import GObjectSupport
 /// ```
 @MainActor
 public final class CSSProvider {
-    private let provider: UnsafeMutablePointer<GtkCssProvider>
+    let provider: UnsafeMutablePointer<GtkCssProvider>
 
     /// Creates a new CSS provider.
     public init() {
         provider = gtk_css_provider_new()
+    }
+
+    /// Releases this wrapper's reference. A provider added to the display
+    /// stays in effect: the display holds a reference of its own until
+    /// ``removeFromDefaultDisplay()``.
+    isolated deinit {
+        g_object_unref(UnsafeMutableRawPointer(provider))
     }
 
     /// Loads CSS from a string.

@@ -5,7 +5,6 @@ import CAdwaita
 import GObjectSupport
 
 /// The C-callable map callback for `GtkMapListModel`.
-/// The C-callable map callback for `GtkMapListModel`.
 private func _mapListModelCallback(
     item: gpointer?, userData: gpointer?
 ) -> gpointer? {
@@ -16,10 +15,12 @@ private func _mapListModelCallback(
     let wrapped = Wrapped(ptr: item)
     nonisolated(unsafe) var result: gpointer?
     MainActor.assumeIsolated {
-        let obj = GObjectRef(borrowing: UnsafeMutableRawPointer(wrapped.ptr))
+        // `item` arrives with a full reference that this callback owns.
+        let obj = GObjectRef(raw: UnsafeMutableRawPointer(wrapped.ptr))
         let mapped = box.closure(obj)
-        // Transfer full: GTK takes ownership, so retain before returning.
-        result = Unmanaged.passRetained(mapped).toOpaque()
+        // Transfer full: hand GTK a GObject reference of its own (not the
+        // Swift wrapper — that is not a GObject).
+        result = g_object_ref(mapped.pointer)
     }
     return result
 }

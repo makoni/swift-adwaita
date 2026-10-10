@@ -270,8 +270,8 @@ open class Widget: GObjectRef, @preconcurrency CustomDebugStringConvertible {
     ///
     /// ```swift
     /// let closeBtn = Button(label: "Close")
-    /// closeBtn.onClicked {
-    ///     closeBtn.window?.close()
+    /// closeBtn.onClicked { [weak closeBtn] in
+    ///     closeBtn?.window?.close()
     /// }
     /// ```
     public var window: GtkWindow? {
@@ -294,8 +294,8 @@ open class Widget: GObjectRef, @preconcurrency CustomDebugStringConvertible {
     /// handlers without capturing the window reference.
     ///
     /// ```swift
-    /// closeBtn.onClicked {
-    ///     closeBtn.closeWindow()
+    /// closeBtn.onClicked { [weak closeBtn] in
+    ///     closeBtn?.closeWindow()
     /// }
     /// ```
     public func closeWindow() {
@@ -510,7 +510,8 @@ open class Widget: GObjectRef, @preconcurrency CustomDebugStringConvertible {
     /// but you can use this for any property.
     ///
     /// ```swift
-    /// entry.onNotify(.text) {
+    /// entry.onNotify(.text) { [weak entry] in
+    ///     guard let entry else { return }
     ///     print("Text changed to: \(entry.text)")
     /// }
     /// ```
@@ -652,9 +653,10 @@ open class Widget: GObjectRef, @preconcurrency CustomDebugStringConvertible {
     /// ```
     @discardableResult
     public func onSizeAllocate(_ handler: @escaping @MainActor (Int, Int) -> Void) -> SignalConnection {
-        SignalHelper.onNotify(self, property: .width) { [weak self] in
-            guard let self else { return }
-            handler(width, height)
+        // The handler is owned by the widget, so its pointer outlives every call.
+        let widget = widgetPointer
+        return SignalHelper.onNotify(self, property: .width) {
+            handler(Int(gtk_widget_get_width(widget)), Int(gtk_widget_get_height(widget)))
         }
     }
 

@@ -40,34 +40,37 @@ public final class Notebook: Widget {
     /// Appends a page with a text label. Returns the page index.
     @discardableResult
     public func appendPage(_ child: Widget, label: String) -> Int {
-        let tabLabel = Label(label)
-        return Int(gtk_notebook_append_page(opaquePointer, child.widgetPointer, tabLabel.widgetPointer))
+        insertPage(child, tab: Label(label), position: -1)
     }
 
     /// Appends a page with a custom tab widget. Returns the page index.
     @discardableResult
     public func appendPage(_ child: Widget, tabWidget: Widget) -> Int {
-        Int(gtk_notebook_append_page(opaquePointer, child.widgetPointer, tabWidget.widgetPointer))
+        insertPage(child, tab: tabWidget, position: -1)
     }
 
     /// Prepends a page with a text label. Returns the page index.
     @discardableResult
     public func prependPage(_ child: Widget, label: String) -> Int {
-        let tabLabel = Label(label)
-        return Int(gtk_notebook_prepend_page(opaquePointer, child.widgetPointer, tabLabel.widgetPointer))
+        insertPage(child, tab: Label(label), position: 0)
     }
 
     /// Inserts a page at the given position. Returns the page index.
     @discardableResult
     public func insertPage(_ child: Widget, label: String, position: Int) -> Int {
-        let tabLabel = Label(label)
-        return Int(
-            gtk_notebook_insert_page(
-                opaquePointer,
-                child.widgetPointer,
-                tabLabel.widgetPointer,
-                Int32(position)
-            ))
+        insertPage(child, tab: Label(label), position: position)
+    }
+
+    /// Inserts `child` without a tab label, then sets `tab`.
+    ///
+    /// Passing the label straight to `gtk_notebook_insert_page` leaks it: GTK
+    /// stores it through the page's "tab" property, which takes a reference
+    /// that `gtk_notebook_remove_tab_label` never drops (GTK 4.22). Labels set
+    /// with `gtk_notebook_set_tab_label` are released with the page.
+    private func insertPage(_ child: Widget, tab: Widget, position: Int) -> Int {
+        let index = gtk_notebook_insert_page(opaquePointer, child.widgetPointer, nil, Int32(position))
+        gtk_notebook_set_tab_label(opaquePointer, child.widgetPointer, tab.widgetPointer)
+        return Int(index)
     }
 
     /// Removes the page at the given index.

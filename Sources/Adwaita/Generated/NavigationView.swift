@@ -17,14 +17,15 @@ import GObjectSupport
 /// let listPage = NavigationPage(child: listBox, title: "Contacts")
 /// nav.add(listPage)
 ///
-/// // Push a detail page when a row is selected
-/// listBox.onRowActivated { row in
+/// // Push a detail page when a row is selected. `nav` contains `listBox`,
+/// // so capture it weakly.
+/// listBox.onRowActivated { [weak nav] row in
 ///     let detail = Label(text: "Detail for row \(row.index)")
-///     nav.push(title: "Detail", child: detail)
+///     nav?.push(title: "Detail", child: detail)
 /// }
 ///
 /// // Pop programmatically
-/// backButton.onClicked { nav.pop() }
+/// backButton.onClicked { [weak nav] in nav?.pop() }
 /// ```
 ///
 /// - Since: libadwaita 1.4
@@ -128,7 +129,7 @@ public final class NavigationView: Widget, Swipeable {
 
     /// Pushes a page onto the navigation stack.
     public func push(_ page: NavigationPage) {
-        g_object_ref(page.pointer)
+        // `page` is transfer-none: the view takes its own reference.
         adw_navigation_view_push(opaquePointer, page.castedPointer() as UnsafeMutablePointer<AdwNavigationPage>)
     }
 
