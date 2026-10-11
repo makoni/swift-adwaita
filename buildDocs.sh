@@ -10,6 +10,7 @@ echo "=== Building documentation for ${TARGET} ==="
 echo ""
 echo "--- Generating documentation archive ---"
 rm -rf "${OUTPUT_PATH}"
+mkdir -p "${OUTPUT_PARENT}"
 
 swift package --allow-writing-to-directory "${OUTPUT_PARENT}" \
     generate-documentation \

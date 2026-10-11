@@ -6,6 +6,11 @@
 #include <adwaita.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+// `ADW_VERSION` expands to `(1.10.0)`, which is not a valid C token. Symbol
+// graph extraction imports every macro of the re-exported module and fails on
+// it, so hide it; use `ADW_VERSION_S` or the `ADW_*_VERSION` parts instead.
+#undef ADW_VERSION
+
 // ---------------------------------------------------------------------------
 // GTK compatibility helpers.
 // ---------------------------------------------------------------------------
