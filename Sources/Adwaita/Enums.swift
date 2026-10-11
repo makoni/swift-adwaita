@@ -553,7 +553,10 @@ public extension GtkInputHints {
 
 public extension AdwTabViewShortcuts {
     /// No shortcuts.
-    static let none = ADW_TAB_VIEW_SHORTCUT_NONE
+    // libadwaita 1.10+ marks the enum `G_GNUC_FLAG_ENUM` (GLib 2.88+), so Swift
+    // imports it as an `OptionSet` and hides the zero case; build it from the
+    // raw value so it compiles against both older and newer headers.
+    static let none = AdwTabViewShortcuts(rawValue: 0)
     /// Ctrl+Tab — switch to next tab.
     static let controlTab = ADW_TAB_VIEW_SHORTCUT_CONTROL_TAB
     /// Ctrl+Shift+Tab — switch to previous tab.
