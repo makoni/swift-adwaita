@@ -29,8 +29,10 @@ dialog.retainUntilClose()
 dialog.present(parentWidget)
 ```
 
-`GtkWindow.present()` already does this for top-level windows, so you usually do
-not need to call ``Widget/retainUntilClose()`` manually there.
+Top-level windows (`GtkWindow` and subclasses) do not need the extra retain at
+all: GTK keeps them alive in its toplevel list, so ``Widget/retainUntilClose()``
+is a no-op on windows — the strong capture it installs would be a reference
+cycle, because "destroy" only fires when the last reference goes.
 
 ## Parenting transfers UI ownership
 
@@ -66,14 +68,12 @@ Use it when the code, not the user, is done with a window — most often at the
 end of a test.
 
 The reason the distinction is worth knowing is what destroying also does: it
-unregisters the window from the list GTK keeps of live toplevels. GTK walks
-that list whenever something process-wide changes — the reading direction
-(``defaultTextDirection``), the theme, the inspector. A window released only by
-dropping its Swift wrapper is not guaranteed to have left the list by the time
-it is finalized, and a stale entry turns the next such walk into a read of
-freed memory. In a long-lived process that is a rare crash; in a shared test
-process, where windows accumulate from every earlier suite, it is a reliable
-one.
+unregisters the window from the list GTK keeps of live toplevels and drops
+the reference GTK holds for it. GTK keeps that reference until the window
+leaves the list, so a window released only by dropping its Swift wrapper stays
+alive, and in the list, until it is destroyed — and it can only finalize once
+it has left the list. Destroying a window you are done with is what lets it
+be freed.
 
 ## A widget's wrapper lives as long as the widget
 
@@ -137,8 +137,8 @@ controllers.
 
 ## Troubleshooting
 
-- dialog disappears immediately: keep a Swift reference or call
-  ``Widget/retainUntilClose()``
+- dialog disappears immediately: keep a Swift reference to it; a dialog that
+  is not presented is finalized with its last reference
 - callback never fires after the widget closes: the signal owner may already be
   destroyed
 - a window's widgets are never freed after it closes: a handler strongly
@@ -146,8 +146,8 @@ controllers.
 - ``GtkWindow/close()`` appears to do nothing: the window was never presented,
   or a `close-request` handler vetoed it. ``GtkWindow/destroy()`` is
   unconditional
-- a crash when the theme or the reading direction changes: a window was
-  released without being destroyed, leaving a stale entry in GTK's toplevel
-  list
+- a window that is never freed after its wrapper is dropped: it was released
+  without being destroyed, so it is still alive in GTK's toplevel list —
+  destroy the windows you are done with
 - widget tree looks wrong: inspect ``Widget/debugDescription`` and confirm the
   parent-child chain you expected actually exists

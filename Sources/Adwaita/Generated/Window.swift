@@ -42,6 +42,8 @@ public class Window: GtkWindow {
     /// Creates a new `Window`.
     public init() {
         let ptr = adw_window_new()!
+        // GTK owns the toplevel (transfer none); the wrapper takes its own reference.
+        g_object_ref(UnsafeMutableRawPointer(ptr))
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 
