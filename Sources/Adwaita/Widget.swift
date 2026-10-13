@@ -304,19 +304,28 @@ open class Widget: GObjectRef, @preconcurrency CustomDebugStringConvertible {
 
     /// Keeps the underlying GObject alive until this widget is destroyed.
     ///
-    /// Call this on windows or widgets that are created locally and would
-    /// otherwise be deallocated when the variable goes out of scope. This
-    /// installs a destroy handler that captures `self`, keeping the Swift
-    /// wrapper alive until GTK disposes the widget and the signal system
-    /// releases the handler on the next main-loop iteration.
+    /// Call this on widgets that are created locally and would otherwise be
+    /// deallocated when the variable goes out of scope. This installs a
+    /// destroy handler that captures `self`, keeping the Swift wrapper alive
+    /// until GTK disposes the widget and the signal system releases the
+    /// handler on the next main-loop iteration.
+    ///
+    /// It is a no-op on windows (``GtkWindow`` and subclasses): GTK owns
+    /// toplevels, and "destroy" only fires when the last reference goes, so
+    /// the strong capture installed here would be a reference cycle.
     ///
     /// ```swift
-    /// let secondary = ApplicationWindow(application: app)
-    /// secondary.title = "Popup"
-    /// secondary.present()
-    /// secondary.retainUntilClose()
+    /// let status = Label("Ready")
+    /// status.retainUntilClose()
+    /// // `status` is kept alive until the widget is destroyed, even though the
+    /// // local variable goes out of scope here.
     /// ```
     public func retainUntilClose() {
+        // GTK owns toplevel windows, and "destroy" only fires at the last
+        // unref, so a strong capture here would be a cycle: no-op for windows.
+        if isInstance(of: gtk_window_get_type()) {
+            return
+        }
         // Guard against double-calling — idempotent.
         let key = "swift-retained"
         guard g_object_get_data(gobjectPointer, key) == nil else { return }

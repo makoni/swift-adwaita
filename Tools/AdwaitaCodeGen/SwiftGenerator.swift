@@ -382,6 +382,7 @@ class SwiftGenerator {
             let args = params.map { cArgFromSwift($0) }
             let argList = args.joined(separator: ", ")
             out += "        let ptr = \(ctor.cIdentifier)(\(argList))!\n"
+            out += toplevelOwnershipLines(for: currentClass!, ctor: ctor)
             out += "        return \(className)(raw: UnsafeMutableRawPointer(ptr))\n"
             out += "    }\n"
         } else {
@@ -392,11 +393,39 @@ class SwiftGenerator {
             let args = params.map { cArgFromSwift($0) }
             let argList = args.joined(separator: ", ")
             out += "        let ptr = \(ctor.cIdentifier)(\(argList))!\n"
+            out += toplevelOwnershipLines(for: currentClass!, ctor: ctor)
             out += "        super.init(raw: UnsafeMutableRawPointer(ptr))\n"
             out += "    }\n"
         }
 
         return out
+    }
+
+    /// Lines that give the wrapper its own reference for a toplevel-window
+    /// constructor. GTK keeps every toplevel window in its list under its own
+    /// reference — the GIR marks these constructors
+    /// `transfer-ownership="none"` — so the wrapper must not inherit GTK's
+    /// reference through `init(raw:)`.
+    private func toplevelOwnershipLines(for cls: GIRClass, ctor: GIRFunction) -> String {
+        guard clsIsToplevelWindow(cls), ctor.returnValue.transferOwnership == "none" else { return "" }
+        return "        // GTK owns the toplevel (transfer none); the wrapper takes its own reference.\n"
+            + "        g_object_ref(UnsafeMutableRawPointer(ptr))\n"
+    }
+
+    /// Whether the class is a toplevel window: a `GtkWindow` (or subclass),
+    /// resolved through the class's GIR parents. The generator only parses the
+    /// Adw GIR, so it cannot walk a Gtk ancestor chain; the known Gtk toplevel
+    /// window types are listed explicitly. Add an entry if a future Adw class
+    /// inherits from a Gtk window type not yet listed here.
+    private func clsIsToplevelWindow(_ cls: GIRClass) -> Bool {
+        guard let parent = cls.parent else { return false }
+        switch parent {
+        case "Gtk.Window", "Gtk.ApplicationWindow", "Gtk.ShortcutsWindow", "Gtk.Dialog":
+            return true
+        default:
+            guard let parentCls = namespace.classes.first(where: { $0.name == parent }) else { return false }
+            return clsIsToplevelWindow(parentCls)
+        }
     }
 
     // MARK: - Property Generation

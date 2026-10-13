@@ -32,6 +32,8 @@ public final class ApplicationWindow: GtkWindow {
     /// - Parameter application: The application this window belongs to.
     public init(application: Application) {
         let ptr = adw_application_window_new(application.gtkApplicationPointer)!
+        // GTK owns the toplevel (transfer none); the wrapper takes its own reference.
+        g_object_ref(UnsafeMutableRawPointer(ptr))
         super.init(raw: UnsafeMutableRawPointer(ptr))
     }
 

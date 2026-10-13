@@ -12,13 +12,12 @@ public extension GtkWindow {
     /// it unparents the content, drops the window's own reference, and removes
     /// it from the list GTK keeps of live toplevels.
     ///
-    /// That last part is why this exists. GTK walks its toplevel list whenever
-    /// something process-wide changes — the reading direction
-    /// (``defaultTextDirection``), the theme, the inspector. A window released
-    /// by dropping its Swift wrapper is not guaranteed to have left that list
-    /// by the time it is finalized, and a stale entry turns the next such walk
-    /// into a crash. Destroying a window you are done with keeps the list
-    /// honest.
+    /// That last part is why this exists. A window released by dropping its
+    /// Swift wrapper stays in that list — and alive — until it is destroyed,
+    /// because GTK keeps its own reference to every window it lists.
+    /// ``destroy()`` drops that reference and removes the window from the
+    /// list, so the window can finalize once the last Swift reference goes.
+    /// Destroying a window you are done with keeps the list honest.
     ///
     /// ```swift
     /// let window = ApplicationWindow(application: app)
